@@ -1,0 +1,82 @@
+// ==================================================
+// > LINKS
+// ==================================================
+a
+	text-decoration: none
+	text-transform: inherit
+	color: $main
+	&:hover
+		color: lighten($main, 5%)
+		text-decoration: underline
+
+// ==================================================
+// > BUTTONS
+// ==================================================
+.button
+	display: inline-block
+	box-sizing: border-box
+	height: 50px
+	line-height: 50px
+	padding: 0 40px
+	border: 1px solid $main
+	color: $main
+	position: relative
+	overflow: hidden
+	transition: color .25s ease
+	z-index: 5
+	text-transform: uppercase
+	&:before
+		content: ""
+		position: absolute
+		z-index: -1
+		transition: all .35s ease
+		left: 50%
+		top: 50%
+		background: $main
+		transform: translate(-50%, -50%)
+		border-radius: 50%
+		width: 0%
+		padding-bottom: 0%
+	&:hover
+		color: white
+		transition: color .15s ease
+		&:before
+			width: 120%
+			padding-top: calc(120% + 80px)
+
+	// ========== MODIFIERS ========== //
+	// &.ghost
+
+
+
+// ==================================================
+// > CROCHED LINK
+// ==================================================
+.croched-link
+	text-decoration: none
+	font-family: $font-light
+	position: relative
+	color: inherit
+	transition: all .35s ease !important
+	text-transform: none
+	font-size: 1em
+	&:before, &:after
+		left: 0
+		position: relative
+		color: inherit
+		content: "[ "
+		transition: all .35s ease !important
+	&:after
+		content: " ]"
+		left: inherit
+		right: 0
+	&:hover
+		opacity: 1
+		color: $main !important
+		&:before, &:after
+			color: $main
+		&:before
+			left: -3px
+		&:after
+			right: -3px
+

@@ -1,0 +1,9 @@
+//-@prepros-append ../_2_vendors/dropzone.js
+//-@prepros-append ../_2_vendors/hammer.min.js
+//-@prepros-append ../_2_vendors/jquery.min.js
+//-@prepros-append ../_2_vendors/prefixfree.min.js
+//-@prepros-append ../_2_vendors/prefixfree.viewport-units.js
+//-@prepros-append ../_2_vendors/select2-fr.js
+//-@prepros-append ../_2_vendors/select2.full.js
+//-@prepros-append ../_2_vendors/slick.js
+//-@prepros-append ../_2_vendors/transit.min.js

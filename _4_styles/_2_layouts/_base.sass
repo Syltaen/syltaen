@@ -1,0 +1,46 @@
+html, body
+	overflow-x: hidden
+	line-height: 1.4
+
+html
+	font-size: 6.25%
+	min-height: 100%
+	&.mobile-menu-open
+		overflow: hidden
+
+body
+	color: $black
+	font-family: $font-regular
+	font-size: 16px
+	font-size: 16rem
+	position: relative
+
+::selection
+	background: $main
+	color: white
+
+.container
+	margin: 0 auto
+	width: 960px
+	+gridle_state(sm)
+		width: 640px
+	+gridle_state(xs)
+		width: 300px
+
+*
+	outline: 0
+	transition: all .35s ease
+	box-sizing: border-box
+
+
+// ==================================================
+// > 404
+// ==================================================
+.p404
+	text-align: center
+	padding: 5% 0
+	h2
+		font-size: 40px
+		font-size: 40rem
+		&:after
+			display: none

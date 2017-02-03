@@ -1,0 +1,134 @@
+// ==================================================
+// > FORM
+// ==================================================
+form
+	hr
+		margin: 50px 0
+		height: 0
+		margin-bottom: 1px solid $scnd
+
+	.hidden-wrap
+		display: none
+
+	*
+		outline: 0
+
+
+// ==================================================
+// > FIELDSET
+// ==================================================
+fieldset
+	margin-bottom: 20px
+
+// ==================================================
+// > LABEL
+// ==================================================
+label
+	cursor: pointer
+	margin-bottom: 5px
+	text-overflow: ellipsis
+	overflow: hidden
+	text-transform: none
+	&.label-top
+		display: block
+
+
+// ==================================================
+// > INPUT
+// ==================================================
+input
+	background: none
+	border: 1px solid lighten($dgry, 50%)
+	padding: 0 20px
+	color: inherit
+	resize: none
+	height: 48px
+	line-height: 48px
+	width: 100%
+
+
+// ==================================================
+// > TEXTAREA
+// ==================================================
+textarea
+	@extend input
+	min-height: 250px
+	padding: 10px 20px
+	line-height: 1.4
+	display: block
+	margin: 0
+
+
+// ==================================================
+// > RADIO / CHECKBOX
+// ==================================================
+input[type="radio"],
+input[type="checkbox"]
+	appearance: none
+	position: relative
+	width: 14px
+	height: 14px
+	margin: 8px 5px 0
+	padding: 0
+	border: 0
+	&:before
+		content: "\f096"
+		font-family: $font-fa
+		color: $main
+		font-size: 16px
+		font-size: 16rem
+		position: absolute
+		height: 14px
+		line-height: 20px
+		top: 0
+		left: 0
+	&:checked:before
+		content: "\f046"
+
+input[type="radio"]
+	border: 2px solid $main
+	border-radius: 50%
+	&:before
+		content: ""
+		opacity: 0
+		width: 6px
+		height: 6px
+		background: $main
+		position: absolute
+		top: 50%
+		left: 50%
+		border-radius: 50%
+		margin-top: -3px
+		margin-left: -3px
+	&:checked:before
+		content: ""
+		opacity: 1
+
+// ==================================================
+// > SUBMIT
+// ==================================================
+input[type="submit"]
+	@extend .button
+	background: $main
+	color: white
+	height: 50px
+	float: right
+	font-family: $font-regular
+	cursor: pointer
+	text-transform: uppercase
+	margin-top: 20px !important
+	clear: both
+	&:hover
+		background: white
+		color: $main
+		border: 2px solid $main
+
+// ==================================================
+// > SELECT
+// ==================================================
+// -> See _select2.sass
+
+// ==================================================
+// > UPLOAD
+// ==================================================
+// -> See _dropzone.sass

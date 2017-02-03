@@ -1,0 +1,43 @@
+// ==================================================
+// > BASIC LIST
+// ==================================================
+ul, ol
+	padding-left: 10px
+	margin-bottom: 10px
+	li
+		margin: 10px 0
+		position: relative
+		&.no-bullet:before
+			display: none
+
+ul li:before
+	content: "\f105"
+	font-family: $font-fa
+	color: $main
+	position: absolute
+	top: 1px
+	left: -10px
+
+ol
+	counter-reset: item
+	li:before
+		content: counter(item)
+		counter-increment: item
+		color: white
+		font-family: $font-regular
+		color: $main
+		position: absolute
+		top: 0px
+		left: -5px
+		transform: translate(-100%)
+
+// ==================================================
+// > RESET
+// ==================================================
+nav ul, nav ol, ul.unstyled, ol.unstyled, ul.options
+	padding: 0
+	margin: 0
+	li
+		margin: 0
+		&:before
+			display: none

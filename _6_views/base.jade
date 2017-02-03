@@ -1,0 +1,54 @@
+doctype
+
+html(lang=$site->language)
+
+	head
+		meta(charset=$site->charset)
+		meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
+		meta(http-equiv="X-UA-Compatible" content="IE=edge")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		= wp_head()
+		block head
+
+	body(class=$body_class)
+
+		//- ==================================================
+		//- > HEADER
+		//- ==================================================
+		header#site-header(role="banner")
+			.container
+				a#main-logo(href=$site->url rel="home")
+					img(src=$site->img->logo alt=$site->name)
+
+
+		//- nav#primary-menu
+		//- 	.container
+		//- 		!= $site->menu->main
+
+
+		//- nav#mobile-menu
+		//- 	header= $site->name
+		//- 	.scrollable
+		//- 		!= $site->menu->main
+
+
+
+		//- ==================================================
+		//- > CONTENT
+		//- ==================================================
+		main(role="main")
+			block main
+				!= $post->post_content
+
+
+
+		//- ==================================================
+		//- > FOOTER
+		//- ==================================================
+		block footer
+			footer#site-footer(role="contentinfo")
+				.container
+					!= $site->menu->footer
+
+
+		= wp_footer()
