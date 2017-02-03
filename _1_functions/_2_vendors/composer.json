@@ -1,0 +1,6 @@
+{
+    "require": {
+        "talesoft/tale-jade": "*",
+        "squizlabs/php_codesniffer": "*"
+    }
+}

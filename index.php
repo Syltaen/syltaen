@@ -25,11 +25,11 @@ endif;
 // ==================================================
 
 // ========== 404 ========== //
-if ( is_404() ):
+if (is_404()) :
 	$views[] = '404';
 
 // ========== SINGLE ========== //
-elseif ( is_single() ):
+elseif (is_single()) :
 	$models[] = 'single';
 	$views[] = 'single';
 
@@ -49,6 +49,3 @@ endif;
 model("base");
 model($models);
 render($views, $data);
-
-
-/* SALUT 1 */

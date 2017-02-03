@@ -3,18 +3,18 @@
 // ==================================================
 // > MENUS
 // ==================================================
-$data['site']->menus = array(
+$data["site"]->menus = array(
 
 	"main" => wp_nav_menu(array(
-		'theme_location'	=> "main_menu",
-		'container'			=> false,
-		'echo'				=> false
+		"theme_location"	=> "main_menu",
+		"container"			=> false,
+		"echo"				=> false
 	)),
 
-	'footer' =>	wp_nav_menu(array(
-		'theme_location'	=> "footer_menu",
-		'container'			=> false,
-		'echo'				=> false
+	"footer" =>	wp_nav_menu(array(
+		"theme_location"	=> "footer_menu",
+		"container"			=> false,
+		"echo"				=> false
 	))
 
 );
@@ -23,10 +23,10 @@ $data['site']->menus = array(
 // ==================================================
 // > HEADER
 // ==================================================
-$data['site']->header = array();
+$data["site"]->header = array();
 
 
 // ==================================================
 // > FOOTER
 // ==================================================
-$data['site']->footer = array();
+$data["site"]->footer = array();

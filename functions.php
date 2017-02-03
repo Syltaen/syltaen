@@ -17,39 +17,40 @@ add_action( "after_setup_theme", function () {
 } );
 
 // ==================================================
-// > 7 - VENDORS
+// > 2 - VENDORS
 // ==================================================
-require_once('_1_functions/_7_vendors/vendor/autoload.php');
-
-
-// ==================================================
-// > 2 - TOOLS
-// ==================================================
-require_once('_1_functions/_2_tools/mvc.php');
-require_once('_1_functions/_2_tools/chromephp.php');
+require_once('_1_functions/_2_vendors/vendor/autoload.php');
 
 
 // ==================================================
-// > 3 - GENERATORS
+// > 3 - TOOLS
 // ==================================================
-// require_once('_1_functions/_3_generators/breadcrumb.php');
-// require_once('_1_functions/_3_generators/pagenav.php');
-
-
-// ==================================================
-// > 4 - ACTIONS
-// ==================================================
-
+require_once('_1_functions/_3_tools/mvc.php');
+require_once('_1_functions/_3_tools/chromephp.php');
 
 
 // ==================================================
-// > 5 - FILTERS
+// > 4 - GENERATORS
+// ==================================================
+// require_once('_1_functions/_4_generators/breadcrumb.php');
+// require_once('_1_functions/_4_generators/pagenav.php');
+// require_once('_1_functions/_4_generators/sharelinks.php');
+
+
+// ==================================================
+// > 5 - ACTIONS
 // ==================================================
 
 
 
 // ==================================================
-// > 6 - AJAX
+// > 6 - FILTERS
+// ==================================================
+
+
+
+// ==================================================
+// > 7 - AJAX
 // ==================================================
 
 
