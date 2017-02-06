@@ -21,14 +21,21 @@ wp core install --prompt
 ### 2 - Themes
 Removal of unused themes
 ```
-rm -rd wp/content/themes
+rm -rd wp-content/themes
 ```
 Install and activate this one from the GitHub repository
 ```
 wp theme install https://github.com/Syltaen/syltaen/archive/master.zip --activate
 ```
 -
-### 3 - Plugins
+### 3 - Theme dependencies
+Install dependencies via Composer
+>```
+>cd wp-content/themes/syltaen/_1_functions/_2_vendors
+>composer install
+>```
+-
+### 4 - Plugins
 Removal of unused plugins
 ```
 wp plugin delete $(wp plugin list --status=inactive --field=name)
@@ -75,9 +82,19 @@ User Role Editor
 >wp plugin install user-role-editor --activate
 >```
 
-### 4 - Dependencies
-Install dependencies via Composer
->```
->cd wp-content/themes/syltaen/_1_functions/_2_vendors
->composer install
->```
+
+## Do everything at the same time:
+Note : Don't forget to replace the ***
+```
+# Download & Install WordPress
+wp core download --locale=fr_FR;
+wp core config --dbname=***** --dbuser=root --dbpass=root --dbprefix=wp_ --extra-php --force;
+wp core install --url=http://localhost/***** --title=Temp --admin_user=Syltaen --admin_email=stanley.lambot@hungryminds.be:
+# Remove themes and install the right one and its dependencies
+rm -rd wp-content/themes;
+wp theme install https://github.com/Syltaen/syltaen/archive/master.zip --activate;
+cd wp-content/themes/syltaen/_1_functions/_2_vendors && composer install;
+# Remove unused plugins and install required ones
+wp plugin delete $(wp plugin list --status=inactive --field=name);
+wp plugin install timber-library --activate;
+```
