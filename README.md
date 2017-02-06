@@ -3,7 +3,7 @@ A custom-made WordPress theme using an MVC approach with Jade, SASS, CoffeeScrip
 
 ## Step-by-step installation & Configuration using WP-CLI
 
-### WordPress core
+### 1 - WordPress core
 
 Download
 ```
@@ -18,8 +18,8 @@ Install database
 wp core install --prompt
 ```
 -
-### Themes
-Remove unused themes
+### 2 - Themes
+Removal of unused themes
 ```
 rm -rd wp/content/themes
 ```
@@ -28,7 +28,7 @@ Install and activate this one from the GitHub repository
 wp theme install https://github.com/Syltaen/syltaen/archive/master.zip --activate
 ```
 -
-### Plugins
+### 3 - Plugins
 Removal of unused plugins
 ```
 wp plugin delete $(wp plugin list --status=inactive --field=name)
@@ -75,7 +75,7 @@ User Role Editor
 >wp plugin install user-role-editor --activate
 >```
 
-### Dependencies
+### 4 - Dependencies
 Install dependencies via Composer
 >```
 >cd wp-content/themes/syltaen/_1_functions/_2_vendors
