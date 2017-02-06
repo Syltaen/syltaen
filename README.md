@@ -74,3 +74,10 @@ User Role Editor
 >```
 >wp plugin install user-role-editor --activate
 >```
+
+### Dependencies
+Install dependencies via Composer
+>```
+>cd wp-content/themes/syltaen/_1_functions/_2_vendors
+>composer install
+>```
