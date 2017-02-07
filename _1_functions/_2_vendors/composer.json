@@ -1,6 +1,5 @@
 {
     "require": {
-        "talesoft/tale-jade": "*",
-        "squizlabs/php_codesniffer": "*"
+        "pug-php/pug": "^2.5"
     }
 }

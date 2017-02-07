@@ -1,7 +1,11 @@
 <?php
 
-use Tale\Jade;
-$renderer = new Jade\Renderer();
+use Pug\Pug;
+$renderer = new Pug(array(
+	// 'prettyprint' => true,
+	'extension' => '.pug',
+	// 'cache' => 'pathto/writable/cachefolder/'
+));
 
 // ==================================================
 // > VIEWS RENDERING
@@ -13,11 +17,11 @@ function render($files, $data = array(), $noecho = false) {
 	if (is_array($files)):
 		$filename = "";
 		for($i = count($files); $i > 0; $i--):
-			$filename = get_template_directory() . '/_6_views/'. $files[$i-1].'.jade';
+			$filename = get_template_directory() . '/_6_views/'. $files[$i-1].'.pug';
 			if (file_exists( $filename )) { break; }
 		endfor;
 	else:
-		$filename =  get_template_directory() . '/_6_views/'. $files . '.jade';
+		$filename =  get_template_directory() . '/_6_views/'. $files . '.pug';
 	endif;
 
 	/*=====  ERRORS  =====*/
@@ -30,7 +34,6 @@ function render($files, $data = array(), $noecho = false) {
 		echo $renderer->render( $filename, $data );
 	}
 }
-
 
 
 // ==================================================
@@ -53,3 +56,12 @@ function model($files, $spec = array()) {
 	/* ========= INCLUDE ========= */
 	include($filename);
 }
+
+
+// ==================================================
+// > ERRORS LOGING
+// ==================================================
+set_error_handler(function($errno, $errstr, $errfile, $errline ) {
+	ChromePhp::error("PHP ERROR $errno : $errstr");
+	return false;
+});

@@ -4,171 +4,33 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f9e56bd443e9fcf96c8b9dfaa72a9f2",
+    "content-hash": "cefc8bad75a12b1e6149b36c322af3ff",
     "packages": [
         {
-            "name": "squizlabs/php_codesniffer",
-            "version": "2.8.0",
+            "name": "js-phpize/js-phpize",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "86dd55a522238211f9f3631e3361703578941d9a"
+                "url": "https://github.com/pug-php/js-phpize.git",
+                "reference": "c4111e62a9d63f7917e700b102141c3741c4d256"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/86dd55a522238211f9f3631e3361703578941d9a",
-                "reference": "86dd55a522238211f9f3631e3361703578941d9a",
+                "url": "https://api.github.com/repos/pug-php/js-phpize/zipball/c4111e62a9d63f7917e700b102141c3741c4d256",
+                "reference": "c4111e62a9d63f7917e700b102141c3741c4d256",
                 "shasum": ""
             },
             "require": {
-                "ext-simplexml": "*",
-                "ext-tokenizer": "*",
-                "ext-xmlwriter": "*",
-                "php": ">=5.1.2"
+                "php": ">=5.3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "bin": [
-                "scripts/phpcs",
-                "scripts/phpcbf"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.x-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "CodeSniffer.php",
-                    "CodeSniffer/CLI.php",
-                    "CodeSniffer/Exception.php",
-                    "CodeSniffer/File.php",
-                    "CodeSniffer/Fixer.php",
-                    "CodeSniffer/Report.php",
-                    "CodeSniffer/Reporting.php",
-                    "CodeSniffer/Sniff.php",
-                    "CodeSniffer/Tokens.php",
-                    "CodeSniffer/Reports/",
-                    "CodeSniffer/Tokenizers/",
-                    "CodeSniffer/DocGenerators/",
-                    "CodeSniffer/Standards/AbstractPatternSniff.php",
-                    "CodeSniffer/Standards/AbstractScopeSniff.php",
-                    "CodeSniffer/Standards/AbstractVariableSniff.php",
-                    "CodeSniffer/Standards/IncorrectPatternException.php",
-                    "CodeSniffer/Standards/Generic/Sniffs/",
-                    "CodeSniffer/Standards/MySource/Sniffs/",
-                    "CodeSniffer/Standards/PEAR/Sniffs/",
-                    "CodeSniffer/Standards/PSR1/Sniffs/",
-                    "CodeSniffer/Standards/PSR2/Sniffs/",
-                    "CodeSniffer/Standards/Squiz/Sniffs/",
-                    "CodeSniffer/Standards/Zend/Sniffs/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Greg Sherwood",
-                    "role": "lead"
-                }
-            ],
-            "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
-            "homepage": "http://www.squizlabs.com/php-codesniffer",
-            "keywords": [
-                "phpcs",
-                "standards"
-            ],
-            "time": "2017-02-02T03:30:00+00:00"
-        },
-        {
-            "name": "symfony/polyfill-mbstring",
-            "version": "v1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/e79d363049d1c2128f133a2667e4f4190904f7f4",
-                "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "suggest": {
-                "ext-mbstring": "For best performance"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Mbstring\\": ""
-                },
-                "files": [
-                    "bootstrap.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill for the Mbstring extension",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "mbstring",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "time": "2016-11-14T01:06:16+00:00"
-        },
-        {
-            "name": "talesoft/tale-config",
-            "version": "0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Talesoft/tale-config.git",
-                "reference": "1a9304e99753fa74c4f43722b52388df8015eb03"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Talesoft/tale-config/zipball/1a9304e99753fa74c4f43722b52388df8015eb03",
-                "reference": "1a9304e99753fa74c4f43722b52388df8015eb03",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5.0",
-                "talesoft/tale-factory": "~0.1"
-            },
-            "suggest": {
-                "symfony/yaml": "for YAML-configuration",
-                "talesoft/tale-dom": "for XML-configuration"
+                "codeclimate/php-test-reporter": "dev-master",
+                "phpunit/phpunit": ">=4.8"
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Tale\\": ""
+                "psr-0": {
+                    "JsPhpize": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -177,44 +39,43 @@
             ],
             "authors": [
                 {
-                    "name": "Torben Koehn",
-                    "email": "tk@talesoft.io"
-                },
-                {
-                    "name": "Talesoft",
-                    "email": "info@talesoft.io",
-                    "homepage": "http://talesoft.io"
+                    "name": "Kyle Katarn",
+                    "email": "kylekatarnls@gmail.com"
                 }
             ],
-            "description": "Lightweight configuration interfaces and utilities",
-            "homepage": "http://docs.talesoft.io/tale-framework/tale/config",
-            "keywords": [
-                "config",
-                "options"
-            ],
-            "time": "2016-03-01T22:39:06+00:00"
+            "description": "Convert js-like syntax to standalone PHP code.",
+            "time": "2017-02-03T19:41:14+00:00"
         },
         {
-            "name": "talesoft/tale-factory",
-            "version": "0.1",
+            "name": "pug-php/pug",
+            "version": "2.5.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Talesoft/tale-factory.git",
-                "reference": "63335da0e6b435aa481ea2917b017cf482efa043"
+                "url": "https://github.com/pug-php/pug.git",
+                "reference": "339bc73949cea13fc9c89da09368170818efa03e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Talesoft/tale-factory/zipball/63335da0e6b435aa481ea2917b017cf482efa043",
-                "reference": "63335da0e6b435aa481ea2917b017cf482efa043",
+                "url": "https://api.github.com/repos/pug-php/pug/zipball/339bc73949cea13fc9c89da09368170818efa03e",
+                "reference": "339bc73949cea13fc9c89da09368170818efa03e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.0"
+                "js-phpize/js-phpize": "^1.2",
+                "php": ">=5.3.0"
+            },
+            "replace": {
+                "kylekatarnls/jade-php": "self.version"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": ">=0.3",
+                "phpunit/phpunit": ">=4.0"
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Tale\\": ""
+                "psr-0": {
+                    "Pug\\": "src/",
+                    "Jade\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -223,80 +84,125 @@
             ],
             "authors": [
                 {
-                    "name": "Torben Koehn",
-                    "email": "tk@talesoft.io"
-                }
-            ],
-            "description": "A small and lightweight implementation of the factory pattern",
-            "homepage": "http://docs.talesoft.io/tale-framework/tale/factory",
-            "keywords": [
-                "factory"
-            ],
-            "time": "2016-05-20T21:20:47+00:00"
-        },
-        {
-            "name": "talesoft/tale-jade",
-            "version": "1.4.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Talesoft/tale-jade.git",
-                "reference": "e15a8d513fc9ceba999bfa4f338c601968334862"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Talesoft/tale-jade/zipball/e15a8d513fc9ceba999bfa4f338c601968334862",
-                "reference": "e15a8d513fc9ceba999bfa4f338c601968334862",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5.0",
-                "symfony/polyfill-mbstring": "*",
-                "talesoft/tale-config": "0.2"
-            },
-            "suggest": {
-                "coffeescript/coffeescript": "Enables CoffeeScript filtering",
-                "erusev/parsedown": "Enables Markdown filtering",
-                "leafo/lessphp": "Enables LESS filtering",
-                "leafo/scssphp": "Enables SASS filtering",
-                "neemzy/stylus": "Enables Stylus filtering"
-            },
-            "bin": [
-                "tale-jade"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Tale\\Jade\\": ""
+                    "name": "Janez Troha",
+                    "email": "janez.troha@gmail.com",
+                    "homepage": "http://flavors.me/dz0ny",
+                    "role": "Maintainer"
                 },
-                "files": [
-                    "functions.php",
-                    "Compiler/functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
                 {
-                    "name": "Torben Koehn",
-                    "email": "torben@talesoft.codes"
+                    "name": "Luke GB",
+                    "email": "git@lukegb.com",
+                    "homepage": "http://twitter.com/lukegb",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Ronan Tessier",
+                    "email": "ronan.tessier@vaconsulting.lu",
+                    "homepage": "http://github.com/ronan-gloo",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "kylekatarnls",
+                    "email": "jade-php@selfbuild.fr",
+                    "homepage": "http://github.com/kylekatarnls",
+                    "role": "Developer"
+                },
+                {
+                    "name": "volter9",
+                    "homepage": "https://github.com/volter9",
+                    "role": "Developer"
+                },
+                {
+                    "name": "sisoftrg",
+                    "homepage": "https://github.com/sisoftrg",
+                    "role": "Developer"
+                },
+                {
+                    "name": "hackaugusto",
+                    "homepage": "https://github.com/hackaugusto",
+                    "role": "Developer"
+                },
+                {
+                    "name": "peniar",
+                    "homepage": "https://github.com/peniar",
+                    "role": "Developer"
+                },
+                {
+                    "name": "NSinopoli",
+                    "homepage": "https://github.com/NSinopoli",
+                    "role": "Developer"
+                },
+                {
+                    "name": "DJRanger",
+                    "homepage": "https://github.com/DJRanger",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "fcrosfly",
+                    "homepage": "https://github.com/fcrosfly",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Soviut",
+                    "homepage": "http://github.com/Soviut",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "just-paja",
+                    "homepage": "http://github.com/just-paja",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "cjonasw",
+                    "homepage": "http://github.com/cjonasw",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "s4msung",
+                    "homepage": "http://github.com/s4msung",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "sadjow",
+                    "homepage": "http://github.com/sadjow",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "hkjels",
+                    "homepage": "http://github.com/hkjels",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "krizalys",
+                    "homepage": "http://github.com/krizalys",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "sszigeti",
+                    "homepage": "http://github.com/sszigeti",
+                    "role": "Contributor"
+                },
+                {
+                    "name": "Konstantin Kudryashov",
+                    "email": "konstantin.kudryashov@knplabs.com",
+                    "homepage": "http://about.me/everzet",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Marco \"Debo\" De Bortoli",
+                    "homepage": "https://github.com/debo",
+                    "role": "contributor"
                 }
             ],
-            "description": "A clean, lightweight and easy-to-use templating engine for PHP based on Jade/Pug",
-            "homepage": "http://jade.talesoft.codes",
+            "description": "HAML-like template engine for PHP 5.3",
+            "homepage": "https://github.com/pug-php/pug",
             "keywords": [
-                "dialect",
-                "html",
                 "jade",
-                "php",
-                "phtml",
-                "presentation",
-                "render",
-                "template",
-                "views"
+                "minification",
+                "pug",
+                "template"
             ],
-            "time": "2016-08-23T15:00:44+00:00"
+            "time": "2017-01-17T11:40:56+00:00"
         }
     ],
     "packages-dev": [],
