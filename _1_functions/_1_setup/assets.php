@@ -64,7 +64,7 @@ add_action( "admin_enqueue_scripts", function () {
 		'admin.styles',
 		get_template_directory_uri().'/_4_styles/_1_setup/admin/admin-style.css',
 		array(),
-		filemtime(get_stylesheet_directory()."/_2_assets/css/styles.min.css")
+		filemtime(get_stylesheet_directory()."/_4_styles/_1_setup/admin/admin-style.css")
 	);
 
 } );
