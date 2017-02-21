@@ -53,6 +53,15 @@ add_action( "wp_enqueue_scripts", function () {
 		filemtime(get_stylesheet_directory()."/_2_assets/css/styles.min.css")
 	);
 
+	if (is_admin_bar_showing()):
+		wp_enqueue_style(
+			'admin.styles',
+			get_template_directory_uri().'/_4_styles/_1_setup/admin/admin-style.css',
+			array(),
+			filemtime(get_stylesheet_directory()."/_2_assets/css/styles.min.css")
+		);
+	endif;
+
 } );
 
 // ==================================================
@@ -68,3 +77,8 @@ add_action( "admin_enqueue_scripts", function () {
 	);
 
 } );
+
+add_action("login_head", function () {
+	// echo '<link rel="stylesheet" type="text/css" href="' . get_template_directory_uri() .'/_2_assets/css/styles.min.css" />';
+	echo '<link rel="stylesheet" type="text/css" href="' . get_template_directory_uri() .'/_4_styles/_1_setup/admin/admin-style.css" />';
+});
