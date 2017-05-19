@@ -1,0 +1,60 @@
+// ==================================================
+// > PARAGRAPHS
+// ==================================================
+p
+	margin: 1em 0
+
+
+// ==================================================
+// > INLINE
+// ==================================================
+strong, b
+	font-weight: normal
+	font-family: $font-regular
+
+em
+	font-style: italic
+
+i
+	font-style: italic
+
+time
+	font-family: $font-bold
+	color: $main
+	display: block
+	margin-bottom: .75em
+
+
+// ==================================================
+// > GLOBAL MODIFIER
+// ==================================================
+.main-color
+	color: $main
+
+.secondary-color
+	color: $scnd
+
+.text-align-center
+	text-align: center
+
+.text-align-left
+	text-align: left
+
+.text-align-right
+	text-align: right
+
+
+// ==================================================
+// > ERRORS
+// ==================================================
+fieldset.error label, .error-message
+	color: red
+
+
+// ==================================================
+// > DISABLED
+// ==================================================
+*[disabled], *[disabled="disabled"], .disabled
+	background: $lgry
+	opacity: .75
+	pointer-events: none

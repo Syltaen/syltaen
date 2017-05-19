@@ -1,0 +1,31 @@
+// ==================================================
+// > BLOCKQUOTE
+// ==================================================
+blockquote
+	border-left: 3px solid lighten($main, 10%)
+	padding: 20px 20px 0
+	position: relative
+	margin-bottom: 40px
+	cite
+		background: $lgry
+		text-align: right
+		display: block
+		margin: 20px -20px -20px
+		padding: 10px 20px
+		font-style: italic
+		color: lighten($dgry, 10%)
+	&:before, &:after
+		content: "\f10d"
+		font-family: $font-fa
+		font-size: 30px
+		font-size: 30rem
+		color: $lgry
+		position: absolute
+		top: -20px
+		left: -40px
+	&:after
+		content: "\f10e"
+		left: auto
+		top: auto
+		right: -40px
+		bottom: -20px

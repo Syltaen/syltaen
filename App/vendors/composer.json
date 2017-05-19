@@ -1,0 +1,6 @@
+{
+    "require": {
+        "pug-php/pug": "^2.5",
+        "php-console/php-console": "^3.1"
+    }
+}
