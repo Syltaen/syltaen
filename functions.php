@@ -1,42 +1,49 @@
 <?php
 
-namespace Syltaen;
+/**
+ * Load all files for the application
+ * @package syltaen
+ */
+
+use Syltaen\App\Services\Files;
 
 include ("App/Services/Files.php");
 
-// ==================================================
-// > FILE LOADING
-// ==================================================
-spl_autoload_register("Syltaen\Syltaen::autoload");
+/**
+ * Autoloading
+ */
+spl_autoload_register("Syltaen\App\Services\Files::autoload");
 
-Syltaen::load( "config", [
-	"assets",
-	"acf",
-	"editor",
-	"menus",
-	// "taxonomies",
-	// "routes",
-	// "shortcodes",
-	"supports",
-	"timber"
+/**
+ * Files loading
+ */
+Files::load("vendors", [
+    "vendor/autoload"
 ]);
 
-Syltaen::load( "vendors", [
-	"vendor/autoload"
+Files::load("config", [
+    "shorthands",
+    "post-types",
+    "post-taxonomies",
+    "post-status",
+    "supports",
+    "menus",
+    "acf",
+    "editor",
+    "routes",
+    "shortcodes",
+    "assets",
+    "timber"
 ]);
 
-Syltaen::load( "tools", [
-		"shorthands"
+Files::load("actions", [
+    // "file"
 ]);
 
-Syltaen::load("generators", [
-	// "pagination",
-	// "breadcrumb",
-	// "sharelinks"
+Files::load("filters", [
+    // "file"
 ]);
 
-
-// ==================================================
-// > POST TYPE REGISTRATION
-// ==================================================
-News::register();
+Files::load("ajax", [
+    // "file"
+]);

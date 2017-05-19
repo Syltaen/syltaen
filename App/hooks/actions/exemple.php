@@ -5,5 +5,5 @@
 // ==================================================
 
 add_action("exemple_action", function () {
-	/* DO STUFF HERE */
+    /* DO STUFF HERE */
 });
