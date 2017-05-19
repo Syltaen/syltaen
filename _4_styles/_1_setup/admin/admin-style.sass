@@ -87,6 +87,10 @@
 		color: white
 		&:hover
 			background: darken($main, 5%)
+		&.disabled
+			background: darken($main, 15%) !important
+			color: white !important
+			border-color: darken($main, 30%) !important
 
 	&.wp-core-ui .button.button-primary.button-hero
 		box-shadow: 0 2px 0 darken($main, 10%)
