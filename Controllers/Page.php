@@ -28,8 +28,8 @@ class Page extends Controller {
         Fields::store($this->data, [
             "intro_content",
             "intro_image",
-            ["news_last", (new News())->get(3)],
-            ["news_link", site_url("news")],
+            ["@news_last", (new News())->get()],
+            ["@news_link", site_url("news")]
         ]);
 
         echo $this->view('home');
@@ -43,7 +43,7 @@ class Page extends Controller {
     public function page()
     {
         Fields::store($this->data, ["intro"]);
-        Sections::store($this->data);
+        // Sections::store($this->data);
         echo $this->view('page');
     }
 

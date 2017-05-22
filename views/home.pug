@@ -3,4 +3,10 @@ extends templates/_base
 block main
 
 
-	h1!= intro_content
+    //- ==================================================
+    //- > INTRO
+    //- ==================================================
+    section#hp-intro
+        .bg(style="background-image: url(".$intro_image['url'].");")
+
+

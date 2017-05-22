@@ -2,7 +2,8 @@
 
 namespace Syltaen\Models;
 
-class News extends Post
+
+class News extends Posts
 {
 
     const TYPE     = "news";
@@ -10,15 +11,17 @@ class News extends Post
     const ICON     = "dashicons-megaphone";
     const SUPPORTS = array("title", "editor", "excerpt", "thumbnail");
 
+    protected $fields = [];
+
     /**
-     * addFileds
-     *
-     * @param array $news
-     * @return array $news
+     * Create the base query and add all needed fields for parent::addFields()
      */
-    static protected function addFields($news)
+    public function __construct()
     {
-        // return Fields::add($news, [
-        // ], $news->id);
+        parent::__construct();
+        // $this->fields = array_merge($this->fields, [
+
+        // ]);
     }
+
 }

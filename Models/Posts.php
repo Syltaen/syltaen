@@ -2,7 +2,9 @@
 
 namespace Syltaen\Models;
 
-abstract class Post
+use Syltaen\Models\ACF\Fields;
+
+abstract class Posts
 {
 
     const TYPE     = "news";
@@ -12,6 +14,8 @@ abstract class Post
     const PUBLIK   = true;
     const REWRITE  = true; // Ex: array( "slug" => "agenda" );
     const TAX      = array("");
+
+    protected $fields = [];
 
     private $wp_query      = false;
     private $wp_query_args = array();
@@ -35,7 +39,7 @@ abstract class Post
 
 
     /**
-     * Create a base query to instract with
+     * Create the base query and pre-sort all needed fields
      */
     public function __construct()
     {
@@ -125,13 +129,16 @@ abstract class Post
     }
 
     /**
-     * Add Custom Fields's values to matching posts
+     * Add Custom Fields's values to all given posts
      *
      * @param $posts
      * @return $posts
      */
-    static protected function addFields($posts)
+    protected function addFields($posts)
     {
+        foreach ($posts as $post) {
+            Fields::store($post, $this->fields, $post->ID);
+        }
         return $posts;
     }
 

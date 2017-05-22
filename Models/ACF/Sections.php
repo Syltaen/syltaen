@@ -12,7 +12,7 @@ class Sections extends Fields
      * @param int|string $post_id
      * @return array : the whole field value
      */
-    public static function get($key = "sections", $post_id = null)
+    public static function get($key = "sections", $post_id = null, $default = [])
     {
         $sections = get_filed($key);
 
@@ -47,13 +47,13 @@ class Sections extends Fields
     /**
      * Store the section value in a provided array
      *
-     * @param array $data
+     * @param array $array
      * @param string $key
      * @param int|string $post_id
      * @return $data
      */
-    public static function store($data, $keys = "sections", $post_id = null)
+    public static function store(&$array, $keys = "sections", $post_id = null)
     {
-        parent::store($data, $keys, $post_id);
+        parent::store($array, $keys, $post_id);
     }
 }

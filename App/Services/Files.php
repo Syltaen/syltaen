@@ -128,13 +128,11 @@ class Files
     public static function addStyle($file, $requirements = [], $action = "wp_enqueue_scripts")
     {
         add_action($action, function () use ($file, $requirements) {
-            // (new \Syltaen\Controllers\Page())->log([$file]);
             wp_enqueue_style(
                 $file,
                 Files::url("css", $file),
                 $requirements,
-                Files::time("css", $file),
-                true
+                Files::time("css", $file)
             );
         });
     }

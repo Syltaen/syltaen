@@ -15,7 +15,7 @@ class Fields
      */
     public static function get($key, $post_id = null, $default = "")
     {
-        return get_field($key, $post_id) ? get_field($key, $post_id) : $default;
+        return get_field($key, $post_id) ?: $default;
     }
 
     /**
@@ -34,28 +34,34 @@ class Fields
     /**
      * Store one or several fields values in a provided array
      *
-     * @param array $data
+     * @param array $array
      * @param array $keys
      * @param int|string $post_id
      * @return $data
      */
-    public static function store(&$data, $keys = null, $post_id = null)
+    public static function store(&$array, $keys = null, $post_id = null)
     {
         foreach ($keys as $key) {
 
-            $default_value = is_array($key) ? $key[1]: false;
-            $store_key     = is_array($key) ? $key[0]: $key;
+            $value     = is_array($key) ? $key[1]: null;
+            $field_key = is_array($key) ? $key[0]: $key;
 
-            if (preg_match('/@/', $store_key, $key)) {
-                $store_key = $key[0];
+            if (preg_match('/(.*)@(.*)/', $field_key, $key)) {
                 $field_key = $key[1];
+                $store_key = $key[2];
             } else {
-                $field_key = $store_key;
+                $store_key = $field_key;
             }
 
-            $data[$store_key] = self::get($field_key, $post_id, $default_value);
+            $value = $field_key ? self::get($field_key, $post_id, $value) : $value;
+
+            if (is_array($array)) {
+                $array[$store_key] = $value;
+            } elseif (is_object($array)) {
+                $array->$store_key = $value;
+            }
         }
 
-        return $data;
+        return $array;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use Syltaen\Models\ACF\Fields;
+
 add_filter('timber_context', function ($data) {
 
     // ==================================================
@@ -8,32 +10,45 @@ add_filter('timber_context', function ($data) {
     $data["site"]->menus = array(
 
         "main" => wp_nav_menu(array(
-            "theme_location"	=> "main_menu",
-            "container"			=> false,
-            "echo"				=> false
+            "theme_location" => "main_menu",
+            "container"      => false,
+            "echo"           => false
         )),
 
         "footer" =>	wp_nav_menu(array(
-            "theme_location"	=> "footer_menu",
-            "container"			=> false,
-            "echo"				=> false
-        ))
+            "theme_location" => "footer_menu",
+            "container"      => false,
+            "echo"           => false
+        )),
+
+        "lang" => wp_nav_menu(array(
+            "theme_location" => "lang_menu",
+            "container"      => false,
+            "echo"           => false
+        )),
 
     );
-
 
     // ==================================================
     // > HEADER
     // ==================================================
     $data["site"]->header = array();
+    Fields::store($data["site"]->header, [
+        "logo",
+        "social"
+    ], "headerfooter");
 
 
     // ==================================================
     // > FOOTER
     // ==================================================
     $data["site"]->footer = array();
-
-
+    Fields::store($data["site"]->footer, [
+        "contact_title",
+        "contact_content",
+        "social_title",
+        "social_content"
+    ], "headerfooter");
 
     return $data;
 });

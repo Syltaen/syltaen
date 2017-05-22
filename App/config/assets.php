@@ -30,7 +30,7 @@ if (is_admin_bar_showing()) {
 // ==================================================
 // > BACK END STYLES
 // ==================================================
-Files::addStyle('styles.min.css', [], 'admin_enqueue_scripts');
+Files::addStyle('admin.min.css', [], 'admin_enqueue_scripts');
 
 add_action("login_head", function () {
     // echo '<link rel="stylesheet" type="text/css" href="' . get_template_directory_uri() .'/_2_assets/css/styles.min.css" />';

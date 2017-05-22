@@ -2,7 +2,7 @@
 
 namespace Syltaen;
 
-class User {
+class Users {
 
     public function __construct() {
 

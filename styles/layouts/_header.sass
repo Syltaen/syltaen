@@ -2,3 +2,105 @@
 // > MAIN HEADER & NAVIGATION
 // ==================================================
 #site-header
+    height: 110px
+    background: white
+    position: relative
+    z-index: 200
+    .main-logo
+        width: 150px
+        margin-top: 10px
+        float: left
+
+    .header-social-menu
+        float: right
+        margin-top: 35px
+        li
+            float: left
+            padding: 0 5px
+            a
+                display: block
+                width: 38px
+                height: 38px
+                line-height: 38px
+                background: $lgry
+                color: $dgry
+                border-radius: 50%
+                text-align: center
+                transition: all .5s ease
+                position: relative
+                &:before
+                    content: ""
+                    border-radius: 50%
+                    border: 2px dashed $main
+                    opacity: 0
+                    position: absolute
+                    left: 50%
+                    top: 50%
+                    width: 100%
+                    height: 100%
+                    margin-left: -21px
+                    margin-top: -21px
+                    transition: all 1s ease
+                &:hover
+                    background: $main
+                    color: white
+                    &:before
+                        margin-left: -23px
+                        margin-top: -23px
+                        padding: 2px
+                        animation: spin 3s linear infinite
+                        opacity: 1
+
+// ==================================================
+// > MAIN MENU
+// ==================================================
+#main-menu
+    position: absolute
+    top: 110px
+    width: 100%
+    z-index: 100
+    &:before
+        content: ""
+        background: $dgry
+        transform: skewY(-3deg)
+        width: 100%
+        height: 200px
+        position: absolute
+        bottom: -70px
+        left: 0
+    .menu
+        padding-left: 200px
+        display: flex
+        justify-content: space-between
+        li
+            float: left
+        a
+            padding: 0 10px
+            font-family: $font-regular
+            color: $main
+            letter-spacing: 2px
+            text-decoration: none
+            height: 70px
+            line-height: 70px
+            &:hover
+                color: white
+        .current_page_item a
+            color: white
+            font-family: $font-bold
+            position: relative
+            display: block
+            &:before,
+            &:after
+                content: ""
+                background: $main
+                height: 2px
+                width: 30px
+                position: absolute
+                left: 10px
+            &:before
+                top: 15px
+            &:after
+                bottom: 15px
+
+    .header-search
+        display: none

@@ -44,21 +44,31 @@ abstract class Controller {
     }
 
     /**
-     * Log data into the console by giving a datakey, a value
+     * Log data into the console
      *
-     * @param $var
+     * @param $data
      * @param string $tags
      * @return void
      */
-    public function log($tolog = false, $tags = null)
+    public static function log($data, $tags = null)
     {
-        if (is_string($tolog)) {
-            $tolog = $this->data[$tolog];
-        } elseif (!$tolog) {
-            $tolog = $this->data;
-        }
+        \PhpConsole\Connector::getInstance()->getDebugDispatcher()->dispatchDebug($data, $tags, 1);
+    }
 
-        \PhpConsole\Connector::getInstance()->getDebugDispatcher()->dispatchDebug($tolog, $tags, 1);
+    /**
+     * Log the controller data into the console
+     *
+     * @param string $key
+     * @param string $tags
+     * @return void
+     */
+    public function dlog($key = false, $tags = null)
+    {
+        if ($key) {
+            self::log($this->data[$key]);
+        } else {
+            self::log($this->data);
+        }
     }
 
     /**
