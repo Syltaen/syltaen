@@ -7,11 +7,11 @@
 // ==================================================
 // > NAME
 // ==================================================
-register_taxonomy("", null, array(
-	"labels" => array(
-		"name" => "Nom",
+register_taxonomy('', null, array(
+	'labels' => array(
+		'name' => 'Nom',
 	),
-	"public" => true,
-	"show_admin_column" => true,
-	'hierarchical' => true
+	'public'            => true,
+	'show_admin_column' => true,
+	'hierarchical'      =>  true
 ));

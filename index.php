@@ -1,37 +1,35 @@
 <?php
 
-namespace Syltaen;
+namespace Syltaen\Controllers;
+
+// use Syltaen\App\Services\Routes;
 
 // ==================================================
 // > 404
 // ==================================================
-if (is_404()) :
-
-	( new PageController(false) )->render("404");
+if (is_404()) {
+	( new Page() )->error404();
 
 
 // ==================================================
 // > SINGLES
 // ==================================================
-elseif (is_single()) :
+ } elseif (is_single()) {
 
-	new SingleController( $post->post_type );
-
+	( new Page() )->single();
 
 // ==================================================
 // > HOMEPAGE
 // ==================================================
-elseif ( is_home() || is_front_page() ) :
+ } elseif ( is_home() || is_front_page() ) {
 
-	new HomeController();
-
+	( new Page() )->home();
 
 // ==================================================
 // > PAGES
 // ==================================================
-else :
+ } else {
 
-	new PageController();
+	( new Page() )->page();
 
-
-endif;
+ }

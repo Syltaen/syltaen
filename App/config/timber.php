@@ -2,38 +2,38 @@
 
 add_filter('timber_context', function ($data) {
 
-	// ==================================================
-	// > MENUS
-	// ==================================================
-	$data["site"]->menus = array(
+    // ==================================================
+    // > MENUS
+    // ==================================================
+    $data["site"]->menus = array(
 
-		"main" => wp_nav_menu(array(
-			"theme_location"	=> "main_menu",
-			"container"			=> false,
-			"echo"				=> false
-		)),
+        "main" => wp_nav_menu(array(
+            "theme_location"	=> "main_menu",
+            "container"			=> false,
+            "echo"				=> false
+        )),
 
-		"footer" =>	wp_nav_menu(array(
-			"theme_location"	=> "footer_menu",
-			"container"			=> false,
-			"echo"				=> false
-		))
+        "footer" =>	wp_nav_menu(array(
+            "theme_location"	=> "footer_menu",
+            "container"			=> false,
+            "echo"				=> false
+        ))
 
-	);
-
-
-	// ==================================================
-	// > HEADER
-	// ==================================================
-	$data["site"]->header = array();
+    );
 
 
-	// ==================================================
-	// > FOOTER
-	// ==================================================
-	$data["site"]->footer = array();
+    // ==================================================
+    // > HEADER
+    // ==================================================
+    $data["site"]->header = array();
+
+
+    // ==================================================
+    // > FOOTER
+    // ==================================================
+    $data["site"]->footer = array();
 
 
 
-	return $data;
+    return $data;
 });
