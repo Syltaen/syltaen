@@ -50,7 +50,7 @@ class Sections extends Fields
      * @param array $array
      * @param string $key
      * @param int|string $post_id
-     * @return $data
+     * @return array|object $data
      */
     public static function store(&$array, $keys = "sections", $post_id = null)
     {

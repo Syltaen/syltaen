@@ -13,7 +13,7 @@ class Routes
      */
     public static function registerVar($keys)
     {
-        add_filter('query_vars', function ($query_vars) {
+        add_filter("query_vars", function ($query_vars) {
             foreach ($keys as $key) {
                 $query_vars[] = $key;
             }
@@ -40,7 +40,7 @@ class Routes
      * @param string $priority
      * @return void
      */
-    public static function register($pattern, $match, $priority = 'top')
+    public static function register($pattern, $match, $priority = "top")
     {
         add_rewrite_rule($pattern, $match, $priority);
     }

@@ -6,14 +6,16 @@ use Syltaen\Models\ACF\Fields;
 use Syltaen\Models\ACF\Sections;
 use Syltaen\Models\News;
 
-class Page extends Controller {
+class Page extends Controller
+{
 
     /**
      * Constructor
      *
      * @param boolean $auto
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->data = \Timber::get_context();
     }
@@ -28,8 +30,10 @@ class Page extends Controller {
         Fields::store($this->data, [
             "intro_content",
             "intro_image",
-            ["@news_last", (new News())->get()],
-            ["@news_link", site_url("news")]
+            "group_gate_left",
+            "group_gate_right",
+            "@news_last" => (new News())->get(),
+            "@news_link" => site_url("news")
         ]);
 
         echo $this->view('home');
@@ -44,7 +48,7 @@ class Page extends Controller {
     {
         Fields::store($this->data, ["intro"]);
         // Sections::store($this->data);
-        echo $this->view('page');
+        echo $this->view("page");
     }
 
     /**
@@ -64,8 +68,6 @@ class Page extends Controller {
      */
     public function single()
     {
-        Sections::store($this->data, "section_intro");
-        Sections::store($this->data, "section_outro");
         echo $this->view("single");
     }
 }

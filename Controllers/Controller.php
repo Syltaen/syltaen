@@ -17,7 +17,7 @@ abstract class Controller {
     public function __construct()
     {
         $this->renderer = new \Pug\Pug([
-            'extension' => '.pug',
+            "extension" => ".pug",
         ]);
 
         $this->viewfolder =  get_template_directory() . "/views/";
@@ -110,10 +110,10 @@ abstract class Controller {
      */
     public function csv($filename = "export.csv", $delimiter = ";", $data = false)
     {
-        header('Content-Type: application/csv');
-        header('Content-Disposition: attachment; filename="'.$filename.'";');
+        header("Content-Type: application/csv");
+        header("Content-Disposition: attachment; filename='".$filename."';");
         $data = $data ?: $this->data;
-        $f = fopen('php://output', 'w');
+        $f = fopen("php://output", "w");
         foreach ($data as $line) {
             fputcsv($f, $line, $delimiter);
         }

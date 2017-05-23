@@ -2,13 +2,12 @@
 
 namespace Syltaen\Controllers;
 
-// use Syltaen\App\Services\Routes;
 
 // ==================================================
 // > 404
 // ==================================================
 if (is_404()) {
-	( new Page() )->error404();
+    ( new Page() )->error404();
 
 
 // ==================================================
@@ -16,20 +15,28 @@ if (is_404()) {
 // ==================================================
  } elseif (is_single()) {
 
-	( new Page() )->single();
+    ( new Page() )->single();
 
 // ==================================================
 // > HOMEPAGE
 // ==================================================
  } elseif ( is_home() || is_front_page() ) {
 
-	( new Page() )->home();
+    ( new Page() )->home();
 
 // ==================================================
 // > PAGES
 // ==================================================
  } else {
 
-	( new Page() )->page();
+    ( new Page() )->page();
 
  }
+
+// use Syltaen\App\Services\Routes;
+
+// Routes::get("404", "Page@error404");
+
+// Routes::get("home", "Page@home");
+
+

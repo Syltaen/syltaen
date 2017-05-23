@@ -52,7 +52,7 @@ abstract class Posts
     /**
      * Add search filter to the query
      *
-     * @param $terms
+     * @param string $terms
      * @param boolean $exclusive : Specify if the search is incluive (||) or inclusive (&&)
      * @return void
      */
@@ -108,7 +108,7 @@ abstract class Posts
     /**
      * Update the query to only retrive one post
      *
-     * @param [type] $post_id
+     * @param int $post_id
      * @return void
      */
     public function one($post_id)
@@ -131,8 +131,8 @@ abstract class Posts
     /**
      * Add Custom Fields's values to all given posts
      *
-     * @param $posts
-     * @return $posts
+     * @param array $posts
+     * @return array $posts
      */
     protected function addFields($posts)
     {
@@ -168,11 +168,11 @@ abstract class Posts
     /**
      * Update all posts matching the query
      *
-     * @param [type] $post_attrs
-     * @param [type] $filds
+     * @param array $post_attrs
+     * @param array $filds
      * @return void
      */
-    public function update($post_attrs, $filds)
+    public function update($post_attrs, $fields)
     {
         foreach ($this->posts as $p) {
             //

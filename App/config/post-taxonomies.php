@@ -7,7 +7,8 @@
 // ==================================================
 // > NAME
 // ==================================================
-register_taxonomy('', null, array(
+register_taxonomy('', null, array
+(
 	'labels' => array(
 		'name' => 'Nom',
 	),

@@ -41,16 +41,17 @@ class Fields
      */
     public static function store(&$array, $keys = null, $post_id = null)
     {
-        foreach ($keys as $key) {
+        foreach ($keys as $key=>$value) {
 
-            $value     = is_array($key) ? $key[1]: null;
-            $field_key = is_array($key) ? $key[0]: $key;
+            if (is_int($key)) {
+                $key = $value;
+                $value = false;
+            }
 
-            if (preg_match('/(.*)@(.*)/', $field_key, $key)) {
-                $field_key = $key[1];
-                $store_key = $key[2];
-            } else {
-                $store_key = $field_key;
+            $field_key = $store_key = $key;
+            if (preg_match('/(.*)@(.*)/', $key, $keys)) {
+                $field_key = $keys[1];
+                $store_key = $keys[2];
             }
 
             $value = $field_key ? self::get($field_key, $post_id, $value) : $value;

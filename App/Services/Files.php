@@ -140,9 +140,9 @@ class Files
     /**
      * Write custom js with php
      *
-     * @param [type] $js
-     * @param [type] $position
-     * @param [type] $handle
+     * @param string $js the JS code to be written
+     * @param string $position "before" or "after"
+     * @param string $handle script name used by the $position argument
      * @return void
      */
     public static function addInlineScript($js, $position, $handle)
@@ -172,4 +172,3 @@ class Files
     }
 
 }
-

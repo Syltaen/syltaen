@@ -31,8 +31,8 @@ html(lang=site.language)
 
         nav#main-menu
             .container
+                form: input.header-search(type="text" name="s")
                 != site.menus.main
-                input.header-search(type="text" name="s")
 
 
         //- nav#mobile-menu
