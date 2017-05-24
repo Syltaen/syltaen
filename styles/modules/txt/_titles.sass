@@ -2,34 +2,58 @@
 // > TITLES
 // ==================================================
 h1, h2, h3, h4, h5, h6
-	color: $main
-	font-weight: normal
-	text-rendering: geometricPrecision
-	line-height: 1.2
+    color: $main
+    font-weight: normal
+    text-rendering: geometricPrecision
+    line-height: 1.2
+    margin: 1em 0
 
-h1
-	font-size: 50px
-	font-size: 50rem
+h1,
+h2
+    font-size: 40px
+    font-size: 40rem
+    font-family: $font-bold
+    color: white
+    position: relative
+    text-transform: uppercase
+    &:before,
+    &:after
+        content: ""
+        width: 100px
+        height: 2px
+        background: white
+        position: absolute
+        left: 0
+    &:before
+        top: -.3em
+    &:after
+        bottom: -.3em
+
 
 h2
-	font-size: 38px
-	font-size: 38rem
+    font-size: 35px
+    font-size: 35rem
+    color: $main
+    &:before,
+    &:after
+        background: $main
+
 
 h3
-	font-size: 30px
-	font-size: 30rem
+    font-size: 30px
+    font-size: 30rem
 
 h4
-	font-size: 24px
-	font-size: 24rem
+    font-size: 24px
+    font-size: 24rem
 
 h5
-	font-size: 18px
-	font-size: 18rem
+    font-size: 18px
+    font-size: 18rem
 
 h6
-	font-size: 16px
-	font-size: 16rem
+    font-size: 16px
+    font-size: 16rem
 
 .subtitle
-	font-size: .8em
+    font-size: .8em

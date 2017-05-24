@@ -74,31 +74,33 @@ abstract class Controller {
     /**
      * Return data in JSON format
      *
-     * @return void
+     * @return string
      */
     public function json()
     {
-
+        header('Content-Type: application/json');
+        return json_encode($this->data);
     }
 
     /**
      * Return data in XML format
      *
-     * @return void
+     * @return string
      */
     public function xml()
     {
-
+        header('Content-type: text/xml; charset=utf-8');
+        return $data;
     }
 
     /**
      * Return data in a PHP format
      *
-     * @return void
+     * @return string
      */
     public function php()
     {
-
+        return "<pre>".print_r($this->data, true)."</pre>";
     }
 
     /**

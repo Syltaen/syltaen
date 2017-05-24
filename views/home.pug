@@ -10,8 +10,55 @@ block main
         .bg(style="background-image: url(".$intro_image['url'].");")
         .content!= intro_content
 
+
     //- ==================================================
     //- > GROUP
     //- ==================================================
     section#hp-group
+        .container
+            .gr-4.prefix-2.no-gutter.gate._left
+                != group_gate_left
+            .gr-4.suffix-2.no-gutter.gate._right
+                != group_gate_right
 
+    //- ==================================================
+    //- > NEWS
+    //- ==================================================
+    section#hp-news(style="background-image: url(".$news_background['url'].");")
+        .container
+            != news_before
+
+            ul.hp-news-list
+                each news in news_last
+                    li
+                        a.thumb(href=news.url)!= news.thumb.tag.home
+                        .content
+                            time= news.date.short
+                            h3= news.post_title
+                            p!= news.post_excerpt
+                        a.more(href=news.url)= news_more
+
+            != news_after
+
+    //- ==================================================
+    //- > KEY FIGURES
+    //- ==================================================
+    section#hp-figures
+        .container
+            != figures_before
+
+            ul.hp-figures-list
+                each figure in figures
+                    li(style="background-image: url(".$figure['icon']['url'].");")
+                        != figure.content
+
+
+    //- ==================================================
+    //- > GATES
+    //- ==================================================
+    section#hp-gates
+        .container
+            ul.hp-gates-list
+                each gate in gates
+                    li(style="background-image: url(".$gate['icon']['url'].");")
+                        != gate.content

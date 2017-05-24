@@ -24,6 +24,9 @@
 // ==================================================
 
 @include gridle_register_default_states();
+@include gridle_register_state( md, (
+	max-width : 1250px
+));
 @include gridle_register_state( sm, (
 	max-width : 1000px
 ));

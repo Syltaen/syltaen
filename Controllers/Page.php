@@ -2,13 +2,13 @@
 
 namespace Syltaen\Controllers;
 
-use Syltaen\Models\ACF\Fields;
-use Syltaen\Models\ACF\Sections;
+use Syltaen\App\Services\Fields;
+use Syltaen\Models\Sections;
 use Syltaen\Models\News;
+use Syltaen\Models\Locations;
 
 class Page extends Controller
 {
-
     /**
      * Constructor
      *
@@ -32,11 +32,24 @@ class Page extends Controller
             "intro_image",
             "group_gate_left",
             "group_gate_right",
-            "@news_last" => (new News())->get(),
-            "@news_link" => site_url("news")
+            "news_background",
+            "news_before",
+            "@news_last" =>
+                (new News())
+                    ->addThumbnailFormat("tag", "home", [310, 310])
+                    ->get(3),
+            "@news_more" => __("More info", "syltaen"),
+            "news_after",
+            "figures_before",
+            "figures",
+            "gates",
+            "@sections" => (new Sections())->data(),
+            "pins" =>
+                (new Locations())
+                    ->getByTypes()
         ]);
 
-        echo $this->view('home');
+        echo $this->view("home");
     }
 
     /**
@@ -46,8 +59,11 @@ class Page extends Controller
      */
     public function page()
     {
-        Fields::store($this->data, ["intro"]);
-        // Sections::store($this->data);
+        Fields::store($this->data, [
+            "intro",
+            "@sections" => (new Sections())->data()
+        ]);
+
         echo $this->view("page");
     }
 
@@ -58,7 +74,7 @@ class Page extends Controller
      */
     public function error404()
     {
-        $this->view("404");
+        echo $this->view("404");
     }
 
     /**

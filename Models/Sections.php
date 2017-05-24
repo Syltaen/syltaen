@@ -1,21 +1,27 @@
 <?php
 
-namespace Syltaen\Models\ACF;
+namespace Syltaen\Models;
 
-class Sections extends Fields
+class Sections
 {
 
+    private $data;
+
     /**
-     * Get the field and all its sub fields
+     * Generate the section data
      *
      * @param string $key
-     * @param int|string $post_id
-     * @return array : the whole field value
+     * @param int $post_id
      */
-    public static function get($key = "sections", $post_id = null, $default = [])
+    public function __construct($key = "sections", $post_id = null)
     {
-        $sections = get_filed($key);
+        $sections = get_field($key);
 
+        $this->data = "tets";
+    }
+
+    public function lol()
+    {
         foreach ($sections as $s) {
 
             $c = $s["content"];
@@ -40,20 +46,15 @@ class Sections extends Fields
                 default: break;
             }
         }
-
-        return $sections;
     }
 
-    /**
-     * Store the section value in a provided array
-     *
-     * @param array $array
-     * @param string $key
-     * @param int|string $post_id
-     * @return array|object $data
-     */
-    public static function store(&$array, $keys = "sections", $post_id = null)
+    public function data()
     {
-        parent::store($array, $keys, $post_id);
+        return $this->data;
+    }
+
+    public function view()
+    {
+
     }
 }

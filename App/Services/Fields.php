@@ -1,6 +1,6 @@
 <?php
 
-namespace Syltaen\Models\ACF;
+namespace Syltaen\App\Services;
 
 class Fields
 {
@@ -37,7 +37,7 @@ class Fields
      * @param array $array
      * @param array $keys
      * @param int|string $post_id
-     * @return $data
+     * @return array $data
      */
     public static function store(&$array, $keys = null, $post_id = null)
     {

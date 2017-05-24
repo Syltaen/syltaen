@@ -5,14 +5,14 @@
  */
 
 // ==================================================
-// > NAME
+// > LOCATIONS
 // ==================================================
-register_taxonomy('', null, array
+register_taxonomy("location-type", null, array
 (
-	'labels' => array(
-		'name' => 'Nom',
-	),
-	'public'            => true,
-	'show_admin_column' => true,
-	'hierarchical'      =>  true
+    "labels" => array(
+        "name" => "Location types",
+    ),
+    "public"            => true,
+    "show_admin_column" => true,
+    "hierarchical"      =>  true
 ));

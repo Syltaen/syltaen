@@ -18,21 +18,25 @@ html(lang=site.language)
         header#site-header(role="banner")
 
             .container
-                a.main-logo(href=site.url rel="home")
-                    img(src=site.header.logo.url alt=site.name)
+                .row
+                    .gr-10.prefix-1.gr-12-sm.prefix-0-sm
+                        a.main-logo(href=site.url rel="home")
+                            img(src=site.header.logo.url alt=site.name)
 
-                nav.header-social-menu
-                    ul
-                        each soc in site.header.social
-                            li: a(href=soc.url title=soc.name)!= soc.icon
+                        nav.header-social-menu
+                            ul
+                                each soc in site.header.social
+                                    li: a(href=soc.url title=soc.name)!= soc.icon
 
                 //- nav.header-lang-menu
 
 
         nav#main-menu
             .container
-                form: input.header-search(type="text" name="s")
-                != site.menus.main
+                .row
+                    .gr-10.prefix-1.gr-12-sm.prefix-0-sm
+                        form: input.header-search(type="text" name="s")
+                        != site.menus.main
 
 
         //- nav#mobile-menu

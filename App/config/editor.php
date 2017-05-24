@@ -79,24 +79,42 @@ add_filter("tiny_mce_before_init", function ($init_array) {
             "title"=> "Textes",
             "items" => [
                 [
-                    'title' => 'Couleur : Principale',
-                    'inline' => 'span',
-                    'classes' => 'main-color'
+                    "title" => "Couleur : Principale",
+                    "inline" => "span",
+                    "classes" => "main-color"
                 ],
                 [
-                    'title' => 'Couleur : Secondaire',
-                    'inline' => 'span',
-                    'classes' => 'secondary-color'
+                    "title" => "Couleur : Secondaire",
+                    "inline" => "span",
+                    "classes" => "secondary-color"
+                ],
+
+                [
+                    "title" => "Fonte : Light",
+                    "inline" => "span",
+                    "classes" => "font-light"
                 ],
                 [
-                    'title' => 'Citation',
-                    'block' => 'blockquote',
-                    'wrapper' => true
+                    "title" => "Fonte : Black",
+                    "inline" => "span",
+                    "classes" => "font-black"
+                ],
+
+                [
+                    "title" => "Nombre incrémenté",
+                    "inline" => "span",
+                    "classes" => "incrementor"
+                ],
+
+                [
+                    "title" => "Citation",
+                    "block" => "blockquote",
+                    "wrapper" => true
                 ],
                 [
-                    'title' => 'Citation - Source',
-                    'block' => 'cite',
-                    'wrapper' => true
+                    "title" => "Citation - Source",
+                    "block" => "cite",
+                    "wrapper" => true
                 ]
             ]
         ],
@@ -106,9 +124,9 @@ add_filter("tiny_mce_before_init", function ($init_array) {
             "title"=> "Listes",
             "items" => [
                 [
-                    'title' => 'Liste sans style',
-                    'selector' => 'ul',
-                    'classes' => 'unstyled'
+                    "title" => "Liste sans style",
+                    "selector" => "ul",
+                    "classes" => "unstyled"
                 ]
             ]
         ],
@@ -118,28 +136,28 @@ add_filter("tiny_mce_before_init", function ($init_array) {
             "title"=> "Images",
             "items" => [
                 [
-                    'title' => 'Bord blanc',
-                    'selector' => 'img',
-                    'classes' => 'white-border',
-                    'wrapper' => false
+                    "title" => "Bord blanc",
+                    "selector" => "img",
+                    "classes" => "white-border",
+                    "wrapper" => false
                 ],
                 [
-                    'title' => 'Rond',
-                    'selector' => 'img',
-                    'classes' => 'round',
-                    'wrapper' => false
+                    "title" => "Rond",
+                    "selector" => "img",
+                    "classes" => "round",
+                    "wrapper" => false
                 ],
                 [
-                    'title' => 'Taille - Toute la largueur',
-                    'selector' => 'img',
-                    'classes' => 'full-width',
-                    'wrapper' => false
+                    "title" => "Taille - Toute la largueur",
+                    "selector" => "img",
+                    "classes" => "full-width",
+                    "wrapper" => false
                 ],
                 [
-                    'title' => 'Taille - Toute la hauteur',
-                    'selector' => 'img',
-                    'classes' => 'full-height',
-                    'wrapper' => false
+                    "title" => "Taille - Toute la hauteur",
+                    "selector" => "img",
+                    "classes" => "full-height",
+                    "wrapper" => false
                 ],
             ]
         ],
@@ -154,4 +172,4 @@ add_filter("tiny_mce_before_init", function ($init_array) {
 // ==================================================
 // > EDITOR STYLESHEET
 // ==================================================
-add_editor_style( "src/css/styles.min.css" );
+add_editor_style("src/css/styles.min.css");

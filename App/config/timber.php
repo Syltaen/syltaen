@@ -1,6 +1,6 @@
 <?php
 
-use Syltaen\Models\ACF\Fields;
+use Syltaen\App\Services\Fields;
 
 add_filter('timber_context', function ($data) {
 

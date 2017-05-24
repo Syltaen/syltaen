@@ -18,7 +18,7 @@ Files::load('vendors', [
 
 Files::load("config", [
     'post-types',
-    // 'post-taxonomies',
+    'post-taxonomies',
     'post-status',
     'supports',
     'menus',
