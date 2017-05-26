@@ -3,7 +3,7 @@
 namespace Syltaen\Controllers\Pages;
 
 use Syltaen\App\Services\Fields;
-use Syltaen\Models\Content\Sections;
+use Syltaen\Controllers\Parts\Sections;
 
 class Page extends \Syltaen\Controllers\Controller
 {
@@ -23,10 +23,10 @@ class Page extends \Syltaen\Controllers\Controller
         parent::__construct();
         $this->data = \Timber::get_context();
 
-        // Fields::store($this->data, [
-        //     "intro",
-        //     "@sections" => (new Sections())->data()
-        // ]);
+        Fields::store($this->data, [
+            "intro_content",
+            "@sections" => (new Sections())->data()
+        ]);
 
     }
 

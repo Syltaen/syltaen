@@ -8,7 +8,11 @@
 (function($) {
 
     $.fn.gmap = function (filtersSelector) {
-        return new GMap($(this), filtersSelector).init();
+        if ($(this).length) {
+            return new GMap($(this), filtersSelector).init();
+        } else {
+            return false;
+        }
     }
 
     function GMap($wrapper, filtersSelector) {

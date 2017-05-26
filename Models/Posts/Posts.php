@@ -114,12 +114,14 @@ abstract class Posts
     /**
      * Change the post order.
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters
-     * @param string $order_by
+     * @param string $orderby
      * @param int $order
      * @return void
      */
-    public function order($order_by = false, $order = "ASC")
+    public function order($orderby = false, $order = "ASC")
     {
+        $this->filters["orderby"] = $orderby;
+        $this->filters["order"]   = $order;
         return $this;
     }
 

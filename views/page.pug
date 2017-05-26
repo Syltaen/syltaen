@@ -2,6 +2,15 @@ extends templates/_base
 
 block main
 
-	//- if default_content
-	//- 	section
-	//- 		.container!= default_content
+    //- ==================================================
+    //- > INTRO
+    //- ==================================================
+    section.page-intro
+        .container
+            != intro_content
+
+
+    //- ==================================================
+    //- > SECTIONS
+    //- ==================================================
+    include parts/_sections

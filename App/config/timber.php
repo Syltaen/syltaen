@@ -47,7 +47,8 @@ add_filter('timber_context', function ($data) {
         "contact_title",
         "contact_content",
         "social_title",
-        "social_content"
+        "social_content",
+        "bottom_content"
     ], "headerfooter");
 
     return $data;

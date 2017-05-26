@@ -1,0 +1,84 @@
+// ==================================================
+// > LOCATIONS ARCHIVE
+// ==================================================
+.archive-locations
+    background: lighten($dgry, 3%)
+    position: relative
+    .filters
+        padding: 70px 0
+        border-right: 5px solid $main
+        box-shadow: inset -5px 0 5px rgba($black, .2)
+    .top-content
+        margin-bottom: 80px
+    .locations-types
+        margin: 0
+        padding: 0
+        color: white
+        li
+            height: 110px
+            background: left center no-repeat
+            line-height: 110px
+            padding-left: 120px
+            text-transform: uppercase
+            font-family: $font-black
+            font-size: 22px
+            font-size: 22rem
+            cursor: pointer
+            transition: all .5s ease
+            &:before
+                content: "\f057"
+                font-family: $font-fa
+                left: -50px
+                font-size: 30px
+                font-size: 30rem
+                transform: scale(.2)
+                opacity: 0
+                transition: all .5s ease
+            span
+                position: relative
+                &:before,
+                &:after
+                    content: ""
+                    width: 0
+                    position: absolute
+                    transition: all .5s ease
+                &:before
+                    height: 40px
+                    border-top: 2px solid $main
+                    border-bottom: 2px solid $main
+                    left: 0
+                    top: -9px
+                &:after
+                    height: 1px
+                    background: $main
+                    margin-left: 10px
+                    left: 100%
+                    top: 50%
+            &:hover
+                color: $main
+            &.selected
+                color: $main
+                &:before
+                    transform: scale(1)
+                    opacity: 1
+                span
+                    &:before
+                        width: 40px
+                    &:after
+                        width: 500px
+
+
+    .map
+        position: absolute
+        height: calc(100% + 30px)
+        width: 50%
+        bottom: 0
+        right: 0
+        &:before
+            content: ""
+            border-right: 50vw solid transparent
+            border-top: 20px solid white
+            position: absolute
+            top: 0
+            left: 0
+            z-index: 100

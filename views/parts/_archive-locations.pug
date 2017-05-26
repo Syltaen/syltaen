@@ -8,15 +8,18 @@
         .row
 
             //- FILTERS
-            .gr-6
-                != c.top_content
+            .gr-5.prefix-1.filters
+                if c.top_content
+                    .top-content
+                        != c.top_content
 
                 ul.locations-types
                     each location_type, i in c.location_types
-                        li(class=i==0?"selected":"" data-id=i style="background-image: url(".$location_type->icon["url"].");" data-filter=location_type.slug)= location_type.name
+                        li(class=i==0?"selected":"" data-id=i style="background-image: url(".$location_type->icon["url"].");" data-filter=location_type.slug)
+                            span= location_type.name
 
             //- MAP
-            .map(style="height: 500px;")
+            .map
                 each location_type in c.location_types
 
                     each location in location_type.posts

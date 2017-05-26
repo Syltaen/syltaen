@@ -49,12 +49,12 @@ abstract class Taxonomy
      * @param string $fields Fields to return : all, ids, id=>parent, names, count, id=>name, id=>slug
      * @param boolean $hide_empty Prevent the return of unused terms
      * @param int $limit Number of terms to return
-     * @param string $order_by name, slug, term_group, term_id, id, description, count, ...
+     * @param string $orderby name, slug, term_group, term_id, id, description, count, ...
      * @param string $order ASC or DESC
      * @return array List of terms
      * see https://developer.wordpress.org/reference/functions/get_terms/
      */
-    public function getTerms($fields = "all", $hide_empty = false, $limit = 0, $order_by = false, $order = false)
+    public function getTerms($fields = "all", $hide_empty = false, $limit = 0, $orderby = "slug", $order = "ASC")
     {
         $this->terms = get_terms([
             "taxonomy"   => static::SLUG,
@@ -62,7 +62,7 @@ abstract class Taxonomy
             "hide_empty" => $hide_empty,
             "number"     => $limit,
             "order"      => $order,
-            "order_by"   => $order_by
+            "orderby"    => $orderby
         ]);
         return $this->populateTermsFields()->terms;
     }

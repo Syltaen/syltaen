@@ -7,7 +7,6 @@ html(lang=site.language)
         meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
         meta(http-equiv="X-UA-Compatible" content="IE=edge")
         meta(name="viewport" content="width=device-width, initial-scale=1.0")
-        script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqGY0yfAyCACo3JUJbdgppD2aYcgV8sC0")
         = wp_head()
         block head
 
@@ -62,7 +61,31 @@ html(lang=site.language)
         block footer
             footer#site-footer(role="contentinfo")
                 .container
-                    != site.menu.footer
+                    .row
 
+                        .gr-3.prefix-1.gr-4-md.prefix-0-md
+                            .footer-title._contact: span= site.footer.contact_title
+                            != site.footer.contact_content
+
+                        .gr-4
+                            .footer-title._middle ECOPHOS GROUP
+                            p.text-align-center
+                                strong: a(href="#") Ecophos Technology
+                                br
+                                strong: a(href="#") Ecophos Opearation
+
+                        .gr-3.prefix-1.gr-4-md.prefix-0-md
+                            .footer-title._social: span= site.footer.social_title
+                            nav.footer-social-menu
+                                ul
+                                    each soc in site.header.social
+                                        li: a(href=soc.url title=soc.name)!= soc.icon
+                            != site.footer.social_content
+
+                .bottom
+                    .container
+                        .row
+                            .gr-10.prefix-1.gr-12-md.prefix-0-md
+                                != site.footer.bottom_content
 
         = wp_footer()

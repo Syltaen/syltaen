@@ -65,6 +65,7 @@ class Sections extends \Syltaen\Controllers\Controller
                         break;
                     case "locations":
                         $c["location_types"] = (new LocationTypes())->getPosts(new Locations());
+                        wp_enqueue_script("google.maps", "https://maps.googleapis.com/maps/api/js?key=AIzaSyBqGY0yfAyCACo3JUJbdgppD2aYcgV8sC0");
                         break;
                     default: break;
                 }
@@ -88,7 +89,7 @@ class Sections extends \Syltaen\Controllers\Controller
         $s["attr"]["id"] = $s["section_ID"] ?: null;
 
         // ========== PADDING ========== //
-        $s["classes"][] = "padding-".$s["section_padding"];
+        $s["classes"][] = $s["section_padding"];
 
         // ========== BACKGROUND ========== //
         $s["classes"][] = "bg-".$s["section_bg"];
