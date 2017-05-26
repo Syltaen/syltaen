@@ -1,6 +1,6 @@
 <?php
 
-namespace Syltaen;
+namespace Syltaen\Models\Users;
 
 class Users {
 

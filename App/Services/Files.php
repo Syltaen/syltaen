@@ -160,13 +160,10 @@ class Files
      */
     public static function autoload($classname)
     {
-
         // check if class is in the app namespace
-        if (strncmp('Syltaen', $classname, 7) !== 0) {
-            return;
-        }
+        if (strncmp('Syltaen', $classname, 7) !== 0) return;
         // remove the app prefix
-        $classname = substr( $classname, 8);
+        $classname = substr($classname, 8);
         // require the full file from root folder
         self::load('root', str_replace('\\', '/', $classname));
     }

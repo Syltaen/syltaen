@@ -47,7 +47,14 @@ if (get_role("subscriber")) {
     remove_role("subscriber");
 }
 
+
 // ==================================================
 // > DISABLE SMART TEXTS
 // ==================================================
 add_filter("run_wptexturize", "__return_false");
+
+
+// ==================================================
+// > FIXES
+// ==================================================
+remove_action("shutdown", "wp_ob_end_flush_all", 1 );

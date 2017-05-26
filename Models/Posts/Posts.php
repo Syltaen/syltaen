@@ -1,6 +1,6 @@
 <?php
 
-namespace Syltaen\Models;
+namespace Syltaen\Models\Posts;
 
 use Syltaen\App\Services\Fields;
 
@@ -10,14 +10,14 @@ abstract class Posts
     /**
      * List of supports for the post type's registration
      */
-    const TYPE     = "news";
+    const TYPE     = "posts";
     const LABEL    = "Articles";
     const ICON     = false; // https://developer.wordpress.org/resource/dashicons
     const SUPPORTS = ["title", "editor", "author", "thumbnail", "excerpt", "trackbacks", "custom-fields", "comments", "revisions", "page-attributes", "post-formats"];
-    const PUBLIK   = true;
-    const HAS_PAGE = true;
-    const REWRITE  = true; // Ex: ["slug" => "agenda"];
-    const TAX      = [];
+    const PUBLIK   = true;  // If not, the post type will be completely hidden
+    const HAS_PAGE = true;  // Should each post have his own page
+    const REWRITE  = true;  // Ex: ["slug" => "agenda"];
+    const TAX      = [];    // List of taxonomy slugs
 
     /**
      * List of fields used by the Fields::store method
@@ -32,7 +32,7 @@ abstract class Posts
      * see https://developer.wordpress.org/reference/functions/get_the_post_thumbnail/
      * @var array
      */
-    protected $thumbnails_formats = [
+    protected $thumbnailsFormats = [
         "url" => [],
         "tag" => []
     ];
@@ -43,7 +43,7 @@ abstract class Posts
      * see https://codex.wordpress.org/Formatting_Date_and_Time
      * @var array
      */
-    protected $date_formats = [];
+    protected $dateFormats = [];
 
 
     /**
@@ -51,8 +51,8 @@ abstract class Posts
      *
      * @var boolean
      */
-    private $query   = false;
-    private $filters = array();
+    protected $query   = false;
+    protected $filters = array();
 
     /**
      * Create the base query and pre-sort all needed fields
@@ -114,13 +114,12 @@ abstract class Posts
     /**
      * Change the post order.
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters
-     * @param int $order
      * @param string $order_by
+     * @param int $order
      * @return void
      */
-    public function order($order, $order_by)
+    public function order($order_by = false, $order = "ASC")
     {
-
         return $this;
     }
 
@@ -141,13 +140,43 @@ abstract class Posts
     /**
      * Update the taxonomy filter
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters
-     * @param array $tax_query
-     * @param string $relation
+     * @param array $taxonomy slug of the taxonomy to look for
+     * @param array|string|int $terms Term or list of terms to match
+     * @param string $relation Erase the current relation between each tax_query.
+     *        Either "OR", "AND"(defl.) or false to keep the current one.
+     * @param boolean $replace Specify if the filter should replace any existing one on the same taxonomy
+     * @param string $operator 'IN', 'NOT IN', 'AND', 'EXISTS' and 'NOT EXISTS'
      * @return self
      */
-    public function tax($tax_query, $relation = false)
+    public function tax($taxonomy, $terms, $relation = false, $replace = false, $operator = "IN")
     {
-        // carefull about duplicates
+        // Create the tax_query if it doesn't exist
+        $this->filters["tax_query"] = isset($this->filters["tax_query"]) ? $this->filters["tax_query"] : [
+            "relation" => "AND"
+        ];
+
+        // Update the relation if specified
+        $this->filters["tax_query"]["relation"] = $relation ?: $this->filters["tax_query"]["relation"];
+
+        // Guess if $terms are slugs or ids for the field parameter
+        $field = is_int($terms) || (is_array($terms) && is_int($terms[0])) ? "term_id" : "slug";
+
+        // If $replace, remove all filters made on that specific taxonomy
+        if ($replace) {
+            foreach ($this->filters["tax_query"] as $key=>$filter) {
+                if (isset($filter["taxonomy"]) && $filter["taxonomy"] == $taxonomy) {
+                    unset($this->filters["tax_query"][$key]);
+                }
+            }
+        }
+
+        // Add the filter
+        $this->filters["tax_query"][] = [
+            "taxonomy" => $taxonomy,
+            "terms"    => $terms,
+            "field"    => $field,
+            "operator" => $operator
+        ];
         return $this;
     }
 
@@ -160,7 +189,7 @@ abstract class Posts
      */
     public function meta($meta_query, $relation = false)
     {
-
+        // carefull about duplicates
         return $this;
     }
 
@@ -218,7 +247,7 @@ abstract class Posts
      */
     public function run()
     {
-        $this->query = new \WP_Query( $this->filters );
+        $this->query = new \WP_Query($this->filters);
         return $this;
     }
 
@@ -242,38 +271,6 @@ abstract class Posts
         return $this->filters;
     }
 
-    // ==================================================
-    // > TAXONOMY
-    // ==================================================
-    public function taxonomy($include_terms = false, $include_posts = false)
-    {
-        $taxonomies = get_object_taxonomies(static::TYPE, ($include_terms ? "objects" : "names"));
-        if ($include_terms) {
-            foreach ($taxonomies as $tax) {
-                $tax->terms = get_terms([
-                    "taxonomy"   => $tax->name,
-                    "hide_empty" => false
-                ]);
-
-                if ($include_posts) {
-                    foreach ($tax->terms as $term) {
-
-                        $term->posts = $this->tax("test", "test")->get(3);
-
-                        // /* #LOG# */ \Syltaen\Controllers\Controller::log($term);
-                    }
-                }
-            }
-        }
-
-        return $taxonomies;
-    }
-
-    protected function populateTermData()
-    {
-
-    }
-
 
     // ==================================================
     // > DATA HANDLING FOR EACH POST
@@ -294,12 +291,12 @@ abstract class Posts
             }
 
             /* ADD THUMBNAIL FORMATS IF ANY */
-            if (!empty($this->thumbnails_formats["url"]) || !empty($this->thumbnails_formats["tag"])) {
+            if (!empty($this->thumbnailsFormats["url"]) || !empty($this->thumbnailsFormats["tag"])) {
                 $this->populateThumbnailFormats($post);
             }
 
             /* ADD DATE FORMATS IF ANY */
-            if (!empty($this->date_formats)) {
+            if (!empty($this->dateFormats)) {
                 $this->populateDateFormats($post);
             }
 
@@ -337,14 +334,14 @@ abstract class Posts
             "tag" => []
         ];
 
-        if (!empty($this->thumbnails_formats["url"])) {
-            foreach ($this->thumbnails_formats["url"] as $name=>$format) {
+        if (!empty($this->thumbnailsFormats["url"])) {
+            foreach ($this->thumbnailsFormats["url"] as $name=>$format) {
                 $post->thumb["url"][$name] = get_the_post_thumbnail_url($post->ID, $format);
             }
         }
 
-        if (!empty($this->thumbnails_formats["tag"])) {
-            foreach ($this->thumbnails_formats["tag"] as $name=>$format) {
+        if (!empty($this->thumbnailsFormats["tag"])) {
+            foreach ($this->thumbnailsFormats["tag"] as $name=>$format) {
                 $post->thumb["tag"][$name] = get_the_post_thumbnail($post->ID, $format);
             }
         }
@@ -359,7 +356,7 @@ abstract class Posts
     protected function populateDateFormats(&$post)
     {
         $post->date = [];
-        foreach ($this->date_formats as $name=>$format) {
+        foreach ($this->dateFormats as $name=>$format) {
             $post->date[$name] = get_the_date($format, $post->ID);
         }
     }
@@ -385,7 +382,7 @@ abstract class Posts
      */
     public function addThumbnailFormat($type, $name, $value)
     {
-        $this->thumbnails_formats[$type][$name] = $value;
+        $this->thumbnailsFormats[$type][$name] = $value;
         return $this;
     }
 
@@ -398,13 +395,13 @@ abstract class Posts
      */
     public function addDateFormat($name, $format)
     {
-        $this->date_formats[$name] = $format;
+        $this->dateFormats[$name] = $format;
         return $this;
     }
 
 
     // ==================================================
-    // > POST TYPE CONTROLS
+    // > POST TYPE REGISTRATION
     // ==================================================
     /**
      * Register a post type using the class constants
@@ -413,7 +410,7 @@ abstract class Posts
      */
     public static function register()
     {
-        return register_post_type(static::TYPE, array(
+        register_post_type(static::TYPE, array(
             "label"              => static::LABEL,
             "public"             => static::PUBLIK,
             "publicly_queryable" => static::HAS_PAGE,
@@ -423,6 +420,13 @@ abstract class Posts
             "taxonomies"         => static::TAX,
             "has_archive"        => false
         ));
+
+        // addStatusTypes
+    }
+
+    public static function addStatusTypes()
+    {
+
     }
 
     // ==================================================

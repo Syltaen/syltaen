@@ -58,3 +58,4 @@ jQuery ($) ->
     new App()
     $("select").each -> Forms.transformSelect $(@)
     $(".incrementor").each -> $(@).incrementor()
+    $(".archive-locations").gmap(".locations-types li")

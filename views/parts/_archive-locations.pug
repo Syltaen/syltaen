@@ -1,0 +1,31 @@
+//- ==================================================
+//- > PARTIAL : LOCATIONS ARCHIVE
+//- ==================================================
+.archive-locations
+
+    .container
+
+        .row
+
+            //- FILTERS
+            .gr-6
+                != c.top_content
+
+                ul.locations-types
+                    each location_type, i in c.location_types
+                        li(class=i==0?"selected":"" data-id=i style="background-image: url(".$location_type->icon["url"].");" data-filter=location_type.slug)= location_type.name
+
+            //- MAP
+            .map(style="height: 500px;")
+                each location_type in c.location_types
+
+                    each location in location_type.posts
+
+                        .marker(
+                            data-lat=location.coordonates.lat
+                            data-lng=location.coordonates.lng
+                            data-icon=location_type.pin.url
+                            data-filter=location_type.slug
+                        )
+                            .marker--title!= location.post_title
+                            .marker--content!= location.post_content

@@ -4,13 +4,36 @@ namespace Syltaen\Controllers;
 
 abstract class Controller {
 
+    /**
+     * Store all the data needed for the rendering
+     *
+     * @var array
+     */
     protected $data;
 
+    /**
+     * Handle the conversion of pug to php
+     *
+     * @var Pug\Pug
+     */
     private $renderer;
+
+    /**
+     * Path to the folder containg all views
+     *
+     * @var string
+     */
     private $viewfolder;
 
     /**
-     * Constructor
+     * Default view used by the controller
+     *
+     * @var string
+     */
+    const VIEW = false;
+
+    /**
+     * Dependencies creation
      *
      * @param boolean $auto
      */
@@ -24,23 +47,45 @@ abstract class Controller {
     }
 
     /**
+     * Get all the controller stored data
+     *
+     * @return void
+     */
+    public function data()
+    {
+        return $this->data;
+    }
+
+    /**
      * Return rendered HTML by passing a view filename
      *
      * @param string $filename
      * @param array $data
      * @return string
      */
-    public function view($filename = "404", $data = false)
+    public function view($filename = false, $data = false)
     {
+        $filename = $filename ?: static::VIEW;
         $filename = $this->viewfolder . $filename . ".pug";
-        $data = $data ?: $this->data;
+        $data     = $data ?: $this->data;
 
         if (file_exists($filename)) {
             return $this->renderer->render($filename, $this->data);
         } else {
             die("View file not found : $filename");
         }
+    }
 
+    /**
+     * Display a view
+     *
+     * @param string $filename
+     * @param array $data
+     * @return void
+     */
+    public function render($filename = false, $data = false)
+    {
+        echo $this->view($filename, $data);
     }
 
     /**
@@ -65,9 +110,9 @@ abstract class Controller {
     public function dlog($key = false, $tags = null)
     {
         if ($key) {
-            self::log($this->data[$key]);
+            self::log($this->data[$key], $tags);
         } else {
-            self::log($this->data);
+            self::log($this->data, $tags);
         }
     }
 

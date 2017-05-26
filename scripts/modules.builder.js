@@ -4,3 +4,4 @@
 //@prepros---append modules/elevator-box.js
 //@prepros---append modules/scrollnav.js
 //@prepros-append modules/incrementor.js
+//@prepros-append modules/gmap.js
