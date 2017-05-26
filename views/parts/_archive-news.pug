@@ -1,0 +1,21 @@
+//- ==================================================
+//- > PARTIAL : NEWS ARCHIVE
+//- ==================================================
+.container
+
+    //- FILTERS
+
+    //- PAGINATION
+
+    ul.archive-news
+
+        each n in c.news
+            li
+                li
+                    a.thumb(href=n.url)!= n.thumb.tag.archive
+                    .content
+                        time!= n.date.archive
+                        h3= n.post_title
+                        p!= n.post_excerpt
+                    //- a.more(href=n.url)= n_more
+

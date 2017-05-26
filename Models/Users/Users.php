@@ -24,20 +24,32 @@ class Users {
 
     }
 
-    // ==================================================
-    // > UPDATE
-    // ==================================================
+
     public function update()
     {
 
     }
 
-    // ==================================================
-    // > DELETE
-    // ==================================================
     public function delete()
     {
 
+    }
+
+    // ==================================================
+    // > ROLES AND PERMISSIONS
+    // ==================================================
+    public function can()
+    {
+
+    }
+
+    public static function unregisterRoles($roles)
+    {
+        foreach ($roles as $role) {
+            if (get_role($role)) {
+                remove_role($role);
+            }
+        }
     }
 
 }

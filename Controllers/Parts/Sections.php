@@ -2,6 +2,7 @@
 
 namespace Syltaen\Controllers\Parts;
 
+use Syltaen\Models\Posts\News;
 use Syltaen\Models\Posts\Locations;
 use Syltaen\Models\Taxonomies\LocationTypes;
 
@@ -62,6 +63,7 @@ class Sections extends \Syltaen\Controllers\Controller
             case "archive":
                 switch($c["type"]) {
                     case "news":
+                        $c["news"] = (new News())->get($c["perpage"]);
                         break;
                     case "locations":
                         $c["location_types"] = (new LocationTypes())->getPosts(new Locations());
@@ -70,6 +72,13 @@ class Sections extends \Syltaen\Controllers\Controller
                     default: break;
                 }
                 break;
+
+            // ========== CONTACT BLOCKS ========== //
+            case "contact_info":
+                /* #LOG# */ self::log($c, __CLASS__.":".__LINE__);
+                break;
+
+
             default: break;
         }
     }

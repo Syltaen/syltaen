@@ -1,5 +1,7 @@
 <?php
 
+use Syltaen\Models\Users\Users;
+
 // ==================================================
 // > THEME SUPPORTS
 // ==================================================
@@ -17,10 +19,10 @@ add_theme_support("post-thumbnails");
 // ==================================================
 // > IMAGE SIZES
 // ==================================================
+// see https://developer.wordpress.org/reference/functions/add_image_size/
 add_image_size("full-width", 9999, 9999);
-// add_filter("image_size_names_choose", function ($sizes) {
-//     return array_merge($sizes, ["full-width" => __( "Pleine largueur" )]);
-// });
+add_image_size("archive", 380, 250, true);
+update_option("medium_crop", 1);
 
 // ==================================================
 // > UPLOADS
@@ -35,18 +37,11 @@ add_filter("upload_mimes", function ($existing_mimes = []) {
 // ==================================================
 // > ROLES
 // ==================================================
-if (get_role("contributor")) {
-    remove_role("contributor");
-}
-
-if (get_role("author")) {
-    remove_role("author");
-}
-
-if (get_role("subscriber")) {
-    remove_role("subscriber");
-}
-
+Users::unregisterRoles([
+    "contributor",
+    "author",
+    "subscriber"
+]);
 
 // ==================================================
 // > DISABLE SMART TEXTS

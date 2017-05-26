@@ -28,6 +28,9 @@ class Page extends \Syltaen\Controllers\Controller
             "@sections" => (new Sections())->data()
         ]);
 
+        /* #LOG# */ $this->dlog("sections", __CLASS__.":".__LINE__);
+
+
     }
 
     /**

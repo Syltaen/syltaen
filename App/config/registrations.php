@@ -1,4 +1,3 @@
-
 <?php
 
 use Syltaen\Models\Taxonomies;

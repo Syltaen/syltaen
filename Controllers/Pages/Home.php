@@ -32,7 +32,7 @@ class Home extends \Syltaen\Controllers\Controller
             "news_before",
             "@news_last" =>
                 (new News())
-                    ->addThumbnailFormat("tag", "home", [310, 310])
+                    ->addThumbnailFormat("tag", "home", "medium")
                     ->get(3),
             "@news_more" => __("More info", "syltaen"),
             "news_after",

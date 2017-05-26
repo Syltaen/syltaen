@@ -1,0 +1,72 @@
+// ==================================================
+// > CONTACT BLOCK
+// ==================================================
+.row.contact-block-row
+    margin: 30px -30px
+
+.contact-block
+    background: $lgry
+    padding: 30px 30px
+    margin: 50px 20px 150px
+    position: relative
+    header
+        text-align: center
+        margin-bottom: 70px
+        position: relative
+        z-index: 5
+        h1, h2, h3
+            &:before,
+            &:after
+                display: none
+
+    .address,
+    .email,
+    .phone
+        position: relative
+        height: 50px
+        padding-left: 70px
+        z-index: 5
+        display: flex
+        align-items: center
+        a
+            color: $dgry
+        &:before
+            content: "\f101"
+            font-family: $font-fa
+            color: white
+            font-size: 20px
+            font-size: 20rem
+            position: absolute
+            height: 50px
+            width: 50px
+            text-align: center
+            line-height: 50px
+            background: $main
+            border-radius: 50%
+            left: 0
+            top: -10px
+    .address:before
+        content: "\f041"
+    .email:before
+        content: "\f003"
+    .phone:before
+        content: "\f095"
+
+
+    &:before,
+    &:after
+        content: ""
+        background: $lgry
+        +cover
+        box-shadow: 15px 15px 30px rgba($black, .15)
+
+    &:before
+        height: 70%
+
+    &:after
+        content: ""
+        background: $lgry
+        transform: skewY(10deg) translateY(50px)
+        height: 50%
+        top: auto
+        bottom: 0

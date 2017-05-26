@@ -28,8 +28,9 @@ abstract class Posts
 
     /**
      * List of thumbnails formats to store in each post.
-     * Specify formats in one or both of the arrays depending on what you want to be retrieved
-     * see https://developer.wordpress.org/reference/functions/get_the_post_thumbnail/
+     * Specify a key and a format (string or array of sizes).
+     * Specify those in one or both of the arrays (url or tag) depending on what you want to be retrieved
+     * see https://developer.wordpress.org/reference/functions/the_post_thumbnail/
      * @var array
      */
     protected $thumbnailsFormats = [

@@ -126,10 +126,12 @@
                 font-family: $font-black
             h3
                 color: white
-                text-transform: uppercase
                 font-family: $font-medium
                 font-size: 24px
                 font-size: 24rem
+                &:before,
+                &:after
+                    display: none
             .thumb
                 position: absolute
                 left: -5px
@@ -227,14 +229,15 @@
             &:before
                 display: none
             h3
-                color: $dgry
-                text-transform: uppercase
                 font-family: $font-medium
                 font-size: 25px
                 font-size: 25rem
                 .subtitle
                     font-size: 15px
                     font-size: 15rem
+                &:before,
+                &:after
+                    display: none
             .incrementor
                 color: $main
                 font-size: 100px
@@ -266,14 +269,15 @@
             font-family: $font-light
             font-size: 18px
             font-size: 18rem
-            background: center top 20px no-repeat
+            background: center top 40px no-repeat
             &:before
                 display: none
             h3
-                text-transform: uppercase
                 font-family: $font-black
                 font-size: 35px
                 font-size: 35rem
-                margin-bottom: 20px
+                &:before,
+                &:after
+                    display: none
             .button
                 margin-top: 20px

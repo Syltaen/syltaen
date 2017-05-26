@@ -7,24 +7,41 @@ each s in sections
 
         each c in s.content
 
-            //- --------- TXT 1 COL --------- -//
+            //- ========== TXT 1 COL ========== -//
             if c.acf_fc_layout == "txt_1col"
-                .container!= c.txt
+                .container
+                    .row: .gr-10.prefix-1.gr-12-md.prefix-0-md
+                        != c.txt
 
 
-            //- --------- TXT 2 COLS --------- -//
+            //- ========== TXT 2 COLS ========== -//
             if c.acf_fc_layout == "txt_2col"
-                .container: .row(class=c.class)
-                    .gr-12-xs(class=c.txt_1_class)!= c.txt_1
-                    .gr-12-xs(class=c.txt_2_class)!= c.txt_2
+                .container
+                    .row: .gr-10.prefix-1.gr-12-md.prefix-0-md
+                        .row(class=c.class)
+                            .gr-12-xs(class=c.txt_1_class)!= c.txt_1
+                            .gr-12-xs(class=c.txt_2_class)!= c.txt_2
 
 
-            //- --------- ARCHIVE --------- -//
+            //- ========== ARCHIVE ========== -//
             if c.acf_fc_layout == "archive"
                 if (c.type == "news")
                     include _archive-news
                 if (c.type == "locations")
                     include _archive-locations
+
+
+            //- ========== CONTACT BLOCKS ========== -//
+            if c.acf_fc_layout == "contact_info"
+                .container
+                    .row: .gr-10.prefix-1.gr-12-md.prefix-0-md
+                        .row.contact-block-row
+                            each block in c.contact_blocks
+                                .gr-6: .contact-block
+                                    header!= block.head_content
+                                    p.address!= block.address
+                                    p.email: a(href="mailto:".$block["email"])= block.email
+                                    p.phone!= block.phone
 
 
 
