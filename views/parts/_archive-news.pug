@@ -5,17 +5,22 @@
 
     //- FILTERS
 
-    //- PAGINATION
+    != c.walker
 
-    ul.archive-news
+    ul.archive.archive--news
+
 
         each n in c.news
             li
-                li
-                    a.thumb(href=n.url)!= n.thumb.tag.archive
-                    .content
-                        time!= n.date.archive
-                        h3= n.post_title
-                        p!= n.post_excerpt
-                    //- a.more(href=n.url)= n_more
+                a.thumb(href=n.url style="background-image: url(".$n->thumb["url"]["archive"].");")!= n.thumb.tag.archive
+                .content
+                    time!= n.date.bold
+                    h3= n.post_title
+                    p!= n.post_excerpt
+                a.button(href=n.url)= c.more
 
+        unless c.news
+            p Sorry, no news matching your request.
+
+
+    != c.walker

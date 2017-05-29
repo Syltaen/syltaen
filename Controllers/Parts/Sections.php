@@ -3,8 +3,10 @@
 namespace Syltaen\Controllers\Parts;
 
 use Syltaen\Models\Posts\News;
+use Syltaen\Models\Posts\Jobs;
 use Syltaen\Models\Posts\Locations;
 use Syltaen\Models\Taxonomies\LocationTypes;
+use Syltaen\App\Services\Pagination;
 
 class Sections extends \Syltaen\Controllers\Controller
 {
@@ -12,7 +14,7 @@ class Sections extends \Syltaen\Controllers\Controller
     /**
      * Default view to use
      */
-    const VIEW = "parts/_sections";
+    protected $view = "parts/_sections";
 
     /**
      * Populate $this->data
@@ -38,51 +40,10 @@ class Sections extends \Syltaen\Controllers\Controller
         }
     }
 
-    /**
-     * Precess a content stored in a section
-     *
-     * @param arrat $c The content data
-     * @return void
-     */
-    private function content(&$c)
-    {
-        switch ($c["acf_fc_layout"]) {
 
-            // ========== TXT 1 COL ========== //
-            case "txt_1col":
-                break;
-
-            // ========== TXT 2 COL ========== //
-            case "txt_2col":
-                $c["class"]       = "align-".$c["valign"];
-                $c["txt_1_class"] = "gr-".substr($c['proportions'],0,1);
-                $c["txt_2_class"] = "gr-".substr($c['proportions'],2,1);
-                break;
-
-            // ========== ARCHIVE ========== //
-            case "archive":
-                switch($c["type"]) {
-                    case "news":
-                        $c["news"] = (new News())->get($c["perpage"]);
-                        break;
-                    case "locations":
-                        $c["location_types"] = (new LocationTypes())->getPosts(new Locations());
-                        wp_enqueue_script("google.maps", "https://maps.googleapis.com/maps/api/js?key=AIzaSyBqGY0yfAyCACo3JUJbdgppD2aYcgV8sC0");
-                        break;
-                    default: break;
-                }
-                break;
-
-            // ========== CONTACT BLOCKS ========== //
-            case "contact_info":
-                /* #LOG# */ self::log($c, __CLASS__.":".__LINE__);
-                break;
-
-
-            default: break;
-        }
-    }
-
+    // ==================================================
+    // > GLOBAL SECTION PARAMETERS
+    // ==================================================
     /**
      * Process a section's parameters
      *
@@ -108,4 +69,79 @@ class Sections extends \Syltaen\Controllers\Controller
             $s["classes"][] = "position-".$s["section_bg_img_pos"];
         }
     }
+
+    // ==================================================
+    // > SECTION CONTENT DATA
+    // ==================================================
+    /**
+     * Precess a content stored in a section
+     *
+     * @param arrat $c The content data
+     * @return void
+     */
+    private function content(&$c)
+    {
+        switch ($c["acf_fc_layout"]) {
+
+            // ========== TXT 1 COL ========== //
+            case "txt_1col":
+                break;
+
+            // ========== TXT 2 COL ========== //
+            case "txt_2col":
+                $c["class"]       = "align-".$c["valign"];
+                $c["txt_1_class"] = "gr-".substr($c['proportions'], 0, 1);
+                $c["txt_2_class"] = "gr-".substr($c['proportions'], 2, 1);
+                break;
+
+            // ========== ARCHIVE ========== //
+            case "archive":
+                $this->contentArchives($c);
+                break;
+
+            // ========== CONTACT BLOCKS ========== //
+            case "contact_info":
+                break;
+
+
+            default: break;
+        }
+    }
+
+    /**
+     * Handle content for Archives
+     *
+     * @param array $a the archive content
+     * @return void
+     */
+    private function contentArchives(&$a)
+    {
+        switch($a["type"]) {
+            case "news":
+                $pagination  = new Pagination(new News, $a["perpage"]);
+                $a["news"]   = $pagination->posts();
+                $a["walker"] = $pagination->walker();
+                $a["more"]   = __("More info", "syltaen");
+                break;
+
+            case "jobs":
+                $pagination  = new Pagination(new Jobs, $a["perpage"]);
+                $a["jobs"]   = $pagination->posts();
+
+                /* #LOG# */ \Syltaen\Controllers\Controller::log($a["jobs"], __CLASS__.":".__LINE__);
+
+
+                $a["walker"] = $pagination->walker();
+                $a["more"]   = __("More info", "syltaen");
+                break;
+
+            case "locations":
+                $a["location_types"] = (new LocationTypes)->getPosts(new Locations);
+                wp_enqueue_script("google.maps", "https://maps.googleapis.com/maps/api/js?key=AIzaSyBqGY0yfAyCACo3JUJbdgppD2aYcgV8sC0");
+                break;
+            default: break;
+        }
+    }
+
+
 }

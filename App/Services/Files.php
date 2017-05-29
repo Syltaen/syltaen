@@ -14,17 +14,18 @@ class Files
             "vendors"    => "App/vendors",
             "generator"  => "App/Generators",
             "hooks"      => "App/hooks",
-                "actions" => "App/hooks/actions",
-                "ajax"    => "App/hooks/ajax",
-                "filters" => "App/hooks/filters",
+                "actions"    => "App/hooks/actions",
+                "ajax"       => "App/hooks/ajax",
+                "filters"    => "App/hooks/filters",
             "services"   => "App/Services",
         "controllers" => "Controllers",
         "models"      => "Models",
         "scripts"     => "scripts",
-        "src"         => "src",
-            "js"  => "src/js",
-            "css" => "src/css",
-            "img" => "scr/img",
+        "assets"      => "assets",
+            "css"         => "assets/css",
+            "fonts"       => "assets/fonts",
+            "img"         => "assets/img",
+            "js"          => "assets/js",
         "styles"      => "styles",
         "views"       => "views",
     ];
@@ -147,7 +148,7 @@ class Files
      */
     public static function addInlineScript($js, $position, $handle)
     {
-        add_action( "wp_enqueue_scripts", function () use ($js, $position, $handle) {
+        add_action("wp_enqueue_scripts", function () use ($js, $position, $handle) {
             wp_add_inline_script($handle, $js, $position);
         });
     }
@@ -161,11 +162,11 @@ class Files
     public static function autoload($classname)
     {
         // check if class is in the app namespace
-        if (strncmp('Syltaen', $classname, 7) !== 0) return;
+        if (strncmp("Syltaen", $classname, 7) !== 0) return;
         // remove the app prefix
         $classname = substr($classname, 8);
         // require the full file from root folder
-        self::load('root', str_replace('\\', '/', $classname));
+        self::load("root", str_replace("\\", "/", $classname));
     }
 
 }

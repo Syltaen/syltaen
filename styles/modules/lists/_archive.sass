@@ -1,7 +1,85 @@
 // ==================================================
-// > ARCHIVES
+// > ARCHIVE
 // ==================================================
-ul.archive
-	padding: 0
-	li:before
-		display: none
+.archive
+    padding: 0
+    margin: 0
+    display: flex
+    justify-content: space-around
+    flex-flow: row wrap
+    li
+        color: white
+        background: $dgry
+        padding: 0 50px
+        float: left
+        width: 380px
+        margin: 100px 40px
+        position: relative
+        *
+            position: relative
+            z-index: 1
+        .thumb
+            height: 250px
+            margin: 0 -50px
+            display: block
+            background: center center / cover no-repeat
+            overflow: hidden
+            position: relative
+            img
+                opacity: 0
+            &:after
+                content: ""
+                +cover
+                border: 4px solid white
+                left: -4px
+                top: -4px
+                opacity: 0
+            &,
+            &:after
+                transition: all .5s ease
+            &:hover
+                transform: scale(1.05)
+                &:after
+                    transform: scale(.9)
+                    opacity: 1
+
+        time
+            font-size: 16px
+            font-size: 16rem
+            text-align: right
+            font-family: $font-regular
+            margin-right: -35px
+            strong
+                font-size: 45px
+                font-size: 45rem
+                display: block
+        h3
+            color: white
+            font-size: 20px
+            font-size: 20rem
+        .button
+            margin-top: 20px
+
+        &:before,
+        &:after
+            content: ""
+            background: $dgry
+            +cover
+            box-shadow: 15px 15px 30px rgba($black, .15)
+            z-index: 0
+
+        &:before
+            height: 110px
+
+        &:after
+            content: ""
+            background: $dgry
+            transform: skewY(10deg) translateY(80px)
+            top: auto
+            bottom: 0
+
+
+// ==================================================
+// > JOBS
+// ==================================================
+.archive--jobs

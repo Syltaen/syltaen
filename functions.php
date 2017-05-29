@@ -4,8 +4,6 @@ use Syltaen\App\Services\Files;
 
 include("App/Services/Files.php");
 
-
-
 // ==================================================
 // > Autoloading
 // ==================================================

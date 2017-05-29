@@ -7,9 +7,10 @@ use Syltaen\Models\Posts;
 // ==================================================
 // > TAXONOMIES
 // ==================================================
-add_action('init', function() {
+add_action("init", function() {
 
     Taxonomies\LocationTypes::register();
+    Taxonomies\Countries::register();
 
 });
 
@@ -17,9 +18,11 @@ add_action('init', function() {
 // ==================================================
 // > POST TYPES
 // ==================================================
-add_action('init', function() {
+add_action("init", function() {
 
     Posts\News::register();
     Posts\Locations::register();
+    Posts\Jobs::register();
+    Posts\Applications::register();
 
 });

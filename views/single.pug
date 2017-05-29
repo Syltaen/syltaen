@@ -1,3 +1,32 @@
-extends templates/_base
+extends page
 
-block main
+block content
+
+    .container
+
+        .row: .gr-10.prefix-1.gr-12-md.prefix-0-md
+
+            nav.singlenav
+                ul
+                    li: a.link-archive(href=singlenav.archive.url)= singlenav.archive.text
+                    li: a(href=singlenav.previous.url class=singlenav.previous.url?"":" disabled")= singlenav.previous.text
+                    li: a(href=singlenav.next.url class=singlenav.next.url?"":" disabled")= singlenav.next.text
+
+
+            block article
+                article.single-content
+
+                    time!= post.date.bold
+
+                    h2= post.post_title
+
+                    != post.post_content
+
+                    .visual!= post.thumb.tag.large
+
+
+            nav.singlenav
+                ul
+                    li: a.link-archive(href=singlenav.archive.url)= singlenav.archive.text
+                    li: a(href=singlenav.previous.url class=singlenav.previous.url?"":" disabled")= singlenav.previous.text
+                    li: a(href=singlenav.next.url class=singlenav.next.url?"":" disabled")= singlenav.next.text

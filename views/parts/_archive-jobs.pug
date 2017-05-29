@@ -1,0 +1,28 @@
+//- ==================================================
+//- > PARTIAL : JOBS ARCHIVE
+//- ==================================================
+.container
+
+    //- FILTERS
+
+
+    != c.walker
+
+    ul.archive.archive--jobs
+
+        each job in c.jobs
+            li
+
+                .country= job.terms.countries.names
+
+                .content
+                    time!= job.date.bold
+                    h3= job.post_title
+                    p!= job.post_excerpt
+                a.button(href=job.url)= c.more
+
+        unless c.jobs
+            p Sorry, no jobs matching your request.
+
+
+    != c.walker

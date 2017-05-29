@@ -11,15 +11,18 @@ class News extends Posts
     const SUPPORTS = ["title", "editor", "excerpt", "thumbnail"];
 
     protected $thumbnailsFormats = [
-        "url" => [],
+        "url" => [
+            "archive" => [400, 400]
+        ],
         "tag" => [
-            "archive" => "archive"
+            "archive"   => [400, 400],
+            "large"     => [1600, 400]
         ]
     ];
 
     protected $dateFormats = [
-        "short"   => "d/m/Y",
-        "archive" => "<\s\\t\\r\o\\n\g>d.m</\s\\t\\r\o\\n\g>Y"
+        "short" => "d/m/Y",
+        "bold"  => "<\s\\t\\r\o\\n\g>d.m</\s\\t\\r\o\\n\g>Y"
     ];
 
 }

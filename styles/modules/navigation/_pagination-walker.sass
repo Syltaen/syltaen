@@ -1,0 +1,61 @@
+// ==================================================
+// > PAGE NAVIGATION
+// ==================================================
+.pagination-walker
+    text-align: center
+    &__direction
+        width: 19px
+        height: 19px
+        border-radius: 50%
+        border: 1px solid $dgry
+        display: inline-block
+        position: relative
+        text-indent: -9999px
+        margin: 0 5px
+        font-size: 12px
+        font-size: 12rem
+        color: $dgry
+        line-height: 20px
+        transition: all .25s ease
+        &:before
+            font-family: $font-fa
+            text-indent: 0
+            +cover
+            text-align: center
+            line-height: 19px
+        &--first:before
+            content: "\f100"
+        &--previous:before
+            content: "\f104"
+        &--next:before
+            content: "\f105"
+        &--last:before
+            content: "\f101"
+        &:hover
+            color: white
+            border-color: $main
+            background: $main
+        &[disabled]
+            opacity: .15
+            background: none
+    &__pagelist
+        display: inline-block
+        li
+            display: inline-block
+            a,
+            .current
+                font-family: $font-bold
+                font-size: 14px
+                font-size: 14rem
+                padding: 0 5px
+                border-right: 2px solid $dgry
+            .current
+                color: $main
+            a
+                color: $dgry
+            &:last-child
+                a,
+                .current
+                    border-right: 0
+
+

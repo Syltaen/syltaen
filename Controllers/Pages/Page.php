@@ -11,12 +11,11 @@ class Page extends \Syltaen\Controllers\Controller
     /**
      * Default view to use
      */
-    const VIEW = "page";
+    protected $view = "page";
 
     /**
      * Populate $this->data
      *
-     * @param boolean $auto
      */
     public function __construct()
     {
@@ -28,11 +27,12 @@ class Page extends \Syltaen\Controllers\Controller
             "@sections" => (new Sections())->data()
         ]);
 
-        /* #LOG# */ $this->dlog("sections", __CLASS__.":".__LINE__);
-
-
     }
 
+
+    // ==================================================
+    // > ERRORS
+    // ==================================================
     /**
      * Error 404 page display
      *
@@ -40,6 +40,6 @@ class Page extends \Syltaen\Controllers\Controller
      */
     public function error404()
     {
-        echo $this->view("404");
+        $this->render("404");
     }
 }

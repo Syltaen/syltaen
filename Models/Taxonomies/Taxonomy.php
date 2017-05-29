@@ -71,7 +71,7 @@ abstract class Taxonomy
     /**
      * Get all posts corresponding to each terms.
      * Extend the $terms parameter to store each corresponding posts.
-     * @param Sytaen/Model/Posts/. $model the post model.
+     * @param \Sytaen\Model\Posts $model the post model.
      * @param boolean $hide_empty Prevent the return of unused terms
      * @return array List of terms each storing a list of posts
      */

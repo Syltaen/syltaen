@@ -31,7 +31,7 @@ block main
             ul.hp-news-list
                 each news in news_last
                     li
-                        a.thumb(href=news.url)!= news.thumb.tag.home
+                        a.thumb(href=news.url style="background-image: url(".$news->thumb["url"]["home"].");")!= news.thumb.tag.home
                         .content
                             time= news.date.short
                             h3= news.post_title

@@ -172,4 +172,4 @@ add_filter("tiny_mce_before_init", function ($init_array) {
 // ==================================================
 // > EDITOR STYLESHEET
 // ==================================================
-add_editor_style("src/css/styles.min.css");
+add_editor_style("assets/css/styles.min.css");

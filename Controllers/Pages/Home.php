@@ -12,7 +12,7 @@ class Home extends \Syltaen\Controllers\Controller
     /**
      * Default view to use
      */
-    const VIEW = "home";
+    protected $view = "home";
 
     /**
      * Populate $this->data
@@ -33,6 +33,7 @@ class Home extends \Syltaen\Controllers\Controller
             "@news_last" =>
                 (new News())
                     ->addThumbnailFormat("tag", "home", "medium")
+                    ->addThumbnailFormat("url", "home", "medium")
                     ->get(3),
             "@news_more" => __("More info", "syltaen"),
             "news_after",

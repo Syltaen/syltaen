@@ -21,7 +21,6 @@ add_theme_support("post-thumbnails");
 // ==================================================
 // see https://developer.wordpress.org/reference/functions/add_image_size/
 add_image_size("full-width", 9999, 9999);
-add_image_size("archive", 380, 250, true);
 update_option("medium_crop", 1);
 
 // ==================================================

@@ -2,7 +2,7 @@
 
 namespace Syltaen\Controllers;
 
-abstract class Controller {
+class Controller {
 
     /**
      * Store all the data needed for the rendering
@@ -30,7 +30,7 @@ abstract class Controller {
      *
      * @var string
      */
-    const VIEW = false;
+    protected $view = false;
 
     /**
      * Dependencies creation
@@ -65,12 +65,12 @@ abstract class Controller {
      */
     public function view($filename = false, $data = false)
     {
-        $filename = $filename ?: static::VIEW;
+        $filename = $filename ?: $this->view;
         $filename = $this->viewfolder . $filename . ".pug";
         $data     = $data ?: $this->data;
 
         if (file_exists($filename)) {
-            return $this->renderer->render($filename, $this->data);
+            return $this->renderer->render($filename, $data);
         } else {
             die("View file not found : $filename");
         }

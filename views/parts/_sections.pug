@@ -27,6 +27,8 @@ each s in sections
             if c.acf_fc_layout == "archive"
                 if (c.type == "news")
                     include _archive-news
+                if (c.type == "jobs")
+                    include _archive-jobs
                 if (c.type == "locations")
                     include _archive-locations
 

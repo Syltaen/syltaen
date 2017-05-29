@@ -20,6 +20,11 @@ abstract class Posts
     const TAX      = [];    // List of taxonomy slugs
 
     /**
+     * @var boolean|string Allow to use an external link (stored in a field) for the permalink generation.
+     */
+    const CUSTOM_PAGE_FIELD = false;
+
+    /**
      * List of fields used by the Fields::store method
      *
      * @var array
@@ -46,6 +51,15 @@ abstract class Posts
      */
     protected $dateFormats = [];
 
+    /**
+     * List of terms format to be stored in each post.
+     * "taxonomy" => ["all"|"ids"|"names"|"slugs"(@alias) => "join"]
+     * If join is false, retrieve an array of terms
+     * see https://codex.wordpress.org/Function_Reference/wp_get_post_terms
+     * @var array
+     */
+    protected $termsFormats = [];
+
 
     /**
      * Store the query and its arguments to be modified by the model
@@ -53,7 +67,14 @@ abstract class Posts
      * @var boolean
      */
     protected $query   = false;
-    protected $filters = array();
+    protected $filters = [];
+
+    /**
+     * A list of other post models joined to this one with $this->join().
+     * Used for applying $this->populateData() differently for each post type.
+     * @var array
+     */
+    protected $joinedModels = [];
 
     /**
      * Create the base query and pre-sort all needed fields
@@ -115,14 +136,19 @@ abstract class Posts
     /**
      * Change the post order.
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters
-     * @param string $orderby
-     * @param int $order
+     * @param string $orderby the field to order the posts by
+     * @param int $order ASC or DESC
+     * @param string $meta_key When $orderby is "meta_value", specify the meta_key.
+     * Must include a meta query beforehand specifying criteras for that key.
      * @return void
      */
-    public function order($orderby = false, $order = "ASC")
+    public function order($orderby = false, $order = "ASC", $meta_key = false)
     {
         $this->filters["orderby"] = $orderby;
         $this->filters["order"]   = $order;
+        if ($orderby == "meta_value") {
+            $this->filters["meta_key"] = $meta_key;
+        }
         return $this;
     }
 
@@ -141,12 +167,36 @@ abstract class Posts
     }
 
     /**
+     * Update the filter to only retrive specific ID's
+     *
+     * @param array $ids
+     * @return void
+     */
+    public function ids($ids)
+    {
+        $this->filters["post__in"] = $ids;
+        return $this;
+    }
+
+    /**
+     * Update the filter to only retrive one specific ID
+     *
+     * @param int $id
+     * @return self
+     */
+    public function id($id)
+    {
+        $this->filters["post__in"] = [$id];
+        return $this;
+    }
+
+    /**
      * Update the taxonomy filter
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters
      * @param array $taxonomy slug of the taxonomy to look for
      * @param array|string|int $terms Term or list of terms to match
      * @param string $relation Erase the current relation between each tax_query.
-     *        Either "OR", "AND"(defl.) or false to keep the current one.
+     *        Either "OR", "AND" (deflault) or false to keep the current one.
      * @param boolean $replace Specify if the filter should replace any existing one on the same taxonomy
      * @param string $operator 'IN', 'NOT IN', 'AND', 'EXISTS' and 'NOT EXISTS'
      * @return self
@@ -166,9 +216,9 @@ abstract class Posts
 
         // If $replace, remove all filters made on that specific taxonomy
         if ($replace) {
-            foreach ($this->filters["tax_query"] as $key=>$filter) {
+            foreach ($this->filters["tax_query"] as $filter_key=>$filter) {
                 if (isset($filter["taxonomy"]) && $filter["taxonomy"] == $taxonomy) {
-                    unset($this->filters["tax_query"][$key]);
+                    unset($this->filters["tax_query"][$filter_key]);
                 }
             }
         }
@@ -186,13 +236,76 @@ abstract class Posts
     /**
      * Update the meta filter
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Custom_Field_Parameters
-     * @param array $tax_query
-     * @param string $relation
-     * @return self
+     * @param string $key Custom field key.
+     * @param string|array $value Custom field value.
+     *        It can be an array only when compare is 'IN', 'NOT IN', 'BETWEEN', or 'NOT BETWEEN'.
+     *        You don't have to specify a value when using the 'EXISTS' or 'NOT EXISTS'
+     * @param string $compare  Operator to test. Possible values are :
+     *        '=', '!=', '>', '>=', '<', '<=', 'LIKE', 'NOT LIKE', 'IN',
+     *        'NOT IN', 'BETWEEN', 'NOT BETWEEN', 'EXISTS' and 'NOT EXISTS'.
+     * @param string $type Custom field type. Possible values are :
+     *        'NUMERIC', 'BINARY', 'CHAR', 'DATE', 'DATETIME', 'DECIMAL', 'SIGNED',
+     *        'TIME', 'UNSIGNED'. Default value is 'CHAR'.
+     *        You can also specify precision and scale for the 'DECIMAL' and 'NUMERIC' types
+     *        (for example, 'DECIMAL(10,5)' or 'NUMERIC(10)' are valid).
+     * @param string $relation Erase the current relation between each meta_query.
+     *        Either "OR", "AND" (deflault) or false to keep the current one.
+     * @param boolean $replace Specify if the filter should replace any existing one on the same meta_key
+     * @return void
      */
-    public function meta($meta_query, $relation = false)
+    public function meta($key, $value = null, $compare = "=", $type = null, $relation = false, $replace = false)
     {
-        // carefull about duplicates
+        // Create the meta_query if it doesn't exist
+        $this->filters["meta_query"] = isset($this->filters["meta_query"]) ? $this->filters["meta_query"] : [
+            "relation" => "AND"
+        ];
+
+        // Update the relation if specified
+        $this->filters["meta_query"]["relation"] = $relation ?: $this->filters["meta_query"]["relation"];
+
+        // If $replace, remove all filters made on that specific meta_key
+        if ($replace) {
+            foreach ($this->filters["meta_query"] as $filter_key=>$filter) {
+                if (isset($filter["key"]) && $filter["key"] == $key) {
+                    unset($this->filters["meta_query"][$filter_key]);
+                }
+            }
+        }
+
+        // Add the filter
+        $filter = [
+            "key"     => $key,
+            "value"   => $value,
+            "compare" => $compare,
+            "type"    => $type
+        ];
+
+        if (is_null($value)) {
+            unset($filter["value"]);
+        }
+
+        if (is_null($type)) {
+            unset($filter["type"]);
+        }
+
+        $this->filters["meta_query"][] = $filter;
+
+        return $this;
+    }
+
+
+    /**
+     * Add a post type to the query
+     *
+     * @param Syltaen\Models\Posts\ $post_model
+     * @return void
+     */
+    public function join($post_model) {
+        if (!is_array($this->filters["post_type"])) {
+            $this->filters["post_type"] = [static::TYPE];
+        }
+        $this->filters["post_type"][] = $post_model::TYPE;
+        $this->joinedModels[$post_model::TYPE] = $post_model;
         return $this;
     }
 
@@ -229,7 +342,7 @@ abstract class Posts
      *
      * @param int $limit Number of posts to return
      * @param int $page Page offset to use
-     * @return void
+     * @return array of WP_Posts
      */
     public function get($limit = false, $page = false)
     {
@@ -241,7 +354,6 @@ abstract class Posts
             ->query
             ->posts;
     }
-
 
     /**
      * Execute the query with the filters and store the result
@@ -274,6 +386,16 @@ abstract class Posts
         return $this->filters;
     }
 
+    /**
+     * Return the number of posts matching the query
+     *
+     * @return void
+     */
+    public function count()
+    {
+        return intval($this->query->found_posts);
+    }
+
 
     // ==================================================
     // > DATA HANDLING FOR EACH POST
@@ -285,31 +407,57 @@ abstract class Posts
      */
     public function populateData()
     {
-        if (!isset($this->query) || empty($this->query)) die("The WP_Query need to be created before populating its posts.");
+
+        if (!isset($this->query) || empty($this->query)) die("The WP_Query need to be run before populating its posts.");
 
         foreach ($this->query->posts as $post) {
-            /* ADD FIELDS IF ANY */
-            if (!empty($this->fields)) {
-                $this->populateFields($post);
-            }
 
-            /* ADD THUMBNAIL FORMATS IF ANY */
-            if (!empty($this->thumbnailsFormats["url"]) || !empty($this->thumbnailsFormats["tag"])) {
-                $this->populateThumbnailFormats($post);
-            }
-
-            /* ADD DATE FORMATS IF ANY */
-            if (!empty($this->dateFormats)) {
-                $this->populateDateFormats($post);
-            }
-
-            /* ADD POST URL IF PUBLIC */
-            if (static::HAS_PAGE) {
-                $this->populatePublicUrl($post);
+            // If the post is not from this model (because of a join), use that post's model
+            if ($post->post_type !== static::TYPE) {
+                $this->joinedModels[$post->post_type]->populatePostData($post);
+            } else {
+                $this->populatePostData($post);
             }
         }
 
         return $this;
+    }
+
+    /**
+     * Launch each populate method on a post
+     *
+     * @param WP_Post $post
+     * @return void
+     */
+    public function populatePostData(&$post)
+    {
+
+        /* ADD FIELDS IF ANY */
+        if (!empty($this->fields)) {
+            $this->populateFields($post);
+        }
+
+        /* ADD THUMBNAIL FORMATS IF ANY */
+        if (!empty($this->thumbnailsFormats["url"]) || !empty($this->thumbnailsFormats["tag"])) {
+
+            $this->populateThumbnailFormats($post);
+        }
+
+        /* ADD DATE FORMATS IF ANY */
+        if (!empty($this->dateFormats)) {
+            $this->populateDateFormats($post);
+        }
+
+        /* ADD TAXONOMIY TERMS IF ANY */
+        if (!empty($this->termsFormats)) {
+            $this->populateTerms($post);
+        }
+
+        /* ADD POST URL IF PUBLIC */
+        if (static::HAS_PAGE || static::CUSTOM_PAGE_FIELD) {
+            $this->populatePublicUrl($post);
+        }
+
     }
 
 
@@ -317,7 +465,7 @@ abstract class Posts
      * Add all Custom Fields's values specified in the model's constructor to a post
      *
      * @param WP_Post $post
-     * @return null
+     * @return void
      */
     protected function populateFields(&$post)
     {
@@ -328,7 +476,7 @@ abstract class Posts
      * Add all thumbnail formats specified in the model to a post object
      *
      * @param WP_Post $post
-     * @return null
+     * @return void
      */
     protected function populateThumbnailFormats(&$post)
     {
@@ -354,13 +502,44 @@ abstract class Posts
      * Add all date formats specified in the model to a post object
      *
      * @param WP_Post $post
-     * @return null
+     * @return void
      */
     protected function populateDateFormats(&$post)
     {
         $post->date = [];
         foreach ($this->dateFormats as $name=>$format) {
-            $post->date[$name] = get_the_date($format, $post->ID);
+            if ($format) {
+                $post->date[$name] = get_the_date($format, $post->ID);
+            }
+        }
+    }
+
+    /**
+     * Add taxonomy terms data to the post
+     *
+     * @param WP_Post $post
+     * @return void
+     */
+    protected function populateTerms(&$post)
+    {
+        $post->terms = [];
+        foreach ($this->termsFormats as $taxonomy=>$formats) {
+            foreach ($formats as $fields=>$join) {
+                if (preg_match('/(.*)@(.*)/', $fields, $keys)) {
+                    $fields = $keys[1];
+                    $store  = $keys[2];
+                } else {
+                    $store = $fields;
+                }
+
+                $post->terms[$taxonomy][$store] = wp_get_post_terms($post->ID, $taxonomy, [
+                    "fields" => $fields
+                ]);
+
+                if ($join) {
+                    $post->terms[$taxonomy][$store] = join($join, $post->terms[$taxonomy][$store]);
+                }
+            }
         }
     }
 
@@ -368,11 +547,11 @@ abstract class Posts
      * Add the post public url to a post object
      *
      * @param WP_Post $post
-     * @return null
+     * @return void
      */
     protected function populatePublicUrl(&$post)
     {
-        $post->url = get_the_permalink($post->ID);
+        $post->url = static::CUSTOM_PAGE_FIELD ? Fields::get(static::CUSTOM_PAGE_FIELD, $post->ID) : get_the_permalink($post->ID);
     }
 
     /**
@@ -413,7 +592,7 @@ abstract class Posts
      */
     public static function register()
     {
-        register_post_type(static::TYPE, array(
+        register_post_type(static::TYPE, [
             "label"              => static::LABEL,
             "public"             => static::PUBLIK,
             "publicly_queryable" => static::HAS_PAGE,
@@ -422,7 +601,7 @@ abstract class Posts
             "rewrite"            => static::REWRITE,
             "taxonomies"         => static::TAX,
             "has_archive"        => false
-        ));
+        ]);
 
         // addStatusTypes
     }
