@@ -4,6 +4,7 @@ namespace Syltaen\Controllers\Pages;
 
 use Syltaen\App\Services\Fields;
 use Syltaen\Models\Posts\News;
+use Syltaen\Models\Posts\Jobs;
 
 
 class Single extends \Syltaen\Controllers\Controller
@@ -31,7 +32,6 @@ class Single extends \Syltaen\Controllers\Controller
 
     /**
      * Populate $this->data
-     *
      */
     public function __construct()
     {
@@ -41,20 +41,53 @@ class Single extends \Syltaen\Controllers\Controller
         $this->post    = $post;
         $this->archive = get_page_by_path($post->post_type);
 
-        $this->addIntroData();
-        $this->addNavigationData();
-
-        // Populate the post with the post type's model
         switch($this->post->post_type) {
             case "news":
-                (new News)->populatePostData($this->post);
-                $this->data["singlenav"]["archive"]["text"] = __("Back to the list of news", "syltaen");
+                $this->singleNews();
+                break;
+            case "jobs":
+                $this->singleJobs();
                 break;
             default: break;
         }
 
         $this->data["post"] = $this->post;
 
+    }
+
+    // ==================================================
+    // > POST TYPES
+    // ==================================================
+    /**
+     * Data and view handling for News
+     *
+     * @return void
+     */
+    private function singleNews()
+    {
+        $this->addIntroData();
+        $this->addNavigationData(__("Back to the list of news", "syltaen"));
+
+        (new News)->populatePostData($this->post);
+    }
+
+    /**
+     * Data and view handling for Jobs
+     *
+     * @return void
+     */
+    private function singleJobs()
+    {
+        $this->addIntroData();
+        $this->addNavigationData( __("Back to the list of jobs", "syltaen"));
+
+        (new Jobs)->populatePostData($this->post);
+        Fields::store($this->post, [
+            "content",
+            "application_form"
+        ]);
+
+        $this->view = "single-job";
     }
 
     // ==================================================
@@ -73,14 +106,15 @@ class Single extends \Syltaen\Controllers\Controller
     /**
      * Add data for the navigation between posts
      *
+     * @param string $archive_link_text Text to use for the archive link
      * @return void
      */
-    private function addNavigationData()
+    private function addNavigationData($archive_link_text = false)
     {
         $this->data["singlenav"] = [
             "archive"  => [
                 "url"  => get_the_permalink($this->archive),
-                "text" => __("Back to the list", "syltaen")
+                "text" => $archive_link_text ?: __("Back to the list", "syltaen")
             ],
             "previous" => [
                 "url"  => get_previous_post() ? get_the_permalink(get_previous_post()->ID): "",

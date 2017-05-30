@@ -28,14 +28,14 @@ Files::load("config", [
     "timber"
 ]);
 
-Files::load('actions', [
+Files::load("actions", [
     // "file"
 ]);
 
-Files::load('filters', [
+Files::load("filters", [
     // "file"
 ]);
 
-Files::load('ajax', [
-    // "file"
+Files::load("ajax", [
+    "ajax-upload"
 ]);

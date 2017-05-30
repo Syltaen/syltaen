@@ -2,61 +2,98 @@
 // > FORM
 // ==================================================
 form
-	hr
-		margin: 50px 0
-		height: 0
-		margin-bottom: 1px solid $scnd
+    hr
+        margin: 50px 0
+        height: 0
+        margin-bottom: 1px solid $scnd
 
-	.hidden-wrap
-		display: none
+    .hidden-wrap
+        display: none
 
-	*
-		outline: 0
+    *
+        outline: 0
 
+    &.loading
+        position: relative
+        &:before
+            content: "\f1ce"
+            font-family: $font-fa
+            position: absolute
+            bottom: 0
+            right: 0
+            width: 50px
+            height: 50px
+            line-height: 50px
+            text-align: center
+            margin-left: -25px
+            margin-top: -25px
+            animation: spin 2s linear infinite
+            transform: rotate(0deg)
+
+// .form-success
+//     display: none
 
 // ==================================================
 // > FIELDSET
 // ==================================================
 fieldset
-	margin-bottom: 20px
+    margin-bottom: 20px
 
 // ==================================================
 // > LABEL
 // ==================================================
 label
-	cursor: pointer
-	margin-bottom: 5px
-	text-overflow: ellipsis
-	overflow: hidden
-	text-transform: none
-	&.label-top
-		display: block
+    cursor: pointer
+    margin-bottom: 5px
+    text-overflow: ellipsis
+    overflow: hidden
+    text-transform: none
 
+// ==================================================
+// > PLACEHOLDERS
+// ==================================================
+=placeholder
+    color: $dgry
+    // opacity: .5
+    font-family: $font-light
+    text-align: center
+    // font-size: 15pxj
+
+input::-webkit-input-placeholder
+    +placeholder
+input:-moz-placeholder
+    +placeholder
+input::-moz-placeholder
+    +placeholder
+input:-ms-input-placeholder
+    +placeholder
 
 // ==================================================
 // > INPUT
 // ==================================================
 input
-	background: none
-	border: 1px solid lighten($dgry, 50%)
-	padding: 0 20px
-	color: inherit
-	resize: none
-	height: 48px
-	line-height: 48px
-	width: 100%
+    background: none
+    border: 1px solid $dgry
+    padding: 0 20px
+    color: inherit
+    resize: none
+    height: 48px
+    line-height: 48px
+    width: 100%
+    font-size: 16px
+    font-size: 16rem
 
 
 // ==================================================
 // > TEXTAREA
 // ==================================================
 textarea
-	@extend input
-	min-height: 250px
-	padding: 10px 20px
-	line-height: 1.4
-	display: block
-	margin: 0
+    @extend input
+    min-height: 250px
+    padding: 10px 20px
+    line-height: 1.4
+    display: block
+    margin: 0
 
 
 // ==================================================
@@ -64,64 +101,63 @@ textarea
 // ==================================================
 input[type="radio"],
 input[type="checkbox"]
-	appearance: none
-	position: relative
-	width: 14px
-	height: 14px
-	margin: 8px 5px 0
-	padding: 0
-	border: 0
-	&:before
-		content: "\f096"
-		font-family: $font-fa
-		color: $main
-		font-size: 16px
-		font-size: 16rem
-		position: absolute
-		height: 14px
-		line-height: 20px
-		top: 0
-		left: 0
-	&:checked:before
-		content: "\f046"
+    appearance: none
+    position: relative
+    width: 14px
+    height: 14px
+    margin: 8px 5px 0
+    padding: 0
+    border: 0
+    &:before
+        content: "\f096"
+        font-family: $font-fa
+        color: $main
+        font-size: 16px
+        font-size: 16rem
+        position: absolute
+        height: 14px
+        line-height: 20px
+        top: 0
+        left: 0
+    &:checked:before
+        content: "\f046"
 
 input[type="radio"]
-	border: 2px solid $main
-	border-radius: 50%
-	&:before
-		content: ""
-		opacity: 0
-		width: 6px
-		height: 6px
-		background: $main
-		position: absolute
-		top: 50%
-		left: 50%
-		border-radius: 50%
-		margin-top: -3px
-		margin-left: -3px
-	&:checked:before
-		content: ""
-		opacity: 1
+    border: 2px solid $main
+    border-radius: 50%
+    &:before
+        content: ""
+        opacity: 0
+        width: 6px
+        height: 6px
+        background: $main
+        position: absolute
+        top: 50%
+        left: 50%
+        border-radius: 50%
+        margin-top: -3px
+        margin-left: -3px
+    &:checked:before
+        content: ""
+        opacity: 1
 
 // ==================================================
 // > SUBMIT
 // ==================================================
-input[type="submit"]
-	@extend .button
-	background: $main
-	color: white
-	height: 50px
-	float: right
-	font-family: $font-regular
-	cursor: pointer
-	text-transform: uppercase
-	margin-top: 20px !important
-	clear: both
-	&:hover
-		background: white
-		color: $main
-		border: 2px solid $main
+input[type="submit"],
+input[type="button"]
+    @extend .button
+    border: 2px solid $main
+    cursor: pointer
+    display: block
+    width: 100% !important
+    font-size: 16px
+    font-size: 16rem
+    font-family: $font-bold
+    &:hover
+        background: white
+        color: $main
+        border: 2px solid $main
 
 // ==================================================
 // > SELECT

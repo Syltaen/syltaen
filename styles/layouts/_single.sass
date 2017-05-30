@@ -31,3 +31,95 @@
             bottom: -50px
 
 
+// ==================================================
+// > SINGLE JOBS
+// ==================================================
+.single-job
+    background: $lgry
+    padding: 0
+    position: relative
+    margin-bottom: 200px
+    header
+        background: $dgry
+        padding: 0 100px
+        height: 80px
+        position: relative
+        z-index: 10
+        time
+            color: $main
+            line-height: 30px
+            padding-top: 15px
+            text-align: right
+            float: left
+        .country
+            height: 40px
+            line-height: 40px
+            position: absolute
+            right: 0
+            top: 0
+            padding: 0 20px
+            background: $main
+            color: $dgry
+            text-transform: uppercase
+            font-size: 14px
+            font-size: 14rem
+            font-family: $font-bold
+
+    &__content
+        padding: 0 100px
+        overflow: hidden
+        clear: both
+        position: relative
+        z-index: 10
+        h2
+            color: $dgry
+            font-size: 30px
+            font-size: 30rem
+            margin-top: 30px
+
+    &__title
+        position: relative
+        font-size: 16px
+        font-size: 16rem
+        background: $main
+        display: inline-block
+        line-height: 35px
+        padding-right: 20px
+        &:after
+            display: none
+        &:before
+            width: 500px
+            height: 100%
+            left: -500px
+            top: 0
+
+    &:before,
+    &:after
+        content: ""
+        background: $lgry
+        +cover
+        box-shadow: 15px 15px 30px rgba($black, .15)
+        z-index: 0
+    &:before
+        height: 230px
+    &:after
+        content: ""
+        background: $lgry
+        transform: skewY(10deg) translateY(140px)
+        top: auto
+        bottom: 0
+
+    // ========== FORM ========== //
+    &__form
+        h3,
+        h4
+            color: $main
+            font-size: 20px
+            font-size: 20rem
+            margin: .25em 0
+            &:before,
+            &:after
+                display: none
+        h4
+            color: $dgry
+            // margin-bottom: 50px

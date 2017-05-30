@@ -362,6 +362,7 @@ abstract class Posts
      */
     public function run()
     {
+        if (empty($this->filters)) die ("Filters not set for " . static::TYPE);
         $this->query = new \WP_Query($this->filters);
         return $this;
     }
@@ -414,6 +415,7 @@ abstract class Posts
 
             // If the post is not from this model (because of a join), use that post's model
             if ($post->post_type !== static::TYPE) {
+
                 $this->joinedModels[$post->post_type]->populatePostData($post);
             } else {
                 $this->populatePostData($post);
@@ -616,15 +618,28 @@ abstract class Posts
     // ==================================================
     /**
      * Create a new post
-     *
-     * @param string $title
-     * @param string $content
-     * @param boolean $fields
+     * see https://developer.wordpress.org/reference/functions/wp_insert_post/
+     * @param string $title The post title
+     * @param string $content The post content
+     * @param array $fields Custom ACF fields with their values
+     * @param string $status Status for the post
      * @return WP_Post added post(s)
      */
-    public static function add($title = "", $content = "", $fields = false)
+    public static function add($title, $content = "", $fields = false, $status = "published")
     {
+        $post_id = wp_insert_post([
+            "post_type"    => static::TYPE,
+            "post_title"   => $title,
+            "post_content" => $content,
+            "post_status"  => $status
+        ]);
 
+        /* #LOG# */ \Syltaen\Controllers\Controller::log($post_id, __CLASS__.":".__LINE__);
+
+
+        foreach ($fields as $key=>$value) {
+            update_field($key, $value, $post_id);
+        }
     }
 
     /**

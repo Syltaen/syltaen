@@ -10,7 +10,7 @@
     ul.archive.archive--news
 
 
-        each n in c.news
+        each n in c.posts
             li
                 a.thumb(href=n.url style="background-image: url(".$n->thumb["url"]["archive"].");")!= n.thumb.tag.archive
                 .content
@@ -19,7 +19,7 @@
                     p!= n.post_excerpt
                 a.button(href=n.url)= c.more
 
-        unless c.news
+        unless c.posts
             p Sorry, no news matching your request.
 
 

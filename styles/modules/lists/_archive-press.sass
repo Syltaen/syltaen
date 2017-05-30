@@ -1,0 +1,54 @@
+// ==================================================
+// > PRESS ARCHIVE
+// ==================================================
+.archive--press
+    padding: 0
+    margin: 0
+    li
+        background: $lgry
+        margin: 40px 0
+        position: relative
+        padding-left: 35%
+        box-shadow: 15px 15px 30px rgba($black, .15)
+        &:before
+            display: none
+
+    .thumb
+        position: absolute
+        left: 0
+        top: 0
+        height: 100%
+        width: 35%
+        overflow: hidden
+        background: center center / cover no-repeat
+        transition: all .5s ease
+        &:hover
+            transform: translate(-10px)
+        img
+            opacity: 0
+        time
+            position: absolute
+            bottom: 0
+            left: 0
+            margin: 0
+            padding: 0 15px
+            font-family: $font-thin
+            span:after
+                content: ""
+                height: 1000px
+                width: 1000px
+                position: absolute
+                bottom: 0
+                left: 0
+        &:after
+            content: ""
+            height: 100%
+            width: 500px
+            background: $lgry
+            transform: skew(-10deg)
+            position: absolute
+            left: 90%
+            top: 0
+
+    .content
+        padding: 30px 50px

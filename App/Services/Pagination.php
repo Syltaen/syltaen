@@ -33,11 +33,11 @@ class Pagination
      * @param int $page Page number
      * @return string Full link to the page
      */
-    public function getLink($page)
+    public function getLink($page, $anchor = "")
     {
         if ($this->isDisabled($page)) return "";
         $page = $page == 1 ? "" : $page."/";
-        return get_the_permalink() . $page . $this->querystring;
+        return get_the_permalink() . $page . $this->querystring . $anchor;
     }
 
     /**
@@ -69,37 +69,36 @@ class Pagination
     /**
      * Generate Walker
      *
-     * @param boolean $id Id to add to the navigation
+     * @param string $anchor ID to append to each page link
      * @param boolean $class Class to add to the navigation
      * @param int $pages_span Number of pages to display in the navigation
      * @param bool $hide_alone Return an empty string if the walker only has one page
      * @return HTML
      */
-    public function walker($id = false, $class = false, $pages_span = 3, $hide_alone = true)
+    public function walker($anchor = "", $class = false, $pages_span = 3, $hide_alone = true)
     {
 
         if ($hide_alone && $this->totalPages <= 1) return "";
 
         $walker = [
-            "id"       => $id,
             "classes"  => $class,
             "first"  => [
-                "url"      => $this->getLink(1),
+                "url"      => $this->getLink(1, $anchor),
                 "disabled" => $this->isDisabled(1),
                 "title"    => __("Go to first page", "syltaen")
             ],
             "previous" => [
-                "url"      => $this->getLink($this->page - 1),
+                "url"      => $this->getLink($this->page - 1, $anchor),
                 "disabled" => $this->isDisabled($this->page - 1),
                 "title"    => __("Go to previous page", "syltaen")
             ],
             "next"  => [
-                "url"      => $this->getLink($this->page + 1),
+                "url"      => $this->getLink($this->page + 1, $anchor),
                 "disabled" => $this->isDisabled($this->page + 1),
                 "title"    => __("Go to next page", "syltaen")
             ],
             "last"   => [
-                "url"      => $this->getLink($this->totalPages),
+                "url"      => $this->getLink($this->totalPages, $anchor),
                 "disabled" => $this->isDisabled($this->totalPages),
                 "title"    => __("Go to last page", "syltaen")
             ],
@@ -115,7 +114,7 @@ class Pagination
 
         for (; $pages_span > 0; $i++, $pages_span--) {
             $walker["pages"][] = [
-                "url"     => $this->getLink($this->page + $i),
+                "url"     => $this->getLink($this->page + $i, $anchor),
                 "current" => $i == 0,
                 "number"  => $this->format($this->page + $i)
             ];
@@ -142,24 +141,3 @@ class Pagination
         return $page;
     }
 }
-
-/*<nav class="pagination-walker <?= $class;?>" <?= $id?"id='$id'":"";?>>
-
-    <a href="<?= $this->getLink(0); ?>" class="pagination-walker__direction pagination-walker__direction--first <?= $this->page<=1?'disabled':''; ?>" title="Page précédente">Page précédente</a>
-    <a href="<?= $this->getLink($this->page-1); ?>" class="pagination-walker__direction pagination-walker__direction--previous <?= $this->page<=1?'disabled':''; ?>" title="Page précédente">Page précédente</a>
-
-    <div class="pagination-walker__pagelistwrapper gr-8 gr-12-xs">
-        <ul class="pagination-walker__pagelist">
-
-            <?php for($p = 1; $p <= $this->totalPages; $p++): ?>
-                <li <?= $p==$this->page?"class='page'":""; ?>>
-                    <a href="<?= $this->getLink($p); ?>"><?= $this->format($p); ?></a>
-                </li>
-            <?php endfor; ?>
-
-        </ul>
-    </div>
-
-    <a href="<?= $this->getLink($this->page+1); ?>" class="pagination-walker__direction pagination-walker__direction--next <?= $this->page>=$this->totalPages?'disabled':''; ?>" title="Page suivante">Page suivante</a>
-    <a href="<?= $this->getLink(0); ?>" class="pagination-walker__direction pagination-walker__direction--last <?= $this->page<=1?'disabled':''; ?>" title="Page précédente">Page précédente</a>
-</nav>*/

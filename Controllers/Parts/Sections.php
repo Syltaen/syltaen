@@ -4,6 +4,7 @@ namespace Syltaen\Controllers\Parts;
 
 use Syltaen\Models\Posts\News;
 use Syltaen\Models\Posts\Jobs;
+use Syltaen\Models\Posts\Press;
 use Syltaen\Models\Posts\Locations;
 use Syltaen\Models\Taxonomies\LocationTypes;
 use Syltaen\App\Services\Pagination;
@@ -35,7 +36,7 @@ class Sections extends \Syltaen\Controllers\Controller
             $this->parameters($section);
 
             foreach ($section["content"] as &$content) {
-                $this->content($content);
+                $this->content($content, $section);
             }
         }
     }
@@ -79,7 +80,7 @@ class Sections extends \Syltaen\Controllers\Controller
      * @param arrat $c The content data
      * @return void
      */
-    private function content(&$c)
+    private function content(&$c, $s)
     {
         switch ($c["acf_fc_layout"]) {
 
@@ -96,7 +97,7 @@ class Sections extends \Syltaen\Controllers\Controller
 
             // ========== ARCHIVE ========== //
             case "archive":
-                $this->contentArchives($c);
+                $this->contentArchives($c, $s);
                 break;
 
             // ========== CONTACT BLOCKS ========== //
@@ -112,27 +113,27 @@ class Sections extends \Syltaen\Controllers\Controller
      * Handle content for Archives
      *
      * @param array $a the archive content
+     * @param array $s the section
      * @return void
      */
-    private function contentArchives(&$a)
+    private function contentArchives(&$a, $s)
     {
+        $pagination_model = false;
+
         switch($a["type"]) {
             case "news":
-                $pagination  = new Pagination(new News, $a["perpage"]);
-                $a["news"]   = $pagination->posts();
-                $a["walker"] = $pagination->walker();
-                $a["more"]   = __("More info", "syltaen");
+                $pagination_model = new News;
+                $a["more"]        = __("More info", "syltaen");
                 break;
 
             case "jobs":
-                $pagination  = new Pagination(new Jobs, $a["perpage"]);
-                $a["jobs"]   = $pagination->posts();
+                $pagination_model = new Jobs;
+                $a["more"]        = __("More info", "syltaen");
+                break;
 
-                /* #LOG# */ \Syltaen\Controllers\Controller::log($a["jobs"], __CLASS__.":".__LINE__);
-
-
-                $a["walker"] = $pagination->walker();
-                $a["more"]   = __("More info", "syltaen");
+            case "press":
+                $pagination_model = new Press;
+                $a["more"]        = __("See more", "syltaen");
                 break;
 
             case "locations":
@@ -140,6 +141,12 @@ class Sections extends \Syltaen\Controllers\Controller
                 wp_enqueue_script("google.maps", "https://maps.googleapis.com/maps/api/js?key=AIzaSyBqGY0yfAyCACo3JUJbdgppD2aYcgV8sC0");
                 break;
             default: break;
+        }
+
+        if ($pagination_model) {
+            $pagination  = new Pagination($pagination_model, $a["perpage"]);
+            $a["posts"]  = $pagination->posts();
+            $a["walker"] = $pagination->walker("#".$s["attr"]["id"]);
         }
     }
 

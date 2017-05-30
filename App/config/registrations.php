@@ -2,6 +2,7 @@
 
 use Syltaen\Models\Taxonomies;
 use Syltaen\Models\Posts;
+use Syltaen\App\Services\Forms\NinjaForms;
 
 
 // ==================================================
@@ -24,5 +25,6 @@ add_action("init", function() {
     Posts\Locations::register();
     Posts\Jobs::register();
     Posts\Applications::register();
+    Posts\Press::register();
 
 });

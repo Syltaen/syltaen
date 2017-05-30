@@ -1,0 +1,27 @@
+//- ==================================================
+//- > PARTIAL : NEWS ARCHIVE
+//- ==================================================
+.container
+
+    .row: .gr-10.prefix-1.gr-12-md.prefix-0-md
+
+        != c.walker
+
+        ul.archive--press
+
+            each n in c.posts
+                li
+                    a.thumb(href=n.url style="background-image: url(".$n->thumb["url"]["archive"].");")
+                        != n.thumb.tag.archive
+                        time.button: span!= n.date.bold
+
+                    .content
+                        h3= n.post_title
+                        p!= n.post_excerpt
+                        a.button(href=n.url)= c.more
+
+            unless c.posts
+                p Sorry, no article matching your request.
+
+
+        != c.walker

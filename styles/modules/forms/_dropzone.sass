@@ -1,3 +1,58 @@
 // ==================================================
 // > DROPZONE
 // ==================================================
+.fileuploadfield-container
+
+    .nf-field-label
+        width: 100%
+
+    label
+        @extend input
+        width: 100%
+        text-align: center
+        display: block
+        position: relative
+        text-transform: none
+        overflow: visible
+        font-family: $font-bold
+        background: $dgry
+        color: white
+        border-width: 2px
+        height: 50px
+        line-height: 50px
+        &:hover
+            background: none
+            color: $dgry
+
+
+    .dz-preview
+        .dz-image,
+        // .dz-progress,
+        .dz-success-mark,
+        .dz-error-mark
+            display: none
+
+        .dz-details
+            +cover
+            text-indent: 0
+            .dz-size
+                display: none
+
+    .dz-error-message
+        color: red
+        text-indent: 0
+        line-height: 1
+
+    .dz-started
+        text-indent: -9999em
+
+    .dz-filename
+        +cover
+        box-sizing: content-box
+        padding: 1px
+        margin: -1px
+        background: white
+        font-family: $font-regular
+        color: $dgry
+        text-align: left
+        text-indent: 20px

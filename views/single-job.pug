@@ -1,0 +1,38 @@
+extends single
+
+block article
+
+
+    //- ==================================================
+    //- > JOB DESCRIPTION
+    //- ==================================================
+    article.single-content.single-job
+
+        header
+            time!= post.date.bold
+            .country= post.terms.countries.names
+
+        .single-job__content
+            h2= post.post_title
+
+            each c in post.content
+
+                if c.acf_fc_layout == "title"
+                    h3.single-job__title= c.title
+
+                if c.acf_fc_layout == "txt_1col"
+                    != c.txt
+
+                if c.acf_fc_layout == "txt_2col"
+                    .row
+                        .gr-6!= c.txt_1
+                        .gr-6!= c.txt_2
+
+
+    //- ==================================================
+    //- > APPLICATION FORM
+    //- ==================================================
+    .single-job__form
+        .row
+            .gr-10.prefix-1.gr-12-md.prefix-0-md
+                != post.application_form

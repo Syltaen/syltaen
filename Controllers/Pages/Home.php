@@ -4,7 +4,9 @@ namespace Syltaen\Controllers\Pages;
 
 use Syltaen\App\Services\Fields;
 use Syltaen\Models\Posts\News;
+use Syltaen\Models\Posts\Jobs;
 use Syltaen\Controllers\Parts\Sections;
+use Syltaen\App\Services\Pagination;
 
 class Home extends \Syltaen\Controllers\Controller
 {
@@ -31,7 +33,7 @@ class Home extends \Syltaen\Controllers\Controller
             "news_background",
             "news_before",
             "@news_last" =>
-                (new News())
+                (new News)
                     ->addThumbnailFormat("tag", "home", "medium")
                     ->addThumbnailFormat("url", "home", "medium")
                     ->get(3),
@@ -42,5 +44,7 @@ class Home extends \Syltaen\Controllers\Controller
             "gates",
             "@sections" => (new Sections())->data(),
         ]);
+
+        $test = (new Jobs)->get();
     }
 }

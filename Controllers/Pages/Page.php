@@ -16,22 +16,25 @@ class Page extends \Syltaen\Controllers\Controller
     /**
      * Populate $this->data
      *
+     * @param bool $spacial_page
      */
-    public function __construct()
+    public function __construct($special_page = false)
     {
         parent::__construct();
         $this->data = \Timber::get_context();
 
-        Fields::store($this->data, [
-            "intro_content",
-            "@sections" => (new Sections())->data()
-        ]);
+
+        if (!$special_page) {
+            Fields::store($this->data, [
+                "intro_content",
+                "@sections" => (new Sections())->data()
+            ]);
+        }
 
     }
 
-
     // ==================================================
-    // > ERRORS
+    // > SPECIAL PAGES
     // ==================================================
     /**
      * Error 404 page display
@@ -42,4 +45,30 @@ class Page extends \Syltaen\Controllers\Controller
     {
         $this->render("404");
     }
+
+    /**
+     * Display a form
+     *
+     * @param int $form_id The ID of the form to display
+     * @return void
+     */
+    public function ninjaFormPreview($form_id)
+    {
+        global $post;
+        Fields::store($this->data, [
+            "@intro_content" => "<h1>Form preview</h1>",
+            "@sections"      => [[
+                "classes" => "",
+                "attr"    => "",
+                "content" => [[
+                    "acf_fc_layout" => "txt_1col",
+                    "txt"           => do_shortcode("[ninja_form id=$form_id]")
+                ]]
+            ]]
+        ]);
+
+        $this->render();
+    }
+
+
 }

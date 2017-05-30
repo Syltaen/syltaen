@@ -7,8 +7,15 @@ namespace Syltaen\Controllers\Pages;
 // > 404
 // ==================================================
 if (is_404()) {
-    (new Page)->error404();
 
+    (new Page(true))->error404();
+
+// ==================================================
+// > NINJA FORM PREVIEW
+// ==================================================
+ } elseif (isset($_GET["nf_preview_form"])) {
+
+    (new Page(true))->ninjaFormPreview($_GET["nf_preview_form"]);
 
 // ==================================================
 // > SINGLES
