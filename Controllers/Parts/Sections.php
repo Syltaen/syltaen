@@ -95,6 +95,14 @@ class Sections extends \Syltaen\Controllers\Controller
                 $c["txt_2_class"] = "gr-".substr($c['proportions'], 2, 1);
                 break;
 
+            // ========== TXT 3 COL ========== //
+            case "txt_3col":
+                $c["class"]       = "align-".$c["valign"];
+                $c["txt_1_class"] = "gr-".substr($c['proportions'], 0, 1);
+                $c["txt_2_class"] = "gr-".substr($c['proportions'], 2, 1);
+                $c["txt_3_class"] = "gr-".substr($c['proportions'], 4, 1);
+                break;
+
             // ========== ARCHIVE ========== //
             case "archive":
                 $this->contentArchives($c, $s);
@@ -104,7 +112,10 @@ class Sections extends \Syltaen\Controllers\Controller
             case "contact_info":
                 break;
 
-
+            // ========== FULL WIDTH IMAGE ========== //
+            case "full_width_image":
+                $this->contentFullWidthImage($c);
+                break;
             default: break;
         }
     }
@@ -112,43 +123,89 @@ class Sections extends \Syltaen\Controllers\Controller
     /**
      * Handle content for Archives
      *
-     * @param array $a the archive content
+     * @param array $c the archive content
      * @param array $s the section
      * @return void
      */
-    private function contentArchives(&$a, $s)
+    private function contentArchives(&$c, $s)
     {
         $pagination_model = false;
 
-        switch($a["type"]) {
+        switch($c["type"]) {
             case "news":
                 $pagination_model = new News;
-                $a["more"]        = __("More info", "syltaen");
+                $c["more"]        = __("More info", "syltaen");
                 break;
 
             case "jobs":
                 $pagination_model = new Jobs;
-                $a["more"]        = __("More info", "syltaen");
+                $c["more"]        = __("More info", "syltaen");
                 break;
 
             case "press":
                 $pagination_model = new Press;
-                $a["more"]        = __("See more", "syltaen");
+                $c["more"]        = __("See more", "syltaen");
                 break;
 
             case "locations":
-                $a["location_types"] = (new LocationTypes)->getPosts(new Locations);
+                $c["location_types"] = (new LocationTypes)->getPosts(new Locations);
                 wp_enqueue_script("google.maps", "https://maps.googleapis.com/maps/api/js?key=AIzaSyBqGY0yfAyCACo3JUJbdgppD2aYcgV8sC0");
                 break;
             default: break;
         }
 
         if ($pagination_model) {
-            $pagination  = new Pagination($pagination_model, $a["perpage"]);
-            $a["posts"]  = $pagination->posts();
-            $a["walker"] = $pagination->walker("#".$s["attr"]["id"]);
+            $pagination  = new Pagination($pagination_model, $c["perpage"]);
+            $c["posts"]  = $pagination->posts();
+            $c["walker"] = $pagination->walker("#".$s["attr"]["id"]);
         }
     }
 
+    /**
+     * Handle content for full-width images
+     *
+     * @param array $c
+     * @return void
+     */
+    private function contentFullWidthImage(&$c) {
+        $c["classes"] = ["full-width-image"];
+        $c["styles"]  = [];
+        $c["attr"]   = [];
+        // ========== CLASSES ========== //
+        $c["classes"][] = $c["parallax"];
+
+        if ($c["top_edge"] != "default") {
+            $c["classes"][] = $c["top_edge"];
+        }
+
+        if ($c["bottom_edge"] != "default") {
+            $c["classes"][] = $c["bottom_edge"];
+        }
+
+        $c["classes"] = join($c["classes"], " ");
+
+        // ========== STYLES ========== //
+        $c["styles"][] = "background-image: url(".$c["image"]["url"].");";
+        $c["image"]    = wp_get_attachment_image($c["image"]["ID"], [1600, null]);
+
+        if ($c["vertical_offset"]) {
+            $c["styles"][] = "margin-top: ".$c["vertical_offset"]."px;";
+        }
+
+        $c["styles"]  = join($c["styles"], " ");
+
+        // ========== ATTRS ========== //
+        switch ($c["parallax"]) {
+            case "parallax-to-top":
+                $c["attr"]["data-top-bottom"] = "background-position-y: 100%";
+                $c["attr"]["data-bottom-top"] = "background-position-y: 0%";
+                break;
+            case "parallax-to-bottom":
+                $c["attr"]["data-top-bottom"] = "background-position-y: 0%";
+                $c["attr"]["data-bottom-top"] = "background-position-y: 100%";
+                break;
+            default: break;
+        }
+    }
 
 }

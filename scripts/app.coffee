@@ -12,14 +12,25 @@ jQuery ($) ->
             @post = (/((page-id)|(postid))-(\d*)/g).exec( @$body.attr("class") )
             @post = if @post then @post[4] else false
 
+            @parallaxConfig()
+
         clicks: ->
             $("[data-click]").click (e) ->
-            	e.preventDefault()
-            	switch $(@).data "click"
-            		when "print"
-            			window.print()
-            		when "windowed"
-            			window.open $(@).attr("href"), "_blank", "location=yes,height=500,width=600,scrollbars=yes,status=yes"
+                e.preventDefault()
+                switch $(@).data "click"
+                    when "print"
+                        window.print()
+                    when "windowed"
+                        window.open $(@).attr("href"), "_blank", "location=yes,height=500,width=600,scrollbars=yes,status=yes"
+
+        parallaxConfig: ->
+            @parallax = skrollr.init
+                forceHeight: false
+                smoothScrolling: false
+                smoothScrollingDuration: 0
+
+            if @parallax.isMobile() then @parallax.destroy()
+            $(window).resize => @parallax.refresh()
 
     # ==================================================
     # > FORMS

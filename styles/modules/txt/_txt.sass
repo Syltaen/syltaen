@@ -4,6 +4,25 @@
 p
     margin: 1em 0
 
+// ==================================================
+// > BLOCKS
+// ==================================================
+.txt-col
+    display: flex
+    flex-flow: row nowrap
+    &.align-top
+        align-items: flex-start
+    &.align-center
+        align-items: center
+    &.align-bot
+        align-items: flex-end
+    +gridle_state(xs)
+        flex-flow: column nowrap
+
+    margin: 0 -25px !important
+    & > div
+        padding: 0 25px
+
 
 // ==================================================
 // > INLINE

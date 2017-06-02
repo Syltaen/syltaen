@@ -6,3 +6,4 @@
 //@prepros---append vendors/prefixfree.min.js
 //@prepros---append vendors/prefixfree.viewport-units.js
 //@prepros-append vendors/dropzone.js
+//@prepros-append vendors/skrollr.js

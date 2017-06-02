@@ -1,0 +1,78 @@
+// ==================================================
+// > SECTION CONTENT - FULL WIDTH IMAGE
+// ==================================================
+.full-width-image
+    position: relative
+    background: center center / 100% auto no-repeat
+
+    // ========== PARALLAX ========== //
+    &.parallax-to-bottom,
+    &.parallax-to-top
+        img
+            opacity: 0
+            width: 80%
+            display: block
+            margin: 0 auto
+
+    &.parallax-to-bottom
+        background-position: center 100%
+
+    &.parallax-to-top
+        background-position: center 0%
+
+    // ========== EDGES TOP ========== //
+    &.top-ascending,
+    &.top-descending
+        &:before
+            content: ""
+            position: absolute
+            top: 0
+            left: 0
+            width: 0
+            height: 0
+            border-top: 50px solid white
+    &.top-ascending:before
+        border-right: 100vw solid transparent
+    &.top-descending:before
+        border-left: 100vw solid transparent
+
+    // ========== EDGES BOTTOM ========== //
+    &.bottom-ascending,
+    &.bottom-descending
+        &:after
+            content: ""
+            position: absolute
+            bottom: 0
+            left: 0
+            width: 0
+            height: 0
+            border-bottom: 50px solid white
+    &.bottom-ascending:after
+        border-left: 100vw solid transparent
+    &.bottom-descending:after
+        border-right: 100vw solid transparent
+
+    // ========== EDGES COLOR ========== //
+    .bg-lgry &
+        &.top-ascending:before,
+        &.top-descending:before
+            border-top-color: $lgry
+        &.bottom-ascending:after,
+        &.bottom-descending:after
+            border-top-color: $lgry
+
+    .bg-dgry &
+        &.top-ascending:before,
+        &.top-descending:before
+            border-top-color: $dgry
+        &.bottom-ascending:after,
+        &.bottom-descending:after
+            border-top-color: $dgry
+
+    .bg-main &
+        &.top-ascending:before,
+        &.top-descending:before
+            border-top-color: $main
+        &.bottom-ascending:after,
+        &.bottom-descending:after
+            border-top-color: $main

@@ -46,6 +46,12 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                     "classes" => "subtitle",
                     "wrapper" => false
                 ],
+                [
+                    "title"   => "Ligne transversale",
+                    "classes" => "line-through",
+                    "wrapper" => true,
+                    "selector" => "*"
+                ]
             ]
         ],
 
@@ -88,7 +94,6 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                     "inline" => "span",
                     "classes" => "secondary-color"
                 ],
-
                 [
                     "title" => "Fonte : Light",
                     "inline" => "span",
@@ -99,7 +104,26 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                     "inline" => "span",
                     "classes" => "font-black"
                 ],
-
+                [
+                    "title" => "Couleur du fond : Blanc",
+                    "inline" => "span",
+                    "classes" => "bg-white"
+                ],
+                [
+                    "title" => "Couleur du fond : Princpale",
+                    "inline" => "span",
+                    "classes" => "bg-main"
+                ],
+                [
+                    "title" => "Couleur du fond : Gris foncé",
+                    "inline" => "span",
+                    "classes" => "bg-dgry"
+                ],
+                [
+                    "title" => "Couleur du fond : Gris clair",
+                    "inline" => "span",
+                    "classes" => "bg-lgry"
+                ],
                 [
                     "title" => "Nombre incrémenté",
                     "inline" => "span",

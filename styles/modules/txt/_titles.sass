@@ -29,7 +29,11 @@ h3
         top: -.3em
     &:after
         bottom: -.3em
-
+    .bg-main &
+        color: white
+        &:before,
+        &:after
+            background: white
 
 h2
     font-size: 35px
@@ -39,18 +43,51 @@ h3
     font-size: 30px
     font-size: 30rem
     color: $dgry
+    .bg-dgry &
+        color: white
 
 h4
     font-size: 24px
     font-size: 24rem
+    text-transform: uppercase
+    font-family: $font-bold
+    .bg-main &
+        color: white
+    .bg-dgry &
+        color: white
 
 h5
-    font-size: 18px
-    font-size: 18rem
-
+    font-size: 20px
+    font-size: 20rem
+    font-family: $font-bold
+    .bg-main &
+        color: white
 h6
     font-size: 16px
     font-size: 16rem
+    font-family: $font-light
+    letter-spacing: 2px
+    .bg-main &
+        color: white
 
+// ========== SUBTITLE ========== //
 .subtitle
     font-size: .8em
+
+// ========== LINE THROUGH ========== //
+.line-through
+    position: relative
+    span
+        position: relative
+        z-index: 10
+        padding: 0 10px
+        margin-left: -10px
+    &:before
+        content: ""
+        z-index: 0
+        height: 1px
+        width: 9999px
+        position: absolute
+        left: -5000px
+        top: 50%
+        background: $main

@@ -1,0 +1,19 @@
+{
+    "remotePath": "./httpdocs/ecophos/group/wp-content/themes/syltaen",
+    "host": "taho.p4x.net",
+    "username": "hungryminds-dev",
+    "password": "hmdev200uve",
+    "port": 21,
+    "secure": false,
+    "protocol": "ftp",
+    "uploadOnSave": false,
+    "passive": false,
+    "debug": false,
+    "privateKeyPath": null,
+    "passphrase": null,
+    "ignore": [
+        "\\.vscode",
+        "\\.git",
+        "\\.DS_Store"
+    ]
+}
