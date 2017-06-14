@@ -123,3 +123,74 @@
             width: 200px
             +gridle_state(md)
                 width: 120px
+
+// ==================================================
+// > LANGUAGE MENU
+// ==================================================
+.lang-menu
+    float: right
+    font-family: $font-black
+    text-transform: uppercase
+    font-size: 15px
+    font-size: 15rem
+    margin-top: 35px
+    padding: 0 25px 0 10px
+    margin-left: 20px
+    position: relative
+    color: $main
+    height: 40px
+    line-height: 40px
+    &:after
+        content: "\f107"
+        font-family: $font-fa
+        position: absolute
+        right: 4px
+        top: 0
+
+    &--current
+        position: relative
+        z-index: 10
+
+    &--list
+        position: absolute
+        top: 0
+        left: 0
+        overflow: hidden
+        background: white
+        border: 1px solid $lgry
+        font-family: $font-medium
+        opacity: 1
+        visibility: hidden
+        height: 0
+        padding-top: 40px
+        &--item
+            position: relative
+            a,
+            &__current
+                padding: 0 25px 0 10px
+                position: relative
+            &__current
+                color: $dgry
+            a
+                position: relative
+                z-index: 10
+            &__link:before
+                content: ""
+                +cover
+                width: 140%
+                transform: skew(15deg) translate(-120%)
+                background: $main
+                display: block
+                transition: all .25s ease
+            &:hover
+                a
+                    text-decoration: none
+                    color: white
+                &:before
+                    transform: skew(10deg) translate(-20%)
+
+    &:hover
+        .lang-menu--list
+            opacity: 1
+            visibility: visible
+            height: auto

@@ -45,6 +45,5 @@ class Home extends \Syltaen\Controllers\Controller
             "@sections" => (new Sections())->data(),
         ]);
 
-        $test = (new Jobs)->get();
     }
 }

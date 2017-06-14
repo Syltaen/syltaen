@@ -5,8 +5,7 @@
 // ==================================================
 register_nav_menus([
     "main_menu"   => "Main menu",
-    "footer_menu" => "Footer menu",
-    "lang_menu"   => "Language menu",
+    "footer_menu" => "Footer menu"
 ]);
 
 // ==================================================

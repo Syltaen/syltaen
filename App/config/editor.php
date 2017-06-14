@@ -76,6 +76,12 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                     "selector" => "a",
                     "classes" => "croched-link",
                     "wrapper" => false
+                ],
+                [
+                    "title" => "Lanceur vidéo",
+                    "selector" => "a",
+                    "classes" => "video-launcher",
+                    "wrapper" => false
                 ]
             ]
         ],

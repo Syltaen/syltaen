@@ -91,16 +91,16 @@ class Sections extends \Syltaen\Controllers\Controller
             // ========== TXT 2 COL ========== //
             case "txt_2col":
                 $c["class"]       = "align-".$c["valign"];
-                $c["txt_1_class"] = "gr-".substr($c['proportions'], 0, 1);
-                $c["txt_2_class"] = "gr-".substr($c['proportions'], 2, 1);
+                $c["txt_1_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_1"] : "gr-".substr($c["proportions"], 0, 1);
+                $c["txt_2_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_2"] : "gr-".substr($c["proportions"], 2, 1);
                 break;
 
             // ========== TXT 3 COL ========== //
             case "txt_3col":
                 $c["class"]       = "align-".$c["valign"];
-                $c["txt_1_class"] = "gr-".substr($c['proportions'], 0, 1);
-                $c["txt_2_class"] = "gr-".substr($c['proportions'], 2, 1);
-                $c["txt_3_class"] = "gr-".substr($c['proportions'], 4, 1);
+                $c["txt_1_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_1"] : "gr-".substr($c["proportions"], 0, 1);
+                $c["txt_2_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_2"] : "gr-".substr($c["proportions"], 2, 1);
+                $c["txt_3_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_3"] : "gr-".substr($c["proportions"], 4, 1);
                 break;
 
             // ========== ARCHIVE ========== //

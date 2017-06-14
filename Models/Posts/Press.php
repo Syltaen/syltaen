@@ -6,7 +6,7 @@ class Press extends Posts
 {
 
     const TYPE     = "press";
-    const LABEL    = "Press";
+    const LABEL    = "Press articles";
     const ICON     = "dashicons-clipboard";
     const HAS_PAGE = false;
     const SUPPORTS = ["title", "excerpt", "thumbnail"];

@@ -2,7 +2,7 @@
 
 use Syltaen\App\Services\Fields;
 
-add_filter('timber_context', function ($data) {
+add_filter("timber_context", function ($data) {
 
     // ==================================================
     // > MENUS
@@ -21,11 +21,7 @@ add_filter('timber_context', function ($data) {
             "echo"           => false
         )),
 
-        "lang" => wp_nav_menu(array(
-            "theme_location" => "lang_menu",
-            "container"      => false,
-            "echo"           => false
-        )),
+        "languages" => qtrans_getSortedLanguages()
 
     );
 

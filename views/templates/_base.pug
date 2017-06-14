@@ -23,19 +23,30 @@ html(lang=site.language)
                         a.main-logo(href=site.url rel="home")
                             img(src=site.header.logo.url alt=site.name)
 
+
+                        nav.lang-menu
+                            span.lang-menu--current
+                                != qtrans_getLanguage()
+                            ul.lang-menu--list
+                                each lang in site.menus.languages
+                                    if lang == qtrans_getLanguage()
+                                        li.lang-menu--list--item.lang-menu--list--item__current
+                                            span= lang
+                                    else
+                                        li.lang-menu--list--item.lang-menu--list--item__link
+                                            a(href="?lang="+lang)= lang
+
                         nav.header-social-menu
                             ul
                                 each soc in site.header.social
                                     li: a(href=soc.url title=soc.name)!= soc.icon
-
-                //- nav.header-lang-menu
 
 
         nav#main-menu
             .container
                 .row
                     .gr-10.prefix-1.gr-12-sm.prefix-0-sm
-                        form: input.header-search(type="text" name="s")
+                        form(action=site.url): input.header-search(type="text" name="s" value=site.header.search)
                         != site.menus.main
 
 

@@ -27,7 +27,7 @@ jQuery(function($) {
                         if( validateEmail(value) )
                             Backbone.Radio.channel("fields").request("remove:error", id, "login-error");
                         else
-                            Backbone.Radio.channel("fields").request("add:error", id, "login-error", "Veuillez entrer une adresse e-mail valide.");
+                            Backbone.Radio.channel("fields").request("add:error", id, "login-error", "Please provide a valid email address.");
                         break;
 
                     default: return;
@@ -66,7 +66,7 @@ jQuery(function($) {
                     maxFilesize: view.model.attributes.maxupload,
                     clickable: true,
                     dictDefaultMessage: view.model.attributes.label,
-                    dictFileTooBig: "Fichier trop lourd ({{filesize}}Mb) - Maximum autorisé : {{maxFilesize}}Mb",
+                    dictFileTooBig: "This file is too heavy ({{filesize}}Mb) - Max. authorised : {{maxFilesize}}Mb",
                     dictInvalidFileType: "Ce type de fichier n'est pas autorisé.",
                     uploadprogress: function (file, progress, bytesSent) {
                         if (progress >= 100) {

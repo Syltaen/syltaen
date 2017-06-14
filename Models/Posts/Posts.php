@@ -18,6 +18,7 @@ abstract class Posts
     const HAS_PAGE = true;  // Should each post have his own page
     const REWRITE  = true;  // Ex: ["slug" => "agenda"];
     const TAX      = [];    // List of taxonomy slugs
+    const STATUS   = [];    // List of posts status. status_key => [singular_label, plurial_label]
 
     /**
      * @var boolean|string Allow to use an external link (stored in a field) for the permalink generation.
@@ -66,8 +67,10 @@ abstract class Posts
      *
      * @var boolean
      */
-    protected $query   = false;
-    protected $filters = [];
+    protected $query         = false;
+    protected $filters       = [];
+    protected $cachedFilters = [];
+    protected $cachedPosts   = [];
 
     /**
      * A list of other post models joined to this one with $this->join().
@@ -129,6 +132,7 @@ abstract class Posts
         // $local_query
         // "s" => "keyword",
         // "post_in"
+        $this->filters["s"] = $terms;
 
         return $this;
     }
@@ -167,26 +171,26 @@ abstract class Posts
     }
 
     /**
-     * Update the filter to only retrive specific ID's
+     * Restrict to only specific posts
      *
-     * @param array $ids
+     * @param array|int $list
      * @return void
      */
-    public function ids($ids)
+    public function is($list)
     {
-        $this->filters["post__in"] = $ids;
+        $this->filters["post__in"] = Fields::extractIds($list);
         return $this;
     }
 
     /**
-     * Update the filter to only retrive one specific ID
+     * Exclude specific posts
      *
-     * @param int $id
-     * @return self
+     * @param array|int $list
+     * @return void
      */
-    public function id($id)
+    public function isnt($list)
     {
-        $this->filters["post__in"] = [$id];
+        $this->filters["post__not_in"] = Fields::extractIds($list);
         return $this;
     }
 
@@ -320,7 +324,7 @@ abstract class Posts
         if (!$filter_keys) {
             $this->filters = [
                 "post_type"   => static::TYPE,
-                "nopaging"    => true,
+                "nopaging"    => true
             ];
             return $this;
         }
@@ -342,17 +346,23 @@ abstract class Posts
      *
      * @param int $limit Number of posts to return
      * @param int $page Page offset to use
-     * @return array of WP_Posts
+     * @return array of WP_Post
      */
     public function get($limit = false, $page = false)
     {
-        return $this
-            ->limit($limit)
-            ->page($page)
-            ->run()
-            ->populateData()
-            ->query
-            ->posts;
+        $this->limit($limit)->page($page);
+
+        // Only re-fetch posts if the query has been updated
+        if ($this->filters !== $this->cachedFilters) {
+            $this->cachedPosts = $this
+                ->run()
+                ->populateData()
+                ->query
+                ->posts;
+            $this->cachedFilters = $this->filters;
+        }
+
+        return $this->cachedPosts;
     }
 
     /**
@@ -362,7 +372,6 @@ abstract class Posts
      */
     public function run()
     {
-        if (empty($this->filters)) die ("Filters not set for " . static::TYPE);
         $this->query = new \WP_Query($this->filters);
         return $this;
     }
@@ -402,20 +411,18 @@ abstract class Posts
     // > DATA HANDLING FOR EACH POST
     // ==================================================
     /**
-     * Add data to each passed post based on what the model supports
+     * Add data to each post based on what the model supports
      *
      * @return self
      */
     public function populateData()
     {
-
         if (!isset($this->query) || empty($this->query)) die("The WP_Query need to be run before populating its posts.");
 
         foreach ($this->query->posts as $post) {
 
             // If the post is not from this model (because of a join), use that post's model
             if ($post->post_type !== static::TYPE) {
-
                 $this->joinedModels[$post->post_type]->populatePostData($post);
             } else {
                 $this->populatePostData($post);
@@ -461,7 +468,6 @@ abstract class Posts
         }
 
     }
-
 
     /**
      * Add all Custom Fields's values specified in the model's constructor to a post
@@ -605,12 +611,89 @@ abstract class Posts
             "has_archive"        => false
         ]);
 
-        // addStatusTypes
+        static::addStatusTypes(static::STATUS);
     }
 
-    public static function addStatusTypes()
+    /**
+     * Register custom status types for the model
+     *
+     * @param array $status_list List of custom posts status
+     * @return void
+     */
+    private static function addStatusTypes($status_list)
     {
+        $post_type = static::TYPE;
 
+        // ========== register each status ========== //
+        foreach ($status_list as $status=>$labels) {
+            register_post_status($status, [
+                "label" => $labels[0],
+                "public" => true,
+                "exclude_from_search" => true,
+                "show_in_admin_all_list" => true,
+                "show_in_admin_status_list" => true,
+                "label_count" => _n_noop(
+                    "$labels[0] <span class='count'>(%s)</span>",
+                    "$labels[1] <span class='count'>(%s)</span>",
+                    "syltaen"
+                )
+            ]);
+        }
+        // ========== Add in quick edit ========== //
+        add_action("admin_footer-edit.php", function () use ($status_list, $post_type) {
+            global $post;
+            if (!$post || $post->post_type !== $post_type) return false;
+            foreach ($status_list as $status=>$labels) {
+                printf(
+                    "<script>jQuery(function(\$){\$('select[name=\"_status\"]').append('<option value=\"%s\">%s</option>');});</script>",
+                    $status,
+                    $labels[0]
+                );
+            }
+        });
+
+
+        // ========== Add in post edit ========== //
+        add_action("admin_footer-post.php", function () use($status_list, $post_type) {
+            global $post;
+            if (!$post || $post->post_type !== $post_type) return false;
+            foreach ($status_list as $status=>$labels) {
+                printf(
+                        '<script>'.
+                        '   jQuery(document).ready(function($){'.
+                        '      $("select#post_status").append("<option value=\"%s\" %s>%s</option>");'.
+                        '      $("a.save-post-status").on("click",function(e){'.
+                        '         e.preventDefault();'.
+                        '         var value = $("select#post_status").val();'.
+                        '         $("select#post_status").value = value;'.
+                        '         $("select#post_status option").removeAttr("selected", true);'.
+                        '         $("select#post_status option[value=\'"+value+"\']").attr("selected", true)'.
+                        '       });'.
+                        '   });'.
+                        '</script>',
+                        $status,
+                        $post->post_status !== $status ? "" : "selected='selected'",
+                        $labels[0]
+                );
+                if ($post->post_status === $status) {
+                    printf(
+                        "<script>jQuery(function(\$){\$(\".misc-pub-section #post-status-display\").text(\"%s\");});</script>",
+                        $labels[0]
+                    );
+                }
+            }
+        });
+
+
+
+
+        // ========== Prevent status switch when saving ========== //
+        add_filter("wp_insert_post_data", function ($data , $postarr) use ($post_type) {
+            if ($data["post_type"] == $post_type) {
+                $data["post_status"] = $data["post_status"] == "publish" ? $postarr["original_post_status"] : $data["post_status"];
+            }
+            return $data;
+        }, "99", 2);
     }
 
     // ==================================================
@@ -623,7 +706,7 @@ abstract class Posts
      * @param string $content The post content
      * @param array $fields Custom ACF fields with their values
      * @param string $status Status for the post
-     * @return WP_Post added post(s)
+    * @return int Added post's id
      */
     public static function add($title, $content = "", $fields = false, $status = "published")
     {
@@ -634,12 +717,11 @@ abstract class Posts
             "post_status"  => $status
         ]);
 
-        /* #LOG# */ \Syltaen\Controllers\Controller::log($post_id, __CLASS__.":".__LINE__);
-
-
         foreach ($fields as $key=>$value) {
+            // $this->is($post_id)->update()
             update_field($key, $value, $post_id);
         }
+        return $post_id;
     }
 
     /**

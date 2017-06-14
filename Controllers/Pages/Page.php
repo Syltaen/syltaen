@@ -4,6 +4,10 @@ namespace Syltaen\Controllers\Pages;
 
 use Syltaen\App\Services\Fields;
 use Syltaen\Controllers\Parts\Sections;
+use Syltaen\Models\Posts\Pages;
+use Syltaen\Models\Posts\News;
+use Syltaen\Models\Posts\Jobs;
+use Syltaen\Models\Posts\Press;
 
 class Page extends \Syltaen\Controllers\Controller
 {
@@ -50,13 +54,13 @@ class Page extends \Syltaen\Controllers\Controller
      * Display a form
      *
      * @param int $form_id The ID of the form to display
-     * @return void
+     * @return output HTML
      */
     public function ninjaFormPreview($form_id)
     {
         global $post;
         Fields::store($this->data, [
-            "@intro_content" => "<h1>Form preview</h1>",
+            "@intro_content" => "<h1>".__("Form preview", "syltaen")."</h1>",
             "@sections"      => [[
                 "classes" => "",
                 "attr"    => "",
@@ -68,6 +72,43 @@ class Page extends \Syltaen\Controllers\Controller
         ]);
 
         $this->render();
+    }
+
+    /**
+     * Search results page
+     *
+     * @param string $search Terms to search for
+     * @return output HTML
+     */
+    public function search($search)
+    {
+        $models_to_search = [
+            new Pages,
+            new News,
+            new Jobs,
+            new Press
+        ];
+
+        $this->data["results"] = [];
+        $total_results_count   = 0;
+
+        foreach ($models_to_search as $model) {
+            $this->data["results"][$model::TYPE] = [
+                "posts" => $model->search($search)->get(),
+                "count" => $model->count(),
+                "label" => $model::LABEL
+            ];
+            $total_results_count += $model->count();
+        }
+
+
+        $total_results_count = $total_results_count > 1 ? $total_results_count." results" : ($total_results_count < 1 ? "No result" : "One result");
+
+        $this->data["site"]->header["search"] = $search;
+        Fields::store($this->data, [
+            "@intro_content" => "<h1><span class='font-light'>".__("Search for : ", "syltaen")."</span> $search</h1><p>$total_results_count</p>"
+        ]);
+        $this->render("search");
     }
 
 
