@@ -1,0 +1,82 @@
+.collapsable
+    margin: 0
+    margin-bottom: 20px
+    margin-top: 10px
+    overflow: hidden
+    transition: height .5s ease
+
+
+    // ==================================================
+    // > HEADER
+    // ==================================================
+    &__header
+        background: $main
+        height: 65px
+        line-height: 65px
+        font-size: 24px
+        font-size: 24rem
+        color: white
+        text-align: center
+        position: relative
+        font-family: $font-bold
+        box-sizing: border-box
+        padding-left: 40px
+        cursor: pointer
+        z-index: 50
+        &:before
+            content: "\f054"
+            font-family: $font-fa
+            position: absolute
+            top: 0
+            left: 15px
+        +gridle_state(sm)
+            font-size: 20px
+            font-size: 20rem
+        +gridle_state(xs)
+            box-sizing: border-box
+            font-size: 13px
+            font-size: 13rem
+            line-height: 18px
+            font-family: $font-regular
+            display: flex
+            align-items: center
+            justify-content: center
+            &:before
+                top: 50%
+                margin-top: -10px
+
+
+    // ==================================================
+    // > CONTENT
+    // ==================================================
+    &__content
+        border: 1px solid $main
+        box-sizing: border-box
+        padding: 30px 20px
+        &.bg-white
+            background: white
+        &.bg-lgry
+            background: #f6f6f6
+
+
+    // ==================================================
+    // > MODIERS
+    // ==================================================
+    &.toggleable
+        position: relative
+        header
+            &:hover
+                background: lighten($main, 4%)
+            &+.content-wrapper
+                border-color: lighten($main, 4%)
+            &:before
+                transition: transform .5s ease
+        .content-wrapper
+            position: absolute
+            bottom: 1px
+            left: 0
+            width: 100%
+
+    &.open
+        header:before
+            transform: rotate(90deg)

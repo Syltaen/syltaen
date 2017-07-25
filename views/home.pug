@@ -1,0 +1,96 @@
+extends templates/_base
+
+//- ==================================================
+//- > INTRO
+//- ==================================================
+block intro
+    #intro
+        h1 Home
+
+
+//- ==================================================
+//- > CONTENT
+//- ==================================================
+block content
+    .container
+
+        h1 Titre - H1
+        p Lorem ipsum <a href="#">dolor sit amet</a>, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
+
+        h2 Titre - H2
+        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
+
+        .row
+            .gr-3
+                a.button.sb-trigger Button
+            .gr-3
+                p.incrementor <strong>Incrementor:</strong> 500
+            .gr-3
+                ul.slide-exemple
+                    li Slide 1
+                    li Slide 2
+                    li Slide 3
+            .gr-3
+                p(data-bottom-top="transform: translateX(-0px);" data-top-bottom="transform: translateX(100px);") Parallax
+        hr
+        .row
+            .gr-3
+                label(for="condition-exemple")
+                    input(type="checkbox" value="show" checked)#condition-exemple
+                    | Conditional display
+            .gr-9
+                .collapsable.open
+                    .collapsable__header.trigger Collapsable
+                    .collapsable__content
+                        .row
+                            .gr-6: p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tenetur voluptatum vel sapiente quas adipisci culpa veritatis iure numquam quis explicabo eveniet maxime, unde mollitia animi provident. Aliquam, illo quia.
+                            .gr-6: p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tenetur voluptatum vel sapiente quas adipisci culpa veritatis iure numquam quis explicabo eveniet maxime, unde mollitia animi provident. Aliquam, illo quia.
+
+
+        h3 Titre - H3
+        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
+
+        h4 Titre - H4
+        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
+
+        h5 Titre - H5
+        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
+
+        h6 Titre - H6
+        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
+
+
+        table
+            tr
+                th First column
+                th Second column
+                th Third column
+
+            tr.table-filters
+                td: select(name="first" placeholder="Filter on the first column").clearable
+                    option
+                    option(value="1") 1
+                    option(value="2") 2
+                    option(value="3") 3
+                td: select(name="second" placeholder="Filter on the second column").clearable
+                    option
+                    option(value="A") A
+                    option(value="B") B
+                    option(value="C") C
+                td: select(name="third" placeholder="Filter on the third column").clearable
+                    option
+                    option(value="*") *
+                    option(value="**") **
+                    option(value="***") ***
+            tr(data-filter-first="1" data-filter-second="A" data-filter-third="*")
+                td 1
+                td A
+                td *
+            tr(data-filter-first="1" data-filter-second="B" data-filter-third="***")
+                td 1
+                td B
+                td ***
+            tr(data-filter-first="3" data-filter-second="C" data-filter-third="***")
+                td 3
+                td C
+                td ***

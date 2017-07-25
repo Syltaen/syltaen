@@ -1,0 +1,69 @@
+// ==================================================
+// > TITLES
+// ==================================================
+h1, h2, h3, h4, h5, h6
+    color: $main
+    font-weight: normal
+    text-rendering: geometricPrecision
+    line-height: 1.2
+    margin: 1em 0
+
+h1,
+h2,
+h3
+    font-size: 40px
+    font-size: 40rem
+    font-family: $font-bold
+    color: $main
+    position: relative
+    text-transform: uppercase
+
+h2
+    font-size: 35px
+    font-size: 35rem
+
+h3
+    font-size: 30px
+    font-size: 30rem
+    color: $dgry
+
+
+h4
+    font-size: 24px
+    font-size: 24rem
+    text-transform: uppercase
+    font-family: $font-bold
+
+h5
+    font-size: 20px
+    font-size: 20rem
+    font-family: $font-bold
+
+h6
+    font-size: 16px
+    font-size: 16rem
+    font-family: $font-light
+    letter-spacing: 2px
+
+
+// ========== SUBTITLE ========== //
+.subtitle
+    font-size: .8em
+
+// ========== LINE THROUGH ========== //
+.line-through
+    position: relative
+    span
+        position: relative
+        z-index: 10
+        padding: 0 10px
+        margin-left: -10px
+    &:before
+        content: ""
+        z-index: 0
+        height: 1px
+        width: 9999px
+        position: absolute
+        left: -5000px
+        top: 50%
+        background: $main

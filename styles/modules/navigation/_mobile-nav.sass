@@ -1,0 +1,151 @@
+// ==================================================
+// > MOBILE NAV
+// ==================================================
+.mobile-nav
+    z-index: 300
+    position: fixed
+    width: calc(100% - 40px)
+    height: 100vh
+    top: 0
+    left: 0
+    background: $dgry
+    transform: translateX(-100%)
+    transition: all .2s ease-in-out
+    &:after
+        z-index: 0
+        content: ""
+        position: absolute
+        width: 0
+        height: 100%
+        top: 0
+        right: 0
+        background: rgba($dgry, 0.7)
+
+    &:before
+        content: ""
+        height: 30px
+        width: 5px
+        border-left: 1px solid white
+        border-right: 1px solid white
+        position: fixed
+        right: 10px
+        top: 50%
+        margin-top: -15px
+
+    // ========== CLOSE ========== //
+    &__close
+        position: absolute
+        width: 38px
+        height: 38px
+        top: 10px
+        right: 10px
+        background: lighten($dgry, 5%)
+        border-radius: 50%
+        z-index: 100
+
+        &:before, &:after
+            content: ""
+            position: absolute
+            width: 16px
+            height: 2px
+            left: 50%
+            top: 50%
+            background: $lgry
+        &:before
+            transform: translate(-50%, -50%) rotate(-45deg)
+        &:after
+            transform: translate(-50%, -50%) rotate(45deg)
+
+    // ========== SEARCH ========== //
+    &__search
+        position: relative
+        &:before
+            content: "\f002"
+            font-family: $font-fa
+            position: absolute
+            line-height: 40px
+            line-height: 40px
+            left: 20px
+            color: white
+        input
+            width: calc(100% - 60px)
+            height: 40px
+            padding-left: 50px
+            background: lighten($dgry, 10%)
+            border: 0
+            border-radius: 20px
+            color: white
+            font-size: 18px
+            font-size: 18rem
+            line-height: 30px
+            transition: all .5s ease
+            &:focus
+                width: calc(100% - 56px)
+
+    // ========== MENU ========== //
+    &__scrollable
+        overflow-y: scroll
+        height: 100%
+        box-sizing: border-box
+        position: relative
+        padding: 80px 20px 100px
+
+
+    .menu
+        margin-top: 40px
+        li a
+            display: block
+            padding: 10px
+            color: $main
+            font-family: $font-regular
+            text-decoration: none
+            letter-spacing: 2px
+            &:hover
+                color: white
+        li.current_page_item a
+            color: white
+            &:before
+                content: ""
+                display: inline-block
+                width: 20px
+                height: 2px
+                background: white
+                vertical-align: middle
+                margin-right: 10px
+
+
+.mobile-nav-open .mobile-nav
+    transform: translateX(0%)
+    transition: all .2s ease-in-out
+    &:after
+        width: 40px
+        transform: translateX(40px)
+
+
+// ==================================================
+// > HAMBURGER TRIGGER
+// ==================================================
+.hamburger
+    width: 50px
+    height: 38px
+    float: right
+    text-indent: -9999em
+    position: relative
+    // display: none
+    &:before, &:after
+        content: ""
+        width: 38px
+        height: 20px
+        border-top: 3px solid $scnd
+        border-bottom: 3px solid $scnd
+        position: absolute
+        top: 5px
+        left: 5px
+    &:after
+        border-bottom: 0
+        height: 0
+        top: 16px
+    // +gridle_state(sm)
+    //     display: block
+    // +gridle_state(xs)
+    //     bottom: 0px

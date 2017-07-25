@@ -1,0 +1,24 @@
+extends templates/_base
+
+//- ==================================================
+//- > CONTENT
+//- ==================================================
+block content
+    .container.results: .row
+
+        each post_type in results
+
+            if post_type.count
+                .gr-6.gr-12-xs
+                    h2  <strong>#{post_type.count}</strong> #{post_type.label}
+
+                    ul
+                        each result in post_type.posts
+                            li
+                                a(href=result.url)= result.post_title
+
+
+    .container
+        h3 Modifier votre recherche
+        form(action=site.url)
+            input(name="s" value=search)

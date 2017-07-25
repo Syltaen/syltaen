@@ -1,0 +1,22 @@
+// ==================================================
+// > NAVIGATION FOR SINGLE POST LAYOUT
+// ==================================================
+.singlenav
+    text-align: center
+    margin: 50px 0
+    li
+        display: inline
+        a
+            color: $dgry
+            border-right: 1px solid $dgry
+            padding: 0 10px
+            background: none
+            &.link-archive
+                font-family: $font-bold
+            &.disabled
+                opacity: .25
+            &:hover
+                text-decoration: none
+                color: $main
+        &:last-child a
+            border-right: 0

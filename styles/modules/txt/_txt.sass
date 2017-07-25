@@ -1,0 +1,98 @@
+// ==================================================
+// > PARAGRAPH
+// ==================================================
+p
+    margin: 1em 0
+
+// ==================================================
+// > BLOCKS
+// ==================================================
+.txt-col
+    display: flex
+    flex-flow: row nowrap
+    &.align-top
+        align-items: flex-start
+    &.align-center
+        align-items: center
+    &.align-bot
+        align-items: flex-end
+    +gridle_state(xs)
+        flex-flow: column nowrap
+
+    margin: 0 -25px !important
+    & > div
+        padding: 0 25px
+
+
+// ==================================================
+// > MESSAGES
+// ==================================================
+p.error,
+p.success
+    color: red
+    font-family: $font-bold
+    text-align: center
+    a
+        color: red
+        &:after
+            background: red
+    &.login_required
+        &, a
+            color: $scnd
+        a:after
+            background: $scnd
+
+p.success
+    &, a
+        color: $success
+    a:after
+        background: $success
+
+
+// ==================================================
+// > INLINE
+// ==================================================
+strong,
+b
+    font-weight: normal
+    font-family: $font-bold
+
+em
+    font-style: italic
+
+i
+    font-style: italic
+
+time
+    font-family: $font-bold
+    color: $main
+    display: block
+    margin-bottom: 10px
+
+small
+    font-size: .8em
+
+
+// ==================================================
+// > GLOBAL MODIFIER
+// ==================================================
+.main-color
+    color: $main
+
+.secondary-color
+    color: $scnd
+
+// .font-light
+//     font-family: $font-light
+
+// .font-black
+//     font-family: $font-black
+
+.text-align-center
+    text-align: center
+
+.text-align-left
+    text-align: left
+
+.text-align-right
+    text-align: right

@@ -1,0 +1,96 @@
+doctype
+
+html(lang=site.language)
+
+    head
+        meta(charset=site.charset)
+        meta(name="description" content=site.description)
+        meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
+        meta(http-equiv="X-UA-Compatible" content="IE=edge")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        link(rel="pingback" href=site.pingback_url)
+        = wp_head()
+        block head
+
+    body(class=site.body_class)
+
+        //- ==================================================
+        //- > HEADER
+        //- ==================================================
+        header#site-header(role="banner")
+            block header
+
+                .container
+                    .row
+                        .gr-1
+                            a#main-logo(href=site.url rel="home")= site.name
+
+                        .gr-11
+                            //- nav#social-menu: ul
+                                each soc in site.header.social
+                                    li
+                                        a(href=soc.link target="_blank")
+                                            i(class="fa "+soc["icon"])
+                                            span= soc.name
+
+                            != site.menus.main
+
+                            #mobile-menu-trigger.hamburger Afficher le menu
+
+        #scroll-top
+
+        //- ==================================================
+        //- > MOBILE MENU
+        //- ==================================================
+        nav#mobile-menu.mobile-nav
+            .mobile-nav__close
+            .mobile-nav__scrollable.container
+                form.mobile-nav__search(action=site.url): input(type="text" name="s" value=site.header.search)
+                != site.menus.mobile
+
+        //- ==================================================
+        //- > CONTENT
+        //- ==================================================
+        main(role="main")
+            block main
+
+                //- ========== INTRO ========== -//
+                block intro
+                    #intro
+                        .container
+                            //- != intro_content
+
+
+                //- ========== BREADCRUMB ========== -//
+                block breadcrumb
+                    //- .container.breadcrumb-container!= site.breadcrumb
+
+
+                //- ========== ASIDE ========== -//
+                block aside
+
+
+                //- ========== ERROR & SUCCESS MESSAGES ========== -//
+                block errorsuccess
+                    - if ($error_message || $success_message)
+                        section.bg-white.small-padding: .container
+                            if error_message
+                                p.error!= error_message
+                            if success_message
+                                p.success!= success_message
+
+                //- ========== CONTENT ========== -//
+                block content
+                    include ../parts/_sections
+
+
+        //- ==================================================
+        //- > FOOTER
+        //- ==================================================
+        block footer
+            footer#site-footer(role="contentinfo")
+                .container
+                    != site.menus.footer
+
+
+        = wp_footer()

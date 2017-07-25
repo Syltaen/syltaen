@@ -1,0 +1,20 @@
+//- ==================================================
+//- > PART : NEWS ARCHIVE
+//- ==================================================
+.container
+    != c.walker
+
+    ul.archive-news.row.unstyled
+        each news in c.posts
+            li.gr-6.gr-12-xs
+                article
+                    a(href=news.url style="background-image: url(".$news->thumb["url"]["archive"].")").visual
+                        != news.thumb.tag.archive
+                    .box.bg-org
+                        time= news.date.short
+                        h2= news.post_title
+                        p= news.post_excerpt
+                        a.button(href=news.url) Lire plus
+
+
+    != c.walker

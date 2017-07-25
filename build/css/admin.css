@@ -1,0 +1,218 @@
+.admin-color-fresh #wp-admin-bar-site-name > a:before,
+.logged-in.admin-bar #wp-admin-bar-site-name > a:before {
+  content: "" !important;
+  height: 32px;
+  width: 32px;
+  margin: -2px 5px 0 0;
+  padding: 0;
+  background: url("../img/admin_logo.png") center center/contain no-repeat !important; }
+
+.admin-color-fresh #wp-admin-bar-wp-logo,
+.admin-color-fresh #wp-admin-bar-comments,
+.admin-color-fresh #wp-admin-bar-updates,
+.admin-color-fresh #wp-admin-bar-new-post,
+.admin-color-fresh .update-plugins,
+.logged-in.admin-bar #wp-admin-bar-wp-logo,
+.logged-in.admin-bar #wp-admin-bar-comments,
+.logged-in.admin-bar #wp-admin-bar-updates,
+.logged-in.admin-bar #wp-admin-bar-new-post,
+.logged-in.admin-bar .update-plugins {
+  display: none !important; }
+
+.admin-color-fresh #adminmenu,
+.admin-color-fresh #adminmenuback,
+.admin-color-fresh #adminmenuwrap,
+.logged-in.admin-bar #adminmenu,
+.logged-in.admin-bar #adminmenuback,
+.logged-in.admin-bar #adminmenuwrap {
+  background: #333; }
+
+.admin-color-fresh #adminmenu .wp-submenu,
+.logged-in.admin-bar #adminmenu .wp-submenu {
+  background: #444; }
+
+.admin-color-fresh #adminmenu div.wp-menu-image:before,
+.admin-color-fresh #adminmenu li a:focus div.wp-menu-image:before, .admin-color-fresh #adminmenu li.opensub div.wp-menu-image:before, .admin-color-fresh #adminmenu li:hover div.wp-menu-image:before,
+.logged-in.admin-bar #adminmenu div.wp-menu-image:before,
+.logged-in.admin-bar #adminmenu li a:focus div.wp-menu-image:before,
+.logged-in.admin-bar #adminmenu li.opensub div.wp-menu-image:before,
+.logged-in.admin-bar #adminmenu li:hover div.wp-menu-image:before {
+  color: #555; }
+
+.admin-color-fresh #adminmenu .current div.wp-menu-image:before, .admin-color-fresh #adminmenu .wp-has-current-submenu div.wp-menu-image:before, .admin-color-fresh #adminmenu a.current:hover div.wp-menu-image:before, .admin-color-fresh #adminmenu a.wp-has-current-submenu:hover div.wp-menu-image:before, .admin-color-fresh #adminmenu li.wp-has-current-submenu a:focus div.wp-menu-image:before, .admin-color-fresh #adminmenu li.wp-has-current-submenu.opensub div.wp-menu-image:before, .admin-color-fresh #adminmenu li.wp-has-current-submenu:hover div.wp-menu-image:before,
+.logged-in.admin-bar #adminmenu .current div.wp-menu-image:before,
+.logged-in.admin-bar #adminmenu .wp-has-current-submenu div.wp-menu-image:before,
+.logged-in.admin-bar #adminmenu a.current:hover div.wp-menu-image:before,
+.logged-in.admin-bar #adminmenu a.wp-has-current-submenu:hover div.wp-menu-image:before,
+.logged-in.admin-bar #adminmenu li.wp-has-current-submenu a:focus div.wp-menu-image:before,
+.logged-in.admin-bar #adminmenu li.wp-has-current-submenu.opensub div.wp-menu-image:before,
+.logged-in.admin-bar #adminmenu li.wp-has-current-submenu:hover div.wp-menu-image:before {
+  color: white; }
+
+.admin-color-fresh #adminmenu .wp-has-current-submenu .wp-submenu .wp-submenu-head,
+.admin-color-fresh #adminmenu .wp-menu-arrow,
+.admin-color-fresh #adminmenu .wp-menu-arrow div,
+.admin-color-fresh #adminmenu li.current a.menu-top,
+.admin-color-fresh #adminmenu li.wp-has-current-submenu a.wp-has-current-submenu,
+.admin-color-fresh .folded #adminmenu li.current.menu-top,
+.admin-color-fresh .folded #adminmenu li.wp-has-current-submenu,
+.logged-in.admin-bar #adminmenu .wp-has-current-submenu .wp-submenu .wp-submenu-head,
+.logged-in.admin-bar #adminmenu .wp-menu-arrow,
+.logged-in.admin-bar #adminmenu .wp-menu-arrow div,
+.logged-in.admin-bar #adminmenu li.current a.menu-top,
+.logged-in.admin-bar #adminmenu li.wp-has-current-submenu a.wp-has-current-submenu,
+.logged-in.admin-bar .folded #adminmenu li.current.menu-top,
+.logged-in.admin-bar .folded #adminmenu li.wp-has-current-submenu {
+  background: #9de4b6; }
+
+.admin-color-fresh #wpadminbar .ab-top-menu > li.hover > .ab-item,
+.admin-color-fresh #wpadminbar.nojq .quicklinks .ab-top-menu > li > .ab-item:focus,
+.admin-color-fresh #wpadminbar:not(.mobile) .ab-top-menu > li:hover > .ab-item,
+.admin-color-fresh #wpadminbar:not(.mobile) .ab-top-menu > li > .ab-item:focus,
+.admin-color-fresh #wpadminbar .quicklinks .ab-sub-wrapper .menupop.hover > a,
+.admin-color-fresh #wpadminbar .quicklinks .menupop ul li a:focus,
+.admin-color-fresh #wpadminbar .quicklinks .menupop ul li a:focus strong,
+.admin-color-fresh #wpadminbar .quicklinks .menupop ul li a:hover,
+.admin-color-fresh #wpadminbar .quicklinks .menupop ul li a:hover strong,
+.admin-color-fresh #wpadminbar .quicklinks .menupop.hover ul li a:focus,
+.admin-color-fresh #wpadminbar .quicklinks .menupop.hover ul li a:hover,
+.admin-color-fresh #wpadminbar .quicklinks .menupop.hover ul li div[tabindex]:focus,
+.admin-color-fresh #wpadminbar .quicklinks .menupop.hover ul li div[tabindex]:hover,
+.admin-color-fresh #wpadminbar li #adminbarsearch.adminbar-focused:before,
+.admin-color-fresh #wpadminbar li .ab-item:focus .ab-icon:before,
+.admin-color-fresh #wpadminbar li .ab-item:focus:before,
+.admin-color-fresh #wpadminbar li a:focus .ab-icon:before,
+.admin-color-fresh #wpadminbar li.hover .ab-icon:before,
+.admin-color-fresh #wpadminbar li.hover .ab-item:before,
+.admin-color-fresh #wpadminbar li:hover #adminbarsearch:before,
+.admin-color-fresh #wpadminbar li:hover .ab-icon:before,
+.admin-color-fresh #wpadminbar li:hover .ab-item:before,
+.admin-color-fresh #wpadminbar.nojs .quicklinks .menupop:hover ul li a:focus,
+.admin-color-fresh #wpadminbar.nojs .quicklinks .menupop:hover ul li a:hover,
+.admin-color-fresh #wpadminbar:not(.mobile) > #wp-toolbar a:focus span.ab-label,
+.admin-color-fresh #wpadminbar:not(.mobile) > #wp-toolbar li:hover span.ab-label,
+.admin-color-fresh #wpadminbar > #wp-toolbar li.hover span.ab-label,
+.logged-in.admin-bar #wpadminbar .ab-top-menu > li.hover > .ab-item,
+.logged-in.admin-bar #wpadminbar.nojq .quicklinks .ab-top-menu > li > .ab-item:focus,
+.logged-in.admin-bar #wpadminbar:not(.mobile) .ab-top-menu > li:hover > .ab-item,
+.logged-in.admin-bar #wpadminbar:not(.mobile) .ab-top-menu > li > .ab-item:focus,
+.logged-in.admin-bar #wpadminbar .quicklinks .ab-sub-wrapper .menupop.hover > a,
+.logged-in.admin-bar #wpadminbar .quicklinks .menupop ul li a:focus,
+.logged-in.admin-bar #wpadminbar .quicklinks .menupop ul li a:focus strong,
+.logged-in.admin-bar #wpadminbar .quicklinks .menupop ul li a:hover,
+.logged-in.admin-bar #wpadminbar .quicklinks .menupop ul li a:hover strong,
+.logged-in.admin-bar #wpadminbar .quicklinks .menupop.hover ul li a:focus,
+.logged-in.admin-bar #wpadminbar .quicklinks .menupop.hover ul li a:hover,
+.logged-in.admin-bar #wpadminbar .quicklinks .menupop.hover ul li div[tabindex]:focus,
+.logged-in.admin-bar #wpadminbar .quicklinks .menupop.hover ul li div[tabindex]:hover,
+.logged-in.admin-bar #wpadminbar li #adminbarsearch.adminbar-focused:before,
+.logged-in.admin-bar #wpadminbar li .ab-item:focus .ab-icon:before,
+.logged-in.admin-bar #wpadminbar li .ab-item:focus:before,
+.logged-in.admin-bar #wpadminbar li a:focus .ab-icon:before,
+.logged-in.admin-bar #wpadminbar li.hover .ab-icon:before,
+.logged-in.admin-bar #wpadminbar li.hover .ab-item:before,
+.logged-in.admin-bar #wpadminbar li:hover #adminbarsearch:before,
+.logged-in.admin-bar #wpadminbar li:hover .ab-icon:before,
+.logged-in.admin-bar #wpadminbar li:hover .ab-item:before,
+.logged-in.admin-bar #wpadminbar.nojs .quicklinks .menupop:hover ul li a:focus,
+.logged-in.admin-bar #wpadminbar.nojs .quicklinks .menupop:hover ul li a:hover,
+.logged-in.admin-bar #wpadminbar:not(.mobile) > #wp-toolbar a:focus span.ab-label,
+.logged-in.admin-bar #wpadminbar:not(.mobile) > #wp-toolbar li:hover span.ab-label,
+.logged-in.admin-bar #wpadminbar > #wp-toolbar li.hover span.ab-label {
+  color: #9de4b6; }
+
+.admin-color-fresh #adminmenu .wp-submenu a:focus, .admin-color-fresh #adminmenu .wp-submenu a:hover, .admin-color-fresh #adminmenu a:hover, .admin-color-fresh #adminmenu li.menu-top > a:focus,
+.admin-color-fresh #adminmenu li.menu-top:hover, .admin-color-fresh #adminmenu li.opensub > a.menu-top, .admin-color-fresh #adminmenu li > a.menu-top:focus,
+.admin-color-fresh #collapse-button:focus, .admin-color-fresh #collapse-button:hover,
+.logged-in.admin-bar #adminmenu .wp-submenu a:focus,
+.logged-in.admin-bar #adminmenu .wp-submenu a:hover,
+.logged-in.admin-bar #adminmenu a:hover,
+.logged-in.admin-bar #adminmenu li.menu-top > a:focus,
+.logged-in.admin-bar #adminmenu li.menu-top:hover,
+.logged-in.admin-bar #adminmenu li.opensub > a.menu-top,
+.logged-in.admin-bar #adminmenu li > a.menu-top:focus,
+.logged-in.admin-bar #collapse-button:focus,
+.logged-in.admin-bar #collapse-button:hover {
+  color: #9de4b6; }
+
+.admin-color-fresh.wp-core-ui .button-primary,
+.logged-in.admin-bar.wp-core-ui .button-primary {
+  background: #9de4b6;
+  border-color: #89dea7 #75d998 #75d998;
+  box-shadow: 0 1px 0 #75d998;
+  text-shadow: 0 -1px 1px #75d998, 1px 0 1px #75d998, 0 1px 1px #75d998, -1px 0 1px #75d998;
+  color: white; }
+  .admin-color-fresh.wp-core-ui .button-primary:hover,
+  .logged-in.admin-bar.wp-core-ui .button-primary:hover {
+    background: #89dea7; }
+
+.admin-color-fresh.wp-core-ui .button.button-primary.button-hero,
+.logged-in.admin-bar.wp-core-ui .button.button-primary.button-hero {
+  box-shadow: 0 2px 0 #75d998; }
+
+.ninja-forms-no-nest {
+  margin-left: 40px; }
+
+._rowstart-li,
+._rowend-li {
+  margin-left: 0; }
+  ._rowstart-li .menu-item-handle,
+  ._rowend-li .menu-item-handle {
+    background: #ccc !important; }
+
+._colstart-li,
+._colend-li {
+  margin-left: 20px; }
+  ._colstart-li .menu-item-handle,
+  ._colend-li .menu-item-handle {
+    background: #e0e0e0 !important; }
+
+.acf-ui-datepicker #ui-datepicker-div {
+  display: none; }
+
+#tinymce {
+  padding: 20px; }
+  #tinymce *:first-child {
+    margin-top: 0; }
+
+#login h1 a {
+  background: url("../img/admin_logo.png") center center/contain no-repeat !important;
+  background-size: contain;
+  width: 100px;
+  height: 100px;
+  pointer-events: none; }
+
+#login .button.button-primary {
+  text-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+  margin-top: 20px;
+  background: none;
+  color: #9de4b6;
+  border: 2px solid #9de4b6;
+  height: 50px;
+  line-height: 50px; }
+  #login .button.button-primary:hover {
+    background: #9de4b6;
+    color: white; }
+
+#profile-page .user-rich-editing-wrap,
+#profile-page .user-admin-color-wrap,
+#profile-page .user-comment-shortcuts-wrap,
+#profile-page .show-admin-bar,
+#profile-page .user-language-wrap,
+#profile-page .user-url-wrap,
+#profile-page .user-googleplus-wrap,
+#profile-page .user-twitter-wrap,
+#profile-page .user-facebook-wrap,
+#profile-page .user-description-wrap,
+#profile-page .user-profile-picture,
+#profile-page .yoast-settings,
+#profile-page #fieldset-billing,
+#profile-page #fieldset-shipping,
+#profile-page #qtranslate_highlight_enabled,
+#profile-page h2,
+#profile-page h3 {
+  display: none; }
+
+/*# sourceMappingURL=admin.css.map*/

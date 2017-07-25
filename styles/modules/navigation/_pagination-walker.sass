@@ -1,0 +1,66 @@
+// ==================================================
+// > PAGE NAVIGATION
+// ==================================================
+.pagination-walker
+    text-align: center
+
+    p
+        text-align: center
+        font-size: 14px
+        font-size: 14rem
+        margin-bottom: 40px
+
+    &__direction
+        display: inline-block
+        position: relative
+        text-indent: -9999px
+        margin: 0 5px
+        font-size: 20px
+        font-size: 20rem
+        color: $main
+        transition: all .25s ease
+        width: 40px
+        height: 20px
+        line-height: 20px
+        &:before
+            font-family: $font-fa
+            text-indent: 0
+            +cover
+            text-align: center
+            line-height: 19px
+        &--first:before
+            content: "\f100"
+        &--last:before
+            content: "\f101"
+        &[disabled]
+            opacity: .15
+            background: none
+
+    &__pagelist
+        display: inline-block
+        li
+            display: inline-block
+            a,
+            .current
+                background: $main
+                border: 3px solid white
+                text-align: center
+                color: white
+                font-size: 20px
+                font-size: 20rem
+                display: block
+                width: 45px
+                height: 45px
+                line-height: 45px
+                opacity: .7
+                margin: 0 -3px
+                transition: all .25s ease
+                position: relative
+                top: 0
+            .current
+                opacity: 1
+                top: -10px
+                z-index: 5
+
+            a:hover
+                top: -5px
