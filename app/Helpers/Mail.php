@@ -4,24 +4,30 @@ namespace Syltaen;
 
 abstract class Mail
 {
+
+    const DEBUG = false;
+
     /**
      * The sender name used in all mails
      *
      * @var string
      */
+
     public static $fromName = "Hungry Minds";
     /**
      * The address used to send all mails
      *
      * @var string
      */
+
     public static $fromAddr = "info@hungryminds.be";
+
     /**
      * The content type of all mails
      *
      * @var string
      */
-    public static $contType = "text/html";
+    public static $contType = "multipart/alternative";
 
     /**
      * Send a mail
@@ -34,16 +40,35 @@ abstract class Mail
      */
     public static function send($to, $subject, $body, $custom_headers = [])
     {
-        // Controller::log($to, "to");
-        // Controller::log($subject, "subject");
-        // Controller::log($body, "body");
-        // return true;
-        return wp_mail(
-            $to,
-            $subject,
-            $body,
-            static::parseHeader($custom_headers)
-        );
+        $boundary = static::generateBoundary();
+
+        if (static::DEBUG) {
+            Controller::log([
+                "to"      => $to,
+                "subject" => static::parseSubject($subject),
+                "body"    => static::parseBody($body, $boundary),
+                "headers" => static::parseHeader($custom_headers, $boundary)
+            ], "MAIL");
+            return true;
+
+        } else {
+            return mail(
+                $to,
+                static::parseSubject($subject),
+                static::parseBody($body, $boundary),
+                static::parseHeader($custom_headers, $boundary)
+            );
+        }
+    }
+
+    /**
+     * Generate a multipart boundary
+     *
+     * @return string
+     */
+    public static function generateBoundary()
+    {
+        return "---boudary-" . sha1(microtime(true).mt_rand(10000,90000));
     }
 
     /**
@@ -54,11 +79,26 @@ abstract class Mail
      */
     public static function sendTest($to)
     {
-        if (static::send($to, "TEST", "This is a test sent from ".site_url())) {
+        if (static::send($to, "TEST", "This is a test sent from <a href='".site_url()."'>".get_bloginfo("name")."</a>")) {
             return "The e-mail was sent successfully to ".$to;
         } else {
             return "Could not send a mail to ".$to;
         }
+    }
+
+
+    // ==================================================
+    // > PARSERS
+    // ==================================================
+    /**
+     * Get an UTF-8 version of the subject
+     *
+     * @param string $subject
+     * @return string
+     */
+    private static function parseSubject($subject)
+    {
+        return "=?utf-8?Q?".imap_8bit(substr($subject, 0, 60))."?=";
     }
 
     /**
@@ -67,11 +107,50 @@ abstract class Mail
      * @param array $custom_headers
      * @return array
      */
-    private static function parseHeader($custom_headers = [])
+    private static function parseHeader($custom_headers = [], $boundary)
     {
-        return array_merge([
-            "Content-Type: text/html; charset=UTF-8",
-            "From: ".static::$fromName." <".static::$fromAddr.">"
+        $g = array_merge([
+
+            "From: ".static::$fromName." <".static::$fromAddr.">",
+            "Return-Path: ".static::$fromAddr,
+
+            "Content-Type: multipart/alternative; boundary=$boundary",
+            "MIME-Version: 1.0",
+
+            "List-Id: ".static::$fromName,
+            "List-Unsubscribe: <mailto:".static::$fromAddr.">"
+
         ], $custom_headers);
+
+        return implode("\r\n", $g);
+    }
+
+    /**
+     * Get a multipart version of the body
+     *
+     * @param string $html_body
+     * @param string $boundary
+     * @return string
+     */
+    private static function parseBody($html_body, $boundary)
+    {
+        $body = [
+            "--$boundary",
+            "Content-Type: text/plain; charset=\"UTF-8\"",
+            "Content-Transfer-Encoding: 8bit",
+            "",
+            \Html2Text\Html2Text::convert($html_body),
+
+            "",
+            "--$boundary",
+            "Content-Type: text/html; charset=\"UTF-8\"",
+            "Content-Transfer-Encoding: 8bit",
+            "",
+            $html_body,
+
+            "--$boundary--",
+        ];
+
+        return implode("\r\n", $body);
     }
 }
