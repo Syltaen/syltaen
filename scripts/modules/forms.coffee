@@ -141,7 +141,7 @@ ninjaFormsController =
 
             init: ->
                 @on "addedfile", (file) ->
-                    if $input.find(".dz-preview").size() > 1
+                    if $input.find(".dz-preview").length > 1
                         $input.find(".dz-preview").first().remove()
 
 

@@ -5,31 +5,50 @@
   * @requires jQuery
 ###
 
+import $ from "jquery"
 
 # ==================================================
 # > JQUERY METHOD
 # ==================================================
- $.fn.gmap = (filtersSelector) ->
-    if $(this).length
-        new GMap($(this), filtersSelector).init()
-    else
-        false
+$.fn.gmap = (filtersSelector, markerCallback = false) ->
+    if $(this).length then return new GMap $(this), filtersSelector, markerCallback
+
 
 # ==================================================
 # > CLASS
 # ==================================================
-class GMap = ->
+class Filter
+    constructor: (@key, @$el, @filterCallBack) ->
+        @value = []
+        @bindCallback()
 
-    constructor: (@$wrapper, @filtersSelector) ->
 
-        @$map = $wrapper.find ".map"
+    bindCallback: ->
+        # ========== SELECT FILTERS ========== #
+        if @$el.is "select"
+            @$el.change =>
+                @value = [@$el.val()]
+                @filterCallBack.call()
+
+        # ========== LI FILTERS ========== #
+        if @$el.is("li")
+            @$el.each (i, el) => $(el).click (e) =>
+                e.stopPropagation()
+                @$el.removeClass "selected"
+                $(el).addClass "selected"
+                @value = [$(el).data("value")]
+                @filterCallBack.call()
+
+
+class GMap
+
+    constructor: (@$wrapper, @filtersSelector, @markerCallback = false) ->
+
+        @$map = @$wrapper.find ".map"
         @map  = null
 
         @$markers = @$map.find(".marker")
         @markers  = []
-
-        @$filters = $wrapper.find filtersSelector
-        @filters  = null
 
         @infobox = null
         @defaultArgs =
@@ -38,16 +57,12 @@ class GMap = ->
             mapTypeId: google.maps.MapTypeId.ROADMAP
             scrollwheel: false
 
-    ###
-      * Handel map creating and filters binding
-    ###
-    init: ->
         @createMap()
-        self.$filters.click (e) =>
-          e.stopPropagation()
-          @$filters.removeClass "selected"
-          $(e.target).addClass "selected"
-          @filterMarkers()
+
+        @filters = []
+        for filter, selector of @filtersSelector
+            @filters[filter] = new Filter filter, @$wrapper.find(selector), => @applyFilters()
+
 
 
     ###
@@ -56,77 +71,100 @@ class GMap = ->
     createMap: ->
         @map = new (google.maps.Map)(@$map[0], @defaultArgs)
         @$markers.each (i, el) => @addMarker $(el)
-        @filterMarkers()
+        @applyFilters()
+
 
     ###
       * Add a marker to the map
       * @param jQueryNode $marker The HTML element storing the marker data
     ###
-
     addMarker: ($marker) ->
-      marker = new (google.maps.Marker)(
-        position: new (google.maps.LatLng)($marker.data('lat'), $marker.data('lng'))
-        map: @map
-        filter: $marker.data('filter')
-        icon: url: $marker.data('icon'))
-      @markers.push marker
-      if $marker.html()
-        infowindow = new (google.maps.InfoWindow)(content: $marker.html())
-        ((self) ->
-          google.maps.event.addListener marker, 'click', ->
-            if self.infowindow
-              self.infowindow.close()
-            self.infowindow = infowindow
-            self.infowindow.open self.map, marker
-            return
-          return
-        ) this
-      return
+        marker = new google.maps.Marker
+            position: new google.maps.LatLng $marker.data("lat"), $marker.data("lng")
+            map: @map
+            filters: {}
+            icon:
+                url: $marker.data "icon"
+
+        # Add filters
+        $.each $marker[0].attributes, (i, attr) =>
+            if attr.name.startsWith("data-filter-")
+                key =  attr.name.replace("data-filter-", "")
+                marker.filters[key] = attr.value
+
+        # Add infowindow
+        if $marker.html()
+            marker.content = $marker.html()
+            marker.infowindow = new google.maps.InfoWindow
+                content: marker.content
+
+            google.maps.event.addListener marker, "click", =>
+                if @markerCallback
+                    @markerCallback marker, @
+                else
+                    @openInfobox marker
+
+        # add the marker to the collection
+        @markers.push marker
+
+    ###
+      * Default callback when clicking a marker : Open its infobox
+      * @param maker
+    ###
+    openInfobox: (marker) ->
+        if @infowindow then @infowindow.close()
+        @infowindow = marker.infowindow
+        @infowindow.open @map, marker
 
     ###
       * Dislpay only markers matching the filter
     ###
-    filterMarkers: ->
-      @filters = []
-      if @infowindow
-        @infowindow.close()
-      ((self) ->
-        self.$filters.each ->
-          if $(this).hasClass('selected')
-            self.filters.push $(this).data('filter')
-          return
-        $.each self.markers, (i, marker) ->
-          if self.filters.indexOf(marker.filter) >= 0
-            marker.setVisible true
-          else
-            marker.setVisible false
-          return
-        return
-      ) this
-      @center()
-      return
+    applyFilters: ->
+        if @infowindow then @infowindow.close()
+
+        # for all markers
+        $.each @markers, (i, marker) =>
+
+            # flag used for the filter
+            shouldHide = false
+
+            # look each filters and their values
+            for i, filter of @filters then if filter.value.length then for value in filter.value then if value
+
+                # if the marker should be filtered
+                if marker.filters.hasOwnProperty filter.key
+
+                    # if the marker does not match the filter value, hide it
+                    unless marker.filters[filter.key] == value then shouldHide = true
+
+            # hide or show the marker
+            marker.setVisible !shouldHide
+
+        @center()
 
     ###
       * Center the map to display only visible markers
     ###
-    center: ->
-      bounds = new (google.maps.LatLngBounds)
-      visible_markers = []
+    center: (focusedMarkers = false, zoom = 10) ->
 
-      $.each @markers, (i, marker) ->
-        if marker.visible
-          bounds.extend new (google.maps.LatLng)(marker.position.lat(), marker.position.lng())
-          visible_markers.push marker
+        bounds = new (google.maps.LatLngBounds)
 
-      if visible_markers.length == 0
-        @map.setCenter @defaultArgs.center
-        @map.setZoom @defaultArgs.zoom
-      else if visible_markers.length == 1
-        @map.setCenter bounds.getCenter()
-        @map.setZoom 10
-      else
-        @map.fitBounds bounds
-      return
+        # a set of defined marker or all of them
+        focusedMarkers = focusedMarkers || @markers
 
-    return
+        visible_markers = []
+        $.each focusedMarkers, (i, marker) =>
+            if marker.visible
+                bounds.extend new google.maps.LatLng marker.position.lat(), marker.position.lng()
+                visible_markers.push marker
 
+        if visible_markers.length == 0
+            @map.setCenter @defaultArgs.center
+            @map.setZoom @defaultArgs.zoom
+
+        else if visible_markers.length == 1
+            @map.setCenter bounds.getCenter()
+            if zoom then @map.setZoom zoom
+
+        else
+            @map.fitBounds bounds
