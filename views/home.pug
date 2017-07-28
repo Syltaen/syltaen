@@ -14,11 +14,30 @@ block intro
 block content
     .container
 
-        h1 Titre - H1
+        h1#title-1 Titre - H1
         p Lorem ipsum <a href="#">dolor sit amet</a>, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
 
-        h2 Titre - H2
+        h2#title-2 Titre - H2
         p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
+
+        h3#title-3 Titre - H3
+        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
+
+        h4 Titre - H4
+        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
+
+        h5 Titre - H5
+        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
+
+        h6 Titre - H6
+        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
+
+
+
+
+        br
+        br
+        hr
 
         .row
             .gr-3
@@ -33,11 +52,13 @@ block content
             .gr-3
                 p(data-bottom-top="transform: translateX(-0px);" data-top-bottom="transform: translateX(100px);") Parallax
         hr
+
         .row
             .gr-3
                 label(for="condition-exemple")
                     input(type="checkbox" value="show" checked)#condition-exemple
                     | Conditional display
+
             .gr-9
                 .collapsable.open
                     .collapsable__header.trigger Collapsable
@@ -46,19 +67,20 @@ block content
                             .gr-6: p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tenetur voluptatum vel sapiente quas adipisci culpa veritatis iure numquam quis explicabo eveniet maxime, unde mollitia animi provident. Aliquam, illo quia.
                             .gr-6: p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tenetur voluptatum vel sapiente quas adipisci culpa veritatis iure numquam quis explicabo eveniet maxime, unde mollitia animi provident. Aliquam, illo quia.
 
+        hr
 
-        h3 Titre - H3
-        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
+        nav.scrollnav: ul
+            li: a(href="#title-1")
+                span.hovered Navigation item 1
+                span Navigation item 1
+            li: a(href="#title-2")
+                span.hovered Navigation item 2
+                span Navigation item 2
+            li: a(href="#title-3")
+                span.hovered Navigation item 3
+                span Navigation item 3
 
-        h4 Titre - H4
-        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
-
-        h5 Titre - H5
-        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
-
-        h6 Titre - H6
-        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis iure repudiandae suscipit architecto similique iste beatae, sint non voluptatum tempora quisquam error tenetur, voluptas libero illum a corrupti eligendi distinctio.
-
+        hr
 
         table
             tr
@@ -94,3 +116,6 @@ block content
                 td 3
                 td C
                 td ***
+
+        br
+        br

@@ -8,9 +8,9 @@ $roots = $("html, body")
 # ==================================================
 # > SCROLL NAV
 # ==================================================
-# import "./../tools/scrollnav.coffee"
+import "./../tools/scrollnav.coffee"
 
-# $(".scrollnav").scrollnav()
+$(".scrollnav").scrollnav()
 
 
 # ==================================================

@@ -5395,17 +5395,14 @@ h1, h2, h3, h4, h5, h6 {
   color: #9de4b6;
   font-weight: normal;
   text-rendering: geometricPrecision;
-  line-height: 1.2;
-  margin: 1em 0; }
+  margin-top: 1em;
+  font-family: "Raleway-Bold", "Raleway-Regular", "Helvetica", "Arial", sans-serif; }
 
 h1,
 h2,
 h3 {
   font-size: 40px;
   font-size: 40rem;
-  font-family: "Raleway-Bold", "Raleway-Regular", "Helvetica", "Arial", sans-serif;
-  color: #9de4b6;
-  position: relative;
   text-transform: uppercase; }
 
 h2 {
@@ -5414,14 +5411,11 @@ h2 {
 
 h3 {
   font-size: 30px;
-  font-size: 30rem;
-  color: #282828; }
+  font-size: 30rem; }
 
 h4 {
   font-size: 24px;
-  font-size: 24rem;
-  text-transform: uppercase;
-  font-family: "Raleway-Bold", "Raleway-Regular", "Helvetica", "Arial", sans-serif; }
+  font-size: 24rem; }
 
 h5 {
   font-size: 20px;
@@ -5431,8 +5425,7 @@ h5 {
 h6 {
   font-size: 16px;
   font-size: 16rem;
-  font-family: "Raleway-Light", "Raleway-Regular", "Helvetica", "Arial", sans-serif;
-  letter-spacing: 2px; }
+  font-family: "Raleway-Regular", "Raleway-Light", "Helvetica", "Arial", sans-serif; }
 
 .subtitle {
   font-size: .8em; }
@@ -5913,6 +5906,92 @@ blockquote {
   #scroll-top.shown {
     -webkit-transform: translateY(0);
             transform: translateY(0); }
+
+.scrollnav {
+  margin: 40px auto; }
+  .scrollnav ul {
+    margin: 0 -20px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: row wrap;
+            flex-flow: row wrap;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between; }
+    @media screen and (max-width: 680px) {
+      .scrollnav ul {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-flow: column nowrap;
+                flex-flow: column nowrap; }
+        .scrollnav ul li {
+          margin: 5px 0; } }
+  .scrollnav li {
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+    padding: 1px 20px;
+    overflow: hidden; }
+  .scrollnav a {
+    display: block;
+    line-height: 44px;
+    border: 1px dashed #373e48;
+    text-align: center;
+    color: #373e48;
+    font-size: 18px;
+    font-size: 18rem;
+    position: relative;
+    transition: all .5s ease; }
+    .scrollnav a.current {
+      background: #9de4b6;
+      color: white;
+      border-color: #9de4b6; }
+      .scrollnav a.current:after {
+        border-color: #9de4b6; }
+    .scrollnav a:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      margin-top: -1px;
+      margin-left: -1px;
+      border: 1px solid #373e48;
+      transition: all .5s ease; }
+    .scrollnav a:hover span {
+      -webkit-transform: translateY(200%);
+              transform: translateY(200%); }
+    .scrollnav a:hover .hovered {
+      -webkit-transform: translateY(0);
+              transform: translateY(0); }
+    .scrollnav a:hover:after {
+      opacity: 0; }
+  .scrollnav span {
+    transition: -webkit-transform .5s ease;
+    transition: transform .5s ease;
+    transition: transform .5s ease, -webkit-transform .5s ease;
+    display: block;
+    position: relative; }
+  .scrollnav .hovered, .scrollnav .hovered:after {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    -webkit-transform: translateY(-200%);
+            transform: translateY(-200%); }
+  .scrollnav .hovered {
+    font-family: "Raleway-Bold", "Raleway-Regular", "Helvetica", "Arial", sans-serif; }
+    .scrollnav .hovered:after {
+      content: "\F107";
+      font-family: "FontAwesome";
+      font-size: 2em;
+      -webkit-transform: translateY(100%);
+              transform: translateY(100%); }
 
 ul, ol {
   padding-left: 10px;

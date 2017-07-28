@@ -9,38 +9,17 @@
 import $ from "jquery"
 
 # ==================================================
-# > GLOBALS
-# ==================================================
-anchorCollection = new AnchorCollection()
-$roots           = $("html, body")
-
-# ==================================================
-# > JQUERY METHOD
-# ==================================================
-$.fn.scrollnav = (speed = 500, mirrorURL = false) ->
-
-    $(this).find("a[href=*='#']").each (i, el) ->
-        anchor = new Anchor $(el), speed, mirrorURL
-        anchorCollection.add anchor
-
-# ==================================================
-# > EVENTS
-# ==================================================
-$(window).scroll anchorCollection.checkCurrent
-$(window).resize anchorCollection.checkCurrent
-$(window).on "load", anchorCollection.checkCurrent
-
-
-# ==================================================
 # > CLASSES
 # ==================================================
 class Anchor
-    constructor: (@$el, @speed, @mirrorURL) ->
-        @hash = getHash()
+    constructor: (@$el, @speed, @offset) ->
+        @hash = @getHash()
         unless @hash then return false
 
-        @$target = $(@hash).first()
+        @$target   = $(@hash).first()
 
+        @localizeTarget()
+        @bindClick()
 
     getHash: ->
         hash = @$el.attr("href").match(/(.*)(#.+)/)
@@ -50,72 +29,89 @@ class Anchor
         else
             return false
 
+    localizeTarget: ->
+        @targetTop = @$target.offset().top + @offset
+
     bindClick: ->
-        @$el.click =>
+        @$el.click (e) =>
             e.preventDefault()
             $roots.stop().animate
-                "scrollTop": @$target - 20
+                "scrollTop": @targetTop + 1
             , @speed, "swing", =>
                 window.location.hash = @hash
 
 
+
 class AnchorCollection
     constructor: ->
-        @items   = []
-        @scroll  = 0
-        @current = ""
+        @items     = []
+        @scroll    = 0
+        @current   = ""
+        @mirrorURL = false
 
         @cleanURL = window.location.href.match(/(.+)(#.+)/)
-        @cleanURL = if @cleanURL then cleanURL[1] else window.location.href
+        @cleanURL = if @cleanURL then @cleanURL[1] else window.location.href
 
     add: (item) ->
         if item
             @items.push item
 
+    activateMirror: (shouldActivate) ->
+        if shouldActivate
+            @mirrorURL = true
+
     checkCurrent: ->
-        @scroll = $(window).scrollTop()
-        hash    = false
+        @scroll  = $(window).scrollTop()
+        toSelect = false
 
+        for item in @items
 
-        for i, item of @items
-            if @scroll >= item.$target.offset().top
-                #
+            item.localizeTarget()
 
-###
-            var _update = function () {
-                var s = $(window).scrollTop(),
-                    toSelect, i, id;
+            if !toSelect || toSelect.targetTop < item.targetTop
 
-                for (i in ids) {
-                    id = ids[i];
-                    if (id.scrollTop <= s && (!toSelect || id.scrollTop > toSelect.scrollTop) ) {
-                        toSelect = id;
-                    }
-                }
+                if @scroll > item.targetTop
+                    toSelect = item
 
-                if (toSelect !== selected) {
-                    _select(toSelect)
-                }
-            } ###
+        if toSelect isnt @current then @updateCurrent toSelect
 
+    updateCurrent: (toSelect) ->
+        @current     = toSelect
+        @hash        = @current.hash || ""
 
-
-        if hash isnt @current
-            @setCurrent hash
-
-    setCurrent: (hash) ->
-        @current = hash
-        shouldMirror = false
-
-        for i, item of @items
-            if item.hash == @current
+        for item in @items
+            if item.hash == @hash
                 item.$el.addClass "current"
-                shouldMirror = if item.mirrorURL then true else shouldMirror
             else
                 item.$el.removeClass "current"
 
-        if shouldMirror
+        if @mirrorURL
             window.history.replaceState
                 action: "mirrorURL"
-                id: @current
-            , "", @cleanURL+@current
+                id: @hash
+            , "", @cleanURL+@hash
+
+
+# ==================================================
+# > GLOBALS
+# ==================================================
+anchorCollection = new AnchorCollection()
+$roots           = $("html, body")
+
+# ==================================================
+# > JQUERY METHOD
+# ==================================================
+$.fn.scrollnav = (speed = 500, mirrorURL = false, offset = -20) ->
+
+    $(this).find("a[href*='#']").each (i, el) ->
+        anchor = new Anchor $(el), speed, offset
+
+        anchorCollection.add anchor
+        anchorCollection.activateMirror mirrorURL
+
+# ==================================================
+# > EVENTS
+# ==================================================
+$(window).scroll => anchorCollection.checkCurrent()
+$(window).resize => anchorCollection.checkCurrent()
+$(window).on "load", => anchorCollection.checkCurrent()
