@@ -59,17 +59,6 @@
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
-/******/ 	// webpack-livereload-plugin
-/******/ 	(function() {
-/******/ 	  if (typeof window === "undefined") { return };
-/******/ 	  var id = "webpack-livereload-plugin-script";
-/******/ 	  if (document.getElementById(id)) { return; }
-/******/ 	  var el = document.createElement("script");
-/******/ 	  el.id = id;
-/******/ 	  el.async = true;
-/******/ 	  el.src = "http://localhost:35729/livereload.js";
-/******/ 	  document.getElementsByTagName("head")[0].appendChild(el);
-/******/ 	}());
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
@@ -10339,8 +10328,8 @@ return jQuery;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(2);
-__webpack_require__(19);
-module.exports = __webpack_require__(20);
+__webpack_require__(20);
+module.exports = __webpack_require__(21);
 
 
 /***/ }),
@@ -10352,7 +10341,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_forms_coffee__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modules_animations_coffee__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_navigation_coffee__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_contents_coffee__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_contents_coffee__ = __webpack_require__(14);
 // ==================================================
 // > FORMS
 // ==================================================
@@ -18705,7 +18694,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*! skrollr 0.6.26 (2014-06-08) | Alexander Pr
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_hammerjs__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_hammerjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_hammerjs__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tools_addClassAt_coffee__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tools_scrollnav_coffee__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tools_scrollnav_coffee__ = __webpack_require__(13);
 var $root, $roots, MobileMenu;
 
 
@@ -21505,12 +21494,187 @@ __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.fn.addClassAt = function(scrollTo
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tools_collapsable_coffee__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_slick_carousel__ = __webpack_require__(15);
+
+/*
+  * Make a smooth scroll animation with anchor
+  * Detect anchor menu and activate elements based on scroll position
+  * @package Syltaen
+  * @author Stanley Lambot
+  * @requires jQuery, hammer.js
+ */
+var $roots, Anchor, AnchorCollection, anchorCollection;
+
+
+
+Anchor = (function() {
+  function Anchor($el, speed1, offset1) {
+    this.$el = $el;
+    this.speed = speed1;
+    this.offset = offset1;
+    this.hash = this.getHash();
+    if (!this.hash) {
+      return false;
+    }
+    this.$target = __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this.hash).first();
+    this.localizeTarget();
+    this.bindClick();
+  }
+
+  Anchor.prototype.getHash = function() {
+    var hash;
+    hash = this.$el.attr("href").match(/(.*)(#.+)/);
+    if (hash[1] === "" || hash[1] === window.location.pathname || hash[1] === window.location.origin + window.location.pathname) {
+      if (hash && hash[2] && __WEBPACK_IMPORTED_MODULE_0_jquery___default()(hash[2]).length > 0) {
+        return hash[2];
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
+
+  Anchor.prototype.localizeTarget = function() {
+    return this.targetTop = this.$target.offset().top + this.offset;
+  };
+
+  Anchor.prototype.bindClick = function() {
+    return this.$el.click((function(_this) {
+      return function(e) {
+        e.preventDefault();
+        return $roots.stop().animate({
+          "scrollTop": _this.targetTop + 1
+        }, _this.speed, "swing", function() {
+          return window.location.hash = _this.hash;
+        });
+      };
+    })(this));
+  };
+
+  return Anchor;
+
+})();
+
+AnchorCollection = (function() {
+  function AnchorCollection() {
+    this.items = [];
+    this.scroll = 0;
+    this.current = "";
+    this.mirrorURL = false;
+    this.cleanURL = window.location.href.match(/(.+)(#.+)/);
+    this.cleanURL = this.cleanURL ? this.cleanURL[1] : window.location.href;
+  }
+
+  AnchorCollection.prototype.add = function(item) {
+    if (item) {
+      return this.items.push(item);
+    }
+  };
+
+  AnchorCollection.prototype.activateMirror = function(shouldActivate) {
+    if (shouldActivate) {
+      return this.mirrorURL = true;
+    }
+  };
+
+  AnchorCollection.prototype.checkCurrent = function() {
+    var item, j, len, ref, toSelect;
+    this.scroll = __WEBPACK_IMPORTED_MODULE_0_jquery___default()(window).scrollTop();
+    toSelect = false;
+    ref = this.items;
+    for (j = 0, len = ref.length; j < len; j++) {
+      item = ref[j];
+      item.localizeTarget();
+      if (!toSelect || toSelect.targetTop < item.targetTop) {
+        if (this.scroll > item.targetTop) {
+          toSelect = item;
+        }
+      }
+    }
+    if (toSelect !== this.current) {
+      return this.updateCurrent(toSelect);
+    }
+  };
+
+  AnchorCollection.prototype.updateCurrent = function(toSelect) {
+    var item, j, len, ref;
+    this.current = toSelect;
+    this.hash = this.current.hash || "";
+    ref = this.items;
+    for (j = 0, len = ref.length; j < len; j++) {
+      item = ref[j];
+      if (item.hash === this.hash) {
+        item.$el.addClass("current");
+      } else {
+        item.$el.removeClass("current");
+      }
+    }
+    if (this.mirrorURL) {
+      return window.history.replaceState({
+        action: "mirrorURL",
+        id: this.hash
+      }, "", this.cleanURL + this.hash);
+    }
+  };
+
+  return AnchorCollection;
+
+})();
+
+anchorCollection = new AnchorCollection();
+
+$roots = __WEBPACK_IMPORTED_MODULE_0_jquery___default()("html, body");
+
+__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.fn.scrollnav = function(speed, mirrorURL, offset) {
+  if (speed == null) {
+    speed = 500;
+  }
+  if (mirrorURL == null) {
+    mirrorURL = false;
+  }
+  if (offset == null) {
+    offset = -20;
+  }
+  return __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).find("a[href*='#']").each(function(i, el) {
+    var anchor;
+    anchor = new Anchor(__WEBPACK_IMPORTED_MODULE_0_jquery___default()(el), speed, offset);
+    anchorCollection.add(anchor);
+    return anchorCollection.activateMirror(mirrorURL);
+  });
+};
+
+__WEBPACK_IMPORTED_MODULE_0_jquery___default()(window).scroll((function(_this) {
+  return function() {
+    return anchorCollection.checkCurrent();
+  };
+})(this));
+
+__WEBPACK_IMPORTED_MODULE_0_jquery___default()(window).resize((function(_this) {
+  return function() {
+    return anchorCollection.checkCurrent();
+  };
+})(this));
+
+__WEBPACK_IMPORTED_MODULE_0_jquery___default()(window).on("load", (function(_this) {
+  return function() {
+    return anchorCollection.checkCurrent();
+  };
+})(this));
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tools_collapsable_coffee__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_slick_carousel__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_slick_carousel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_slick_carousel__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tools_shadowbox_coffee__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__tools_showif_coffee__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__tools_tableFilters_coffee__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tools_shadowbox_coffee__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__tools_showif_coffee__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__tools_tableFilters_coffee__ = __webpack_require__(19);
 
 
 
@@ -21551,7 +21715,7 @@ __WEBPACK_IMPORTED_MODULE_0_jquery___default()(function() {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21623,7 +21787,7 @@ Collapsable = (function() {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -24524,7 +24688,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24608,7 +24772,7 @@ var Shadowbox;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24706,7 +24870,7 @@ Condition = (function() {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24799,196 +24963,16 @@ FilterableTable = (function() {
 
 
 /***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
 /* 20 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 21 */
+/***/ (function(module, exports) {
 
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-
-/*
-  * Make a smooth scroll animation with anchor
-  * Detect anchor menu and activate elements based on scroll position
-  * @package Syltaen
-  * @author Stanley Lambot
-  * @requires jQuery, hammer.js
- */
-var $roots, Anchor, AnchorCollection, anchorCollection;
-
-
-
-Anchor = (function() {
-  function Anchor($el, speed1, offset1) {
-    this.$el = $el;
-    this.speed = speed1;
-    this.offset = offset1;
-    this.hash = this.getHash();
-    if (!this.hash) {
-      return false;
-    }
-    this.$target = __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this.hash).first();
-    this.localizeTarget();
-    this.bindClick();
-  }
-
-  Anchor.prototype.getHash = function() {
-    var hash;
-    hash = this.$el.attr("href").match(/(.*)(#.+)/);
-    if (hash[1] === "" || hash[1] === window.location.pathname || hash[1] === window.location.origin + window.location.pathname) {
-      if (hash && hash[2] && __WEBPACK_IMPORTED_MODULE_0_jquery___default()(hash[2]).length > 0) {
-        return hash[2];
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  };
-
-  Anchor.prototype.localizeTarget = function() {
-    return this.targetTop = this.$target.offset().top + this.offset;
-  };
-
-  Anchor.prototype.bindClick = function() {
-    return this.$el.click((function(_this) {
-      return function(e) {
-        e.preventDefault();
-        return $roots.stop().animate({
-          "scrollTop": _this.targetTop + 1
-        }, _this.speed, "swing", function() {
-          return window.location.hash = _this.hash;
-        });
-      };
-    })(this));
-  };
-
-  return Anchor;
-
-})();
-
-AnchorCollection = (function() {
-  function AnchorCollection() {
-    this.items = [];
-    this.scroll = 0;
-    this.current = "";
-    this.mirrorURL = false;
-    this.cleanURL = window.location.href.match(/(.+)(#.+)/);
-    this.cleanURL = this.cleanURL ? this.cleanURL[1] : window.location.href;
-  }
-
-  AnchorCollection.prototype.add = function(item) {
-    if (item) {
-      return this.items.push(item);
-    }
-  };
-
-  AnchorCollection.prototype.activateMirror = function(shouldActivate) {
-    if (shouldActivate) {
-      return this.mirrorURL = true;
-    }
-  };
-
-  AnchorCollection.prototype.checkCurrent = function() {
-    var item, j, len, ref, toSelect;
-    this.scroll = __WEBPACK_IMPORTED_MODULE_0_jquery___default()(window).scrollTop();
-    toSelect = false;
-    ref = this.items;
-    for (j = 0, len = ref.length; j < len; j++) {
-      item = ref[j];
-      item.localizeTarget();
-      if (!toSelect || toSelect.targetTop < item.targetTop) {
-        if (this.scroll > item.targetTop) {
-          toSelect = item;
-        }
-      }
-    }
-    if (toSelect !== this.current) {
-      return this.updateCurrent(toSelect);
-    }
-  };
-
-  AnchorCollection.prototype.updateCurrent = function(toSelect) {
-    var item, j, len, ref;
-    this.current = toSelect;
-    this.hash = this.current.hash || "";
-    ref = this.items;
-    for (j = 0, len = ref.length; j < len; j++) {
-      item = ref[j];
-      if (item.hash === this.hash) {
-        item.$el.addClass("current");
-      } else {
-        item.$el.removeClass("current");
-      }
-    }
-    if (this.mirrorURL) {
-      return window.history.replaceState({
-        action: "mirrorURL",
-        id: this.hash
-      }, "", this.cleanURL + this.hash);
-    }
-  };
-
-  return AnchorCollection;
-
-})();
-
-anchorCollection = new AnchorCollection();
-
-$roots = __WEBPACK_IMPORTED_MODULE_0_jquery___default()("html, body");
-
-__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.fn.scrollnav = function(speed, mirrorURL, offset) {
-  if (speed == null) {
-    speed = 500;
-  }
-  if (mirrorURL == null) {
-    mirrorURL = false;
-  }
-  if (offset == null) {
-    offset = -20;
-  }
-  return __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).find("a[href*='#']").each(function(i, el) {
-    var anchor;
-    anchor = new Anchor(__WEBPACK_IMPORTED_MODULE_0_jquery___default()(el), speed, offset);
-    anchorCollection.add(anchor);
-    return anchorCollection.activateMirror(mirrorURL);
-  });
-};
-
-__WEBPACK_IMPORTED_MODULE_0_jquery___default()(window).scroll((function(_this) {
-  return function() {
-    return anchorCollection.checkCurrent();
-  };
-})(this));
-
-__WEBPACK_IMPORTED_MODULE_0_jquery___default()(window).resize((function(_this) {
-  return function() {
-    return anchorCollection.checkCurrent();
-  };
-})(this));
-
-__WEBPACK_IMPORTED_MODULE_0_jquery___default()(window).on("load", (function(_this) {
-  return function() {
-    return anchorCollection.checkCurrent();
-  };
-})(this));
-
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

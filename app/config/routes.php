@@ -14,7 +14,7 @@ Route::add([
     // ==================================================
     // [
     //     'NAME_OF_THE_PAGE/(things|to|capture)/?$',
-    //     'index.php?pagename=NAME_OF_THE_PAGE/?(TOKEN_NAME)=$matches[1]'
+    //     'index.php?pagename=NAME_OF_THE_PAGE&(TOKEN_NAME)=$matches[1]'
     // ],
 
 ]);

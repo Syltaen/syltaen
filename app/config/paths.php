@@ -44,6 +44,7 @@ return [
 
         // ========== HELPERS ========== //
         "Ajax"       => "app/Helpers",
+        "Cache"      => "app/Helpers",
         "Data"       => "app/Helpers",
         "Files"      => "app/Helpers",
         "Mail"       => "app/Helpers",
