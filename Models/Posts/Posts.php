@@ -333,8 +333,8 @@ abstract class Posts extends Model
     {
         $supports = [];
         if (static::HAS_TITLE)          $supports[] = "title";
-        if (static::HAS_EDITOR)         $supports[] = "author";
-        if (static::HAS_AUTHOR)         $supports[] = "editor";
+        if (static::HAS_EDITOR)         $supports[] = "editor";
+        if (static::HAS_AUTHOR)         $supports[] = "author";
         if (static::HAS_THUMBNAIL)      $supports[] = "thumbnail";
         if (static::HAS_EXCERPT)        $supports[] = "excerpt";
         if (static::HAS_TRACKBACKS)     $supports[] = "trackbacks";

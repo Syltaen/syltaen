@@ -52,6 +52,25 @@ abstract class Route
         exit;
     }
 
+    // ==================================================
+    // > RULES
+    // ==================================================
+    public static function any($resp, $args = [])
+    {
+        if ($resp) {
+            static::respond($resp, $args);
+        }
+        return true;
+    }
+
+    /**
+     * Custom route defined in app/config/route.php
+     *
+     * @param string $key The key set for the route
+     * @param mix $resp The response to use
+     * @param array $args Arguments for the response
+     * @return void
+     */
     public static function custom($key, $resp, $args = [])
     {
         if (!static::qVar("custompage")) return false;
@@ -149,7 +168,9 @@ abstract class Route
     }
 
 
-
+    // ==================================================
+    // > CUSTOM ROUTES
+    // ==================================================
     /**
      * Register a new query_var or get its value
      *
@@ -222,6 +243,9 @@ abstract class Route
         static::qVar($auto_query_vars);
     }
 
+    // ==================================================
+    // > UTILITIES
+    // ==================================================
     /**
      * Redirect to a different page
      *
@@ -230,8 +254,6 @@ abstract class Route
      */
     public static function redirect($path = "")
     {
-        /* #LOG# */ Controller::log($path, __CLASS__.":".__LINE__);
-
         if (is_string($path)) {
             if (preg_match("~^(?:f|ht)tps?://~i", $path)) {
                 wp_redirect($path);
@@ -247,7 +269,13 @@ abstract class Route
         exit;
     }
 
-
+    /**
+     * Get the full current URL with all its parameters
+     *
+     * @param array $query_args
+     * @param boolean $merge
+     * @return string The URL
+     */
     public static function getFullUrl($query_args = [], $merge = true)
     {
         global $wp;
