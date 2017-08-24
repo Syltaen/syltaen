@@ -30,10 +30,6 @@ class ApiController extends Controller
 
     }
 
-    private function bootstrap()
-    {
-        die("ok");
-    }
 
     /**
      * Login as a certain user

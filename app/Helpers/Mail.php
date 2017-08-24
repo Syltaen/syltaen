@@ -68,7 +68,7 @@ abstract class Mail
      */
     public static function generateBoundary()
     {
-        return "---boudary-" . sha1(microtime(true).mt_rand(10000,90000));
+        return "---boudary-" . sha1(microtime(true) . mt_rand(10000,90000));
     }
 
     /**

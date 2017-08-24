@@ -71,21 +71,21 @@ abstract class PageController extends Controller
             "main" => wp_nav_menu([
                 "theme_location" => "main_menu",
                 "menu_id"        => "main_menu",
-                "container"      => "nav",
+                "container"      => "ul",
                 "echo"           => false
             ]),
 
             "mobile" => wp_nav_menu([
                 "theme_location" => "main_menu",
                 "menu_id"        => "main_menu_mobile",
-                "container"      => "nav",
+                "container"      => "ul",
                 "echo"           => false
             ]),
 
             "footer" =>	wp_nav_menu([
                 "theme_location" => "footer_menu",
                 "menu_id"        => "footer_menu",
-                "container"      => "nav",
+                "container"      => "ul",
                 "echo"           => false
             ])
         ];

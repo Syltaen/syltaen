@@ -5,6 +5,13 @@ namespace Syltaen;
 class Cache
 {
     /**
+     * The cache folder/file identifier
+     *
+     * @var string
+     */
+    private $key = "";
+
+    /**
      * The directory in which to store all cache files
      *
      * @var string
@@ -60,14 +67,16 @@ class Cache
      * @param string $key Folder in with the cache files are stored
      * @param string $format File format to use
      */
-    public function __construct($key, $ttl = 60, $format = "json", $keep = 10)
+    public function __construct($key = "logs", $ttl = 60, $format = "json", $keep = 10)
     {
-        $this->directory = Files::path("cache") . $key;
-        $this->format    = $format;
-        $this->files     = $this->getAllFiles();
+        $this->key       = $key;
         $this->ttl       = round($ttl * 60);
+        $this->format    = $key == "logs" ? "log" : $format;
         $this->keep      = $keep;
+
         $this->now       = time();
+        $this->directory = Files::path("cache") . $this->key;
+        $this->files     = $this->getAllFiles();
     }
 
     /**
@@ -80,6 +89,7 @@ class Cache
      */
     public function get($resultCallback)
     {
+
         $last = $this->getDataFrom(0);
 
         if ($this->isExpired()) {
@@ -89,9 +99,32 @@ class Cache
         }
     }
 
-    // ==================================================
-    // > PRIVATE
-    // ==================================================
+    /**
+     * Log a new line into a log text file
+     *
+     * @param string $newLine The line to add
+     * @param string $filename The logfile name
+     * @param int $linesToKeep Limit of lines to keep in the file
+     * @return void
+     */
+    public function log($newLine, $filename = "logs", $linesToKeep = 500)
+    {
+        $last = $this->getDataFrom($filename);
+
+        // Get the files
+        $filename = $this->directory . "/" . $filename . ".log";
+        $file     = fopen($filename, "w");
+
+        // The new content
+        $content = $last ? $last . "\n" : "";
+        $content .= "[". date("d/m/Y h:i:s", $this->now) . "] ". $newLine;
+        $content = implode("\n", array_slice(explode("\n", $content), -$linesToKeep, $linesToKeep));
+
+        // Rewrite the file
+        fwrite($file, $content);
+        fclose($file);
+    }
+
     /**
      * Check if the last cache file is expired
      *
@@ -103,6 +136,9 @@ class Cache
         return $this->now - $this->ttl > $lastTime;
     }
 
+    // ==================================================
+    // > PRIVATE
+    // ==================================================
     /**
      * Get a list of all cached files
      *
@@ -178,14 +214,30 @@ class Cache
     /**
      * Get the data from a file by its index
      *
-     * @param integer $fileIndex
+     * @param mixed $fileSearch Name or index of the file
      * @return mix
      */
-    private function getDataFrom($fileIndex = 0)
+    private function getDataFrom($fileSearch = 0)
     {
+        /* #LOG# */ Controller::log($this->files, __CLASS__.":".__LINE__);
+
         if (empty($this->files)) return false;
 
-        $file = $this->directory . "/" . $this->files[$fileIndex];
+        // Get the correct file
+        $file = false;
+
+        if (is_int($fileSearch)) { // by id
+            $file = $this->directory . "/" . $this->files[$fileSearch];
+
+        } elseif (is_string($fileSearch)) { // by name
+            foreach ($this->files as $fileIndex=>$fileName) {
+                if ($fileName == $fileSearch . "." . $this->format) {
+                    $file = $this->directory . "/" . $this->files[$fileIndex];
+                    break;
+                }
+            }
+        }
+
         if (!file_exists($file)) return false;
 
         $content = file_get_contents($file);

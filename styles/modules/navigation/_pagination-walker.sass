@@ -1,27 +1,23 @@
-// ==================================================
-// > PAGE NAVIGATION
-// ==================================================
+// =============================================================================
+// > LAYOUTS: MODULES - NAVIGATION: PAGINATION
+// =============================================================================
+
 .pagination-walker
     text-align: center
 
     p
         text-align: center
-        font-size: 14px
-        font-size: 14rem
+        +font(14px)
         margin-bottom: 40px
 
     &__direction
+        +size(40px, 20px)
+        +font(20px, $main, null, 20px)
         display: inline-block
         position: relative
         text-indent: -9999px
         margin: 0 5px
-        font-size: 20px
-        font-size: 20rem
-        color: $main
         transition: all .25s ease
-        width: 40px
-        height: 20px
-        line-height: 20px
         &:before
             font-family: $font-fa
             text-indent: 0
@@ -42,16 +38,12 @@
             display: inline-block
             a,
             .current
+                +size(45px)
+                +font(20px, white, null, 45px)
                 background: $main
                 border: 3px solid white
                 text-align: center
-                color: white
-                font-size: 20px
-                font-size: 20rem
                 display: block
-                width: 45px
-                height: 45px
-                line-height: 45px
                 opacity: .7
                 margin: 0 -3px
                 transition: all .25s ease

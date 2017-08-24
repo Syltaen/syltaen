@@ -1,41 +1,29 @@
-// ==================================================
-// > TITLES
-// ==================================================
+// =============================================================================
+// > MODULES: TXT - TITLES
+// =============================================================================
+
 h1, h2, h3, h4, h5, h6
-    color: $main
     font-weight: normal
     text-rendering: geometricPrecision
     margin-top: 1em
-    font-family: $font-bold
 
-h1,
-h2,
-h3
-    font-size: 40px
-    font-size: 40rem
-    text-transform: uppercase
+h1
+    +font(40px, $main, $font-bold)
 
 h2
-    font-size: 35px
-    font-size: 35rem
+    +font(35px, $main, $font-bold)
 
 h3
-    font-size: 30px
-    font-size: 30rem
+    +font(30px, $main, $font-bold)
 
 h4
-    font-size: 24px
-    font-size: 24rem
+    +font(24px, $main, $font-bold)
 
 h5
-    font-size: 20px
-    font-size: 20rem
-    font-family: $font-bold
+    +font(20px, $main, $font-bold)
 
 h6
-    font-size: 16px
-    font-size: 16rem
-    font-family: $font-regular
+    +font(16px, $main, $font-bold)
 
 
 // ========== SUBTITLE ========== //

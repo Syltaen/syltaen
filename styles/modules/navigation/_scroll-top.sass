@@ -1,23 +1,18 @@
-// ==================================================
-// > SCROLL TOP ARROW
-// ==================================================
+// =============================================================================
+// > LAYOUTS: MODULES - NAVIGATION: SCROLL TOP
+// =============================================================================
+
 #scroll-top
-    position: fixed
-    bottom: 40px
-    right: 40px
-    width: 50px
-    height: 50px
+    +size(50px)
+    +font(24px, white, null, 50px)
+    +fixed(right 40px bottom 40px)
     background: $main
     z-index: 9999
     border-radius: 3px
     cursor: pointer
     transform: translateY(100px)
     transition: all .35s ease
-    color: white
     text-align: center
-    line-height: 50px
-    font-size: 24px
-    font-size: 24rem
     box-shadow: 0 0 3px 0 rgba(black, 0)
 
     &:hover

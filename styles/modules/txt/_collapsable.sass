@@ -1,3 +1,7 @@
+// =============================================================================
+// > MODULES: TXT - COLLAPSABLE
+// =============================================================================
+
 .collapsable
     margin: 0
     margin-bottom: 20px
@@ -5,20 +9,15 @@
     overflow: hidden
     transition: height .5s ease
 
-
     // ==================================================
     // > HEADER
     // ==================================================
     &__header
+        +font(24px, white, $font-bold, 65px)
         background: $main
         height: 65px
-        line-height: 65px
-        font-size: 24px
-        font-size: 24rem
-        color: white
         text-align: center
         position: relative
-        font-family: $font-bold
         box-sizing: border-box
         padding-left: 40px
         cursor: pointer
@@ -29,15 +28,11 @@
             position: absolute
             top: 0
             left: 15px
-        +gridle_state(sm)
-            font-size: 20px
-            font-size: 20rem
-        +gridle_state(xs)
+        +state(sm)
+            +font(20px)
+        +state(xs)
+            +font(13px, null, $font-regular, 18px)
             box-sizing: border-box
-            font-size: 13px
-            font-size: 13rem
-            line-height: 18px
-            font-family: $font-regular
             display: flex
             align-items: center
             justify-content: center

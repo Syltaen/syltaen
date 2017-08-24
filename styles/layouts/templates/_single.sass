@@ -1,19 +1,16 @@
-// ==================================================
-// > SINGLE
-// ==================================================
+// =============================================================================
+// > LAYOUTS: TEMPLATES - SINGLE
+// =============================================================================
+
 .single-content
     padding: 40px 0
     overflow: hidden
 
     // ========== TIME ========== //
     time
-        font-size: 16px
-        font-size: 16rem
-        font-family: $font-regular
-        color: $dgry
+        +font(16px, $dgry, $font-regular)
         strong
-            font-size: 45px
-            font-size: 45rem
+            +font(45px)
             display: block
 
     // ========== VISUAL ========== //

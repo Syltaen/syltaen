@@ -1,0 +1,49 @@
+// =============================================================================
+// > ASSETS: VARIABLES
+// =============================================================================
+
+// ==================================================
+// > BREAKPOINTS
+// ==================================================
+$responsive: (
+    md: (
+        breakpoint: null,
+        container: 960px
+    ),
+    sm: (
+        breakpoint: 1040px,
+        container: 600px
+    ),
+    xs: (
+        breakpoint: 640px,
+        container: 300px
+    )
+);
+
+
+// ==================================================
+// > FONTS
+// ==================================================
+$font-regular: "Raleway-Regular", "Raleway-Light", "Helvetica", "Arial", sans-serif;
+$font-light:   "Raleway-Light", "Raleway-Regular", "Helvetica", "Arial", sans-serif;
+$font-bold:    "Raleway-Bold", "Raleway-Regular", "Helvetica", "Arial", sans-serif;
+$font-fa:      "FontAwesome";
+
+
+// ==================================================
+// > COLORS
+// ==================================================
+// General
+$success: ​#66cc66;
+$error:   #e05252;
+
+$lgry:  #f8f7f7;
+$dgry:  #282828;
+$black: #111;
+
+// Project
+$green: #9de4b6;
+$mgry:  #373e48;
+
+$main: $green;
+$scnd: $mgry;

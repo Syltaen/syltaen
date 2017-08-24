@@ -37,7 +37,7 @@ class Elements
 # > GLOBALS
 # ==================================================
 elements = new Elements()
-$(window).scroll => elements.check()
+$(window).scroll -> elements.check()
 
 # ==================================================
 # > JQUERY METHOD

@@ -1,6 +1,7 @@
-// ==================================================
-// > TABLES
-// ==================================================
+// =============================================================================
+// > LAYOUTS: MODULES - TABLES
+// =============================================================================
+
 table
     width: 100%
     max-width: 100%
@@ -25,7 +26,9 @@ table
         width: auto
 
 
-
+    // ==================================================
+    // > ELEMENTS
+    // ==================================================
     td, th
         padding: 10px
 
@@ -70,8 +73,7 @@ table
                 position: relative
                 top: 1px
                 padding: 0 6px
-                font-size: 12px
-                font-size: 12rem
+                +font(12px)
                 float: none
                 &.submit
                     top: 2px
@@ -88,7 +90,6 @@ table
                 .select2-selection__rendered
                     padding-left: 5px
                     padding-right: 5px
-                    font-size: 12px
-                    font-size: 12rem
+                    +font(12px)
                 .select2-selection__arrow
                     width: 20px

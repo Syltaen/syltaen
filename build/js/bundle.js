@@ -18760,7 +18760,7 @@ MobileMenu = (function() {
 })();
 
 __WEBPACK_IMPORTED_MODULE_0_jquery___default()(function() {
-  return new MobileMenu(__WEBPACK_IMPORTED_MODULE_0_jquery___default()("#mobile-menu-trigger"), __WEBPACK_IMPORTED_MODULE_0_jquery___default()("#mobile-menu"), "mobile-nav-open");
+  return new MobileMenu(__WEBPACK_IMPORTED_MODULE_0_jquery___default()("#app-nav-mobile-trigger"), __WEBPACK_IMPORTED_MODULE_0_jquery___default()("#app-nav-mobile"), "mobile_nav_open");
 });
 
 
@@ -21468,11 +21468,9 @@ Elements = (function() {
 
 elements = new Elements();
 
-__WEBPACK_IMPORTED_MODULE_0_jquery___default()(window).scroll((function(_this) {
-  return function() {
-    return elements.check();
-  };
-})(this));
+__WEBPACK_IMPORTED_MODULE_0_jquery___default()(window).scroll(function() {
+  return elements.check();
+});
 
 __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.fn.addClassAt = function(scrollTop, classToAdd) {
   var toAdd;

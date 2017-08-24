@@ -1,8 +1,10 @@
-// ==================================================
-// > ANCHOR MENU
-// ==================================================
+// =============================================================================
+// > LAYOUTS: MODULES - NAVIGATION: SCROLL NAV
+// =============================================================================
+
 .scrollnav
     margin: 40px auto
+
     ul
         margin: 0 -20px
         display: flex
@@ -12,18 +14,17 @@
             flex-flow: column nowrap
             li
                 margin: 5px 0
+
     li
         flex: 1
         padding: 1px 20px
         overflow: hidden
+
     a
-        display: block
-        line-height: 44px
-        border: 1px dashed $scnd
+        +font(18px, $scnd, null, 44px)
         text-align: center
-        color: $scnd
-        font-size: 18px
-        font-size: 18rem
+        display: block
+        border: 1px dashed $scnd
         position: relative
         transition: all .5s ease
         &.current
@@ -50,10 +51,12 @@
                 transform: translateY(0)
             &:after
                 opacity: 0
+
     span
         transition: transform .5s ease
         display: block
         position: relative
+
     .hovered, .hovered:after
         position: absolute
         width: 100%
@@ -61,6 +64,7 @@
         left: 0
         top: 0
         transform: translateY(-200%)
+
     .hovered
         font-family: $font-bold
         &:after

@@ -1,6 +1,7 @@
-// ==================================================
-// > FORM
-// ==================================================
+// =============================================================================
+// > LAYOUTS: MODULES - FORMS
+// =============================================================================
+
 form
     hr
         margin: 50px 0
@@ -18,11 +19,8 @@ form
         &:before
             content: "\f1ce"
             font-family: $font-fa
-            position: absolute
-            bottom: 0
-            right: 0
-            width: 50px
-            height: 50px
+            +absolute(right 0 bottom 0)
+            +size(50px)
             line-height: 50px
             text-align: center
             margin-left: -25px
@@ -58,57 +56,33 @@ fieldset
 // > LABEL
 // ==================================================
 label
-    font-size: 15px
-    font-size: 15rem
-    font-family: $font-regular
+    +font(15px, null, $font-regular)
+    +truncate(100%)
     font-weight: normal
     cursor: pointer
     height: 24px
     margin-bottom: 5px
-    text-overflow: ellipsis
-    overflow: hidden
     text-transform: none
-    +gridle_state(xs)
-        font-size: 14px
-        font-size: 14rem
 
 // ==================================================
 // > PLACEHOLDERS
 // ==================================================
-=placeholder
-    color: $dgry
-    opacity: .5
-    font-family: $font-light
-    // text-align: center
-    // font-size: 15px
-
-input::-webkit-input-placeholder
-    +placeholder
-input:-moz-placeholder
-    +placeholder
-input::-moz-placeholder
-    +placeholder
-input:-ms-input-placeholder
-    +placeholder
+input
+    +input-placeholder
+        +font(null, rgba($dgry, .5), $font-light)
 
 // ==================================================
 // > INPUT
 // ==================================================
 input
+    +size(100%, 48px)
+    +font(16px, inherit, null, 48px)
     background: none
-    border: 1px solid lighten($dgry, 50%)
     padding: 0 20px
-    box-sizing: border-box
-    color: inherit
-    font-size: 16px
-    font-size: 16rem
     resize: none
-    height: 48px
-    line-height: 48px
-    width: 100%
+    border: 1px solid lighten($dgry, 50%)
     &.no-border
         border: 0
-
 
 // ==================================================
 // > TEXTAREA
@@ -127,24 +101,19 @@ textarea
 // ==================================================
 input[type="radio"],
 input[type="checkbox"]
+    +size(14px)
     appearance: none
     position: relative
-    width: 14px
-    height: 14px
     margin: 8px 5px 0
     padding: 0
     border: 0
     &:before
         content: "\f096"
-        font-family: $font-fa
-        color: $main
-        font-size: 16px
-        font-size: 16rem
-        position: absolute
+        +font(16px, $main, $font-fa, 20px)
+        +absolute(top 0 left 0)
         height: 14px
         line-height: 20px
-        top: 0
-        left: 0
+
     &:checked:before
         content: "\f046"
 
@@ -153,13 +122,10 @@ input[type="radio"]
     border-radius: 50%
     &:before
         content: ""
+        +size(6px)
+        +absolute(top 50% left 50%)
         opacity: 0
-        width: 6px
-        height: 6px
         background: $main
-        position: absolute
-        top: 50%
-        left: 50%
         border-radius: 50%
         margin-top: -3px
         margin-left: -3px

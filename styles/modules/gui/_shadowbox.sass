@@ -1,6 +1,6 @@
-// ==================================================
-// > SHADOWBOX
-// ==================================================
+// =============================================================================
+// > LAYOUTS: MODULES - GUI: SHADOWBOX
+// =============================================================================
 .shadowbox
     +cover
     position: fixed
@@ -13,16 +13,10 @@
         align-items: center
         justify-content: center
     .close
-        position: absolute
-        top: 20px
-        right: 20px
-        width: 50px
-        height: 50px
-        line-height: 50px
+        +absolute(top 20px right 20px)
+        +size(50px)
+        +font(30px, white, null, 50px)
         text-align: center
-        color: white
-        font-size: 30px
-        font-size: 30rem
         text-indent: -9999px
         cursor: pointer
         transition: all .25s ease

@@ -1,6 +1,7 @@
-// ==================================================
-// > PIKADAY CALLENDAR
-// ==================================================
+// =============================================================================
+// > LAYOUTS: MODULES - FORMS: PICKADAY
+// =============================================================================
+
 .pika-date-choice
     position: relative
     &:before
@@ -32,11 +33,9 @@
         margin: 0
 
     .pika-title
+        +font(16px, white)
         background: $main
-        color: white
         text-transform: uppercase
-        font-size: 16px
-        font-size: 16rem
         margin: 0 -10px
         .pika-label
             background: none
@@ -47,22 +46,16 @@
         background: white
         padding: 0 10px
         th
+            +font(11px, $main)
             background: none
             text-transform: uppercase
-            color: $main
-            font-size: 11px
-            font-size: 11rem
             border-bottom: 2px solid #e3e3e3
         td
             border: 0
             .pika-button
+                +font(16px, $main, $font-bold, 20px)
                 text-align: center
                 background: white
-                color: $main
-                font-family: $font-bold
-                font-size: 15px
-                font-size: 15rem
-                line-height: 20px
             &.is-selected .pika-button
                 background: $main
                 border-radius: 0

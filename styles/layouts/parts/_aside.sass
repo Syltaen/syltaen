@@ -1,38 +1,4 @@
-aside
-    position: absolute
-    left: 0
-    z-index: 500
+// =============================================================================
+// > LAYOUTS: PARTS - ASIDE
+// =============================================================================
 
-    &.aside--small
-        top: 542px
-        width: 200px
-
-    &.aside--large
-        top: 600px
-        width: 300px
-
-    @media screen and (max-width: 1400px)
-        transition: all .35s ease
-        transform: translate(-100%)
-        cursor: pointer
-        &:before
-            content: "\f105"
-            font-family: $font-fa
-            color: white
-            text-align: center
-            line-height: 40px
-            position: absolute
-            top: 0
-            right: -40px
-            width: 40px
-            height: 40px
-            background: $main
-            transition: all .35s ease
-        &:hover:before
-            text-indent: 5px
-        &.open
-            transform: translate(0)
-            &:before
-                content: "\f104"
-            &:hover:before
-                text-indent: -5px

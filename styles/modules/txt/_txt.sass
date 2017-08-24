@@ -1,3 +1,7 @@
+// =============================================================================
+// > MODULES: TXT - TXT
+// =============================================================================
+
 // ==================================================
 // > PARAGRAPH
 // ==================================================
@@ -27,27 +31,17 @@ p
 // ==================================================
 // > MESSAGES
 // ==================================================
-p.error,
-p.success
-    color: red
-    font-family: $font-bold
+.page-message
     text-align: center
-    a
-        color: red
-        &:after
-            background: red
-    &.login_required
-        &, a
-            color: $scnd
-        a:after
-            background: $scnd
+    font-family: $font-bold
 
-p.success
+.error
+    &, a
+        color: $error
+
+.success
     &, a
         color: $success
-    a:after
-        background: $success
-
 
 // ==================================================
 // > INLINE
@@ -57,9 +51,7 @@ b
     font-weight: normal
     font-family: $font-bold
 
-em
-    font-style: italic
-
+em,
 i
     font-style: italic
 
@@ -76,18 +68,22 @@ small
 // ==================================================
 // > GLOBAL MODIFIER
 // ==================================================
+
+// ========== COLORS ========== //
 .main-color
     color: $main
 
 .secondary-color
     color: $scnd
 
+// ========== FONTS ========== //
 // .font-light
 //     font-family: $font-light
 
 // .font-black
 //     font-family: $font-black
 
+// ========== ALIGNMENTS ========== //
 .text-align-center
     text-align: center
 
@@ -96,3 +92,9 @@ small
 
 .text-align-right
     text-align: right
+
+// ========== DISABLED ========== //
+*[disabled], *[disabled="disabled"], .disabled
+    background: $lgry
+    opacity: .75
+    pointer-events: none

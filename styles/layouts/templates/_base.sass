@@ -1,37 +1,50 @@
-html, body
-    overflow-x: hidden
-    line-height: 1.4
-
-html
-    font-size: 6.25%
-    min-height: 100%
-    &.mobile-menu-open,
-    &.shadowbox-open,
-        overflow: hidden
-
-body
-    color: $dgry
-    font-family: $font-regular
-    font-size: 16px
-    font-size: 16rem
-    position: relative
-    +gridle_state(xs)
-        font-size: 14px
-        font-size: 14rem
+// =============================================================================
+// > LAYOUTS: TEMPLATES - BASE
+// =============================================================================
+*
+    outline: none
+    box-sizing: border-box
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+    // vertical-align: baseline
+    // margin: 0
+    // padding: 0
+    // font-size: inherit
+    // font-weight: normal
 
 ::selection
     background: $main
     color: white
 
+html
+    font-size: 16px
+    background: white
+
+html, body
+    overflow-x: hidden
+    line-height: 1.4
+
+body
+    +font(16px, $dgry, $font-regular)
+    min-height: 100vh
+    position: relative
+
+#app
+    min-height: 100%
+    background: white
+    overflow: hidden
+    animation: fadeIn .5s linear
+
+
 .container
-    margin: 0 auto
-    width: 960px
-    +gridle_state(sm)
-        width: 640px
-    +gridle_state(xs)
-        width: 300px
+    position: relative
+    width: calc(100% - 40px)
+    max-width: container(md)
+    margin: auto
 
-*
-    outline: 0
-    box-sizing: border-box
+    @each $slug, $bp in $responsive
+        &-#{slug}
+            max-width: container($slug)
 
+        +state($slug)
+            max-width: container($slug)
