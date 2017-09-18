@@ -79,7 +79,9 @@ ninjaFormsController =
 
         form.$el.find("input, select").each (i, el) =>
             $(el).change =>
-                @checkConditional form
+                setTimeout =>
+                    @checkConditional form
+                , 100
 
         @checkConditional form
 

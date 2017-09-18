@@ -31,6 +31,7 @@ class SectionsController extends Controller
 
             foreach ($section["content"] as &$content) {
                 // Add data to the content by using the method matching the layout name
+                $method = str_replace("-", "_", $content["acf_fc_layout"]);
                 $this->$method($content);
             }
         }

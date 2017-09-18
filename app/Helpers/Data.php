@@ -49,8 +49,11 @@ abstract class Data
                 return static::extractIds($value)[0];
             case "ids":
                 return static::extractIds($value);
+            case "img:tag":
             case "img":
                 return wp_get_attachment_image(static::extractIds($value)[0], "full");
+            case "img:url":
+                return wp_get_attachment_url(static::extractIds($value)[0], "full");
             case "url":
                 if (!preg_match("~^(?:f|ht)tps?://~i", $value)) return "http://" . $value;
                 return $value;

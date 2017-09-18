@@ -31,6 +31,8 @@ class FieldRoles extends FieldAdvancedListSelect
         $default_value = static::getDefault($settings);
 
         // ========== ADD OPTIONS  ========== //
+        if (!function_exists("get_editable_roles")) require_once ABSPATH . "wp-admin/includes/user.php";
+
         foreach (get_editable_roles() as $slug=>$role) {
             $options[] = [
                 "label"    => $role["name"],

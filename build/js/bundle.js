@@ -59,6 +59,17 @@
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/ 	// webpack-livereload-plugin
+/******/ 	(function() {
+/******/ 	  if (typeof window === "undefined") { return };
+/******/ 	  var id = "webpack-livereload-plugin-script";
+/******/ 	  if (document.getElementById(id)) { return; }
+/******/ 	  var el = document.createElement("script");
+/******/ 	  el.id = id;
+/******/ 	  el.async = true;
+/******/ 	  el.src = "http://localhost:35729/livereload.js";
+/******/ 	  document.getElementsByTagName("head")[0].appendChild(el);
+/******/ 	}());
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
@@ -10487,7 +10498,9 @@ ninjaFormsController = {
     form.$el.find("input, select").each((function(_this) {
       return function(i, el) {
         return __WEBPACK_IMPORTED_MODULE_0_jquery___default()(el).change(function() {
-          return _this.checkConditional(form);
+          return setTimeout(function() {
+            return _this.checkConditional(form);
+          }, 100);
         });
       };
     })(this));
@@ -24692,16 +24705,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+var Shadowbox;
+
+
+
 
 /*
-  * Create a Google Map and add filterable pins to it
+  * Create a shadowbox
   * @package Syltaen
   * @author Stanley Lambot
   * @requires jQuery
  */
-var Shadowbox;
-
-
 
 /* harmony default export */ __webpack_exports__["a"] = (Shadowbox = (function() {
   function Shadowbox() {
@@ -24732,7 +24746,11 @@ var Shadowbox;
     return this;
   };
 
-  Shadowbox.prototype.video = function(url) {
+  Shadowbox.prototype.video = function(url, attrs) {
+    if (attrs == null) {
+      attrs = "loop autoplay controls";
+    }
+    this.$content.append("<video " + attrs + "><source src='" + url + "'></source></video>");
     return this;
   };
 

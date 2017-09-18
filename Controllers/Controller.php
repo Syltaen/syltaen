@@ -172,18 +172,43 @@ class Controller {
      *
      * @param string $filename
      * @param string $delimiter
+     * @param mixed $data
      * @return void
      */
     public function csv($filename = "export.csv", $delimiter = ";", $data = false)
     {
-
         header("Content-Type: application/csv");
-        header("Content-Disposition: attachment; filename='".$filename."';");
+        header("Content-Disposition: attachment; filename='{$filename}';");
+
         $data = $data ?: $this->data;
+
         $f = fopen("php://output", "w");
         foreach ($data as $line) {
             fputcsv($f, (array) $line, $delimiter);
         }
+        exit;
+    }
+
+    /**
+     * Return a downloadable .xlxs
+     *
+     * @param string $filename
+     * @param mixed $data
+     * @uses composer require "mk-j/php_xlsxwriter"
+     * @return void
+     */
+    public function excel($filename = "export.xlsx", $data)
+    {
+        header("Content-Type: application/xlsx");
+        header("Content-Disposition: attachment; filename={$filename};");
+
+        $data = $data ?: $this->data;
+
+        $writer = new \XLSXWriter();
+        $writer->writeSheet($data);
+
+        $f = fopen("php://output", "w");
+        fwrite($f, $writer->writeToString());
         exit;
     }
 

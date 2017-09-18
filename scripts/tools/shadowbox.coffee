@@ -1,11 +1,11 @@
+import $ from "jquery"
+
 ###
-  * Create a Google Map and add filterable pins to it
+  * Create a shadowbox
   * @package Syltaen
   * @author Stanley Lambot
   * @requires jQuery
 ###
-
-import $ from "jquery";
 
 export default class Shadowbox
 
@@ -25,22 +25,28 @@ export default class Shadowbox
 
         return @$sb
 
+    # ==================================================
+    # > CONTENT TYPES
+    # ==================================================
     empty: () ->
         @$content.html ""
         return this
 
-    video: (url) ->
-        # todo
+    video: (url, attrs = "loop autoplay controls") ->
+        @$content.append "<video #{attrs}><source src='#{url}'></source></video>"
         return this
 
     image: (url) ->
-        @$content.append "<img src='"+url+"'>"
+        @$content.append "<img src='" + url + "'>"
         return this
 
     html: (html) ->
         @$content.html html
         return this
 
+    # ==================================================
+    # > ACTIONS
+    # ==================================================
     show: (speed = 350) ->
         @$sb.fadeIn speed
         @$html.addClass "shadowbox-open"

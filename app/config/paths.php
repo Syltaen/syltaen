@@ -49,6 +49,7 @@ return [
         "Files"      => "app/Helpers",
         "Mail"       => "app/Helpers",
         "Pagination" => "app/Helpers",
+        "Request"    => "app/Helpers",
         "Route"      => "app/Helpers"
     ],
 

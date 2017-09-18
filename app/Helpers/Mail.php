@@ -12,15 +12,14 @@ abstract class Mail
      *
      * @var string
      */
+    public static $fromName = "Wallonie Plus Propre";
 
-    public static $fromName = "Hungry Minds";
     /**
      * The address used to send all mails
      *
      * @var string
      */
-
-    public static $fromAddr = "info@hungryminds.be";
+    public static $fromAddr = "info@bewapp.be";
 
     /**
      * The content type of all mails
@@ -28,6 +27,8 @@ abstract class Mail
      * @var string
      */
     public static $contType = "multipart/alternative";
+
+
 
     /**
      * Send a mail
@@ -38,7 +39,7 @@ abstract class Mail
      * @param array $custom_headers Custom headers to put in the mail
      * @return boolean True if no error during the sending
      */
-    public static function send($to, $subject, $body, $custom_headers = [])
+    public static function send($to, $subject, $body, $custom_headers = [], $attachements = [])
     {
         $boundary = static::generateBoundary();
 
@@ -52,12 +53,23 @@ abstract class Mail
             return true;
 
         } else {
-            return mail(
-                $to,
-                static::parseSubject($subject),
-                static::parseBody($body, $boundary),
-                static::parseHeader($custom_headers, $boundary)
-            );
+            if (empty($attachements)) {
+                return wp_mail(
+                    $to,
+                    static::parseSubject($subject),
+                    static::parseBody($body, $boundary),
+                    static::parseHeader($custom_headers, $boundary),
+                    $attachements
+                );
+            } else {
+                return wp_mail(
+                    $to,
+                    static::parseSubject($subject),
+                    $body,
+                    static::parseHeader($custom_headers),
+                    $attachements
+                );
+            }
         }
     }
 
@@ -68,7 +80,7 @@ abstract class Mail
      */
     public static function generateBoundary()
     {
-        return "---boudary-" . sha1(microtime(true) . mt_rand(10000,90000));
+        return "---boudary-" . sha1(microtime(true).mt_rand(10000,90000));
     }
 
     /**
@@ -79,7 +91,7 @@ abstract class Mail
      */
     public static function sendTest($to)
     {
-        if (static::send($to, "TEST", "This is a test sent from <a href='".site_url()."'>".get_bloginfo("name")."</a>")) {
+        if (static::send($to, "TEST", "This is a test sent from <a href='".site_url()."'>".site_url()."</a>")) {
             return "The e-mail was sent successfully to ".$to;
         } else {
             return "Could not send a mail to ".$to;
@@ -100,29 +112,34 @@ abstract class Mail
     {
         return "=?utf-8?Q?".imap_8bit(substr($subject, 0, 60))."?=";
     }
-
     /**
      * Merge the default header and a custom one
      *
      * @param array $custom_headers
      * @return array
      */
-    private static function parseHeader($custom_headers = [], $boundary)
+    private static function parseHeader($custom_headers = [], $boundary = false)
     {
         $g = array_merge([
 
             "From: ".static::$fromName." <".static::$fromAddr.">",
             "Return-Path: ".static::$fromAddr,
 
-            "Content-Type: multipart/alternative; boundary=$boundary",
-            "MIME-Version: 1.0",
-
             "List-Id: ".static::$fromName,
             "List-Unsubscribe: <mailto:".static::$fromAddr.">"
 
         ], $custom_headers);
 
+
+        if ($boundary) {
+            $g = array_merge([
+                "Content-Type: ".static::$contType."; boundary=$boundary",
+                "MIME-Version: 1.0",
+            ], $g);
+        }
+
         return implode("\r\n", $g);
+
     }
 
     /**
