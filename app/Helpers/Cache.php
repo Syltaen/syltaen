@@ -136,6 +136,16 @@ class Cache
         return $this->now - $this->ttl > $lastTime;
     }
 
+    /**
+     * Clear all files found in the cache folder
+     *
+     * @return void
+     */
+    public function clear()
+    {
+        $this->checkGarbage(0);
+    }
+
     // ==================================================
     // > PRIVATE
     // ==================================================
@@ -192,7 +202,7 @@ class Cache
 
         // Add file to the list and delete files that are too old
         array_unshift($this->files, $filename);
-        static::checkGarbage();
+        $this->checkGarbage($this->keep);
 
         return $content;
     }
@@ -203,13 +213,14 @@ class Cache
      *
      * @return void
      */
-    private function checkGarbage()
+    private function checkGarbage($keep)
     {
-        while (count($this->files) > $this->keep) {
+        while (count($this->files) > $keep) {
             $filename = array_pop($this->files);
             unlink($this->directory . "/" . $filename);
         }
     }
+
 
     /**
      * Get the data from a file by its index
@@ -219,8 +230,6 @@ class Cache
      */
     private function getDataFrom($fileSearch = 0)
     {
-        /* #LOG# */ Controller::log($this->files, __CLASS__.":".__LINE__);
-
         if (empty($this->files)) return false;
 
         // Get the correct file

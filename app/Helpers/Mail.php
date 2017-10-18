@@ -12,14 +12,14 @@ abstract class Mail
      *
      * @var string
      */
-    public static $fromName = "Wallonie Plus Propre";
+    public static $fromName = "Hungry Minds";
 
     /**
      * The address used to send all mails
      *
      * @var string
      */
-    public static $fromAddr = "info@bewapp.be";
+    public static $fromAddr = "info@hungryminds.be";
 
     /**
      * The content type of all mails

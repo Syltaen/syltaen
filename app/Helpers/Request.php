@@ -25,8 +25,7 @@ class Request
      */
     private $alertMails = [
         "stanley.lambot@gmail.com",
-        "stanley.lambot@hungryminds.be",
-        "jyp@bep.be"
+        "stanley.lambot@hungryminds.be"
     ];
 
     /**

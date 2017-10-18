@@ -5,8 +5,8 @@
   "main": "scripts/build.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "start": "webpack --watch"
+    "build": "webpack --env.prod",
+    "start": "webpack --watch --env.dev"
   },
   "author": "Syltaen",
   "license": "ISC",

@@ -53,7 +53,7 @@ class AnchorCollection
         @cleanURL = if @cleanURL then @cleanURL[1] else window.location.href
 
     add: (item) ->
-        if item
+        if item && item.hash
             @items.push item
 
     activateMirror: (shouldActivate) ->

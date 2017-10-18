@@ -77,6 +77,16 @@ abstract class Taxonomy
         return $this->terms;
     }
 
+
+    /**
+     * Get terms for a specific post
+     *
+     * @param int $post_id The post ID
+     * @param string $fields The fields to retrieve
+     * @param string $orderby Order key
+     * @param string $order Order
+     * @return array of terms
+     */
     public function getPostTerms($post_id, $fields = "all", $orderby = "slug", $order = "ASC")
     {
         $this->terms = wp_get_post_terms($post_id, static::SLUG, [
@@ -104,7 +114,10 @@ abstract class Taxonomy
      */
     public function getPosts($model, $hide_empty = true)
     {
-        $this->getTerms("all", $hide_empty);
+        if (!$this->terms) {
+            $this->getTerms("all", $hide_empty);
+        }
+
         foreach ($this->terms as $term) {
             $term->posts = $model->tax(static::SLUG, $term->slug, "AND", true)->get();
         }

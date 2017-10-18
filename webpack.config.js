@@ -1,6 +1,6 @@
-// ==================================================
+// =============================================================================
 // > Assets
-// ==================================================
+// =============================================================================
 const project                     = require("./package.json");
 const webpack                     = require("webpack");
 const autoprefixer                = require("autoprefixer");
@@ -13,113 +13,122 @@ const BrowserSyncPlugin           = require('browser-sync-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin")
 
 
-// ==================================================
+// =============================================================================
 // > Extracted outputs
-// ==================================================
+// =============================================================================
 const bundle_css = new ExtractTextPlugin("css/bundle.css");
 const admin_css  = new ExtractTextPlugin("css/admin.css");
 
 
-// ==================================================
+// =============================================================================
 // > CONFIG
-// ==================================================
-module.exports = {
+// =============================================================================
+module.exports = env => {
 
-    // ==================================================
-    // > ENTRY
-    // ==================================================
-    entry: [
-        "./scripts/builder.js",
-        "./styles/builder.sass",
-        "./styles/layouts/templates/admin.sass"
-    ],
+    var config = {
+        // ==================================================
+        // > ENTRY
+        // ==================================================
+        entry: [
+            "./scripts/builder.js",
+            "./styles/builder.sass",
+            "./styles/layouts/templates/admin.sass"
+        ],
 
-    devtool: "source-map",
+        devtool: "source-map",
 
-    // ==================================================
-    // > OUTPUT(S)
-    // ==================================================
-    output: {
-        path: path.resolve(__dirname, "build"),
-        filename: "js/bundle.js"
-    },
+        // ==================================================
+        // > OUTPUT(S)
+        // ==================================================
+        output: {
+            path: path.resolve(__dirname, "build"),
+            filename: "js/bundle.js"
+        },
 
-    // ==================================================
-    // > MODULES
-    // ==================================================
-    module: {
-        rules: [
+        // ==================================================
+        // > MODULES
+        // ==================================================
+        module: {
+            rules: [
 
-            // ========== COFFEESCRIPT ========== //
-            {
-                test: /\.coffee$/,
-                use: ['coffee-loader?sourceMap']
-            },
-
-            // ========== SASS ========== //
-            {
-                test: /admin\.sass$/,
-                use: admin_css.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        { loader: "css-loader", options: { url: false, sourceMap: true }, },
-                        { loader: "postcss-loader", options: { plugins: () => [autoprefixer], sourceMap: true }},
-                        "sass-loader?sourceMap"
-                    ]
-                })
-            },
-            {
-                test: /builder\.sass$/,
-                use: bundle_css.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        { loader: "css-loader", options: { url: false, sourceMap: true }, },
-                        { loader: "postcss-loader", options: { plugins: () => [autoprefixer], sourceMap: true }},
-                        "sass-loader?sourceMap"
-                    ]
-                })
-            }
-        ]
-    },
-
-    // ==================================================
-    // > PUGINS
-    // ==================================================
-    plugins: [
-
-        // ========== DEV ========== //
-        new LiveReloadPlugin({
-            appendScriptTag: true,
-            ignore: /\.js$|\.map$/
-        }),
-
-        new BrowserSyncPlugin({
-            proxy: "http://localhost/"+project.name,
-            // port: 3000,
-            files: [
+                // ========== COFFEESCRIPT ========== //
                 {
-                    match: [
-                        '**/*.php',
-                        "**/*.pug"
-                    ],
-                    fn: function(event, file) {
-                        if (event === "change") require('browser-sync').get('bs-webpack-plugin').reload();
-                    }
+                    test: /\.coffee$/,
+                    use: ['coffee-loader?sourceMap']
+                },
+
+                // ========== SASS ========== //
+                {
+                    test: /admin\.sass$/,
+                    use: admin_css.extract({
+                        fallback: 'style-loader',
+                        use: [
+                            { loader: "css-loader", options: { url: false, sourceMap: true }, },
+                            { loader: "postcss-loader", options: { plugins: () => [autoprefixer], sourceMap: true }},
+                            "sass-loader?sourceMap"
+                        ]
+                    })
+                },
+                {
+                    test: /builder\.sass$/,
+                    use: bundle_css.extract({
+                        fallback: 'style-loader',
+                        use: [
+                            { loader: "css-loader", options: { url: false, sourceMap: true }, },
+                            { loader: "postcss-loader", options: { plugins: () => [autoprefixer], sourceMap: true }},
+                            "sass-loader?sourceMap"
+                        ]
+                    })
                 }
             ]
         },
-        {
-             reload: false
-        }),
 
-        new FriendlyErrorsWebpackPlugin(),
-        // new DashboardPlugin(),
+        // ==================================================
+        // > PUGINS
+        // ==================================================
+        plugins: [
 
-        bundle_css,
-        admin_css,
+            // ========== DEV ========== //
+            new LiveReloadPlugin({
+                appendScriptTag: true,
+                ignore: /\.js$|\.map$/
+            }),
 
-        // ========== PROD ========== //
-        // new UglifyJSPlugin(),
-        // new OptimizeCssAssetsPlugin()
-    ]
+            new BrowserSyncPlugin({
+                proxy: "http://localhost/"+project.name,
+                // port: 3000,
+                files: [
+                    {
+                        match: [
+                            '**/*.php',
+                            "**/*.pug"
+                        ],
+                        fn: function(event, file) {
+                            if (event === "change") require('browser-sync').get('bs-webpack-plugin').reload();
+                        }
+                    }
+                ]
+            },
+            {
+                reload: false
+            }),
+
+            new FriendlyErrorsWebpackPlugin(),
+
+            bundle_css,
+            admin_css
+        ]
+    };
+
+    // ==================================================
+    // > ENVIRONEMENTS PLUGINS
+    // ==================================================
+    if (env.prod) {
+        config.plugins.push(new UglifyJSPlugin());
+        config.plugins.push(new OptimizeCssAssetsPlugin());
+    }
+
+
+    // ========== RETURN ========== //
+    return config;
 };

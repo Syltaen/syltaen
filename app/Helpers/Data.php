@@ -172,6 +172,11 @@ abstract class Data
             // get value and filter it as/if suggested
             $value = $field_key ? self::get($field_key, $post_id, $value, $filter) : $value;
 
+            // Execute callable functions
+            if (is_callable($value)) {
+                $value = $value($array);
+            }
+
             // store value in the array or object provided
             if (is_array($array)) {
                 $array[$store_key] = $value;

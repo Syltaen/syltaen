@@ -10,12 +10,20 @@ include($syltaen_paths["classes"]["Files"]."/"."Files.php");
 spl_autoload_register("Syltaen\Files::autoload");
 
 // ==================================================
-// > Files loading
+// > COMPOSER AUTOLOADER
 // ==================================================
-Files::load("vendors", [
-    "vendor/autoload"
-]);
+Files::load("vendors", "vendor/autoload");
 
+// ==================================================
+// > ERROR HANDLING
+// ==================================================
+if (WP_DEBUG) (new \Whoops\Run)
+    ->pushHandler(new \Whoops\Handler\PrettyPageHandler)
+    ->register();
+
+// ==================================================
+// > FILES LOADING
+// ==================================================
 Files::load("config", [
     "globals",
     "registrations",

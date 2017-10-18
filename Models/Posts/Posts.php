@@ -357,9 +357,10 @@ abstract class Posts extends Model
         ]);
 
         if (static::HAS_PAGINATION) {
+            $page = static::CUSTOMPATH ? static::CUSTOMPATH : static::TYPE;
             Route::add([[
-                static::TYPE . "/([0-9]*)/?$",
-                'index.php?pagename='.static::TYPE.'&page=$matches[1]'
+                $page . "/([0-9]*)/?$",
+                'index.php?pagename='.$page.'&page=$matches[1]'
             ]]);
         }
     }
