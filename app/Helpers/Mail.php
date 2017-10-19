@@ -21,14 +21,6 @@ abstract class Mail
      */
     public static $fromAddr = "info@hungryminds.be";
 
-    /**
-     * The content type of all mails
-     *
-     * @var string
-     */
-    public static $contType = "multipart/alternative";
-
-
 
     /**
      * Send a mail
@@ -41,46 +33,37 @@ abstract class Mail
      */
     public static function send($to, $subject, $body, $custom_headers = [], $attachements = [])
     {
-        $boundary = static::generateBoundary();
+        $mail = new \PHPMailer\PHPMailer\PHPMailer();
 
-        if (static::DEBUG) {
-            Controller::log([
-                "to"      => $to,
-                "subject" => static::parseSubject($subject),
-                "body"    => static::parseBody($body, $boundary),
-                "headers" => static::parseHeader($custom_headers, $boundary)
-            ], "MAIL");
-            return true;
+        $mail->CharSet = "UTF-8";
 
-        } else {
-            if (empty($attachements)) {
-                return wp_mail(
-                    $to,
-                    static::parseSubject($subject),
-                    static::parseBody($body, $boundary),
-                    static::parseHeader($custom_headers, $boundary),
-                    $attachements
-                );
-            } else {
-                return wp_mail(
-                    $to,
-                    static::parseSubject($subject),
-                    $body,
-                    static::parseHeader($custom_headers),
-                    $attachements
-                );
-            }
+        // From
+        $mail->From     = static::$fromAddr;
+        $mail->FromName = static::$fromName;
+
+        // To
+        foreach (static::parseTo($to) as $addr) {
+            $mail->AddAddress(trim($addr));
         }
-    }
 
-    /**
-     * Generate a multipart boundary
-     *
-     * @return string
-     */
-    public static function generateBoundary()
-    {
-        return "---boudary-" . sha1(microtime(true).mt_rand(10000,90000));
+        // Subject
+        $mail->Subject = $subject;
+
+        // Body
+        $mail->msgHTML($body);
+
+        // Use PHP mail()
+        $mail->IsMail();
+
+        // Send or debug
+        if (static::DEBUG) {
+            return Controller::log($mail, "MAIL");
+        } else {
+            static::log($mail);
+
+            // Send
+            return $mail->Send();
+        }
     }
 
     /**
@@ -91,83 +74,45 @@ abstract class Mail
      */
     public static function sendTest($to)
     {
-        if (static::send($to, "TEST", "This is a test sent from <a href='".site_url()."'>".site_url()."</a>")) {
+        if (static::send($to, "TEST mail", "This is a test sent from <a href='".site_url()."'>".site_url()."</a>")) {
             return "The e-mail was sent successfully to ".$to;
         } else {
-            return "Could not send a mail to ".$to;
+            return "An error occured";
         }
     }
-
 
     // ==================================================
     // > PARSERS
     // ==================================================
-    /**
-     * Get an UTF-8 version of the subject
-     *
-     * @param string $subject
-     * @return string
-     */
-    private static function parseSubject($subject)
+    private static function parseTo($to)
     {
-        return "=?utf-8?Q?".imap_8bit(substr($subject, 0, 60))."?=";
-    }
-    /**
-     * Merge the default header and a custom one
-     *
-     * @param array $custom_headers
-     * @return array
-     */
-    private static function parseHeader($custom_headers = [], $boundary = false)
-    {
-        $g = array_merge([
+        if (is_array($to)) return $to;
 
-            "From: ".static::$fromName." <".static::$fromAddr.">",
-            "Return-Path: ".static::$fromAddr,
-
-            "List-Id: ".static::$fromName,
-            "List-Unsubscribe: <mailto:".static::$fromAddr.">"
-
-        ], $custom_headers);
-
-
-        if ($boundary) {
-            $g = array_merge([
-                "Content-Type: ".static::$contType."; boundary=$boundary",
-                "MIME-Version: 1.0",
-            ], $g);
+        if (is_string($to)) {
+            $to = explode(",", $to);
         }
 
-        return implode("\r\n", $g);
-
+        return (array) $to;
     }
 
-    /**
-     * Get a multipart version of the body
-     *
-     * @param string $html_body
-     * @param string $boundary
-     * @return string
-     */
-    private static function parseBody($html_body, $boundary)
+    // ==================================================
+    // > TOOLS
+    // ==================================================
+    private static function log($mail)
     {
-        $body = [
-            "--$boundary",
-            "Content-Type: text/plain; charset=\"UTF-8\"",
-            "Content-Transfer-Encoding: 8bit",
-            "",
-            \Html2Text\Html2Text::convert($html_body),
+        if (class_exists("No3x\WPML\WPML_Plugin")) {
+            $to = [];
+            foreach ($mail->getToAddresses() as $reciever) {
+                $to[] = $reciever[0];
+            }
 
-            "",
-            "--$boundary",
-            "Content-Type: text/html; charset=\"UTF-8\"",
-            "Content-Transfer-Encoding: 8bit",
-            "",
-            $html_body,
-
-            "--$boundary--",
-        ];
-
-        return implode("\r\n", $body);
+            (new \No3x\WPML\WPML_Plugin)->log_email([
+                "to" => $to,
+                "subject" => $mail->Subject,
+                "message" => $mail->Body,
+                "headers" => [],
+                "attachments" => []
+            ]);
+        }
     }
 }

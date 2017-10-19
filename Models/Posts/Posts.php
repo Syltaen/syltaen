@@ -303,7 +303,11 @@ abstract class Posts extends Model
                 } else {
                     $post->terms[$alias][$format_alias] = $terms;
                     if ($join) {
-                        $post->terms[$alias][$format_alias] = join($join, $post->terms[$alias][$format_alias]);
+                        if (is_callable($join)) {
+                            $post->terms[$alias][$format_alias] = $join($post->terms[$alias][$format_alias]);
+                        } else {
+                            $post->terms[$alias][$format_alias] = join($join, $post->terms[$alias][$format_alias]);
+                        }
                     }
                 }
             }
@@ -461,10 +465,10 @@ abstract class Posts extends Model
     public static function add($title, $content = "", $fields = false, $status = "publish")
     {
         $post_id = wp_insert_post([
-            "post_type"    => static::TYPE,
-            "post_title"   => $title,
-            "post_content" => $content,
-            "post_status"  => $status,
+            "post_type"      => static::TYPE,
+            "post_title"     => $title,
+            "post_content"   => $content,
+            "post_status"    => $status
         ]);
 
         if ($fields) {
@@ -472,6 +476,31 @@ abstract class Posts extends Model
         }
 
         return $post_id;
+    }
+
+    /**
+     * Add a comment to all matchin posts
+     *
+     * @param string $content
+     * @param string $author
+     * @param string $email
+     * @param string $url
+     * @param integer $parent
+     * @return void
+     */
+    public function addComment($content, $author = "", $email = "", $url = "", $parent = 0)
+    {
+        foreach ($this->get() as $post) {
+            wp_new_comment([
+                "comment_post_ID"		=> $post->ID,
+                "comment_author"		=> $author,
+                "comment_author_email" 	=> $email,
+                "comment_author_url"	=> $url,
+                "comment_type"			=> "",
+                "comment_parent"		=> $parent,
+                "comment_content"		=> wpautop($content)
+            ]);
+        }
     }
 
 }

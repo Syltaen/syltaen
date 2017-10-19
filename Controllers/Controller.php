@@ -108,9 +108,12 @@ class Controller {
      * @param string $tags
      * @return void
      */
-    public static function log($data, $tags = null)
+    public static function log($data, $tags = null, $levelLimit = 5, $itemsCountLimit = 100, $itemSizeLimit = 50000, $dumpSizeLimit = 500000)
     {
-        \PhpConsole\Connector::getInstance()->getDebugDispatcher()->dispatchDebug($data, $tags, 1);
+        $dumper    = new \PhpConsole\Dumper($levelLimit, $itemsCountLimit, $itemSizeLimit, $dumpSizeLimit);
+        $connector = \PhpConsole\Connector::getInstance();
+        $connector->setDebugDispatcher(new \PhpConsole\Dispatcher\Debug($connector, $dumper));
+        $connector->getDebugDispatcher()->dispatchDebug($data, $tags, 1);
     }
 
     /**
@@ -120,12 +123,12 @@ class Controller {
      * @param string $tags
      * @return void
      */
-    public function dlog($key = false, $tags = null)
+    public function dlog($key = false, $tags = null, $levelLimit = null, $itemsCountLimit = null, $itemSizeLimit = null, $dumpSizeLimit = null)
     {
         if ($key) {
-            self::log($this->data[$key], $tags);
+            self::log($this->data[$key], $tags, $levelLimit, $itemsCountLimit, $itemSizeLimit, $dumpSizeLimit);
         } else {
-            self::log($this->data, $tags);
+            self::log($this->data, $tags, $levelLimit, $itemsCountLimit, $itemSizeLimit, $dumpSizeLimit);
         }
     }
 

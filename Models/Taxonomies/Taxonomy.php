@@ -77,7 +77,6 @@ abstract class Taxonomy
         return $this->terms;
     }
 
-
     /**
      * Get terms for a specific post
      *

@@ -299,7 +299,7 @@ abstract class Model implements \Iterator
     {
         $this->filters["orderby"] = $orderby;
         $this->filters["order"]   = $order;
-        if ($orderby == "meta_value") {
+        if ($orderby == "meta_value" || $orderby == "meta_value_num") {
             $this->filters["meta_key"] = $meta_key;
         }
         return $this;
@@ -408,6 +408,18 @@ abstract class Model implements \Iterator
         return $this;
     }
 
+
+    /**
+     * Update filters in the hard way
+     *
+     * @param array $filters
+     * @return self
+     */
+    public function filters($filters)
+    {
+        $this->filters = array_merge($this->filters, $filters);
+        return $this;
+    }
 
 
     /**
@@ -707,7 +719,12 @@ abstract class Model implements \Iterator
             }
 
             // Custom fields
-            static::updateFields($result, $fields, "", $merge);
+            if ($fields && !empty($fields)) {
+                static::updateFields($result, $fields, $merge);
+            }
+
+            // Taxonomy
+            // TODO
         }
 
         // Force get refresh

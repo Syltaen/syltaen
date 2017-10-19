@@ -17,9 +17,16 @@ Files::load("vendors", "vendor/autoload");
 // ==================================================
 // > ERROR HANDLING
 // ==================================================
-if (WP_DEBUG) (new \Whoops\Run)
-    ->pushHandler(new \Whoops\Handler\PrettyPageHandler)
-    ->register();
+if (WP_DEBUG) {
+    $handler = new \Whoops\Handler\PrettyPageHandler;
+    $handler->setEditor("vscode");
+
+    (new \Whoops\Run)
+        // ->silenceErrorsInPaths(["/plugins/"], E_ALL)
+        ->pushHandler($handler)
+        ->register();
+}
+
 
 // ==================================================
 // > FILES LOADING

@@ -2,7 +2,7 @@
     "require": {
         "pug-php/pug": "^2.5",
         "php-console/php-console": "^3.1",
-        "soundasleep/html2text": "~0.5",
-        "filp/whoops": "^2.1"
+        "filp/whoops": "^2.1",
+        "phpmailer/phpmailer": "^6.0"
     }
 }
