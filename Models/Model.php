@@ -473,6 +473,22 @@ abstract class Model implements \Iterator
     }
 
     /**
+     * Only return the matching IDs without
+     *
+     * @return void
+     */
+    public function getIDs()
+    {
+        $this->filters["fields"] = "ids";
+        $this->cachedResults = static::getResultsFromQuery(
+            $this->run()
+            ->cachedQuery
+        );
+
+        return $this->cachedResults;
+    }
+
+    /**
      * Extracts results from the query
      *
      * @param $query
@@ -708,7 +724,7 @@ abstract class Model implements \Iterator
      * @param array $attrs
      * @param array $filds
      * @param bool $merge Only update data that is not already set
-     * @return WP_Post updated post(s)
+     * @return slef
      */
     public function update($attrs = [], $fields = false, $merge = false)
     {
@@ -729,6 +745,8 @@ abstract class Model implements \Iterator
 
         // Force get refresh
         $this->cachedFilters = false;
+
+        return $this;
     }
 
     /**
@@ -748,6 +766,10 @@ abstract class Model implements \Iterator
             }
         }
 
+        foreach ($attrs as &$attr) {
+            if (is_callable($attr)) $attr = $attr($result);
+        }
+
         $attrs["ID"] = $result->ID;
         wp_update_post($attrs);
     }
@@ -764,9 +786,10 @@ abstract class Model implements \Iterator
     public static function updateFields($result, $fields, $merge = false, $fields_prefix = "")
     {
         if ($fields && !empty($fields)) {
-            $result = Data::filter($result, "id");
+            $result_id = Data::filter($result, "id");
             foreach ($fields as $key=>$value) {
-                Data::update($key, $value, $fields_prefix.$result, $merge);
+                if (is_callable($value)) $value = $value($result);
+                Data::update($key, $value, $fields_prefix.$result_id, $merge);
             }
         }
     }
@@ -783,6 +806,4 @@ abstract class Model implements \Iterator
             wp_delete_post($post->ID, $force);
         }
     }
-
-
 }

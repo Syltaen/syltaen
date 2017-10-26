@@ -245,9 +245,14 @@ class Users extends Model
             }
         }
 
+        foreach ($attrs as &$attr) {
+            if (is_callable($attr)) $attr = $attr($result);
+        }
+
         $attrs["ID"] = $result->ID;
         wp_update_user($attrs);
     }
+
 
     /* Update parent method */
     public static function updateFields($user, $fields, $merge = false, $fields_prefix = "user_")

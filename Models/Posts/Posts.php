@@ -502,5 +502,4 @@ abstract class Posts extends Model
             ]);
         }
     }
-
 }

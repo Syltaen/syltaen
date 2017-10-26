@@ -108,7 +108,7 @@ class Controller {
      * @param string $tags
      * @return void
      */
-    public static function log($data, $tags = null, $levelLimit = 5, $itemsCountLimit = 100, $itemSizeLimit = 50000, $dumpSizeLimit = 500000)
+    public static function log($data, $tags = null, $levelLimit = 10, $itemsCountLimit = 100, $itemSizeLimit = 50000, $dumpSizeLimit = 500000)
     {
         $dumper    = new \PhpConsole\Dumper($levelLimit, $itemsCountLimit, $itemSizeLimit, $dumpSizeLimit);
         $connector = \PhpConsole\Connector::getInstance();
@@ -123,7 +123,7 @@ class Controller {
      * @param string $tags
      * @return void
      */
-    public function dlog($key = false, $tags = null, $levelLimit = null, $itemsCountLimit = null, $itemSizeLimit = null, $dumpSizeLimit = null)
+    public function dlog($key = false, $tags = null, $levelLimit = 10, $itemsCountLimit = 100, $itemSizeLimit = 50000, $dumpSizeLimit = 500000)
     {
         if ($key) {
             self::log($this->data[$key], $tags, $levelLimit, $itemsCountLimit, $itemSizeLimit, $dumpSizeLimit);
