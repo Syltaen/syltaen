@@ -14,13 +14,25 @@ abstract class PageController extends Controller
      */
     protected $user;
 
+    /**
+     * The global post
+     *
+     * @var WP_Posts
+     */
+    protected $post;
 
     /**
      * Add data for the rendering
      */
     public function __construct($args = [])
     {
+        global $post;
+
         parent::__construct($args);
+
+        // Global post
+        $this->post = $post;
+        $this->data["post"] = $this->post;
 
         // Store the current user of internal use
         $this->user = Data::globals("user");
@@ -204,8 +216,9 @@ abstract class PageController extends Controller
         global $wp_query;
         global $post;
 
-        $wp_query = $model->limit(1)->getSingularQuery();
-        $post     = $model->getOne();
+        $wp_query   = $model->limit(1)->getSingularQuery();
+        $post       = $model->getOne();
+        $this->post = $post;
 
         if ($refreshBase) {
             $this->setBase();

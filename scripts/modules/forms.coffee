@@ -178,12 +178,15 @@ $ -> $("select").each (i, el) ->
 
     if ($el.data("value") || $el.data("value") is 0) then $el.val $el.data "value"
 
-    disabled   = $el.hasClass "disabled"
-    allowClear = $el.hasClass "clearable"
+    disabled       = $el.hasClass "disabled"
+    allowClear     = $el.hasClass "clearable"
+    appendDropdown = $el.data("append-dropdown")
+    noSearch       = $el.data("no-search")
 
     $el.select2
-        minimumResultsForSearch: 5
+        minimumResultsForSearch: if noSearch then Infinity else 5
         placeholder: $el.attr("placeholder") || "Cliquez pour choisir"
         disabled: disabled
         allowClear: allowClear
+        dropdownParent: if appendDropdown then $el.parent() else null
 

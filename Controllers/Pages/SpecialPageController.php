@@ -38,7 +38,6 @@ class SpecialPageController extends PageController
      */
     public function ninjaFormPreview()
     {
-        global $post;
         Data::store($this->data, [
             "@sections"      => [[
                 "classes" => "",

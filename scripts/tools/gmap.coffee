@@ -10,8 +10,8 @@ import $ from "jquery"
 # ==================================================
 # > JQUERY METHOD
 # ==================================================
-$.fn.gmap = (filtersSelector, markerCallback = false) ->
-    if $(this).length then return new GMap $(this), filtersSelector, markerCallback
+$.fn.gmap = (config) ->
+    if $(this).length then return new GMap $(this), config
 
 
 # ==================================================
@@ -19,6 +19,7 @@ $.fn.gmap = (filtersSelector, markerCallback = false) ->
 # ==================================================
 class Filter
     constructor: (@key, @$el, @filterCallBack) ->
+
         @value = []
         @bindCallback()
 
@@ -26,6 +27,9 @@ class Filter
     bindCallback: ->
         # ========== SELECT FILTERS ========== #
         if @$el.is "select"
+
+            @value = [@$el.val()]
+
             @$el.change =>
                 @value = [@$el.val()]
                 @filterCallBack.call()
@@ -42,15 +46,26 @@ class Filter
 
 class GMap
 
-    constructor: (@$wrapper, @filtersSelector, @markerCallback = false) ->
+    @config:
+        filters: []
+        beforeCreate:       false
+        afterCreate:        false
+        beforeFilters:      false
+        afterFilters:       false
+        onMarkerClick:      false
 
-        @$map = @$wrapper.find ".map"
-        @map  = null
+    constructor: (@$wrapper, customConfig) ->
 
-        @$markers = @$map.find(".marker")
-        @markers  = []
+        # update the config
+        @config      = $.extend @config, customConfig
 
-        @infobox = null
+        @$map        = @$wrapper.find ".map"
+        @map         = null
+
+        @$markers    = @$map.find(".marker")
+        @markers     = []
+
+        @infobox     = null
         @defaultArgs =
             zoom: 3
             center: new (google.maps.LatLng)(0, 0)
@@ -60,18 +75,22 @@ class GMap
         @createMap()
 
         @filters = []
-        for filter, selector of @filtersSelector
+        for filter, selector of @config.filters
             @filters[filter] = new Filter filter, @$wrapper.find(selector), => @applyFilters()
 
+        @applyFilters()
 
 
     ###
       * Create the map and its markers
     ###
     createMap: ->
+        if @config.beforeCreate then @config.beforeCreate @
+
         @map = new (google.maps.Map)(@$map[0], @defaultArgs)
         @$markers.each (i, el) => @addMarker $(el)
-        @applyFilters()
+
+        if @config.afterCreate then @config.afterCreate @
 
 
     ###
@@ -87,7 +106,7 @@ class GMap
                 url: $marker.data "icon"
 
         # Add filters
-        $.each $marker[0].attributes, (i, attr) =>
+        $.each $marker[0].attributes, (i, attr) ->
             if attr.name.startsWith("data-filter-")
                 key =  attr.name.replace("data-filter-", "")
                 marker.filters[key] = attr.value
@@ -99,13 +118,14 @@ class GMap
                 content: marker.content
 
             google.maps.event.addListener marker, "click", =>
-                if @markerCallback
-                    @markerCallback marker, @
+                if @config.onMarkerClick
+                    @config.onMarkerClick marker, @
                 else
                     @openInfobox marker
 
         # add the marker to the collection
         @markers.push marker
+
 
     ###
       * Default callback when clicking a marker : Open its infobox
@@ -116,11 +136,17 @@ class GMap
         @infowindow = marker.infowindow
         @infowindow.open @map, marker
 
+
     ###
       * Dislpay only markers matching the filter
     ###
     applyFilters: ->
+
+        if @config.beforeFilters then @config.beforeFilters @
+
         if @infowindow then @infowindow.close()
+
+        visibleMakers = []
 
         # for all markers
         $.each @markers, (i, marker) =>
@@ -140,7 +166,12 @@ class GMap
             # hide or show the marker
             marker.setVisible !shouldHide
 
+            unless shouldHide then visibleMakers.push marker
+
         @center()
+
+        if @config.afterFilters then @config.afterFilters @, visibleMakers
+
 
     ###
       * Center the map to display only visible markers
@@ -153,7 +184,7 @@ class GMap
         focusedMarkers = focusedMarkers || @markers
 
         visible_markers = []
-        $.each focusedMarkers, (i, marker) =>
+        $.each focusedMarkers, (i, marker) ->
             if marker.visible
                 bounds.extend new google.maps.LatLng marker.position.lat(), marker.position.lng()
                 visible_markers.push marker

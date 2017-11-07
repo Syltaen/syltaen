@@ -15,22 +15,11 @@ class SingleController extends PageController
     protected $archive;
 
     /**
-     * The global post
-     *
-     * @var WP_Posts
-     */
-    protected $post;
-
-
-    /**
      * Populate $this->data
      */
     public function __construct($args = [])
     {
-        global $post;
-
-        $this->post    = $post;
-        $this->archive = get_page_by_path($post->post_type);
+        $this->archive = get_page_by_path($this->post->post_type);
 
         // Use the post type as a method
         $this->{$this->post->post_type}();

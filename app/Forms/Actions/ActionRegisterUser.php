@@ -31,7 +31,18 @@ class ActionRegisterUser extends \NF_Abstracts_Action
     {
         parent::__construct();
 
-        $this->_nicename = __("Inscription utilisateur - Intranet & Application", "syltaen");
+        $this->_nicename = __("Inscription utilisateur", "syltaen");
+
+        $this->_settings["success_message"] = [
+            "name"           => "success_message",
+            "type"           => "rte",
+            "group"          => "primary",
+            "label"          => __("Success message", "ninja-forms"),
+            "placeholder"    => "",
+            "value"          => "",
+            "width"          => "full",
+            "use_merge_tags" => false
+        ];
     }
 
     /**
@@ -65,18 +76,9 @@ class ActionRegisterUser extends \NF_Abstracts_Action
         }
 
         // ==================================================
-        // > THE SELECTED PROJECT
-        // ==================================================
-        $project = (new Projects)->is($val["projet"])->getOne();
-        if (!$project) {
-            $data["actions"]["error_message"] = "Ce projet n'a pas été trouvé";
-            return $data;
-        }
-
-        // ==================================================
         // > REGISTER USER
         // ==================================================
-        $user_id = Users::add($val["login"], $val["password"], $val["login"],
+        $user_id = Users::add($val["email"], $val["password"], $val["email"],
 
             // Attrs
             [
@@ -84,23 +86,14 @@ class ActionRegisterUser extends \NF_Abstracts_Action
                 "last_name"            => $val["lastname"],
                 "user_nicename"        => urlencode($val["firstname"]."-".$val["lastname"]),
                 "display_name"         => $val["firstname"]." ".$val["lastname"],
-                "nickname"             => $val["login"]
+                "nickname"             => $val["email"]
             ],
 
             // Fields
             [
-                "intranet_project" => $val["projet"],
                 "phone"            => $val["phone"],
-                "commune"          => $val["commune"],
-                "fonction"         => $val["fonction"] == "Autre" ? $val["other"] : $val["fonction"],
-                "service"          => $val["service"],
-                "user_key"         => sha1(microtime(true).mt_rand(10000,90000)),
-                "app_password"     => "{MD5}".base64_encode(md5($val["password"], true)),
-                "state"            => "to_validate",
-            ],
-
-            // Roles
-            $project->user_role
+                "user_key"         => sha1(microtime(true) . mt_rand(10000, 90000)),
+            ]
         );
 
 
@@ -114,34 +107,11 @@ class ActionRegisterUser extends \NF_Abstracts_Action
             return $data;
         }
 
-        // ==================================================
-        // > MAILS
-        // ==================================================
-
-        // ========== USER ========== //
-        if ($project->send_mail_registration) {
-            Mail::send($val["login"], $project->mail_registration_subject, $project->mail_registration_body);
-        }
-
-        // ========== ADMINS ========== //
-        if ($project->send_mail_registration_admin) {
-            Mail::send(
-                $project->mail_registration_admin_to,
-                $project->mail_registration_admin_subject,
-                str_replace(
-                    "[profile_link]",
-                    site_url("profil?user=".$user_ID),
-                    $project->mail_registration_admin_body
-                )
-            );
-        }
 
         // ==================================================
         // > SUCCESS MESSAGE
         // ==================================================
-        if (isset($action_settings["registration_user_success"])) {
-            $data["actions"]["success_message"] = do_shortcode($project->success_message);
-        }
+        $data["actions"]["success_message"] = $action_settings["success_message"];
 
         return $data;
     }

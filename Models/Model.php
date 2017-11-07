@@ -584,6 +584,29 @@ abstract class Model implements \Iterator
         return $this->count() > 0;
     }
 
+    /**
+     * Put all matching result in a clean array
+     * Used for exporting data
+     *
+     * @param callable $columns An associative array. $header=>$value
+     * @return array
+     */
+    public function getAsTable($getColumnsData = false)
+    {
+        if (!is_callable($getColumnsData)) wp_die("getColumnsData must be a callable function");
+
+        // ========== ROWS ========== //
+        $rows = [];
+        foreach ($this->get() as $result) $rows[] = $getColumnsData($result);;
+
+        // ========== HEADER ========== //
+        $header = [];
+        foreach ($rows[0] as $name=>$key) $header[] = $name;
+
+        // ========== EXPORT ========== //
+        return array_merge([$header], $rows);
+    }
+
     // ==================================================
     // > DATA HANDLING FOR EACH RESULT
     // ==================================================

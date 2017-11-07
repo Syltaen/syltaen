@@ -3,6 +3,7 @@
         "pug-php/pug": "^2.5",
         "php-console/php-console": "^3.1",
         "filp/whoops": "^2.1",
-        "phpmailer/phpmailer": "^6.0"
+        "phpmailer/phpmailer": "^6.0",
+        "mk-j/php_xlsxwriter": "^0.35.0"
     }
 }
