@@ -747,7 +747,7 @@ abstract class Model implements \Iterator
      * @param array $attrs
      * @param array $filds
      * @param bool $merge Only update data that is not already set
-     * @return slef
+     * @return self
      */
     public function update($attrs = [], $fields = false, $merge = false)
     {

@@ -61,8 +61,8 @@ class SectionsController extends Controller
     private function txt_2col(&$c)
     {
         $c["class"]       = "align-".$c["valign"];
-        $c["txt_1_class"] = "gr-".substr($c['proportions'], 0, 1);
-        $c["txt_2_class"] = "gr-".substr($c['proportions'], 2, 1);
+        $c["txt_1_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_1"] : "gr-".substr($c['proportions'], 0, 1);
+        $c["txt_2_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_2"] : "gr-".substr($c['proportions'], 2, 1);
     }
 
     /**
