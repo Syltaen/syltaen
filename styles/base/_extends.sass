@@ -1,0 +1,66 @@
+// =============================================================================
+// > BASE : @extend CLASSES.
+// =============================================================================
+
+// ==================================================
+// > CLEARFIX
+// ==================================================
+%clearfix
+    &::after
+        content: ""
+        display: table
+        clear: both
+
+
+// ==================================================
+// > UNSTYLED LIST
+// ==================================================
+%unstyled-list
+    list-style: none
+    &, li
+        margin: 0
+        padding: 0
+        &::before
+            content: none
+
+// ==================================================
+// > CENTERED ITEM
+// ==================================================
+%centered
+    +absolute(left 50% top 50%)
+    transform: translate(-50%, -50%)
+
+
+// ==================================================
+// > COVER PARENT
+// ==================================================
+%cover
+    +absolute(left 0 top 0)
+    +size(100%)
+
+
+// ==================================================
+// > FLEX
+// ==================================================
+.flex
+    display: flex
+    &--column
+        flex-flow: column
+    &--row
+        flex-flow: row
+
+// .txt-col
+//     display: flex
+//     flex-flow: row nowrap
+//     &.align-top
+//         align-items: flex-start
+//     &.align-center
+//         align-items: center
+//     &.align-bot
+//         align-items: flex-end
+//     +gridle_state(xs)
+//         flex-flow: column nowrap
+
+//     margin: 0 -25px !important
+//     & > div
+//         padding: 0 25px

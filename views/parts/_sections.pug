@@ -4,40 +4,54 @@
 
 each s in sections
 
-    section(class=s.class)&attributes(s.attr)
+    section(class=s.classes)&attributes(s.attr)
 
         each c in s.content
 
-            //- ========== TXT 1 COL ========== -//
-            if c.acf_fc_layout == "txt_1col"
-                .container
-                    != c.txt
+            case c.acf_fc_layout
+
+                //- ==================================================
+                //- > TXT 1 COL
+                //- ==================================================
+                when "txt_1col"
+                    .container
+                        != c.txt
 
 
-            //- ========== TXT 2 COLS ========== -//
-            if c.acf_fc_layout == "txt_2col"
-                .container
-                    .row.txt-col(class=c.class)
-                        .gr-12-xs(class=c.txt_1_class)!= c.txt_1
-                        .gr-12-xs(class=c.txt_2_class)!= c.txt_2
+                //- ==================================================
+                //- > TXT 2 COLS
+                //- ==================================================
+                when "txt_2col"
+                    .container
+                        .row.txt-col(class=c.class)
+                            .gr-12-xs(class=c.txt_1_class)!= c.txt_1
+                            .gr-12-xs(class=c.txt_2_class)!= c.txt_2
 
-            //- ========== TXT 3 COLS ========== -//
-            if c.acf_fc_layout == "txt_3col"
-                .container
-                    .row.txt-col(class=c.class)
-                        .gr-12-xs(class=c.txt_1_class)!= c.txt_1
-                        .gr-12-xs(class=c.txt_2_class)!= c.txt_2
-                        .gr-12-xs(class=c.txt_3_class)!= c.txt_3
-
-
-            //- ========== ARCHIVE ========== -//
-            if c.acf_fc_layout == "archive"
-
-                if (c.type == "news")
-                    include _archive-news
+                //- ==================================================
+                //- > TXT 3 COLS
+                //- ==================================================
+                when "txt_3col"
+                    .container
+                        .row.txt-col(class=c.class)
+                            .gr-12-xs(class=c.txt_1_class)!= c.txt_1
+                            .gr-12-xs(class=c.txt_2_class)!= c.txt_2
+                            .gr-12-xs(class=c.txt_3_class)!= c.txt_3
 
 
-            //- ========== FULL WIDTH IMAGE ========== -//
-            if c.acf_fc_layout == "full_width_image"
-                .full-width-image(style=c.styles class=c.classes)&attributes(c.attr)
-                    != c.image
+                //- ==================================================
+                //- > ARCHIVE
+                //- ==================================================
+                when "archive"
+                    case c.type
+
+                        //- News
+                        when "news"
+                            include _archive-news
+
+
+                //- ==================================================
+                //- > FULL WIDTH IMAGE
+                //- ==================================================
+                when "full_width_image"
+                    .full-width-image(style=c.styles class=c.classes)&attributes(c.attr)
+                        != c.image

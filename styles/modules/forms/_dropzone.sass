@@ -1,5 +1,5 @@
 // =============================================================================
-// > LAYOUTS: MODULES - FORMS: DROPZONE
+// > COMPONENTS : DROPZONE
 // =============================================================================
 
 .fileuploadfield-container
@@ -8,22 +8,22 @@
         width: 100%
 
     label
-        @extend input
+        @extend %input
         width: 100%
         text-align: center
         display: block
         position: relative
         text-transform: none
         overflow: visible
-        font-family: $font-bold
-        background: $dgry
+        font-family: font(bold)
+        background: color(dark-grey)
         color: white
         border-width: 2px
         height: 50px
         line-height: 50px
         &:hover
             background: none
-            color: $dgry
+            color: color(dark-grey)
 
 
     .dz-preview
@@ -34,7 +34,7 @@
             display: none
 
         .dz-details
-            +cover
+            @extend %cover
             text-indent: 0
             .dz-size
                 display: none
@@ -48,12 +48,12 @@
         text-indent: -9999em
 
     .dz-filename
-        +cover
+        @extend %cover
         box-sizing: content-box
         padding: 1px
         margin: -1px
         background: white
-        font-family: $font-regular
-        color: $dgry
+        font-family: font(regular)
+        color: color(dark-grey)
         text-align: left
         text-indent: 20px

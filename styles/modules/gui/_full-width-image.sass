@@ -6,7 +6,9 @@
     position: relative
     background: center center / 100% auto no-repeat
 
-    // ========== PARALLAX ========== //
+    // ==================================================
+    // > PARALLAX
+    // ==================================================
     &.parallax-to-bottom,
     &.parallax-to-top
         img
@@ -20,53 +22,3 @@
 
     &.parallax-to-top
         background-position: center 0%
-
-    // ========== EDGES TOP ========== //
-    &.top-ascending,
-    &.top-descending
-        &:before
-            content: ""
-            +size(0)
-            +absolute(top 0 left 0)
-            border-top: 50px solid white
-    &.top-ascending:before
-        border-right: 100vw solid transparent
-    &.top-descending:before
-        border-left: 100vw solid transparent
-
-
-    // ========== EDGES BOTTOM ========== //
-    &.bottom-ascending,
-    &.bottom-descending
-        &:after
-            content: ""
-            +size(0)
-            +absolute(top 0 left 0)
-            border-bottom: 50px solid white
-    &.bottom-ascending:after
-        border-left: 100vw solid transparent
-    &.bottom-descending:after
-        border-right: 100vw solid transparent
-
-
-    // ========== EDGES COLOR ========== //
-    .bg-lgry &
-        &.top-ascending:before,
-        &.top-descending:before,
-        &.bottom-ascending:after,
-        &.bottom-descending:after
-            border-top-color: $lgry
-
-    .bg-dgry &
-        &.top-ascending:before,
-        &.top-descending:before,
-        &.bottom-ascending:after,
-        &.bottom-descending:after
-            border-top-color: $dgry
-
-    .bg-main &
-        &.top-ascending:before,
-        &.top-descending:before,
-        &.bottom-ascending:after,
-        &.bottom-descending:after
-            border-top-color: $main

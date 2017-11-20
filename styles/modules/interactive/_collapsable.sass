@@ -1,0 +1,75 @@
+// =============================================================================
+// > MODULES: TXT - COLLAPSABLE
+// =============================================================================
+
+.collapsable
+    margin: 0
+    margin-bottom: 20px
+    margin-top: 10px
+    overflow: hidden
+    transition: height .5s ease
+
+    // ==================================================
+    // > HEADER
+    // ==================================================
+    &__header
+        +font(24px 65px white bold)
+        background: primary(primary)
+        height: 65px
+        text-align: center
+        position: relative
+        box-sizing: border-box
+        padding-left: 40px
+        cursor: pointer
+        z-index: 50
+        &::before
+            content: "\f054"
+            +font(fa)
+            +absolute(top 0 left 15px)
+        +screen(sm)
+            +font(20px)
+        +screen(xs)
+            +font(13px 18px regular)
+            box-sizing: border-box
+            display: flex
+            align-items: center
+            justify-content: center
+            &::before
+                top: 50%
+                margin-top: -10px
+
+
+    // ==================================================
+    // > CONTENT
+    // ==================================================
+    &__content
+        border: 1px solid color(primary)
+        box-sizing: border-box
+        padding: 30px 20px
+        &.bg-white
+            background: white
+        &.bg-lgry
+            background: #f6f6f6
+
+
+    // ==================================================
+    // > MODIERS
+    // ==================================================
+    &.toggleable
+        position: relative
+        header
+            &:hover
+                background: lighten(color(primary), 4%)
+            & + .content-wrapper
+                border-color: lighten(color(primary), 4%)
+            &::before
+                transition: transform .5s ease
+        .content-wrapper
+            position: absolute
+            bottom: 1px
+            left: 0
+            width: 100%
+
+    &.open
+        header::before
+            transform: rotate(90deg)

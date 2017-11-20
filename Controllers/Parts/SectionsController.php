@@ -157,23 +157,44 @@ class SectionsController extends Controller
      */
     private function parameters(&$s)
     {
-        $s["class"] = "";
-        $s["attr"]  = [];
+        $s["classes"] = ["site-section"];
+        $s["attr"]    = [];
 
         // ========== ID ========== //
-        $s["attr"]["id"] = $s["section_ID"] ?: null;
+        $s["attr"]["id"] = $s["anchor"] ? sanitize_title($s["anchor"]) : null;
 
         // ========== PADDING ========== //
-        $s["class"] .= is_array($s["section_padding"]) ? join($s["section_padding"]) : $s["section_padding"];;
-
+        $s["classes"][] = $s["padding"] . "-padding-vertical";
 
         // ========== BACKGROUND ========== //
-        $s["class"] .= " bg-".$s["section_bg"];
-        if ($s["section_bg"] == "image") {
-            $s["attr"]["style"] = "background-image: url(".$s["section_bg_img"].");";
-            $s["class"]        .= " size-".$s["section_bg_img_size"];
-            $s["class"]        .= " position-".$s["section_bg_img_pos"];
+        $s["classes"][] = "bg-" . $s["bg"];
+        if ($s["bg"] == "image") {
+            $s["attr"]["style"] = "background-image: url(" . $s["bg_img"] . ");";
+            $s["classes"][]     = "bg-image--" . $s["bg_img_size"];
+            $s["classes"][]     = "bg-image--" . $s["bg_img_pos"];
         }
+
+        // ========== TEXT ========== //
+        if ($s["text_color"] != "none") {
+            $s["classes"][] = "color-" . $s["text_color"];
+        }
+
+        // ========== EDGES ========== //
+        if ($s["top_edge"] != "none") {
+            $s["classes"][] = "has-edge-top--" . $s["top_edge"];
+            if ($s["top_edge_color"] != "section") {
+                $s["classes"][] = "has-edge-top--" . $s["top_edge_color"];
+            }
+        }
+
+        if ($s["bottom_edge"] != "none") {
+            $s["classes"][] = "has-edge-bottom--" . $s["bottom_edge"];
+            if ($s["bottom_edge_color"] != "section") {
+                $s["classes"][] = "has-edge-bottom--" . $s["bottom_edge_color"];
+            }
+        }
+
+
     }
 
     /**
@@ -184,32 +205,30 @@ class SectionsController extends Controller
      */
     private function shouldHide($s)
     {
-        if (!$s["section_hide"]) return false;
+        if (!$s["hide"]) return false;
 
         // BETWEEN TWO DATES
-        if ($s["section_hide_after"] && $s["section_hide_before"]) {
+        if ($s["hide_start"] && $s["hide_end"]) {
 
             // SHOW BETWEEN TWO DATES
-            if ($s["section_hide_after"] > $s["section_hide_before"]) {
-                return time() < $s["section_hide_before"] || time() > $s["section_hide_after"];
+            if ($s["hide_start"] > $s["hide_end"]) {
+                return time() < $s["hide_end"] || time() > $s["hide_start"];
             // HIDE BETWEEN TWO DATES
             } else {
-                return time() < $s["section_hide_before"] && time() > $s["section_hide_after"];
+                return time() < $s["hide_end"] && time() > $s["hide_start"];
             }
 
         // BEFORE A DATE
-        } elseif ($s["section_hide_before"]) {
-            return time() < $s["section_hide_before"];
+        } elseif ($s["hide_end"]) {
+            return time() < $s["hide_end"];
 
         // AFTER A DATE
-        } elseif ($s["section_hide_after"]) {
-            return time() > $s["section_hide_after"];
+        } elseif ($s["hide_start"]) {
+            return time() > $s["hide_start"];
 
         // ALWAYS HIDE
         } else {
             return true;
         }
     }
-
-
 }

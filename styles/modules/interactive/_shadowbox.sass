@@ -1,0 +1,36 @@
+// =============================================================================
+// > LAYOUTS: MODULES - GUI: SHADOWBOX
+// =============================================================================
+
+.shadowbox
+    @extend %cover
+    position: fixed
+    background: rgba(black, .75)
+    z-index: 9999
+    display: none
+
+    .content
+        @extend %cover
+        display: flex
+        align-items: center
+        justify-content: center
+
+    .close
+        +absolute(top 20px right 20px)
+        +size(50px)
+        +font(30px 50px white center)
+        text-indent: -9999px
+        cursor: pointer
+        transition: all .25s ease
+        z-index: 100
+
+        &:hover
+            +font(primary)
+
+        &::before
+            content: "\f057"
+            +font(fa)
+            @extend %cover
+            text-indent: 0
+
+

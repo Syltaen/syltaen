@@ -6,10 +6,10 @@ const webpack                     = require("webpack");
 const autoprefixer                = require("autoprefixer");
 const path                        = require("path");
 const ExtractTextPlugin           = require("extract-text-webpack-plugin");
-const UglifyJSPlugin              = require('uglifyjs-webpack-plugin');
-const OptimizeCssAssetsPlugin     = require('optimize-css-assets-webpack-plugin');
-const LiveReloadPlugin            = require('webpack-livereload-plugin');
-const BrowserSyncPlugin           = require('browser-sync-webpack-plugin');
+const UglifyJSPlugin              = require("uglifyjs-webpack-plugin");
+const OptimizeCssAssetsPlugin     = require("optimize-css-assets-webpack-plugin");
+const LiveReloadPlugin            = require("webpack-livereload-plugin");
+const BrowserSyncPlugin           = require("browser-sync-webpack-plugin");
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin")
 
 
@@ -18,7 +18,6 @@ const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin")
 // =============================================================================
 const bundle_css = new ExtractTextPlugin("css/bundle.css");
 const admin_css  = new ExtractTextPlugin("css/admin.css");
-
 
 // =============================================================================
 // > CONFIG
@@ -29,11 +28,16 @@ module.exports = env => {
         // ==================================================
         // > ENTRY
         // ==================================================
-        entry: [
-            "./scripts/builder.js",
-            "./styles/builder.sass",
-            "./styles/layouts/templates/admin.sass"
-        ],
+        entry: {
+            "js/bundle": [
+                "./scripts/builder.coffee",
+                "./styles/builder.sass"
+            ],
+            "js/admin" : [
+                "./scripts/admin.coffee",
+                "./styles/admin.sass",
+            ]
+        },
 
         devtool: "source-map",
 
@@ -42,7 +46,7 @@ module.exports = env => {
         // ==================================================
         output: {
             path: path.resolve(__dirname, "build"),
-            filename: "js/bundle.js"
+            filename: "[name].js"
         },
 
         // ==================================================
@@ -54,7 +58,7 @@ module.exports = env => {
                 // ========== COFFEESCRIPT ========== //
                 {
                     test: /\.coffee$/,
-                    use: ['coffee-loader?sourceMap']
+                    use: ["coffee-loader?sourceMap"]
                 },
 
                 // ========== SASS ========== //
@@ -72,7 +76,7 @@ module.exports = env => {
                 {
                     test: /builder\.sass$/,
                     use: bundle_css.extract({
-                        fallback: 'style-loader',
+                        fallback: "style-loader",
                         use: [
                             { loader: "css-loader", options: { url: false, sourceMap: true }, },
                             { loader: "postcss-loader", options: { plugins: () => [autoprefixer], sourceMap: true }},
@@ -104,7 +108,7 @@ module.exports = env => {
                             "**/*.pug"
                         ],
                         fn: function(event, file) {
-                            if (event === "change") require('browser-sync').get('bs-webpack-plugin').reload();
+                            if (event === "change") require("browser-sync").get("bs-webpack-plugin").reload();
                         }
                     }
                 ]

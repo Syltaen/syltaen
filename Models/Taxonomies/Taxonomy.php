@@ -16,14 +16,18 @@ abstract class Taxonomy
     protected $taxonomyFields;
     protected $taxonomyFieldsOptionPage;
     protected $terms;
-    protected $termsFields;
+    protected $termsFields = [];
 
     /**
      * Should specify $taxonomyFields and $termsFields
      */
     public function __construct()
     {
-
+        $this->termsFields = array_merge($this->termsFields, [
+            "@description" => function ($term) {
+                return term_description($term->term_id, static::SLUG);
+            },
+        ]);
     }
 
     // ==================================================
@@ -52,16 +56,20 @@ abstract class Taxonomy
      * @return array List of terms
      * see https://developer.wordpress.org/reference/functions/get_terms/
      */
-    public function getTerms($fields = "all", $hide_empty = false, $limit = 0, $orderby = "slug", $order = "ASC")
+    public function getTerms($fields = "all", $hide_empty = false, $limit = 0, $orderby = "slug", $order = "ASC", $parent = null)
     {
-        $this->terms = get_terms([
+        $args = [
             "taxonomy"   => static::SLUG,
             "fields"     => $fields,
             "hide_empty" => $hide_empty,
             "number"     => $limit,
             "order"      => $order,
-            "orderby"    => $orderby
-        ]);
+            "orderby"    => $orderby,
+        ];
+
+        if ($parent !== null) $args["parent"] = $parent;
+
+        $this->terms = get_terms($args);
 
         if ($fields == "all") {
             foreach($this->terms as $term) {
@@ -111,14 +119,14 @@ abstract class Taxonomy
      * @param boolean $hide_empty Prevent the return of unused terms
      * @return array List of terms each storing a list of posts
      */
-    public function getPosts($model, $hide_empty = true)
+    public function getPosts($model, $hide_empty = true, $children = true)
     {
         if (!$this->terms) {
             $this->getTerms("all", $hide_empty);
         }
 
         foreach ($this->terms as $term) {
-            $term->posts = $model->tax(static::SLUG, $term->slug, "AND", true)->get();
+            $term->posts = $model->tax(static::SLUG, $term->slug, "AND", true, "IN", $children)->get();
         }
 
         return $this->terms;

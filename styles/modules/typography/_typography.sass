@@ -1,0 +1,72 @@
+// =============================================================================
+// > TYPOGRAPHY
+// =============================================================================
+
+// ==================================================
+// > GLOBAL MODIFIER
+// ==================================================
+
+// ========== COLORS ========== //
+// Ex: .color-primary
+@each $color, $value in $colors
+    .color-#{$color}
+        &, *
+            color: $value !important
+
+// ========== FONT FAMILIES ========== //
+//: Ex:  .font-light
+@each $slug, $stack in $fonts-stacks
+    .font-#{$slug}
+        font-family: $stack
+
+
+// ========== ALIGNMENTS ========== //
+.text-align-center
+    text-align: center
+
+.text-align-left
+    text-align: left
+
+.text-align-right
+    text-align: right
+
+
+// ==================================================
+// > INLINE
+// ==================================================
+strong,
+b
+    font-weight: normal
+    font-family: font(bold)
+
+em,
+i
+    font-style: italic
+
+time
+    font-family: font(bold)
+    color: color(primary)
+    display: block
+    margin-bottom: 10px
+
+small
+    font-size: .8em
+
+sup,
+sub
+    vertical-align: super
+    font-size: smaller
+    line-height: 0
+
+sub
+    vertical-align: sub
+
+// ==================================================
+// > PARAGRAPH
+// ==================================================
+p
+    margin: 1em 0
+
+
+
+

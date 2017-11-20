@@ -19,12 +19,14 @@ class SingleController extends PageController
      */
     public function __construct($args = [])
     {
+        parent::__construct($args);
+
+        // Get the archive
         $this->archive = get_page_by_path($this->post->post_type);
 
         // Use the post type as a method
         $this->{$this->post->post_type}();
 
-        parent::__construct($args);
     }
 
 

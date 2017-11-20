@@ -3,6 +3,15 @@
 //- =============================================================================
 extends templates/_base
 
+
+//- ==================================================
+//- > INTRO
+//- ==================================================
+block intro
+    .site-intro.search-page__intro
+        h1 test
+
+
 //- ==================================================
 //- > SECTIONS
 //- ==================================================
@@ -11,7 +20,7 @@ block sections
     section.bg-white: .container
 
 
-        nav.singlenav
+        nav.single-nav
             ul
                 li: a.link-archive(href=singlenav.archive.url)= singlenav.archive.text
                 li: a(href=singlenav.previous.url class=singlenav.previous.url?"":" disabled")= singlenav.previous.text
@@ -19,7 +28,7 @@ block sections
 
 
         block article
-            article.single-content
+            article.single__content
 
                 time!= post.date.bold
 
@@ -30,7 +39,7 @@ block sections
                 .visual!= post.thumb.tag.large
 
 
-        nav.singlenav
+        nav.single-nav
             ul
                 li: a.link-archive(href=singlenav.archive.url)= singlenav.archive.text
                 li: a(href=singlenav.previous.url class=singlenav.previous.url?"":" disabled")= singlenav.previous.text

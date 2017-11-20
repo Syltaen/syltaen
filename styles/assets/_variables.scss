@@ -3,8 +3,46 @@
 // =============================================================================
 
 // ==================================================
+// > COLORS
+// ==================================================
+// Usage : color(primary)
+$colors: (
+    // Project
+    primary:    #a1f2ca,
+    secondary:  #282828,
+
+    // Texts
+    text:       #111,
+
+    // General
+    success:    ​#66cc66,
+    error:      #e05252,
+
+    // Grays
+    light-grey: #f8f7f7,
+    dark-grey:  #282828,
+    white:    #fff,
+    black:    #111
+
+);
+
+
+// ==================================================
+// > FONTS
+// ==================================================
+// Usage : font(regular)
+$fonts-stacks: (
+    regular: ("Raleway-Regular", "Raleway-Light", "Helvetica", "Arial", sans-serif),
+    light:   ("Raleway-Light", "Raleway-Regular", "Helvetica", "Arial", sans-serif),
+    bold:    ("Raleway-Bold", "Raleway-Regular", "Helvetica", "Arial", sans-serif),
+    fa:      "FontAwesome"
+);
+
+
+// ==================================================
 // > BREAKPOINTS
 // ==================================================
+// Usage : breakpoint(md) / container(sm)
 $responsive: (
     md: (
         breakpoint: null,
@@ -20,30 +58,15 @@ $responsive: (
     )
 );
 
-
 // ==================================================
-// > FONTS
+// > SPACING
 // ==================================================
-$font-regular: "Raleway-Regular", "Raleway-Light", "Helvetica", "Arial", sans-serif;
-$font-light:   "Raleway-Light", "Raleway-Regular", "Helvetica", "Arial", sans-serif;
-$font-bold:    "Raleway-Bold", "Raleway-Regular", "Helvetica", "Arial", sans-serif;
-$font-fa:      "FontAwesome";
-
-
-// ==================================================
-// > COLORS
-// ==================================================
-// General
-$success: ​#66cc66;
-$error:   #e05252;
-
-$lgry:  #f8f7f7;
-$dgry:  #282828;
-$black: #111;
-
-// Project
-$green: #9de4b6;
-$mgry:  #373e48;
-
-$main: $green;
-$scnd: $mgry;
+// Usage : spacing(xs)
+$spacing: (
+    no: 0px,
+    xs: 12px,
+    sm: 24px,
+    md: 60px,
+    lg: 120px,
+    xl: 240px
+);

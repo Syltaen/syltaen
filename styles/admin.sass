@@ -1,0 +1,201 @@
+// =============================================================================
+// > ADMIN STYLES
+// =============================================================================
+
+@import "./assets/variables"
+@import "./assets/utils"
+
+// ==================================================
+// > THEME
+// ==================================================
+.admin-color-fresh,
+.logged-in.admin-bar
+    #wp-admin-bar-site-name > a:before
+        content: "" !important
+        height: 32px
+        width: 32px
+        margin: -2px 5px 0 0
+        padding: 0
+        background: img("admin_logo.png") center center / contain no-repeat !important
+
+    #wp-admin-bar-wp-logo,
+    #wp-admin-bar-comments,
+    #wp-admin-bar-updates,
+    #wp-admin-bar-new-post,
+    .update-plugins
+        display: none !important
+
+    #adminmenu,
+    #adminmenuback,
+    #adminmenuwrap
+        background: #333
+
+    #adminmenu .wp-submenu
+        background: #444
+
+    #adminmenu div.wp-menu-image:before,
+    #adminmenu li a:focus div.wp-menu-image:before, #adminmenu li.opensub div.wp-menu-image:before, #adminmenu li:hover div.wp-menu-image:before
+        color: #555
+    #adminmenu .current div.wp-menu-image:before, #adminmenu .wp-has-current-submenu div.wp-menu-image:before, #adminmenu a.current:hover div.wp-menu-image:before, #adminmenu a.wp-has-current-submenu:hover div.wp-menu-image:before, #adminmenu li.wp-has-current-submenu a:focus div.wp-menu-image:before, #adminmenu li.wp-has-current-submenu.opensub div.wp-menu-image:before, #adminmenu li.wp-has-current-submenu:hover div.wp-menu-image:before
+        color: white
+
+    #adminmenu .wp-has-current-submenu .wp-submenu .wp-submenu-head,
+    #adminmenu .wp-menu-arrow,
+    #adminmenu .wp-menu-arrow div,
+    #adminmenu li.current a.menu-top,
+    #adminmenu li.wp-has-current-submenu a.wp-has-current-submenu,
+    .folded #adminmenu li.current.menu-top,
+    .folded #adminmenu li.wp-has-current-submenu
+        background: color(primary)
+
+    #wpadminbar .ab-top-menu>li.hover>.ab-item,
+    #wpadminbar.nojq .quicklinks .ab-top-menu>li>.ab-item:focus,
+    #wpadminbar:not(.mobile) .ab-top-menu>li:hover>.ab-item,
+    #wpadminbar:not(.mobile) .ab-top-menu>li>.ab-item:focus,
+    #wpadminbar .quicklinks .ab-sub-wrapper .menupop.hover>a,
+    #wpadminbar .quicklinks .menupop ul li a:focus,
+    #wpadminbar .quicklinks .menupop ul li a:focus strong,
+    #wpadminbar .quicklinks .menupop ul li a:hover,
+    #wpadminbar .quicklinks .menupop ul li a:hover strong,
+    #wpadminbar .quicklinks .menupop.hover ul li a:focus,
+    #wpadminbar .quicklinks .menupop.hover ul li a:hover,
+    #wpadminbar .quicklinks .menupop.hover ul li div[tabindex]:focus,
+    #wpadminbar .quicklinks .menupop.hover ul li div[tabindex]:hover,
+    #wpadminbar li #adminbarsearch.adminbar-focused:before,
+    #wpadminbar li .ab-item:focus .ab-icon:before,
+    #wpadminbar li .ab-item:focus:before,
+    #wpadminbar li a:focus .ab-icon:before,
+    #wpadminbar li.hover .ab-icon:before,
+    #wpadminbar li.hover .ab-item:before,
+    #wpadminbar li:hover #adminbarsearch:before,
+    #wpadminbar li:hover .ab-icon:before,
+    #wpadminbar li:hover .ab-item:before,
+    #wpadminbar.nojs .quicklinks .menupop:hover ul li a:focus,
+    #wpadminbar.nojs .quicklinks .menupop:hover ul li a:hover,
+    #wpadminbar:not(.mobile)>#wp-toolbar a:focus span.ab-label,
+    #wpadminbar:not(.mobile)>#wp-toolbar li:hover span.ab-label,
+    #wpadminbar>#wp-toolbar li.hover span.ab-label
+        color: color(primary)
+
+
+    #adminmenu .wp-submenu a:focus, #adminmenu .wp-submenu a:hover, #adminmenu a:hover, #adminmenu li.menu-top>a:focus,
+    #adminmenu li.menu-top:hover, #adminmenu li.opensub>a.menu-top, #adminmenu li>a.menu-top:focus,
+    #collapse-button:focus, #collapse-button:hover
+        color: color(primary)
+
+
+    &.wp-core-ui .button-primary
+        background: color(primary)
+        border-color: darken(color(primary), 5%) darken(color(primary), 10%) darken(color(primary), 10%)
+        box-shadow: 0 1px 0 darken(color(primary), 10%)
+        text-shadow: 0 -1px 1px darken(color(primary), 10%), 1px 0 1px darken(color(primary), 10%), 0 1px 1px darken(color(primary), 10%), -1px 0 1px darken(color(primary), 10%)
+        color: white
+        &:hover
+            background: darken(color(primary), 5%)
+
+    &.wp-core-ui .button.button-primary.button-hero
+        box-shadow: 0 2px 0 darken(color(primary), 10%)
+
+
+// ==================================================
+// > NINJA FORM
+// ==================================================
+.ninja-forms-no-nest
+    margin-left: 40px
+._rowstart-li,
+._rowend-li
+    margin-left: 0
+    .menu-item-handle
+        background: #ccc !important
+
+._colstart-li ,
+._colend-li
+    margin-left: 20px
+    .menu-item-handle
+        background: #e0e0e0 !important
+
+.acf-ui-datepicker #ui-datepicker-div
+    display: none
+
+// ==================================================
+// > EDITOR
+// ==================================================
+#tinymce
+    padding: 20px
+    *:first-child
+        margin-top: 0
+
+// ==================================================
+// > LOGIN
+// ==================================================
+#login
+    h1 a
+        background: img("admin_logo.png") center center / contain no-repeat !important
+        background-size: contain
+        width: 100px
+        height: 100px
+        pointer-events: none
+    .button.button-primary
+        text-shadow: none
+        box-shadow: none
+        border-radius: 0
+        margin-top: 20px
+        background: none
+        color: color(primary)
+        border: 2px solid color(primary)
+        height: 50px
+        line-height: 50px
+        &:hover
+            background: color(primary)
+            color: white
+
+
+// ==================================================
+// > USER FORM
+// ==================================================
+// #profile-page
+    .user-rich-editing-wrap,
+    .user-admin-color-wrap,
+    .user-comment-shortcuts-wrap,
+    .show-admin-bar,
+    .user-language-wrap,
+    .user-url-wrap,
+    .user-googleplus-wrap,
+    .user-twitter-wrap,
+    .user-facebook-wrap,
+    .user-description-wrap,
+    .user-profile-picture,
+    .yoast-settings,
+    #fieldset-billing,
+    #fieldset-shipping,
+    #qtranslate_highlight_enabled,
+    h2,
+    h3
+        display: none
+
+
+#wpadminbar
+    position: fixed !important
+
+
+
+
+// =============================================================================
+// > EDITOR
+// =============================================================================
+.Conversion-Button
+    background-color: red
+    color: #fff
+    padding: 10px 20px
+    display: inline-block
+
+.Conversion-Button a
+    color: #fff
+    text-decoration: none
+    font-weight: bold
+
+a .Conversion-Button
+    color: #fff
+    text-decoration: none
+    padding: 10px 20px
+    font-weight: bold

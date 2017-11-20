@@ -1,0 +1,75 @@
+// =============================================================================
+// > LAYOUTS: MODULES - LISTS
+// =============================================================================
+
+ol, ul
+    list-style: none
+    &:not(.unstyled-list)
+        margin: 1em 0
+        padding-left: 1em
+        li
+            position: relative
+            margin-bottom: .4em
+            &::before
+                font-size: .9em
+                +absolute(left -1em top 0)
+
+
+    // ========== COLORS ========== //
+    @each $slug, $value in $colors
+        &.bullets-color-#{$slug} li::before
+            color: $value
+
+
+// ==================================================
+// > ORDERED LIST
+// ==================================================
+ol
+    counter-reset: item
+    li::before
+        content: counter(item)"."
+        counter-increment: item
+        +font(bold)
+
+
+
+// ==================================================
+// > UNORDERED LIST
+// ==================================================
+ul
+    // ========== DEFAULT ========== //
+    &:not(.unstyled-list) li::before
+        content: "•"
+
+    // ========== CARRETS ========== //
+    &.carrets li::before
+        content: $fa-var-caret-right
+        +font(fa)
+
+    // ========== ANGLES ========== //
+    &.angles li::before
+        content: $fa-var-angle-right
+        +font(fa)
+
+    // ========== ARROWS ========== //
+    &.arrows
+        padding-left: 1.35em
+        li::before
+            content: $fa-var-long-arrow-right
+            +font(fa)
+            left: -1.35em
+
+    // ========== CHECKS ========== //
+    &.checks
+        padding-left: 1.35em
+        li::before
+            content: $fa-var-check
+            +font(fa)
+            left: -1.35em
+
+
+// ==================================================
+// > DEFAULT UNSTYLED
+// ==================================================
+nav ul.menu
+    @extend %unstyled-list

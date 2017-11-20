@@ -44,4 +44,4 @@ class MobileMenu
 
 # ========== INIT ========== #
 $ ->
-    new MobileMenu $("#app-nav-mobile-trigger"), $("#app-nav-mobile"), "mobile_nav_open"
+    new MobileMenu $(".mobile-nav-trigger"), $(".mobile-nav"), "is-mobile-nav-open"

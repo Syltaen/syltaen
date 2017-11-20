@@ -4,9 +4,9 @@
 
 #scroll-top
     +size(50px)
-    +font(24px, white, null, 50px)
+    +font(24px 50px white)
     +fixed(right 40px bottom 40px)
-    background: $main
+    background: color(primary)
     z-index: 9999
     border-radius: 3px
     cursor: pointer
@@ -16,14 +16,14 @@
     box-shadow: 0 0 3px 0 rgba(black, 0)
 
     &:hover
+        +font(primary)
         background: white
-        color: $main
-        border-color: $main
+        border-color: color(primary)
         box-shadow: 0 0 3px 0 rgba(black, .2)
 
-    &:before
-        content: "\f106"
-        font-family: $font-fa
+    &::before
+        content: $fa-var-angle-up
+        +font(fa)
 
     &.shown
         transform: translateY(0)

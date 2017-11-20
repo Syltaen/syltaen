@@ -20,7 +20,7 @@ class SpecialPageController extends PageController
         ]);
 
         // Make sure the error404 is set on the body
-        $this->addBodyClass("error404");
+        $this->addBodyClass("page404");
 
         // Remove the breadcrumb
         // $this->data["site"]["breadcrumb"] = "";
@@ -82,10 +82,11 @@ class SpecialPageController extends PageController
         $total_results_count = $total_results_count > 1 ? $total_results_count." résultats" : ($total_results_count < 1 ? "Pas de résultat" : "Un seul résultat");
 
         Data::store($this->data, [
-            "@title"       => "<h1>".__("Recherche pour : ", "syltaen")." $search <span class='subtitle'>$total_results_count</span></h1>",
+            "@title"       => "<h1>".__("Recherche pour : ", "syltaen")." $search<br><small>$total_results_count</small></h1>",
             "@search"      => $search
         ]);
 
+        $this->addBodyClass("search-page");
         $this->render("search");
     }
 }

@@ -23,30 +23,29 @@ html(lang=site.language)
     body(class=site.body_class)
 
         //- ==================================================
-        //- > MAIN
+        //- > SITE
         //- ==================================================
-        main#app
-            block main
-
+        block site
+            .site
 
                 //- ==================================================
                 //- > HEADER
                 //- ==================================================
                 block header
-                    header(role="navigation")#app-header
+                    header(role="navigation").site-header
 
-                        nav.container
+                        nav.site-header__nav.container
                             .row
-                                .gr-1
-                                    a#main-logo(href=site.url rel="home")= site.name
+                                .gr-2
+                                    a.site-header__brand(href=site.url rel="home")= site.name
 
-                                .gr-11
-                                    //- nav#social-menu: ul
-                                        each soc in site.header.social
-                                            li
-                                                a(href=soc.link target="_blank")
-                                                    i(class="fa "+soc["icon"])
-                                                    span= soc.name
+                                .gr-10
+                                    //- ul.site-header__social.social.social--header
+                                    //-     each soc in site.header.social
+                                    //-         li.social__item
+                                    //-             a(href=soc.link target="_blank")
+                                    //-                 i(class="fa "+soc["icon"])
+                                    //-                 span= soc.name
 
                                     != site.menus.main
 
@@ -54,12 +53,12 @@ html(lang=site.language)
                 //- ==================================================
                 //- > CONTENT
                 //- ==================================================
-                block content
-                    #app-content(role="main")
+                block main
+                    main.site-main(role="main")
 
                         //- ========== INTRO ========== -//
                         block intro
-                            #intro
+                            .site-intro
                                 .container
                                     //- != intro_content
 
@@ -71,6 +70,7 @@ html(lang=site.language)
 
                         //- ========== ASIDE ========== -//
                         block aside
+                            //- .site-aside
 
 
                         //- ========== MESSAGES ========== -//
@@ -78,10 +78,9 @@ html(lang=site.language)
                             //- - if ($error_message || $success_message)
                             //-     section.bg-white.small-padding: .container
                             //-         if error_message
-                            //-             p.page-message.error!= error_message
+                            //-             p.page-message.color-error!= error_message
                             //-         if success_message
-                            //-             p.page-message.success!= success_message
-
+                            //-             p.page-message.color-success!= success_message
 
                         //- ========== CONTENT ========== -//
                         block sections
@@ -92,7 +91,7 @@ html(lang=site.language)
                 //- > FOOTER
                 //- ==================================================
                 block footer
-                    footer#app-footer(role="contentinfo")
+                    footer.site-footer(role="contentinfo")
                         .container
                             != site.menus.footer
 
@@ -100,19 +99,18 @@ html(lang=site.language)
         //- ==================================================
         //- > MOBILE NAVIGATION
         //- ==================================================
-        button#app-nav-mobile-trigger
+        button.mobile-nav-trigger
             span
             span
             span
 
-        aside#app-nav-mobile
+        aside.mobile-nav
             != site.menus.mobile
+
 
         //- ==================================================
         //- > OVERLAYS
         //- ==================================================
         #scroll-top
-
-
 
         = wp_footer()

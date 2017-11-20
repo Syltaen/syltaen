@@ -1,0 +1,66 @@
+// =============================================================================
+// > COMPONENTS - PICKADAY
+// =============================================================================
+
+@import "assets/vendors/pikaday"
+
+.pika
+
+    &-date-choice
+        position: relative
+        &::before
+            content: "\f073"
+            +font(primary fa)
+            padding-right: 10px
+        .value.placeholder
+            opacity: .5
+        &.open .pika-single
+            opacity: 1
+            visibility: visible
+
+
+    &-single
+        position: absolute
+        top: 30px
+        right: 0
+        opacity: 0
+        visibility: hidden
+        border: 0
+        border-bottom-left-radius: 25px
+        border-bottom-right-radius: 25px
+        padding: 0 10px 10px
+        overflow: hidden
+        width: 300px
+    &-lendar
+        width: 100%
+        margin: 0
+
+    &-title
+        +font(16px white)
+        background: color(primary)
+        text-transform: uppercase
+        margin: 0 -10px
+
+    &-label
+        background: none
+        color: inherit
+
+    &-table
+        margin: 0
+        background: white
+        padding: 0 10px
+        th
+            +font(11px primary uppercase)
+            background: none
+            border-bottom: 2px solid #e3e3e3
+        td
+            border: 0
+            .pika-button
+                +font(16px 20px primary bold)
+                text-align: center
+                background: white
+            &.is-selected .pika-button
+                background: color(primary)
+                border-radius: 0
+                box-shadow: none
+                color: white

@@ -3,35 +3,26 @@
 // =============================================================================
 
 .scroll-down
-    position: absolute
-    left: 50%
-    bottom: 40px
+    +absolute(left 50% bottom 40px)
+    +size(24px, 40px)
     margin-left: -12px
     text-indent: -9999em
-    width: 24px
-    height: 40px
     border: 2px solid white
     border-radius: 12px
 
-    &:before
+    &::before
         content: ""
-        width: 4px
-        height: 4px
+        +size(4px)
+        +absolute(left 50% top 10px)
         background: white
         border-radius: 50%
-        position: absolute
-        left: 50%
         margin-left: -2px
-        top: 10px
         animation: scrollDown 1.5s ease infinite
 
-    &:after
+    &::after
         content: ""
-        width: 8px
-        height: 8px
-        position: absolute
-        bottom: -12px
-        left: 50%
+        +size(8px)
+        +absolute(left 50% bottom -12px)
         transform: translate(-50%) rotate(45deg)
         border-bottom: 2px solid white
         border-right: 2px solid white

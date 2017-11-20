@@ -49,12 +49,6 @@ class Users extends Model
         return parent::search($terms, $exclusive, $filter_key);
     }
 
-    /* Update parent method */
-    public function tax($taxonomy, $terms, $relation = false, $replace = false, $operator = "IN")
-    {
-        die("The taxonomy filter is not available for users");
-    }
-
     /**
      * Filter to the current logged user
      *

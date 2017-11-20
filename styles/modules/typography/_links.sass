@@ -1,0 +1,107 @@
+// =============================================================================
+// > MODULES: TXT - LINKS
+// =============================================================================
+
+// ==================================================
+// > LINKS
+// ==================================================
+a
+    +font(primary)
+    text-decoration: none
+    position: relative
+
+    &::after
+        content: ""
+        position: absolute
+        height: 1px
+        background: color(primary)
+        bottom: 0
+        width: 0
+        right: 100%
+        transition: width .2s ease, right 0s ease .2s
+
+    &:hover::after
+        width: 100%
+        right: 0
+        transition: all .2s ease
+
+    // ========== UNDERLINED ========== //
+    &.underlined
+
+        &::after
+            width: 100%
+            right: 0
+            transition: all .2s ease
+
+        &:hover::after
+            width: 0
+            right: 100%
+            transition: width .2s ease, right 0s ease .2s
+
+    nav &::after
+        display: none
+
+// ==================================================
+// > BUTTONS
+// ==================================================
+.button
+    +font(21px 50px white light)
+    height: 50px
+    position: relative
+    display: inline-block
+    padding: 0 spacing(md)
+    z-index: 5
+    background: color(primary)
+    border: 2px solid color(primary)
+    cursor: pointer
+
+
+    &::after
+        display: none
+
+    &:hover
+        color: color(primary)
+        background: none
+
+    // ========== MODIFIERS ========== //
+    &--fullwidth
+        display: block
+        width: 100%
+        padding: 0
+
+
+// ==================================================
+// > CROCHED LINK
+// ==================================================
+.croched-link
+    text-decoration: none
+    +font(light)
+    position: relative
+    color: inherit
+    transition: all .35s ease !important
+    text-transform: none
+    font-size: 1em
+
+    &::before,
+    &::after
+        position: relative
+        color: inherit
+        transition: all .35s ease !important
+    &::before
+        content: "[ "
+        left: 0
+    &::after
+        content: " ]"
+        right: 0
+        background: none
+
+    &:hover
+        opacity: 1
+        color: color(primary) !important
+        &::before,
+        &::after
+            color: color(primary)
+        &::before
+            left: -3px
+        &::after
+            right: -3px

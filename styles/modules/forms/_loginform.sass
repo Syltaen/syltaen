@@ -1,0 +1,45 @@
+// =============================================================================
+// > LAYOUTS: MODULES - FORMS: CONNEXION
+// =============================================================================
+
+#loginform
+    max-width: 400px
+    margin: 0 auto
+    overflow: hidden
+    clear: both
+
+    p
+        margin-bottom: 10px
+
+        #user_login,
+        #user_pass
+            +size(100%, 40px)
+            +font(15px 40px bold)
+            padding: 0 10px
+
+        &.login-password a
+            float: right
+            +font(12px 2)
+
+        &.login-remember
+            float: left
+            width: 40%
+            margin-top: 35px
+            label
+                height: 50px
+                +font(14px 50px)
+
+        &.login-submit
+            width: 60%
+            float: right
+
+        #wp-submit
+            @extend .button
+            +font(16px primary)
+            background: none
+            text-transform: uppercase
+            float: right
+            cursor: pointer
+            &:hover
+                background: primary
+                color: white

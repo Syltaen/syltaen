@@ -1,0 +1,31 @@
+// =============================================================================
+// > MODULES: TXT - QUOTES
+// =============================================================================
+
+blockquote
+    border-left: 3px solid lighten(color(primary), 10%)
+    padding: 20px 20px 0
+    position: relative
+    margin-bottom: 40px
+
+    cite
+        background: color(light-grey)
+        text-align: right
+        display: block
+        margin: 20px -20px -20px
+        padding: 10px 20px
+        font-style: italic
+        color: lighten(color(dark-grey), 10%)
+
+    &::before,
+    &::after
+        content: "\f10d"
+        +font(30px light-grey fa)
+        +absolute(top -20px left -40px)
+
+    &::after
+        content: "\f10e"
+        left: auto
+        top: auto
+        right: -40px
+        bottom: -20px

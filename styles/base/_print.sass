@@ -1,0 +1,46 @@
+// =============================================================================
+// > LAYOUTS: MEDIA - PRINT
+// =============================================================================
+
++print
+
+    @page
+        size: A4
+        margin: 10mm
+
+    // ==================================================
+    // > HIDE
+    // ==================================================
+    .site-header,
+    .site-footer,
+    .site-aside,
+    .breadcrumb-container,
+    .site-intro,
+    button.print
+        display: none
+
+    // ==================================================
+    // > BASE
+    // ==================================================
+    html, body, .container, main, section
+        // width: 100% !important
+        // margin: 0
+        // overflow: hidden
+
+    .container
+        padding: 0 20px
+        width: 100%
+
+    html
+        font-size: 5%
+
+    body
+        padding-top: 0
+
+    .site-section
+        page-break-inside: avoid
+        padding: 20px 0 !important
+
+    .site-main
+        display: table-row-group
+        overflow: hidden

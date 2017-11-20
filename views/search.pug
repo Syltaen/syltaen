@@ -4,6 +4,13 @@
 extends templates/_base
 
 //- ==================================================
+//- > INTRO
+//- ==================================================
+block intro
+    .site-intro.search-page__intro
+        h1!= title
+
+//- ==================================================
 //- > SECTIONS
 //- ==================================================
 block sections
@@ -21,7 +28,7 @@ block sections
                                 a(href=result.url)= result.post_title
 
 
-    .container
+    .container.lg-padding-bottom
         h3 Modifier votre recherche
         form(action=site.url)
             input(name="s" value=search)

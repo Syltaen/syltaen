@@ -6,57 +6,22 @@ form
     hr
         margin: 50px 0
         height: 0
-        margin-bottom: 1px solid $scnd
+        margin-bottom: 1px solid color(secondary)
 
     .hidden-wrap
         display: none
-
-    *
-        outline: 0
-
-    &.loading
-        position: relative
-        &:before
-            content: "\f1ce"
-            font-family: $font-fa
-            +absolute(right 0 bottom 0)
-            +size(50px)
-            line-height: 50px
-            text-align: center
-            margin-left: -25px
-            margin-top: -25px
-            animation: spin 2s linear infinite
-            transform: rotate(0deg)
-
-// ==================================================
-// > DISABLED
-// ==================================================
-form *[disabled],
-form  *[disabled="disabled"],
-form .disabled,
-.logged-in .logged-disabled
-    background: $lgry
-    opacity: .75
-    pointer-events: none
-
-
-// ==================================================
-// > ERRORS
-// ==================================================
-fieldset.error label, .error-message
-    color: red
 
 // ==================================================
 // > FIELDSET
 // ==================================================
 fieldset
-    margin-bottom: 20px
+    margin-bottom: spacing(sm)
 
 // ==================================================
 // > LABEL
 // ==================================================
 label
-    +font(15px, null, $font-regular)
+    +font(15px regular)
     +truncate(100%)
     font-weight: normal
     cursor: pointer
@@ -69,26 +34,29 @@ label
 // ==================================================
 input
     +placeholder
-        +font(null, rgba($dgry, .5), $font-light)
+        +font(light rgba(color(dark-grey), .5))
 
 // ==================================================
 // > INPUT
 // ==================================================
-input
+%input
     +size(100%, 48px)
-    +font(16px, inherit, null, 48px)
+    +font(16px 48px)
     background: none
     padding: 0 20px
     resize: none
-    border: 1px solid lighten($dgry, 50%)
+    border: 1px solid darken(color(light-grey), 5%)
     &.no-border
         border: 0
+
+input
+    @extend %input
 
 // ==================================================
 // > TEXTAREA
 // ==================================================
 textarea
-    @extend input
+    @extend %input
     min-height: 250px
     padding: 10px 20px
     line-height: 1.4
@@ -107,29 +75,29 @@ input[type="checkbox"]
     margin: 8px 5px 0
     padding: 0
     border: 0
-    &:before
+
+    &::before
         content: "\f096"
-        +font(16px, $main, $font-fa, 20px)
+        +font(16px 20px primary fa)
         +absolute(top 0 left 0)
         height: 14px
-        line-height: 20px
 
-    &:checked:before
+    &:checked::before
         content: "\f046"
 
 input[type="radio"]
-    border: 2px solid $main
+    border: 2px solid color(primary)
     border-radius: 50%
-    &:before
+    &::before
         content: ""
         +size(6px)
         +absolute(top 50% left 50%)
         opacity: 0
-        background: $main
+        background: color(primary)
         border-radius: 50%
         margin-top: -3px
         margin-left: -3px
-    &:checked:before
+    &:checked::before
         content: ""
         opacity: 1
 
@@ -140,20 +108,18 @@ input[type="radio"]
 input[type="submit"],
 input[type="button"]
     @extend .button
-    background: $main
-    color: white
+    +font(white regular uppercase)
+    background: color(primary)
     height: 50px
     float: right
-    font-family: $font-regular
     cursor: pointer
-    text-transform: uppercase
     margin-top: 20px !important
     clear: both
 
-    &:hover
+    &::hover
         background: white
-        color: $main
-        border: 2px solid $main
+        color: color(primary)
+        border: 2px solid color(primary)
 
 
 // ==================================================
@@ -166,5 +132,3 @@ input[type="button"]
 // > UPLOAD
 // ==================================================
 // -> See _dropzone.sass
-
-

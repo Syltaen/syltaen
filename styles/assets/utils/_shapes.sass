@@ -1,0 +1,42 @@
+// =============================================================================
+// > UTILS - SHAPES
+// =============================================================================
+
+// ==================================================
+// > CSS TRIANGLE
+// ==================================================
+=css-triangle($color, $direction, $size: 6px, $round: false)
+    content: ""
+    display: block
+    +size(0)
+
+    @if $round
+        border-radius: 3px
+
+    // down
+    @if $direction == down
+        border-left: $size solid transparent
+        border-right: $size solid transparent
+        border-top: $size solid $color
+        margin-top: 0 - round( $size / 2.5 )
+
+    // up
+    @else if $direction == up
+        border-left: $size solid transparent
+        border-right: $size solid transparent
+        border-bottom: $size solid $color
+        margin-bottom: 0 - round( $size / 2.5 )
+
+    // right
+    @else if $direction == right
+        border-top: $size solid transparent
+        border-bottom: $size solid transparent
+        border-left: $size solid $color
+        margin-right: -$size
+
+    // left
+    @else if  $direction == left
+        border-top: $size solid transparent
+        border-bottom: $size solid transparent
+        border-right: $size solid $color
+        margin-left: -$size

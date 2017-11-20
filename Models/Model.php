@@ -305,48 +305,6 @@ abstract class Model implements \Iterator
         return $this;
     }
 
-    /**
-     * Update the taxonomy filter
-     * See https://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters
-     * @param array $taxonomy slug of the taxonomy to look for
-     * @param array|string|int $terms Term or list of terms to match
-     * @param string $relation Erase the current relation between each tax_query.
-     *        Either "OR", "AND" (deflault) or false to keep the current one.
-     * @param boolean $replace Specify if the filter should replace any existing one on the same taxonomy
-     * @param string $operator 'IN', 'NOT IN', 'AND', 'EXISTS' and 'NOT EXISTS'
-     * @return self
-     */
-    public function tax($taxonomy, $terms, $relation = false, $replace = false, $operator = "IN")
-    {
-        // Create the tax_query if it doesn't exist
-        $this->filters["tax_query"] = isset($this->filters["tax_query"]) ? $this->filters["tax_query"] : [
-            "relation" => "AND"
-        ];
-
-        // Update the relation if specified
-        $this->filters["tax_query"]["relation"] = $relation ?: $this->filters["tax_query"]["relation"];
-
-        // Guess if $terms are slugs or ids for the field parameter
-        $field = is_int($terms) || (is_array($terms) && is_int($terms[0])) ? "term_id" : "slug";
-
-        // If $replace, remove all filters made on that specific taxonomy
-        if ($replace) {
-            foreach ($this->filters["tax_query"] as $filter_key=>$filter) {
-                if (isset($filter["taxonomy"]) && $filter["taxonomy"] == $taxonomy) {
-                    unset($this->filters["tax_query"][$filter_key]);
-                }
-            }
-        }
-
-        // Add the filter
-        $this->filters["tax_query"][] = [
-            "taxonomy" => $taxonomy,
-            "terms"    => $terms,
-            "field"    => $field,
-            "operator" => $operator
-        ];
-        return $this;
-    }
 
     /**
      * Update the meta filter

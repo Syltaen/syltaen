@@ -1,0 +1,101 @@
+// =============================================================================
+// > GUI - EDGES
+// > Ex: .has-edge-top--in-ascending.has-edge-top--primary
+// =============================================================================
+
+$edge-height: 42px
+
+.has-edge
+
+    // ==================================================
+    // > TOP
+    // ==================================================
+    &-top,
+
+        &--in-ascending,
+        &--in-descending,
+        &--out-ascending,
+        &--out-descending
+            position: relative
+            &::before
+                content: ""
+                +size(0)
+                +absolute(left 0)
+
+        &--in-ascending::before,
+        &--in-descending::before
+            top: 0
+            border-top: $edge-height solid red
+
+        &--out-ascending::before,
+        &--out-descending::before
+            bottom: 100%
+            border-bottom: $edge-height solid red
+
+        &--in-ascending::before,
+        &--out-descending::before
+            border-right: 100vw solid transparent
+
+        &--in-descending::before,
+        &--out-ascending::before
+            border-left: 100vw solid transparent
+
+
+    // ==================================================
+    // > BOTTOM
+    // ==================================================
+    &-bottom
+        &--in-ascending,
+        &--in-descending,
+        &--out-ascending,
+        &--out-descending
+            position: relative
+            &::after
+                content: ""
+                +size(0)
+                +absolute(left 0)
+
+        &--in-ascending::after,
+        &--in-descending::after
+            bottom: 0
+            border-bottom: $edge-height solid red
+
+        &--out-ascending::after,
+        &--out-descending::after
+            top: 100%
+            border-top: $edge-height solid red
+
+        &--in-ascending::after,
+        &--out-descending::after
+            border-left: 100vw solid transparent
+
+        &--in-descending::after,
+        &--out-ascending::after
+            border-right: 100vw solid transparent
+
+
+// ==================================================
+// > COLORS
+// ==================================================
+@each $color, $value in $colors
+    .bg-#{$color},
+    .has-edge-top--#{$color}
+        &.has-edge-top
+            &--in-ascending::before,
+            &--in-descending::before
+                border-top-color: $value
+
+            &--out-ascending::before,
+            &--out-descending::before
+                border-bottom-color: $value
+
+    .bg-#{$color},
+    .has-edge-bottom--#{$color}
+        &.has-edge-bottom
+            &--in-ascending::after,
+            &--in-descending::after
+                border-bottom-color: $value
+
+            &--out-ascending::after,
+            &--out-descending::after
+                border-top-color: $value

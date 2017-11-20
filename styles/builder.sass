@@ -1,91 +1,83 @@
 // ==================================================
 // > ASSETS
 // ==================================================
-
-// ========== TOOLS ========== //
-@import "assets/functions"
-@import "assets/mixins"
-@import "assets/keyframes"
 @import "assets/fonts"
 @import "assets/variables"
+@import "assets/keyframes"
+@import "assets/utils"
 
-// ========== VENDORS ========== //
-@import "assets/vendors/font-awesome/font-awesome"
-@import "assets/vendors/gridle/setup"
-@import "assets/vendors/select2/core"
-@import "assets/vendors/slick/slick"
-@import "assets/vendors/slick/slick-theme"
-@import "assets/vendors/pikaday"
+// ==================================================
+// > BASE
+// ==================================================
+@import "base/extends"
+@import "base/base"
+@import "base/grid"
+@import "base/states"
+@import "base/spacing"
+@import "base/print"
 
 
 // ==================================================
 // > LAYOUTS
 // ==================================================
+@import "layout/site"
+@import "layout/site-header"
+@import "layout/site-main"
+@import "layout/site-footer"
+@import "layout/site-aside"
+@import "layout/site-intro"
+@import "layout/site-section"
+@import "layout/mobile-nav"
 
-// ========== TEMPLATES ========== //
-@import "layouts/templates/base"
-@import "layouts/templates/404"
-@import "layouts/templates/search"
-@import "layouts/templates/home"
-@import "layouts/templates/single"
 
-// ========== PARTS ========== //
-@import "layouts/parts/header"
-@import "layouts/parts/footer"
-@import "layouts/parts/intro"
-@import "layouts/parts/aside"
-@import "layouts/parts/section"
-
-// ========== MEDIAS ========== //
-@media print
-    @import "layouts/medias/print"
-
+// ==================================================
+// > PAGES
+// ==================================================
+@import "pages/home"
+@import "pages/404"
+@import "pages/search"
+@import "pages/single"
 
 // ==================================================
 // > MODULES
 // ==================================================
 
-// ========== GUI ========== //
-@import "modules/gui/globals"
-@import "modules/gui/backgrounds"
-@import "modules/gui/images"
-@import "modules/gui/shadowbox"
-
-// ========== TXT ========== //
-@import "modules/txt/txt"
-@import "modules/txt/titles"
-@import "modules/txt/links"
-@import "modules/txt/quotes"
-@import "modules/txt/collapsable"
-
-// ========== NAV ========== //
-@import "modules/navigation/mobile-nav"
-@import "modules/navigation/pagination-walker"
-@import "modules/navigation/breadcrumbs"
-@import "modules/navigation/single-nav"
-@import "modules/navigation/scroll-top"
-@import "modules/navigation/scrollnav"
-
-// ========== LISTS ========== //
-@import "modules/lists/lists"
-@import "modules/lists/archive-news"
-
 // ========== FORMS ========== //
 @import "modules/forms/forms"
 @import "modules/forms/ninja-forms"
+@import "modules/forms/loginform"
+@import "modules/forms/dropzone"
+@import "modules/forms/pickaday"
 @import "modules/forms/select2"
-// @import "modules/forms/dropzone"
-// @import "modules/forms/pikaday"
-// @import "modules/forms/connexion"
 
-// ========== TABLES ========== //
+// ========== GUI ========== //
+@import "modules/gui/backgrounds"
+@import "modules/gui/edges"
+@import "modules/gui/full-width-image"
+@import "modules/gui/images"
+
+// ========== INTERACTIVE ========== //
+@import "modules/interactive/collapsable"
+@import "modules/interactive/shadowbox"
+@import "modules/interactive/slick"
+
+// ========== LIST ========== //
+@import "modules/lists/archive-news"
+
+// ========== NAVIGATION ========== //
+@import "modules/navigation/breadcrumbs"
+@import "modules/navigation/pagination-walker"
+@import "modules/navigation/scroll-down"
+@import "modules/navigation/scroll-top"
+@import "modules/navigation/scrollnav"
+@import "modules/navigation/single-nav"
+
+// ========== TABLE ========== //
 @import "modules/tables/table"
 
-
-
-
-
-
-
-
-
+// ========== TYPOGRAPHY ========== //
+@import "modules/typography/typography"
+@import "modules/typography/titles"
+@import "modules/typography/links"
+@import "modules/typography/li"
+@import "modules/typography/quotes"

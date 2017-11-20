@@ -12,21 +12,21 @@
 
     &__direction
         +size(40px, 20px)
-        +font(20px, $main, null, 20px)
+        +font(20px 20px primary)
         display: inline-block
         position: relative
         text-indent: -9999px
         margin: 0 5px
         transition: all .25s ease
-        &:before
-            font-family: $font-fa
+        &::before
+            @extend %cover
+            +font(fa)
             text-indent: 0
-            +cover
             text-align: center
             line-height: 19px
-        &--first:before
+        &--first::before
             content: "\f100"
-        &--last:before
+        &--last::before
             content: "\f101"
         &[disabled]
             opacity: .15
@@ -39,8 +39,8 @@
             a,
             .current
                 +size(45px)
-                +font(20px, white, null, 45px)
-                background: $main
+                +font(20px 45px white)
+                background: color(primary)
                 border: 3px solid white
                 text-align: center
                 display: block

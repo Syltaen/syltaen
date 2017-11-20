@@ -2,42 +2,32 @@
 // > LAYOUTS: MODULES - GUI: BACKGROUNDS
 // =============================================================================
 
+
 // ==================================================
-// > COLOR
+// > GENERATED BACKGOUNDS COLOR CLASSES. Ex: .bg-primary
 // ==================================================
-.bg-main
-    background-color: $main
-
-.bg-scnd
-    background-color: $scnd
-
-.bg-lgry
-    background-color: $lgry
-
-.bg-dgry
-    background-color: $dgry
-
-.bg-white
-    background-color: white
+@each $color, $value in $colors
+    .bg-#{$color}
+        background-color: $value
 
 
 // ==================================================
-// > IMAGE
+// > BACKGROUND IMAGE
 // ==================================================
 .bg-image
     background: center center no-repeat
 
-    &.size-cover
+    &--cover
         background-size: cover
 
-    &.position-left
+    &--left
         background-position-x: left
 
-    &.position-right
+    &--right
         background-position-x: right
 
-    &.position-top
+    &--top
         background-position-y: top
 
-    &.position-bottom
+    &--bottom
         background-position-y: bottom

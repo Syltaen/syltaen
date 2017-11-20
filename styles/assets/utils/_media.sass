@@ -1,0 +1,42 @@
+// =============================================================================
+// > UTILS - MEDIA QUERIES
+// =============================================================================
+
+// ==================================================
+// > SCREEN
+// > Usage :
+// > +screen(md)
+// >    color: red
+// ==================================================
+
+=screen($bp, $compare: "-")
+
+    @if map-has-key($responsive, $bp)
+        $bp: breakpoint($bp)
+
+    // Max width
+    @if $compare == "-"
+        @media screen and (max-width: $bp)
+            @content
+
+    // Min width
+    @else if $compare == "+"
+        @media screen and (min-width: $bp)
+            @content
+
+    // Between
+    @else
+        @if map-has-key($responsive, $compare)
+            $compare: breakpoint($compare)
+
+        @media screen and (min-width: $bp) and (max-width: $compare)
+            @content
+
+
+
+// ==================================================
+// > PRINT
+// ==================================================
+=print
+    @media print
+        @content

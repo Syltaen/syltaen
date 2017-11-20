@@ -7,6 +7,117 @@
 add_filter("tiny_mce_before_init", function ($init_array) {
 
     $style_formats = [
+
+        /* ========= TEXTES ========= */
+        [
+            "title"=> "Textes",
+            "items" => [
+
+                [
+                    "title" => "Couleurs",
+                    "items" => [
+                        [
+                            "title"   => "Defaut",
+                            "inline"  => "span",
+                            "classes" => "color-text"
+                        ],
+                        [
+                            "title"   => "Blanc",
+                            "inline"  => "span",
+                            "classes" => "color-white"
+                        ],
+                        [
+                            "title"   => "Gris clair",
+                            "inline"  => "span",
+                            "classes" => "color-light-grey"
+                        ],
+                        [
+                            "title"   => "Gris foncé",
+                            "inline"  => "span",
+                            "classes" => "color-dark-grey"
+                        ],
+                        [
+                            "title"   => "Principale",
+                            "inline"  => "span",
+                            "classes" => "color-primary"
+                        ],
+                        [
+                            "title"   => "Secondaire",
+                            "inline"  => "span",
+                            "classes" => "color-secondary"
+                        ]
+                    ]
+                ],
+
+                [
+                    "title" => "Alignements",
+                    "items" => [
+                        [
+                            "title"   => "Centre",
+                            "classes" => "text-align-center",
+                            "wrapper" => true,
+                            "selector" => "*"
+                        ],
+                        [
+                            "title"   => "Gauche",
+                            "classes" => "text-align-left",
+                            "wrapper" => true,
+                            "selector" => "*"
+                        ],
+                        [
+                            "title"   => "Droite",
+                            "classes" => "text-align-right",
+                            "wrapper" => true,
+                            "selector" => "*"
+                        ],
+                    ]
+                ],
+
+                [
+                    "title" => "Fontes",
+                    "items" => [
+                        [
+                            "title"   => "Light",
+                            "inline"  => "span",
+                            "classes" => "font-light"
+                        ],
+                        [
+                            "title"   => "Regular",
+                            "inline"  => "span",
+                            "classes" => "font-regular"
+                        ],
+                        [
+                            "title"   => "Bold",
+                            "inline"  => "span",
+                            "classes" => "font-bold"
+                        ],
+                    ]
+                ],
+
+
+
+                [
+                    "title"   => "Texte plus petit",
+                    "inline"  => "small"
+                ],
+                [
+                    "title"   => "Nombre incrémenté",
+                    "inline"  => "span",
+                    "classes" => "incrementor"
+                ],
+                [
+                    "title"   => "Citation",
+                    "block"   => "blockquote",
+                    "wrapper" => true
+                ],
+                [
+                    "title"   => "Citation - Source",
+                    "block"   => "cite",
+                    "wrapper" => true
+                ]
+            ]
+        ],
+
         /* ========= TITLES ========= */
         [
             "title"=> "Titre",
@@ -40,12 +151,6 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                     "title"   => "Titre 6 - H6",
                     "block"   => "h6",
                     "wrapper" => false
-                ],
-                [
-                    "title"   => "Sous-titre",
-                    "inline"  => "span",
-                    "classes" => "subtitle",
-                    "wrapper" => false
                 ]
             ]
         ],
@@ -63,7 +168,7 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                 [
                     "title"    => "Bouton pleine largueur",
                     "selector" => "a",
-                    "classes"  => "button fullwidth",
+                    "classes"  => "button button--fullwidth",
                     "wrapper"  => false
                 ],
                 [
@@ -72,83 +177,50 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                     "classes"  => "croched-link",
                     "wrapper"  => false
                 ],
-                // [
-                //     "title"    => "Lien souligné",
-                //     "selector" => "a",
-                //     "classes"  => "underlined",
-                //     "wrapper"  => false
-                // ]
-            ]
-        ],
-
-        /* ========= TEXTES ========= */
-        [
-            "title"=> "Textes",
-            "items" => [
                 [
-                    "title"   => "Couleur : Principale",
-                    "inline"  => "span",
-                    "classes" => "main-color"
-                ],
-                [
-                    "title"   => "Couleur : Secondaire",
-                    "inline"  => "span",
-                    "classes" => "secondary-color"
-                ],
-
-                [
-                    "title"   => "Fonte : Light",
-                    "inline"  => "span",
-                    "classes" => "font-light"
-                ],
-
-                [
-                    "title"   => "Texte plus petit",
-                    "inline"  => "small"
-                ],
-
-                [
-                    "title"   => "Nombre incrémenté",
-                    "inline"  => "span",
-                    "classes" => "incrementor"
-                ],
-
-                [
-                    "title"   => "Citation",
-                    "block"   => "blockquote",
-                    "wrapper" => true
-                ],
-                [
-                    "title"   => "Citation - Source",
-                    "block"   => "cite",
-                    "wrapper" => true
+                    "title"    => "Lien souligné",
+                    "selector" => "a",
+                    "classes"  => "underlined",
+                    "wrapper"  => false
                 ]
             ]
         ],
+
+
 
         /* ========= LISTES ========= */
         [
             "title"=> "Listes",
             "items" => [
                 [
+                    "title" => "puces",
+                    "items" => [
+                        [
+                            "title"    => "Carets",
+                            "selector" => "ul",
+                            "classes"  => "carets"
+                        ],
+                        [
+                            "title"    => "Angles",
+                            "selector" => "ul",
+                            "classes"  => "angles"
+                        ],
+                        [
+                            "title"    => "FLêches",
+                            "selector" => "ul",
+                            "classes"  => "arrows"
+                        ],
+                        [
+                            "title"    => "Checks",
+                            "selector" => "ul",
+                            "classes"  => "checks"
+                        ],
+                    ],
+                ],
+                [
                     "title"    => "Liste sans style",
                     "selector" => "ul",
-                    "classes"  => "unstyled"
-                ],
-                [
-                    "title"    => "Liste de blocs alignés",
-                    "selector" => "ul",
-                    "classes"  => "blocks-aligned"
-                ],
-                [
-                    "title"    => "Liste ordonnée en colonnes",
-                    "selector" => "ol",
-                    "classes"  => "point-list"
-                ],
-                [
-                    "title"    => "Liste de documents",
-                    "selector" => "ul",
-                    "classes"  => "doc-list"
+                    "classes"  => "unstyled-list"
                 ]
             ]
         ],
@@ -196,6 +268,27 @@ add_filter("tiny_mce_before_init", function ($init_array) {
 // > EDITOR STYLESHEET
 // ==================================================
 add_editor_style("build/css/bundle.css");
+
+
+// =============================================================================
+// > EDITOR PLUGIN
+// =============================================================================
+add_action("admin_head", function () {
+
+    add_filter("mce_external_plugins", function ($plugins) {
+        return array_merge($plugins, [
+            "sylaen" => Syltaen\Files::url("scripts", "tools/tinymce.js")
+        ]);
+    });
+
+    add_filter("mce_buttons", function ($buttons) {
+        return array_merge($buttons, [
+            "button_eek",
+            "button_green"
+        ]);
+    });
+
+});
 
 
 // ==================================================

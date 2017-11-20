@@ -1,0 +1,51 @@
+// =============================================================================
+// > BASE - GRID
+// =============================================================================
+
+// ==================================================
+// > CONTAINERS
+// ==================================================
+.container
+    position: relative
+    width: calc(100% - 40px)
+    max-width: container(md)
+    margin: auto
+
+    // Create a container modifier for each breakpoint
+    @each $slug, $bp in $responsive
+        &--#{slug}
+            max-width: container($slug)
+
+        // Set the container max size for each breakpoint
+        +screen($slug)
+            max-width: container($slug)
+
+
+// ==================================================
+// > COLUMNS
+// ==================================================
+$gridle-context:            12     // number of columns in your grid
+$gridle-column-width:       null   // by default it's percentage based depending on the context but you can specify a column width yourself
+$gridle-gutter-width:       20px   // size of the gutters
+$gridle-gutter-height:      20px   // size of top and bottom gutters
+$gridle-gutter-top:         0      // size of top gutter
+$gridle-gutter-bottom:      0      // size of bottom gutter
+$gridle-gutter-left:        10px   // size of left gutter
+$gridle-gutter-right:       10px   // size of right gutter
+$gridle-direction:          ltr    // direction
+$gridle-dir-attribute:      false  // if need to generate support for dir = "rtl" in order to set part of layout direction
+$gridle-states-classes:     false  // if we need to generate the states classes
+$gridle-name-multiplicator: 1      // if 5, generate gr-5, gr-10, etc...
+$gridle-classes-prefix:     ""     // the prefix used for all classes
+
+@import "assets/vendors/gridle/gridle"
+// - or -
+// @import "assets/vendors/gridle/gridle-flex"
+
+@import "assets/vendors/gridle/setup"
+
+// Create a colummn class for each breakpoint (assets/variables). Example : .gr-7-sm
+@each $slug, $bp in $responsive
+    +gridle_register_state($slug, (max-width : breakpoint($slug)))
++gridle_generate_classes()
+

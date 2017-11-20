@@ -156,8 +156,13 @@ abstract class PageController extends Controller
         $classes = get_body_class();
 
         // Logged as admin
-        if ($this->userData && $this->user->can("administrator")) {
-            $classes[] = "logged-in-admin";
+        if ($this->userData) {
+            $classes[] = "is-logged";
+            if ($this->user->can("administrator")) {
+                $classes[] = "is-logged--admin";
+            }
+        } else {
+            $classes[] = "is-unlogged";
         }
 
         return $classes;

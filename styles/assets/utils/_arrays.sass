@@ -1,0 +1,52 @@
+// ==================================================
+// > UTILS - ARRAYS
+// ==================================================
+
+// ==================================================
+// > TOOLS
+// ==================================================
+@function list_get($array, $index)
+    @if map-has-key($array, $index)
+        @return map-get($array, $index)
+    @warn "Unkown '#{$slug}' in '#{$array}'"
+    @return null
+
+
+// ==================================================
+// > ARRAYS
+// ==================================================
+
+// ========== BREAKPOINTS ========== //
+@function breakpoint($slug)
+    $resp: list_get($responsive, $slug)
+    @return list_get($resp, breakpoint)
+
+
+// ========== CONTAINERS ========== //
+@function container($slug)
+    $resp: list_get($responsive, $slug)
+    @return list_get($resp, container)
+
+
+// ========== COLORS ========== //
+@function color($slug)
+    @if map-has-key($colors, $slug)
+        @return list_get($colors, $slug)
+    @else
+        @return $slug
+
+
+// ========== FONTS ========== //
+@function font($slug)
+    @if map-has-key($fonts-stacks, $slug)
+        @return list_get($fonts-stacks, $slug)
+    @else
+        @return $slug
+
+
+// ========== SPACING ========== //
+@function spacing($slug)
+    @if map-has-key($spacing, $slug)
+        @return list_get($spacing, $slug)
+    @else
+        @return $slug
