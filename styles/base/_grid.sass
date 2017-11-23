@@ -13,7 +13,7 @@
 
     // Create a container modifier for each breakpoint
     @each $slug, $bp in $responsive
-        &--#{slug}
+        &--#{$slug}
             max-width: container($slug)
 
         // Set the container max size for each breakpoint
@@ -49,3 +49,37 @@ $gridle-classes-prefix:     ""     // the prefix used for all classes
     +gridle_register_state($slug, (max-width : breakpoint($slug)))
 +gridle_generate_classes()
 
+
+
+// ==================================================
+// > FLEX
+// > Ex: flex flex--row flex--nowrap flex--jc-top flex--align-left
+// ==================================================
+.flex
+    &-row
+        +flex(row nowrap)
+        &-wrap
+            +flex(row wrap)
+
+    &-column
+        +flex(column)
+        &-wrap
+            +flex(row wrap)
+
+
+    // Justify content
+    @each $jc in start end center space-between space-around
+        @if $jc == start or $jc == end
+            $jc: flex-#{$jc}
+
+        &--justify-#{$jc}
+            justify-content: $jc
+
+
+    // Align items
+    @each $ai in start end center baseline stretch
+        @if $ai == start or $ai == end
+            $ai: flex-#{$ai}
+
+        &-align-#{$ai}
+            align-items: $ai

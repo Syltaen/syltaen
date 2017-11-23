@@ -15,7 +15,7 @@ abstract class PageController extends Controller
     protected $user;
 
     /**
-     * The global post
+     * The current post
      *
      * @var WP_Posts
      */

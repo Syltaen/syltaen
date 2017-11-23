@@ -53,13 +53,6 @@
                 text-transform: $a
 
 
-
-
-
-
-
-
-
 // ==================================================
 // > POSITIONS
 // ==================================================
@@ -86,6 +79,47 @@
 =size($width, $height: $width)
     width: $width
     height: $height
+
+
+// ==================================================
+// > FLEX
+// ==================================================
+=flex($args)
+    display: flex
+    $hasHorizontalAlignment: false
+    $direction: row
+
+    @each $a in $args
+
+        // Flex direction
+        @each $fd in row row-reverse column column-reverse
+            @if $a == $fd
+                flex-direction: $fd
+                $direction: $fd
+
+        // Flex wrap
+        @each $fw in wrap wrap-reverse nowrap
+            @if $a == $fw
+                flex-wrap: $fw
+
+        // Horizontal alignments
+        @each $h in flex-start flex-end center space-between space-around space-evenly null
+            @if $a == $h
+                $hasHorizontalAlignment: true
+                @if $direction == column
+                    align-items: $h
+                @else
+                    justify-content: $h
+
+        // Vertical alignments
+        @if $hasHorizontalAlignment
+            @each $v in flex-start flex-end center space-between space-around space-evenly null
+                @if $a == $v
+                    @if $direction == column
+                        justify-content: $v
+                    @else
+                        align-items: $v
+
 
 
 // ==================================================

@@ -60,7 +60,7 @@ class SectionsController extends Controller
      */
     private function txt_2col(&$c)
     {
-        $c["class"]       = "align-".$c["valign"];
+        $c["class"]       = "flex-row flex-align-".$c["valign"];
         $c["txt_1_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_1"] : "gr-".substr($c['proportions'], 0, 1);
         $c["txt_2_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_2"] : "gr-".substr($c['proportions'], 2, 1);
     }
@@ -73,7 +73,7 @@ class SectionsController extends Controller
      */
     private function txt_3col(&$c)
     {
-        $c["class"]       = "align-".$c["valign"];
+        $c["class"]       = "flex-row flex-align-".$c["valign"];
         $c["txt_1_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_1"] : "gr-".substr($c["proportions"], 0, 1);
         $c["txt_2_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_2"] : "gr-".substr($c["proportions"], 2, 1);
         $c["txt_3_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_3"] : "gr-".substr($c["proportions"], 4, 1);
@@ -104,34 +104,15 @@ class SectionsController extends Controller
      */
     private function full_width_image(&$c)
     {
-        $c["classes"] = ["full-width-image"];
-        $c["styles"]  = [];
         $c["attr"]    = [];
+        $c["classes"] = ["full-width-image", $c["parallax"]];
 
-        // ========== CLASSES ========== //
-        $c["classes"][] = $c["parallax"];
 
-        if ($c["top_edge"] != "default") {
-            $c["classes"][] = $c["top_edge"];
-        }
-
-        if ($c["bottom_edge"] != "default") {
-            $c["classes"][] = $c["bottom_edge"];
-        }
-
-        $c["classes"] = join($c["classes"], " ");
-
-        // ========== STYLES ========== //
-        $c["styles"][] = "background-image: url(".$c["image"]["url"].");";
+        // ========== IMAGE ========== //
+        $c["attr"]["style"] = "background-image: url(".$c["image"]["url"].");";
         $c["image"]    = wp_get_attachment_image($c["image"]["ID"], [1600, null]);
 
-        if ($c["vertical_offset"]) {
-            $c["styles"][] = "margin-top: ".$c["vertical_offset"]."px;";
-        }
-
-        $c["styles"]  = join($c["styles"], " ");
-
-        // ========== ATTRS ========== //
+        // ========== PARALLAX ========== //
         switch ($c["parallax"]) {
             case "parallax-to-top":
                 $c["attr"]["data-top-bottom"] = "background-position-y: 100%";
