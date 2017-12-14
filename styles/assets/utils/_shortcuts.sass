@@ -35,7 +35,7 @@
         // Font color
         @if map-has-key($colors, $a)
             color: color($a)
-        @if type-of($a) == "color"
+        @elseif type-of($a) == "color"
             color: $a
 
         // Font family

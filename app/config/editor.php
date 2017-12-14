@@ -270,27 +270,6 @@ add_filter("tiny_mce_before_init", function ($init_array) {
 add_editor_style("build/css/bundle.css");
 
 
-// =============================================================================
-// > EDITOR PLUGIN
-// =============================================================================
-add_action("admin_head", function () {
-
-    add_filter("mce_external_plugins", function ($plugins) {
-        return array_merge($plugins, [
-            "sylaen" => Syltaen\Files::url("scripts", "tools/tinymce.js")
-        ]);
-    });
-
-    add_filter("mce_buttons", function ($buttons) {
-        return array_merge($buttons, [
-            "button_eek",
-            "button_green"
-        ]);
-    });
-
-});
-
-
 // ==================================================
 // > CONFIG
 // ==================================================
