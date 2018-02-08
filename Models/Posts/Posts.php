@@ -136,7 +136,7 @@ abstract class Posts extends Model
         $this->filters["tax_query"]["relation"] = $relation ?: $this->filters["tax_query"]["relation"];
 
         // Guess if $terms are slugs or ids for the field parameter
-        $field = is_int($terms) || (is_array($terms) && is_int($terms[0])) ? "term_id" : "slug";
+        $field = is_int($terms) || (is_array($terms) && isset($terms[0]) && is_int($terms[0])) ? "term_id" : "slug";
 
         // If $replace, remove all filters made on that specific taxonomy
         if ($replace) {
@@ -489,12 +489,12 @@ abstract class Posts extends Model
         });
 
         // ========== Prevent status switch when saving ========== //
-        add_filter("wp_insert_post_data", function ($data , $postarr) use ($post_type) {
-            if ($data["post_type"] == $post_type) {
-                $data["post_status"] = $data["post_status"] == "publish" ? $postarr["original_post_status"] : $data["post_status"];
-            }
-            return $data;
-        }, "99", 2);
+        // add_filter("wp_insert_post_data", function ($data , $postarr) use ($post_type) {
+        //     if ($data["post_type"] == $post_type) {
+        //         $data["post_status"] = $data["post_status"] == "publish" ? $postarr["original_post_status"] : $data["post_status"];
+        //     }
+        //     return $data;
+        // }, "99", 2);
     }
 
     // ==================================================

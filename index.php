@@ -10,7 +10,7 @@ Route::is("single", "SingleController::render");
 // ==================================================
 // > SEARCH
 // ==================================================
-Route::is("search", "SpecialPageController::search", ["search" => get_search_query()]);
+Route::is("search", "SpecialPageController::search", ["search" => get_search_query(false)]);
 
 // ==================================================
 // > API

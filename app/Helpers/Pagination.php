@@ -5,23 +5,40 @@ namespace Syltaen;
 class Pagination
 {
     /**
+     * The model to paginate
+     *
+     * @var \Syltaen\Model
+     */
+    public $model;
+
+    /**
      * A list of posts for the current page
      *
      * @var array
      */
     private $posts;
+
     /**
      * The current page number
      *
      * @var int
      */
-    private $page;
+    public $page;
+
+    /**
+     * Number of element per page
+     *
+     * @var int
+     */
+    public $perPage;
+
     /**
      * The maximum number of pages
      *
      * @var int
      */
-    private $totalPages;
+    public $totalPages;
+
     /**
      * Any query string found in the url
      *
@@ -36,11 +53,15 @@ class Pagination
      * @param Syltaen\Posts $model The model used to generate the pagination
      * @param int $per_page The number of posts to display on a page
      */
-    function __construct($model, $per_page)
+    public function __construct($model, $per_page, $force_page = false)
     {
-        $this->page        = $this->getPage();
-        $this->posts       = $model->get($per_page, $this->page);
-        $this->totalPages  = $model->getQuery()->max_num_pages;
+        $this->perPage     = $per_page;
+        $this->model       = $model;
+
+        $this->page        = $force_page ? $force_page : $this->getPage();
+        $this->posts       = $model->get($this->perPage, $this->page);
+
+        $this->totalPages  = isset($model->getQuery()->max_num_pages) ? $model->getQuery()->max_num_pages : ceil($model->getQuery()->total_users / $per_page);
 
         $this->querystring = $_SERVER["QUERY_STRING"] ? "?".$_SERVER["QUERY_STRING"] : "";
     }
@@ -62,7 +83,7 @@ class Pagination
      * Check if the page exists
      *
      * @param int $page Page number
-     * @return ss
+     * @return bool
      */
     public function isDisabled($page)
     {
@@ -96,7 +117,6 @@ class Pagination
      */
     public function walker($anchor = "", $class = false, $pages_span = 3, $hide_alone = true, $view = "parts/_pagination-walker")
     {
-
         if ($hide_alone && $this->totalPages <= 1) return "";
 
         $walker = [
@@ -164,5 +184,22 @@ class Pagination
         $page = get_query_var("page");
         $page = $page == 0 ? 1 : $page;
         return $page;
+    }
+
+    /**
+     * Set the current page number
+     *
+     * @param int $page
+     * @param int $per_page
+     * @return self
+     */
+    public function setPage($page, $per_page = false)
+    {
+        if ($per_page) $this->perPage = $per_page;
+
+        $this->page = $page;
+        $this->posts = $this->model->get($this->perPage, $this->page);
+
+        return $this;
     }
 }

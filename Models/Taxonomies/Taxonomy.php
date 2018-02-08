@@ -53,21 +53,20 @@ abstract class Taxonomy
      * @param int $limit Number of terms to return
      * @param string $orderby name, slug, term_group, term_id, id, description, count, ...
      * @param string $order ASC or DESC
+     * @param array $custom_args Additional query arguments
      * @return array List of terms
      * see https://developer.wordpress.org/reference/functions/get_terms/
      */
-    public function getTerms($fields = "all", $hide_empty = false, $limit = 0, $orderby = "slug", $order = "ASC", $parent = null)
+    public function getTerms($fields = "all", $hide_empty = false, $limit = 0, $orderby = "slug", $order = "ASC", $custom_args = [])
     {
-        $args = [
+        $args = array_merge([
             "taxonomy"   => static::SLUG,
             "fields"     => $fields,
             "hide_empty" => $hide_empty,
             "number"     => $limit,
             "order"      => $order,
             "orderby"    => $orderby,
-        ];
-
-        if ($parent !== null) $args["parent"] = $parent;
+        ], $custom_args);
 
         $this->terms = get_terms($args);
 

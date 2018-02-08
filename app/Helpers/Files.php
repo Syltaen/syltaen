@@ -142,6 +142,60 @@ abstract class Files
         });
     }
 
+
+    /**
+     * Upload a media and create an attachement for it
+     *
+     * @param string $url
+     * @return array The attachement information
+     */
+    public static function upload($url)
+    {
+        // Gives us access to the download_url(), wp_handle_sideload() and wp_generate_attachment_metadata()
+        require_once(ABSPATH . "wp-admin/includes/file.php");
+        require_once(ABSPATH . "wp-admin/includes/image.php");
+
+        // Download file to temp dir
+        $temp_file = download_url($url);
+
+        // Check for errors
+        if (is_wp_error($temp_file)) return $temp_file;
+
+        // Create a unique file name
+        $filename  = wp_unique_filename(wp_upload_dir()["path"], sanitize_file_name(basename($url)));
+
+        // Create a fake file array
+        $file = [
+            "name"     => $filename,
+            "type"     => "image/png",
+            "tmp_name" => $temp_file,
+            "error"    => 0,
+            "size"     => filesize($temp_file),
+        ];
+
+        // Move the temporary file into the uploads directory
+        $upload = wp_handle_sideload($file, ["test_form" => false, "test_size" => true]);
+
+        // Check for errors
+        if (!empty($upload["error"])) return $upload["error"];
+
+        // Generate an attachement
+        $upload["id"] = wp_insert_attachment([
+            "post_mime_type"    => $upload["type"],
+            "post_title"        => $filename,
+            "post_content"      => "",
+            "post_status"       => "inherit",
+        ], wp_upload_dir()["subdir"] . "/" . $filename);
+
+        // Update the attachement's metadata
+        $metadata = wp_generate_attachment_metadata($upload["id"], $upload["file"]);
+
+        wp_update_attachment_metadata($upload["id"], $metadata);
+
+        // Return all data
+        return $upload;
+    }
+
     /**
      * Autoloader matching PHP-FIG PSR-4 and PSR-0 standarts
      *

@@ -6,20 +6,17 @@
 // > TRIGGER
 // ==================================================
 .mobile-nav-trigger
-    z-index: 2
-    position: fixed
-    width: 40px
-    height: 40px
-    top: 60px
-    right: 60px
-    border: 2px solid color(primary)
+    z-index: 2000
+    +fixed(top 60px right 60px)
+    +size(40px)
+    border: 2px solid color(secondary)
     border-radius: 50%
     opacity: 0
     visibility: hidden
     transition: all 0.2s ease
     background: none
 
-    +screen(sm)
+    +screen(xs)
         opacity: 1
         visibility: visible
         top: 20px
@@ -31,7 +28,7 @@
         height: 2px
         top: 50%
         left: 50%
-        background: color(primary)
+        background: color(secondary)
         transition: all 0.2s ease
         &:nth-child(1)
             transform: translate(-50%, calc(-50% - 4px))
@@ -45,27 +42,22 @@
 // ==================================================
 .mobile-nav
     z-index: 1
-    position: fixed
-    width: 400px
-    height: 100vh
-    top: 0
-    right: 0
-    padding: 200px 20px 100px
+    +fixed(top 0 right 0)
+    +size(400px, 100%)
+    max-width: calc(100% - 40px)
     transform: translateX(100%)
     background: color(dark-grey)
     overflow: scroll
-    transition: all 0.2s ease
-    +screen(xs)
-        width: calc(100% - 40px)
+    transition: all .2s ease
 
     .menu
-        display: flex
-        flex-direction: column
-        align-items: flex-end
+        @extend %cover
+        @extend %unstyled-list
+        +flex(column flex-end center)
         li a
             +font(20px white regular)
             display: block
-            padding: 20px
+            padding: 10px 20px
             transition: all 0.2s ease
 
 

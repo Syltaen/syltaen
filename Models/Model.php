@@ -273,15 +273,11 @@ abstract class Model implements \Iterator
      * Add search filter to the query.
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Search_Parameter
      * @param string $terms
-     * @param boolean $exclusive : Specify if the search is incluive (||) or exclusive (&&)
      * @return self
      */
-    public function search($terms, $exclusive = false, $filter_key = "s")
+    public function search($terms, $columns = [])
     {
-        // $local_query
-        // "s" => "keyword",
-        // "post_in"
-        $this->filters[$filter_key] = $terms;
+        $this->filters["s"] = $terms;
 
         return $this;
     }
@@ -678,19 +674,38 @@ abstract class Model implements \Iterator
 
     /**
      * Add or remove fields to be populated
+     * Allow to overwrite the default value
      *
      * @param array $fields Fields to be populated
      * @param bool $merge Add fields to the current defined one or replace them
      * @return self
      */
-    public function fields($fields, $merge = false)
+    public function fields($fields)
     {
         $fields = (array) $fields;
-        if ($merge) {
-            $this->fields = array_merge($this->fields, $fields);
-        } else {
-            $this->fields = $fields;
+
+        foreach ($fields as $key=>$field) {
+            // Inherit the parent field's default value, if none is defined
+            if (is_int($key) && isset($this->fields[$field])) {
+                unset($fields[$key]);
+                $fields[$field] = $this->fields[$field];
+            }
         }
+
+        $this->fields = $fields;
+        $this->cachedFilters = false;
+        return $this;
+    }
+
+    /**
+     * Add/Erase one or several fields to the model
+     *
+     * @param array $fields
+     * @return void
+     */
+    public function addFields($fields)
+    {
+        $this->fields = array_merge($this->fields, (array) $fields);
         $this->cachedFilters = false;
         return $this;
     }

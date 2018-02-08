@@ -44,9 +44,13 @@ class Users extends Model
     }
 
     /* Update parent method */
-    public function search($terms, $exclusive = false, $filter_key = "search")
+    public function search($terms, $columns = [])
     {
-        return parent::search($terms, $exclusive, $filter_key);
+        $this->filters["search"] = "*$terms*";
+
+        if (!empty($columns)) $this->filters["search_columns"] = $columns;
+
+        return $this;
     }
 
     /**

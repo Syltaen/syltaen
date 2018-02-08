@@ -69,17 +69,15 @@ $gridle-classes-prefix:     ""     // the prefix used for all classes
 
     // Justify content
     @each $jc in start end center space-between space-around
-        @if $jc == start or $jc == end
-            $jc: flex-#{$jc}
-
         &--justify-#{$jc}
+            @if $jc == start or $jc == end
+                $jc: flex-#{$jc}
             justify-content: $jc
 
 
     // Align items
     @each $ai in start end center baseline stretch
-        @if $ai == start or $ai == end
-            $ai: flex-#{$ai}
-
         &-align-#{$ai}
+            @if $ai == start or $ai == end
+                $ai: flex-#{$ai}
             align-items: $ai
