@@ -4,6 +4,9 @@ namespace Syltaen;
 
 abstract class Files
 {
+    // ==================================================
+    // > PATHS & LOADING
+    // ==================================================
     /**
      * Load one or several files by providing a folder shortcut and a list of filenames
      *
@@ -11,31 +14,16 @@ abstract class Files
      * @param array|string $files
      * @return void
      */
-    public static function load($folder, $files)
+    public static function import($folder, $files)
     {
         if (is_array($files)) {
             foreach ($files as $file) {
                 require_once(self::path($folder, "$file.php"));
             }
         } else {
-            require_once(self::path($folder, "$files.php"));
+            return require_once(self::path($folder, "$files.php"));
         }
     }
-
-
-    /**
-     * Folder key to folder name
-     *
-     * @param string $key
-     * @return string
-     */
-    public static function folder($key)
-    {
-        global $syltaen_paths;
-
-        return $syltaen_paths["folders"][$key];
-    }
-
 
     /**
      * File path resolution
@@ -44,9 +32,9 @@ abstract class Files
      * @param string $filename
      * @return string
      */
-    public static function path($key, $filename = "")
+    public static function path($folder = "", $filename = "")
     {
-        return get_stylesheet_directory() . "/" . self::folder($key) . "/" . $filename;
+        return get_stylesheet_directory() . "/" . $folder . "/" . $filename;
     }
 
     /**
@@ -56,9 +44,9 @@ abstract class Files
      * @param string $filename
      * @return string
      */
-    public static function url($key, $filename)
+    public static function url($folder = "", $filename = "")
     {
-        return get_template_directory_uri() . "/" . self::folder($key) . "/" . $filename;
+        return get_template_directory_uri() . "/" . $folder . "/" . $filename;
     }
 
     /**
@@ -68,9 +56,38 @@ abstract class Files
      * @param string $file
      * @return int : number of ms
      */
-    public static function time($key, $file)
+    public static function time($folder, $file)
     {
-        return filemtime(self::path($key, $file));
+        return filemtime(self::path($folder, $file));
+    }
+
+    /**
+     * Find a file in one off the provided folders
+     *
+     * @param string $file The name of the file
+     * @param array $folders A list of folder's paths (from the theme root)
+     * @return string The file path
+     */
+    public static function findIn($file, $folders, $depth = 2)
+    {
+        // Create the folder pattern
+        $folders = array_map(function ($folder) {
+            return self::path($folder);
+        }, $folders);
+        $folder_pattern = implode(",", $folders);
+
+        // Create the depth pattern
+        for ($depth_pattern_folder = $depth_pattern = ""; $depth > 0; $depth--) {
+            $depth_pattern_folder .= "*/";
+            $depth_pattern        .= ",$depth_pattern_folder";
+        }
+
+        // Glob using the two patterns
+        $results = glob("{" . $folder_pattern . "}" . "{" . $depth_pattern . "}" . $file, GLOB_BRACE);
+
+        if (empty($results)) return false;
+
+        return $results[0];
     }
 
     /**
@@ -86,9 +103,9 @@ abstract class Files
         add_action($action, function () use ($file, $requirements ){
             wp_enqueue_script(
                 $file,
-                Files::url("js", $file),
+                Files::url("build/js", $file),
                 $requirements,
-                Files::time("js", $file),
+                Files::time("build/js", $file),
                 true
             );
         });
@@ -120,9 +137,9 @@ abstract class Files
         add_action($action, function () use ($file, $requirements) {
             wp_enqueue_style(
                 $file,
-                Files::url("css", $file),
+                Files::url("build/css", $file),
                 $requirements,
-                Files::time("css", $file)
+                Files::time("build/css", $file)
             );
         });
     }
@@ -142,6 +159,73 @@ abstract class Files
         });
     }
 
+    // ==================================================
+    // > UPLOADING & MEDIAS
+    // ==================================================
+    /**
+     * Create attachements for an array of files
+     *
+     * @param array $files
+     * @param integer $parent_post_id
+     * @return array of files
+     */
+    private static function generateAttachement($files, $parent_post_id = 0)
+    {
+        require_once(ABSPATH . "wp-admin/includes/image.php");
+
+        return array_map(function ($file) use ($parent_post_id) {
+
+            // Generate an attachement
+            $file["id"] = wp_insert_attachment([
+                "post_mime_type"    => $file["type"],
+                "post_title"        => basename($file["file"]),
+                "post_content"      => "",
+                "post_status"       => "inherit",
+            ], $file["file"], $parent_post_id);
+
+            // Update the attachement's metadata
+            $metadata = wp_generate_attachment_metadata($file["id"], $file["file"]);
+            wp_update_attachment_metadata($file["id"], $metadata);
+
+            return $file;
+
+        }, (array) $files);
+    }
+
+
+    /**
+     * Upload a list of files stored in a $_FILES format
+     *
+     * @param array $files
+     * @param string $folder A custom folder to store the files. Default : yyyy/mm
+     * @return array of files
+     */
+    public static function upload($files, $folder = null, $generateAttachement = false, $parent_post_id = 0)
+    {
+        require_once(ABSPATH . "wp-admin/includes/file.php");
+
+        // $basedir        = wp_upload_dir()["basedir"];
+        $uploaded_files = [];
+
+        // Upload the files in the right folder
+        foreach ((array) $files as $file) {
+
+            if ($file["error"]) continue;
+
+            $uploaded_file = wp_handle_upload($file, [
+                "test_form" => false
+            ], false);
+
+            $uploaded_files[] = $uploaded_file;
+        }
+
+        // Create an attachement if requested
+        if ($generateAttachement) {
+            return static::generateAttachement($uploaded_files, $parent_post_id);
+        }
+
+        return $uploaded_files;
+    }
 
     /**
      * Upload a media and create an attachement for it
@@ -149,7 +233,7 @@ abstract class Files
      * @param string $url
      * @return array The attachement information
      */
-    public static function upload($url)
+    public static function uploadFromUrl($url, $folder = null, $generateAttachement = false, $parent_post_id = 0)
     {
         // Gives us access to the download_url(), wp_handle_sideload() and wp_generate_attachment_metadata()
         require_once(ABSPATH . "wp-admin/includes/file.php");
@@ -179,22 +263,16 @@ abstract class Files
         // Check for errors
         if (!empty($upload["error"])) return $upload["error"];
 
-        // Generate an attachement
-        $upload["id"] = wp_insert_attachment([
-            "post_mime_type"    => $upload["type"],
-            "post_title"        => $filename,
-            "post_content"      => "",
-            "post_status"       => "inherit",
-        ], wp_upload_dir()["subdir"] . "/" . $filename);
-
-        // Update the attachement's metadata
-        $metadata = wp_generate_attachment_metadata($upload["id"], $upload["file"]);
-
-        wp_update_attachment_metadata($upload["id"], $metadata);
+        // Create an attachement if requested
+        if ($generateAttachement) {
+            $upload = static::generateAttachement([$upload], $parent_post_id)[0];
+        }
 
         // Return all data
         return $upload;
     }
+
+
 
     /**
      * Autoloader matching PHP-FIG PSR-4 and PSR-0 standarts
@@ -204,19 +282,15 @@ abstract class Files
      */
     public static function autoload($classname)
     {
-        global $syltaen_paths;
-
         // Not from this namespace
         if (strncmp("Syltaen", $classname, 7) !== 0) return;
 
         // Remove the namespace "Syltaen"
         $classname = substr($classname, 8);
 
-        // Not indexed in config/paths.php
-        if (!array_key_exists($classname, $syltaen_paths["classes"])) return;
-
-        // Try to load the file from the root
-        self::load("root", $syltaen_paths["classes"][$classname] . "/" . $classname);
+        // Find the file in one of the classes folders
+        if ($found = self::findIn("{$classname}.php", ["app/lib", "app/Helpers", "Controllers", "Models", "app/Forms"])) {
+            require_once $found;
+        }
     }
-
 }

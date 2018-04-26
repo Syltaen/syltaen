@@ -3,16 +3,31 @@
 // =============================================================================
 
 .breadcrumbs
-    +font(13px primary regular)
-    text-align: left
+    +font(12px 20px secondary left)
     padding: 10px 5px
-    margin-bottom: -40px
 
-    .trail-items li:after
-        content: "»"
+    &-container
+        height: 40px
+        margin-bottom: -40px
+        overflow: hidden
+        +screen(xs)
+            height: auto
+
+    // ==================================================
+    // > ITEMS
+    // ==================================================
+    .trail-items li
+        float: left
+        // padding: 0 5px
+        &::after
+            content: "/"
+            padding: 0 5px
+        &:last-child::after
+            content: none
 
     a
-        border-bottom: 1px solid color(primary)
+        border-bottom: 1px solid color(white)
+        +font(white)
         &:hover
-            color: darken(color(primary), 10%)
-            border-bottom: 1px solid darken(color(primary), 10%)
+            +font(primary)
+            border-bottom-color: color(primary)

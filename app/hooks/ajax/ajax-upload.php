@@ -5,22 +5,12 @@ namespace Syltaen;
 // ==================================================
 // > UPLOAD A FILE WITH AJAX
 // ==================================================
-Ajax::register("upload", function () {
-    $storeFolder = wp_upload_dir();
-    $storeFolder = $storeFolder["basedir"] . "/ninja-forms/";
-    $time        = $_GET["time"];
+Ajax::register("syltaen_ajax_upload", function () {
 
-    if (!empty($_FILES)) {
-        foreach ($_FILES as $key=>$file) {
-            $storeFolder = $storeFolder . $key;
+    // No file -> error
+    if (empty($_FILES)) die(false);
 
-            if (!file_exists($storeFolder)) {
-                mkdir($storeFolder, 0777, true);
-            }
+    // File -> upload and send result
+    wp_send_json(Files::upload($_FILES, false, true));
 
-            move_uploaded_file($file["tmp_name"], $storeFolder . "/" . $time . "_" . $file["name"]);
-        }
-    } else {
-        die("No files");
-    }
 });

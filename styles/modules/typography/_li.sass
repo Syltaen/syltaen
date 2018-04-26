@@ -4,15 +4,13 @@
 
 ol, ul
     list-style: none
-    &:not(.unstyled-list)
+    &:not([class]),
+    &.default
         margin: 1em 0
-        padding-left: 1em
+        padding-left: 1.2em
         li
             position: relative
             margin-bottom: .4em
-            &::before
-                font-size: .9em
-                +absolute(left -1em top 0)
 
 
     // ========== COLORS ========== //
@@ -26,45 +24,53 @@ ol, ul
 // ==================================================
 ol
     counter-reset: item
-    li::before
+    & > li::before
         content: counter(item)"."
         counter-increment: item
         +font(bold)
-
-
+        font-size: .9em
+        line-height: 1.8em
+        +absolute(left -1.2em top 0)
 
 // ==================================================
 // > UNORDERED LIST
 // ==================================================
 ul
     // ========== DEFAULT ========== //
-    &:not(.unstyled-list) li::before
-        content: "•"
+    &:not([class]),
+    &.default
+        li::before,
+            content: $fa-var-circle
+            +font(8px fa)
+            font-size: .5em
+            line-height: 2.8em
+            +absolute(left -1.75em top 0)
+
+        ul
+            margin-top: .5em
+            li::before
+                content: $fa-var-circle-o
 
     // ========== CARRETS ========== //
-    &.carrets li::before
-        content: $fa-var-caret-right
-        +font(fa)
+    &.carrets > li::before
+        content: $fa-var-caret-right !important
 
     // ========== ANGLES ========== //
-    &.angles li::before
-        content: $fa-var-angle-right
-        +font(fa)
+    &.angles > li::before
+        content: $fa-var-angle-right !important
 
     // ========== ARROWS ========== //
     &.arrows
         padding-left: 1.35em
-        li::before
-            content: $fa-var-long-arrow-right
-            +font(fa)
+        & > li::before
+            content: $fa-var-long-arrow-right !important
             left: -1.35em
 
     // ========== CHECKS ========== //
     &.checks
         padding-left: 1.35em
-        li::before
-            content: $fa-var-check
-            +font(fa)
+        & > li::before
+            content: $fa-var-check !important
             left: -1.35em
 
 

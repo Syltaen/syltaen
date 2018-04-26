@@ -19,19 +19,19 @@ if (function_exists("acf_add_options_page")) {
         "position"   => 4,
     ]);
 
-}
+} else wp_die("ACF Pro is required, please install it.");
 
 // ==================================================
 // > CACHING SYSTEM
 // ==================================================
 add_filter("acf/settings/save_json", function ($path) {
-    $path = Files::path("cache-acf");
+    $path = Files::path("app/cache/cache-acf");
     return $path;
 });
 
 add_filter("acf/settings/load_json", function ($paths) {
     unset($paths[0]);
-    $paths[] = Files::path("cache-acf");
+    $paths[] = Files::path("app/cache/cache-acf");
     return $paths;
 });
 

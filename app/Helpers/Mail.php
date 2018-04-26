@@ -4,22 +4,40 @@ namespace Syltaen;
 
 abstract class Mail
 {
-
+    /**
+     * If set to true, does not send the mail but display it and log all its information
+     */
     const DEBUG = false;
+
+    /**
+     * Define the sending mode.
+     * Either WEB or SMTP
+     */
+    const MODE  = "WEB";
+
 
     /**
      * The sender name used in all mails
      *
      * @var string
      */
-    public static $fromName = "Hungry Minds";
+    public static $fromName = "";
+
 
     /**
      * The address used to send all mails
      *
      * @var string
      */
-    public static $fromAddr = "info@hungryminds.be";
+    public static $fromAddr = "";
+
+    /**
+     * Colors used in the mail template
+     *
+     * @var string Hexadecimal code
+     */
+    public static $primaryColor   = "#a1f2ca";
+    public static $secondaryColor = "#282828";
 
 
     /**
@@ -28,62 +46,66 @@ abstract class Mail
      * @param string $to Address to send the mail to
      * @param string $subject Subject of the mail
      * @param string $body Content of the mail
-     * @param array $custom_headers Custom headers to put in the mail
+     * @param array $mail_hook Callable function to add stuff to the mail
      * @return boolean True if no error during the sending
      */
-    public static function send($to, $subject, $body, $custom_headers = [], $attachements = [])
+    public static function send($to, $subject, $body, $attachements = [], $mail_hook = false, $template = "mail-default")
     {
         $mail = new \PHPMailer\PHPMailer\PHPMailer();
 
-        $mail->CharSet = "UTF-8";
-
-        // From
+        // ========== FROM ========== //
         $mail->From     = static::$fromAddr;
         $mail->FromName = static::$fromName;
 
-        // To
+        // ========== TO ========== //
         foreach (static::parseTo($to) as $addr) {
             $mail->AddAddress(trim($addr));
         }
 
-        // Subject
+        // ========== SUBJECT ========== //
         $mail->Subject = $subject;
 
-        // Body
+
+        // ========== BODY ========== //
+        $mail->CharSet = get_bloginfo("charset");
+        $body = static::parseBody($mail, $body, $template);
         $mail->msgHTML($body);
 
-        // Use PHP mail()
-        $mail->IsMail();
+        // ========== ATTACHEMENTS ========== //
 
-        // Send or debug
+
+        // ========== SETUPS ========== //
+        switch (self::MODE) {
+            case "SMTP": static::smtpSetup($mail); break;
+            case "WEB":
+            default:     static::webSetup($mail); break;
+        }
+        static::antispamSetup($mail);
+
+        // ========== MAIL MODIFICATION HOOK ========== //
+        if (is_callable($mail_hook)) $mail_hook($mail);
+
+        // ========== SEND OR DEBUG ========== //
         if (static::DEBUG) {
-            return Controller::log($mail, "MAIL");
+            Controller::log($mail, "MAIL");
+            echo $body;
+            exit;
         } else {
             static::log($mail);
-
-            // Send
             return $mail->Send();
         }
     }
 
-    /**
-     * Send a test mail with generic content
-     *
-     * @param string $to Address to send the mail to
-     * @return string Result of the test
-     */
-    public static function sendTest($to)
-    {
-        if (static::send($to, "TEST mail", "This is a test sent from <a href='".site_url()."'>".site_url()."</a>")) {
-            return "The e-mail was sent successfully to ".$to;
-        } else {
-            return "An error occured";
-        }
-    }
 
     // ==================================================
     // > PARSERS
     // ==================================================
+    /**
+     * Parse a string list of recievers into an array
+     *
+     * @param string|array $to
+     * @return array
+     */
     private static function parseTo($to)
     {
         if (is_array($to)) return $to;
@@ -93,6 +115,27 @@ abstract class Mail
         }
 
         return (array) $to;
+    }
+
+    /**
+     * Put the text body into a mail template
+     *
+     * @param string $body
+     * @return string
+     */
+    private static function parseBody($mail, $body, $template)
+    {
+        return (new Controller)->view("mails/".$template, [
+            "mail"    => $mail,
+            "body"    => $body,
+
+            // "imgpath"   => Files::url("build/img/mails"),
+            "imgpath" => "http://hungryminds.be/wp-content/themes/club/build/img/mails/",
+            "primary"   => static::$primaryColor,
+            "secondary" => static::$secondaryColor,
+
+            "url"  => get_bloginfo("url")
+        ]);
     }
 
     // ==================================================
@@ -107,12 +150,120 @@ abstract class Mail
             }
 
             (new \No3x\WPML\WPML_Plugin)->log_email([
-                "to" => $to,
-                "subject" => $mail->Subject,
-                "message" => $mail->Body,
-                "headers" => [],
+                "to"          => $to,
+                "subject"     => $mail->Subject,
+                "message"     => $mail->Body,
+                "headers"     => [],
                 "attachments" => []
             ]);
         }
+    }
+
+    /**
+     * Send a test mail with generic content
+     *
+     * @param string $to Address to send the mail to
+     * @return string Result of the test
+     */
+    public static function sendTest($to)
+    {
+        if (static::send($to, "TEST mail", "<p>Hi,<br><br>This is a test sent from <a href='".site_url()."'>".site_url()."</a></p>")) {
+            return "The e-mail was sent successfully to ".$to;
+        } else {
+            return "An error occured";
+        }
+    }
+
+    public static function hookRelay($args)
+    {
+        static::send(
+            $args["to"],
+            $args["subject"],
+            $args["message"],
+            $args["attachments"]
+        );
+
+        // Prevent the default sending
+        $args["to"] = "";
+        $args["message"] = "";
+        return $args;
+    }
+
+
+    // ==================================================
+    // > CONFIGS
+    // ==================================================
+    /**
+     * Setup a classic authentification via DKIM
+     *
+     * @param PHPMailer $mail
+     * @return void
+     */
+    private static function webSetup(&$mail)
+    {
+        // Use PHP mail()
+        $mail->IsMail();
+
+        // DKIM & antispam
+        // self::dkimSetup($mail);
+    }
+
+    /**
+     * Setup a SMTP connection
+     *
+     * @param PHPMailer $mail
+     * @return void
+     */
+    private static function smtpSetup(&$mail)
+    {
+        $mail->isSMTP();
+
+        $mail->SMTPDebug = 2;
+
+        $mail->Host       = "";
+        $mail->Port       = 587;
+        $mail->SMTPAuth   = true;
+        $mail->SMTPSecure = "tls";
+        $mail->Username   = "";
+        $mail->Password   = "";
+
+        // DKIM & antispam
+        // self::dkimSetup($mail);
+    }
+
+    /**
+     * Configure Dkim
+     *
+     * @param [type] $mail
+     * @return void
+     */
+    private static function dkimSetup(&$mail)
+    {
+        $mail->DKIM_domain     = "...";
+        $mail->DKIM_selector   = "phpmailer";
+        $mail->DKIM_private    = "/var/www/vhosts/.../httpdocs/dkim/dkim.private";
+        $mail->DKIM_passphrase = "";
+        $mail->DKIM_identity   = $mail->From;
+    }
+
+    /**
+     * Add custom headers to decrease spam-flag probability
+     *
+     * @param PHPMailer $mail
+     * @return void
+     */
+    private static function antispamSetup(&$mail)
+    {
+        // Unsubscribe list
+        $mail->addCustomHeader("List-Unsubscribe", "<mailto:".$mail->From."?body=unsubscribe>, <".site_url("contact").">");
+
+        // Remove XMailer
+        $mail->XMailer = " ";
+
+        // Organization
+        $mail->addCustomHeader("Organization" , get_bloginfo("name"));
+
+        // Sender enveloppe & bounce address
+        $mail->Sender = $mail->From;
     }
 }

@@ -60,7 +60,7 @@ html(lang=site.language)
                         block intro
                             .site-intro
                                 .container
-                                    //- != intro_content
+                                    h1!= post.post_title
 
 
                         //- ========== BREADCRUMB ========== -//
@@ -84,7 +84,7 @@ html(lang=site.language)
 
                         //- ========== CONTENT ========== -//
                         block sections
-                            include ../parts/_sections
+                            include ../includes/_sections
 
 
                 //- ==================================================

@@ -5,14 +5,13 @@ namespace Syltaen;
 // ==================================================
 // > CLASSES & ASSETS LOADING
 // ==================================================
-$syltaen_paths = require("app/config/paths.php");
-include($syltaen_paths["classes"]["Files"]."/"."Files.php");
+require __DIR__ . "/app/Helpers/Files.php";
 spl_autoload_register("Syltaen\Files::autoload");
 
 // ==================================================
 // > COMPOSER AUTOLOADER
 // ==================================================
-Files::load("vendors", "vendor/autoload");
+Files::import("app/vendors", "vendor/autoload");
 
 // ==================================================
 // > ERROR HANDLING
@@ -31,28 +30,28 @@ if (WP_DEBUG) {
 // ==================================================
 // > FILES LOADING
 // ==================================================
-Files::load("config", [
+Files::import("app/config", [
+    "acf",
     "globals",
     "registrations",
     "supports",
     "menus",
-    "acf",
     "editor",
     "routes",
     "shortcodes",
     "assets"
 ]);
 
-Files::load("actions", [
+Files::import("app/hooks/actions", [
     // "actions-users",
     // "actions-cron",
     // "actions-posts",
 ]);
 
-Files::load("filters", [
+Files::import("app/hooks/filters", [
     "filters-mails"
 ]);
 
-Files::load("ajax", [
+Files::import("app/hooks/ajax", [
     "ajax-upload"
 ]);

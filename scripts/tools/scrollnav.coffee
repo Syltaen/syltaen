@@ -37,8 +37,7 @@ class Anchor
             e.preventDefault()
             $roots.stop().animate
                 "scrollTop": @targetTop + 1
-            , @speed, "swing", =>
-                window.location.hash = @hash
+            , @speed, "swing"
 
 
 
@@ -89,7 +88,16 @@ class AnchorCollection
             window.history.replaceState
                 action: "mirrorURL"
                 id: @hash
-            , "", @cleanURL+@hash
+            , "", @cleanURL + @hash
+
+        @change()
+
+    change: (callback = false) ->
+        if callback
+            @changeCallback = callback
+
+        else if @changeCallback
+            @changeCallback.call()
 
 
 # ==================================================
@@ -109,9 +117,11 @@ $.fn.scrollnav = (speed = 500, mirrorURL = false, offset = -20) ->
         anchorCollection.add anchor
         anchorCollection.activateMirror mirrorURL
 
+    return anchorCollection
+
 # ==================================================
 # > EVENTS
 # ==================================================
-$(window).scroll => anchorCollection.checkCurrent()
-$(window).resize => anchorCollection.checkCurrent()
-$(window).on "load", => anchorCollection.checkCurrent()
+$(window).scroll -> anchorCollection.checkCurrent()
+$(window).resize -> anchorCollection.checkCurrent()
+$(window).on "load", -> anchorCollection.checkCurrent()

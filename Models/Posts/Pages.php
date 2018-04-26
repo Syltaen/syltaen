@@ -2,7 +2,7 @@
 
 namespace Syltaen;
 
-class Pages extends Posts
+class Pages extends PostsModel
 {
 
     const TYPE     = "page";

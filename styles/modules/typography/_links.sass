@@ -10,20 +10,19 @@ a
     text-decoration: none
     position: relative
 
-    &::after
-        content: ""
-        position: absolute
-        height: 1px
-        background: color(primary)
-        bottom: 0
-        width: 0
-        right: 100%
-        transition: width .2s ease, right 0s ease .2s
+    &:not([class]),
+    &.underlined
+        &::after
+            content: ""
+            +absolute(bottom 0 right 100%)
+            +size(0, 1px)
+            background: color(primary)
+            transition: width .2s ease, right 0s ease .2s
 
-    &:hover::after
-        width: 100%
-        right: 0
-        transition: all .2s ease
+        &:hover::after
+            width: 100%
+            right: 0
+            transition: all .2s ease
 
     // ========== UNDERLINED ========== //
     &.underlined
@@ -40,34 +39,6 @@ a
 
     nav &::after
         display: none
-
-// ==================================================
-// > BUTTONS
-// ==================================================
-.button
-    +font(21px 50px white light)
-    height: 50px
-    position: relative
-    display: inline-block
-    padding: 0 spacing(md)
-    z-index: 5
-    background: color(primary)
-    border: 2px solid color(primary)
-    cursor: pointer
-
-
-    &::after
-        display: none
-
-    &:hover
-        color: color(primary)
-        background: none
-
-    // ========== MODIFIERS ========== //
-    &--fullwidth
-        display: block
-        width: 100%
-        padding: 0
 
 
 // ==================================================

@@ -92,7 +92,6 @@ class ActionRegisterUser extends \NF_Abstracts_Action
             // Fields
             [
                 "phone"            => $val["phone"],
-                "user_key"         => sha1(microtime(true) . mt_rand(10000, 90000)),
             ]
         );
 

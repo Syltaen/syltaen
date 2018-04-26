@@ -115,7 +115,7 @@ class Pagination
      * @param string $view The view template to use
      * @return HTML
      */
-    public function walker($anchor = "", $class = false, $pages_span = 3, $hide_alone = true, $view = "parts/_pagination-walker")
+    public function walker($anchor = "", $class = false, $pages_span = 3, $hide_alone = true, $view = "includes/_pagination-walker")
     {
         if ($hide_alone && $this->totalPages <= 1) return "";
 

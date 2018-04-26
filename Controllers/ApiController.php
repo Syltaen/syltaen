@@ -70,6 +70,7 @@ class ApiController extends Controller
         if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
             wp_die("Please provide a valid e-mail address : /api/testmail/your@address.com");
         }
+
         echo Mail::sendTest($address);
     }
 }

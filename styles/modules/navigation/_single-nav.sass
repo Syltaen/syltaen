@@ -1,5 +1,5 @@
 // =============================================================================
-// > NAVIGATION : SINGLE NAV
+// > MODULE : NAVIGATION : SINGLE NAV
 // =============================================================================
 
 .single-nav
@@ -7,21 +7,25 @@
     text-align: center
     margin: 50px 0
 
-    li
+    &__item
         display: inline
 
-        a
-            +font(dary-grey)
-            border-right: 1px solid color(dary-grey)
-            padding: 0 10px
-            background: none
-            &.link-archive
-                +font(bold)
-            &.disabled
-                opacity: .25
-            &:hover
-                text-decoration: none
-                color(primary)
+    &__link
 
-        &:last-child a
-            border-right: 0
+        +font(dark-grey)
+        border-right: 1px solid color(dark-grey)
+        padding: 0 10px
+        background: none
+
+        &--archive
+            +font(bold)
+
+        &.disabled
+            opacity: .25
+
+        &:hover
+            text-decoration: none
+            color(primary)
+
+    &__item:last-child &__link
+        border-right: 0

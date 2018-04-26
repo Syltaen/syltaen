@@ -1,9 +1,78 @@
 // =============================================================================
-// > INTERACTIVE - SLICK
+// > MODULE : INTERACTIVE - SLICK
 // =============================================================================
 
 @import "assets/vendors/slick/slick"
-@import "assets/vendors/slick/slick-theme"
+// @import "assets/vendors/slick/slick-theme"
 
-ul.slick-slider.slick-initialized
-    @extend %unstyled-list
+.slick-slider
+    border: 4px solid white
+    outline: 1px solid darken(color(light-grey), 2%)
+
+    & > li
+        display: none
+    & > li:first-child
+        display: block
+
+    img
+        display: block
+        margin: 0
+
+    // ==================================================
+    // > ARROWS
+    // ==================================================
+    .slick-arrow
+        appearance: none
+        +size(40px)
+        +absolute(top 50%)
+        background: color(primary)
+        text-indent: -9990em
+        border: 0
+        border-radius: 50%
+        margin-top: -20px
+        z-index: 1000
+        cursor: pointer
+        transition: all .25s ease
+        &::before
+            +font(20px 40px fa white center)
+            @extend %cover
+            text-indent: 0
+        &:hover
+            background: color(secondary)
+        &.slick-prev
+            left: -20px
+            &::before
+                content: $fa-var-angle-left
+        &.slick-next
+            right: -20px
+            &::before
+                content: $fa-var-angle-right
+
+        +print
+            display: none !important
+
+
+    // ==================================================
+    // > DOTS
+    // ==================================================
+    .slick-dots
+        // +absolute(bottom 0 left 0)
+        +size(100%, 14px)
+        +flex(row nowrap flex-end center)
+        li
+            +size(12px)
+            border: 1px solid color(primary)
+            background: white
+            border-radius: 50%
+            margin: 3px
+            cursor: pointer
+            transition: all .25s ease
+            button
+                display: none
+            &.slick-active
+                background: color(primary)
+            &:hover
+                border-color: color(secondary)
+                background: color(secondary)
+        +print
+            display: none !important

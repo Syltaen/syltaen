@@ -13,8 +13,7 @@ abstract class Route
      */
     public static function respond($resp, $args = false, $same_session_page = false)
     {
-
-        // In case of bad rooting, uncomment to look what the response is
+        // In case of bad routing, uncomment to look what the response is
         // Controller::log($resp, "response");
 
         // Clear obsolete flash data

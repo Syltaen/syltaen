@@ -4,55 +4,72 @@
 
 .pagination-walker
     text-align: center
+    padding: 40px 0
 
-    p
-        text-align: center
-        +font(14px)
-        margin-bottom: 40px
-
+    // ========== DIRECTIONS ========== //
     &__direction
-        +size(40px, 20px)
-        +font(20px 20px primary)
-        display: inline-block
+        +size(58px)
+        +font(24px 54px primary fa center)
         position: relative
+        border-radius: 50%
+        border: 2px solid color(primary)
+        display: inline-block
         text-indent: -9999px
-        margin: 0 5px
         transition: all .25s ease
+        margin: 0 10px
+
         &::before
-            @extend %cover
             +font(fa)
             text-indent: 0
-            text-align: center
-            line-height: 19px
-        &--first::before
-            content: "\f100"
-        &--last::before
-            content: "\f101"
-        &[disabled]
-            opacity: .15
-            background: none
+            @extend %cover
+        &--first:before
+            content: $fa-var-angle-double-left
+        &--previous:before
+            content: $fa-var-angle-left
+        &--next:before
+            content: $fa-var-angle-right
+        &--last:before
+            content: $fa-var-angle-double-right
 
+        &--first,
+        &--last
+            +size(40px)
+            +font(18px 35px)
+
+        &:hover
+            color: white
+            border-color: color(primary)
+            background: color(primary)
+
+        &[disabled]
+            border-color: darken(color(primary), 20%)
+            color: darken(color(primary), 20%)
+            background: none
+            opacity: .2
+
+    // ========== PAGES ========== //
     &__pagelist
         display: inline-block
+
         li
             display: inline-block
+            position: relative
+
             a,
             .current
-                +size(45px)
-                +font(20px 45px white)
-                background: color(primary)
-                border: 3px solid white
-                text-align: center
-                display: block
-                opacity: .7
-                margin: 0 -3px
-                transition: all .25s ease
-                position: relative
-                top: 0
+                +font(20px dark-grey bold)
+                padding: 0 30px
             .current
-                opacity: 1
-                top: -10px
-                z-index: 5
+                +font(primary)
 
-            a:hover
-                top: -5px
+            &:after
+                content: ""
+                +size(20px, 2px)
+                background: darken(color(light-grey), 20%)
+                +absolute(right -10px top 50%)
+                margin-top: -1px
+
+            &:last-child:after
+                display: none
+
+

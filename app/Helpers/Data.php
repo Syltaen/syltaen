@@ -17,7 +17,7 @@ abstract class Data
     public static function get($key, $post_id = null, $default = "", $filter = false)
     {
         // get the value
-        $value = get_field($key, $post_id);
+        $value = \get_field($key, $post_id);
 
         // filter the value if suggested
         if ($filter && $value) {
@@ -64,14 +64,6 @@ abstract class Data
             default: // use a/several specific model(s)
                 $ids     = static::extractIds($value);
 
-                // if (preg_match('/(.*):(.*)/', $filter, $parts)) {
-                //     $method  = trim($parts[1]);
-                //     $classes = explode(",", $parts[2]);
-                // } else {
-                //     $method  = false;
-                //     $classes = explode(",", $filter);
-                // }
-
                 $classes = explode(",", $filter);
                 foreach ($classes as &$class) $class = "\Syltaen\\" . trim($class);
 
@@ -80,12 +72,6 @@ abstract class Data
                 foreach ($classes as $class) $model->join(new $class);
 
                 return $model->is($ids);
-
-                // if ($method) {
-                //     return $model->$method();
-                // } else {
-                //     return $model;
-                // }
             break;
         }
     }
@@ -173,7 +159,7 @@ abstract class Data
             $value = $field_key ? self::get($field_key, $post_id, $value, $filter) : $value;
 
             // Execute callable functions
-            if (is_callable($value)) {
+            if (is_callable($value) && !is_string($value)) {
                 $value = $value($array);
             }
 
@@ -254,6 +240,10 @@ abstract class Data
         return $_SESSION;
     }
 
+
+    // ==================================================
+    // > FLASH MESSAGES
+    // ==================================================
     /**
      * Get or store a value in the current page session
      *
@@ -271,9 +261,9 @@ abstract class Data
      * @param [type] $data
      * @return void
      */
-    public static function nextPage($data = null, $redirection = false)
+    public static function nextPage($data = null, $redirection = false, $ttl = 1)
     {
-        $result = static::session($data, "syltaen_next_page");
+        static::addFlashMessage($data, $ttl);
 
         if ($redirection) {
             Route::redirect($redirection);
@@ -291,12 +281,43 @@ abstract class Data
     {
         if (!session_id()) session_start();
 
-        if (!isset($_SESSION["syltaen_next_page"])) {
-            $_SESSION["syltaen_current_page"] = [];
-        } else {
-            $_SESSION["syltaen_current_page"] = $_SESSION["syltaen_next_page"];
-            $_SESSION["syltaen_next_page"]    = [];
-        }
+        $_SESSION["syltaen_current_page"] = [];
+
+        // Remove one to all TTL
+        $messages = static::getFlashMessages();
+
+        foreach ($messages as &$message) {
+            $message["ttl"]--;
+
+            if ($message["ttl"] === 0) {
+                $_SESSION["syltaen_current_page"] = $message["messages"];
+            }
+        } unset($message);
+
+        // Remove expired messages
+        $messages = array_filter($messages, function ($message) {
+            return $message["ttl"] > 0;
+        });
+
+        $_SESSION["syltaen_messages"] = $messages;
+    }
+
+    public static function addFlashMessage($messages, $ttl = 1)
+    {
+        if (!session_id()) session_start();
+
+        $_SESSION["syltaen_messages"] = static::getFlashMessages();
+
+        $_SESSION["syltaen_messages"][] = [
+            "messages" => $messages,
+            "ttl"      => $ttl
+        ];
+    }
+
+    public static function getFlashMessages()
+    {
+        if (empty($_SESSION["syltaen_messages"])) return [];
+        return $_SESSION["syltaen_messages"];
     }
 
 
@@ -336,5 +357,96 @@ abstract class Data
         }
 
         return $syltaen_global_data;
+    }
+
+    // ==================================================
+    // > DATABASE
+    // ==================================================
+    /**
+     * Create a backup of a database and save it in a file
+     *
+     * @param boolean $download If the file should be downloaded by the browser
+     * @param string $filename Custom filename
+     * @param string $path Custom path
+     * @return void
+     */
+    public static function backupDatabase($download = false, $filename = false, $path = false)
+    {
+        $filename = $filename ? $filename : "backup-" . date("Ymd-His") . ".sql";
+        $path = $path ? $path : ABSPATH . "backups/";
+
+        if (!is_dir($path)) mkdir($path);
+
+        exec(static::mysqlCommand(DB_NAME . " > {$path}{$filename}", "mysqldump"));
+
+        if ($download) {
+            header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename=\"$filename\"");
+            passthru("cat {$path}{$filename}");
+        }
+    }
+
+    /**
+     * Clone the current database into another, mostly to use as a test environnement
+     * Note: the two database must have the same access information - Only the name must be different
+     * @param string $to_db Name of the database to clone to.
+     * @param string $from_db Name of the database to clone from.
+     * @return void
+     */
+    public static function cloneDatabase($from_db, $to_db)
+    {
+        exec(static::mysqlCommand("-e \"CREATE DATABASE IF NOT EXISTS {$to_db}\""));
+        exec(static::mysqlCommand($from_db, "mysqldump") . " | " . static::mysqlCommand($to_db));
+    }
+
+    /**
+     * Generate a runnable MySql command using that use the provided binary
+     *
+     * @param string $commad The command to executre
+     * @param string $bin The binary to use : mysql, mysqldump, ...
+     * @param string $bin_path You may need to change that depending on the system running your databases
+     * @return void
+     */
+    public static function mysqlCommand($command, $bin = "mysql", $bin_path = "/Applications/MAMP/Library/bin/")
+    {
+        return "{$bin_path}{$bin} -h ".DB_HOST." -u ".DB_USER." --password=".DB_PASSWORD." ".$command;
+    }
+
+
+    /**
+     * Change the configuration file "wp-config.php" to use a different database
+     * Mainly used during acceptance tests
+     * @param string $current The name of the current database
+     * @param string $new The name of the new database
+     * @return void
+     */
+    public static function switchDatabase($current, $new, $config_file = "wp-config.php")
+    {
+        $config_content = file_get_contents(ABSPATH . $config_file);
+        $config_content = str_replace(
+            [
+                "define( 'DB_NAME', '".$current."' );",
+                "define('DB_NAME', '".$current."');"
+            ],
+            "define('DB_NAME', '".$new."');",
+            $config_content
+        );
+        file_put_contents(ABSPATH . $config_file, $config_content);
+    }
+
+    /**
+     * Get the DB_NAME constant from a configuration file.
+     *
+     * @param string $config_file The name of the config file
+     * @return string
+     */
+    public static function getDatabaseName($config_file = "wp-config.php")
+    {
+        $config_file    = ABSPATH . $config_file;
+        $config_content = file_get_contents($config_file);
+        preg_match("/define\( ?\'DB_NAME\', \'([^)]+)\' ?\);/", $config_content, $matches);
+
+        if (isset($matches[1])) return $matches[1];
+        return false;
     }
 }

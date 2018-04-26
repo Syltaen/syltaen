@@ -2,7 +2,7 @@
 
 namespace Syltaen;
 
-class News extends Posts
+class News extends PostsModel
 {
 
     const TYPE     = "news";

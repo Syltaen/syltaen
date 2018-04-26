@@ -5,14 +5,6 @@ extends templates/_base
 
 
 //- ==================================================
-//- > INTRO
-//- ==================================================
-block intro
-    .site-intro.search-page__intro
-        h1 test
-
-
-//- ==================================================
 //- > SECTIONS
 //- ==================================================
 block sections
@@ -20,27 +12,24 @@ block sections
     section.bg-white: .container
 
 
-        nav.single-nav
-            ul
-                li: a.link-archive(href=singlenav.archive.url)= singlenav.archive.text
-                li: a(href=singlenav.previous.url class=singlenav.previous.url?"":" disabled")= singlenav.previous.text
-                li: a(href=singlenav.next.url class=singlenav.next.url?"":" disabled")= singlenav.next.text
+        nav.single-nav: ul.single-nav__list
+            li.single-nav__item: a.single-nav__link.single-nav__link--archive(href=singlenav.archive.url)= singlenav.archive.text
+            li.single-nav__item: a.single-nav__link(href=singlenav.previous.url class=singlenav.previous.url?"":"disabled")= singlenav.previous.text
+            li.single-nav__item: a.single-nav__link(href=singlenav.next.url class=singlenav.next.url?"":"disabled")= singlenav.next.text
 
 
-        block article
-            article.single__content
+        article.single__content
 
-                time!= post.date.bold
+            time!= post.date.short
 
-                h2= post.post_title
+            h2.sm-margin-top= post.post_title
 
-                != post.post_content
+            != post.post_content
 
-                .visual!= post.thumb.tag.large
+            .visual!= post.thumb.tag.large
 
 
-        nav.single-nav
-            ul
-                li: a.link-archive(href=singlenav.archive.url)= singlenav.archive.text
-                li: a(href=singlenav.previous.url class=singlenav.previous.url?"":" disabled")= singlenav.previous.text
-                li: a(href=singlenav.next.url class=singlenav.next.url?"":" disabled")= singlenav.next.text
+        nav.single-nav: ul.single-nav__list
+            li.single-nav__item: a.single-nav__link.single-nav__link--archive(href=singlenav.archive.url)= singlenav.archive.text
+            li.single-nav__item: a.single-nav__link(href=singlenav.previous.url class=singlenav.previous.url?"":"disabled")= singlenav.previous.text
+            li.single-nav__item: a.single-nav__link(href=singlenav.next.url class=singlenav.next.url?"":"disabled")= singlenav.next.text

@@ -32,12 +32,12 @@ class Collapsable
         @bindClick()
 
     close: ->
-        @$el.removeClass "open"
+        @$el.removeClass "is-open"
         @$el.css "height", @closedHeight
         @opened = false
 
     open: ->
-        @$el.addClass "open"
+        @$el.addClass "is-open"
         @$el.css "height", @openHeight
         @opened = true
 

@@ -21,13 +21,9 @@ fieldset
 // > LABEL
 // ==================================================
 label
-    +font(15px regular)
-    +truncate(100%)
-    font-weight: normal
+    +font(15px)
     cursor: pointer
-    height: 24px
     margin-bottom: 5px
-    text-transform: none
 
 // ==================================================
 // > PLACEHOLDERS
@@ -107,7 +103,7 @@ input[type="radio"]
 // ==================================================
 input[type="submit"],
 input[type="button"]
-    @extend .button
+    @extend %button
     +font(white regular uppercase)
     background: color(primary)
     height: 50px
@@ -121,6 +117,9 @@ input[type="button"]
         color: color(primary)
         border: 2px solid color(primary)
 
+    .loading &
+        opacity: .5
+        pointer-events: none
 
 // ==================================================
 // > SELECT

@@ -75,7 +75,7 @@ class Cache
         $this->keep      = $keep;
 
         $this->now       = time();
-        $this->directory = Files::path("cache") . $this->key;
+        $this->directory = Files::path("app/cache/{$this->key}");
         $this->files     = $this->getAllFiles();
     }
 
@@ -117,7 +117,7 @@ class Cache
 
         // The new content
         $content = $last ? $last . "\n" : "";
-        $content .= "[". date("d/m/Y h:i:s", $this->now) . "] ". $newLine;
+        $content .= "[". date("d/m/Y H:i:s", $this->now) . "] ". $newLine;
         $content = implode("\n", array_slice(explode("\n", $content), -$linesToKeep, $linesToKeep));
 
         // Rewrite the file

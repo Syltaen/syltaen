@@ -2,7 +2,7 @@
 
 namespace Syltaen;
 
-class NewsTaxonomy extends Taxonomy
+class NewsTaxonomy extends TaxonomyModel
 {
 
     const SLUG = "news_types";

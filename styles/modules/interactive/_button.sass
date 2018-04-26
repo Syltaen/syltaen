@@ -1,0 +1,32 @@
+// =============================================================================
+// > MODULE - INTERACTIVE : BUTTON
+// =============================================================================
+%button
+    +font(18px 1.2 center primary)
+    background: none
+    position: relative
+    display: inline-flex
+    z-index: 5
+    border: 1px solid color(primary)
+    cursor: pointer
+    padding: 10px 20px
+
+    &:hover
+        color: white
+        background: color(primary)
+
+    // ========== MODIFIERS ========== //
+    &--fullwidth
+        display: block
+        width: 100%
+
+    &--small
+        +font(13px)
+        padding: 5px
+
+    &--big
+        +font(20px bold)
+        padding: 20px
+
+.button
+    @extend %button

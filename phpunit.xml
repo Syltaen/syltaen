@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<phpunit
+    bootstrap="app/tests/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    stopOnFailure="true"
+    >
+
+    <!-- ================================================== -->
+    <!-- TEST SUITES -->
+    <!-- ================================================== -->
+    <testsuites>
+
+        <!-- ========== UNIT TESTS ========== -->
+        <testsuite name="unit">
+            <!-- <directory prefix="UnitTest_" suffix=".php">./app/tests</directory> -->
+
+            <file>./app/tests/UnitTest_Theme.php</file>
+        </testsuite>
+
+        <!-- ========== ACCEPTANCE TESTS ========== -->
+        <testsuite name="acceptance">
+            <!-- <directory prefix="AcceptanceTest_" suffix=".php">./app/tests</directory> -->
+
+            <file>./app/tests/AcceptanceTest_Navigation.php</file>
+        </testsuite>
+
+    </testsuites>
+
+    <!-- ADD ERROR DISPLAY -->
+    <php>
+        <ini name="display_errors" value="true"/>
+    </php>
+
+</phpunit>
