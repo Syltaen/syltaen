@@ -19,7 +19,7 @@ if (function_exists("acf_add_options_page")) {
         "position"   => 4,
     ]);
 
-} else wp_die("ACF Pro is required, please install it.");
+}
 
 // ==================================================
 // > CACHING SYSTEM
