@@ -73,4 +73,14 @@ class ApiController extends Controller
 
         echo Mail::sendTest($address);
     }
+
+    /**
+     * Output the result of phpinfo()
+     *
+     * @return void
+     */
+    private function phpinfo()
+    {
+        phpinfo();
+    }
 }

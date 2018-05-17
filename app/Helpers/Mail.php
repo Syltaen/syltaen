@@ -129,8 +129,7 @@ abstract class Mail
             "mail"    => $mail,
             "body"    => $body,
 
-            // "imgpath"   => Files::url("build/img/mails"),
-            "imgpath" => "http://hungryminds.be/wp-content/themes/club/build/img/mails/",
+            "imgpath"   => Files::url("build/img/mails"),
             "primary"   => static::$primaryColor,
             "secondary" => static::$secondaryColor,
 

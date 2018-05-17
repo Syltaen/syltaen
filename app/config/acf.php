@@ -25,13 +25,13 @@ if (function_exists("acf_add_options_page")) {
 // > CACHING SYSTEM
 // ==================================================
 add_filter("acf/settings/save_json", function ($path) {
-    $path = Files::path("app/cache/cache-acf");
+    $path = Files::path("app/cache/acf");
     return $path;
 });
 
 add_filter("acf/settings/load_json", function ($paths) {
     unset($paths[0]);
-    $paths[] = Files::path("app/cache/cache-acf");
+    $paths[] = Files::path("app/cache/acf");
     return $paths;
 });
 

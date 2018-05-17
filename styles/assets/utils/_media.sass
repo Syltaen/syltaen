@@ -9,19 +9,19 @@
 // >    color: red
 // ==================================================
 
-=screen($bp, $compare: "-")
+=screen($bp, $compare: "-", $dim: "width")
 
     @if map-has-key($responsive, $bp)
         $bp: breakpoint($bp)
 
     // Max width
     @if $compare == "-"
-        @media screen and (max-width: $bp)
+        @media screen and (max-#{$dim}: $bp)
             @content
 
     // Min width
     @else if $compare == "+"
-        @media screen and (min-width: $bp)
+        @media screen and (min-#{$dim}: $bp)
             @content
 
     // Between
@@ -29,8 +29,10 @@
         @if map-has-key($responsive, $compare)
             $compare: breakpoint($compare)
 
-        @media screen and (min-width: $bp) and (max-width: $compare)
+        @media screen and (min-#{$dim}: $bp) and (max-#{$dim}: $compare)
             @content
+
+
 
 
 
