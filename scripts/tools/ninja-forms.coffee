@@ -20,14 +20,10 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
         @listenTo nfRadio.channel("fields"),               "change:modelValue",     @validateRequired
 
         @listenTo nfRadio.channel("listselect"),           "render:view",           @listselectRender
-        @listenTo nfRadio.channel("advancedlistselect"),   "render:view",           @listselectRender
-        @listenTo nfRadio.channel("listmultiselect"),      "render:view",           @listselectRenderer
-        @listenTo nfRadio.channel("rolesfield"),           "render:view",           @listselectRender
-        @listenTo nfRadio.channel("projectfield"),         "render:view",           @listselectRender
-
-        @listenTo nfRadio.channel("fileuploadfield"),      "render:view",           @dropzoneRender
+        @listenTo nfRadio.channel("fieldfileupload"),      "render:view",           @dropzoneRender
 
         @listenTo nfRadio.channel("form"),                 "render:view",           @bindConditionalCheck
+        @listenTo nfRadio.channel("form"),                 "render:view",           @gridRender
 
 
     # ==================================================
@@ -166,6 +162,41 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
         $input.on "click", "div", (e) ->
             e.stopPropagation()
             $input.click()
+
+
+    # GRID
+    gridRender: (form) ->
+
+        while form.$el.find(".fieldopentag-wrap").length
+
+            column = false
+            deph   = 0
+
+            form.$el.find("nf-field").each ->
+
+                append = true
+
+                # When finding an opentag field
+                if $(@).find(".fieldopentag-wrap").length
+                    deph++
+                    unless column
+                        classes = $(@).find("label").text().trim()
+                        if classes
+                            column = $("<div class='" + classes + "'></div>")
+                            $(@).before(column)
+                            $(@).remove()
+                            append = false
+
+                # When finding an closetag field
+                else if $(@).find(".fieldclosetag-wrap").length
+                    deph--
+                    unless deph
+                        column = false
+                        $(@).remove()
+
+                # When finding another field
+                if column && append
+                    column.append $(@)
 
     # ==================================================
     # > UTILITY

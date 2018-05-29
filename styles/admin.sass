@@ -180,22 +180,17 @@
 
 
 
-// =============================================================================
-// > EDITOR
-// =============================================================================
-.Conversion-Button
-    background-color: red
-    color: #fff
-    padding: 10px 20px
-    display: inline-block
-
-.Conversion-Button a
-    color: #fff
-    text-decoration: none
-    font-weight: bold
-
-a .Conversion-Button
-    color: #fff
-    text-decoration: none
-    padding: 10px 20px
-    font-weight: bold
+// ==================================================
+// > NINJA FORM
+// ==================================================
+.nf-field-wrap
+    &.fieldopentag
+        background: #eee linear-gradient(135deg, #eee 0%, #eee 49.9%, white 50%, white 100%)
+    &.fieldclosetag
+        background: #eee linear-gradient(135deg, white 0%, white 49.9%, #eee 50%, #eee 100%)
+    &.fieldopentag,
+    &.fieldclosetag
+        margin-left: -40px
+        padding: 6px 20px
+        .nf-item-controls
+            top: 0px

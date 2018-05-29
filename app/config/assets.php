@@ -14,7 +14,8 @@ Files::removeScript("jquery");
 Files::addScript("bundle.js");
 
 Files::addInlineScript(
-    "var ajaxurl = '".admin_url("admin-ajax.php")."'",
+    "var ajaxurl = '".admin_url("admin-ajax.php")."';".
+    "window.location.site = '".site_url("/")."';",
     "before",
     "bundle.js"
 );
