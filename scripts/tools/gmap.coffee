@@ -8,9 +8,6 @@
 import $ from "jquery"
 
 
-# > TODO : add pollyfill!
-
-
 # ==================================================
 # > JQUERY METHOD
 # ==================================================
@@ -111,7 +108,7 @@ class GMap
 
         # Add filters
         $.each $marker[0].attributes, (i, attr) ->
-            if attr.name.startsWith("data-filter-")
+            if attr.name.match /^data-filter-/
                 key =  attr.name.replace("data-filter-", "")
                 marker.filters[key] = attr.value
 
