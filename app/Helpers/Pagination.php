@@ -109,13 +109,13 @@ class Pagination
      * Generate Walker
      *
      * @param string $anchor ID to append to each page link
-     * @param boolean $class Class to add to the navigation
+     * @param string $class Class to add to the navigation
      * @param int $pages_span Number of pages to display in the navigation
      * @param bool $hide_alone Return an empty string if the walker only has one page
      * @param string $view The view template to use
      * @return HTML
      */
-    public function walker($anchor = "", $class = false, $pages_span = 3, $hide_alone = true, $view = "includes/_pagination-walker")
+    public function walker($anchor = "", $class = false, $pages_span = 5, $hide_alone = true, $view = "includes/archives/_pagination-walker")
     {
         if ($hide_alone && $this->totalPages <= 1) return "";
 

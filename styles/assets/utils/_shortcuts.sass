@@ -84,44 +84,11 @@
 // ==================================================
 // > FLEX
 // ==================================================
-=flex($args)
+=flex($flow, $jc: null, $ai: null)
     display: flex
-    $hasHorizontalAlignment: false
-    $direction: row
-    $wrap: nowrap
-
-    @each $a in $args
-        // Flex direction
-        @each $fd in row row-reverse column column-reverse
-            @if $a == $fd
-                $direction: $fd
-
-        // Flex wrap
-        @each $fw in wrap wrap-reverse nowrap
-            @if $a == $fw
-                $wrap: $fw
-
-        // Horizontal alignments
-        @if not $hasHorizontalAlignment
-            @each $h in flex-start flex-end center space-between space-around space-evenly null
-                @if $a == $h
-                    $hasHorizontalAlignment: true
-                    @if $direction == column
-                        align-items: $h
-                    @else
-                        justify-content: $h
-
-        // Vertical alignments
-        @if $hasHorizontalAlignment
-            @each $v in flex-start flex-end center space-between space-around space-evenly null
-                @if $a == $v
-                    @if $direction == column
-                        justify-content: $v
-                    @else
-                        align-items: $v
-
-    flex-direction: $direction
-    flex-wrap: $wrap
+    flex-flow: $flow
+    justify-content: $jc
+    align-items: $ai
 
 
 

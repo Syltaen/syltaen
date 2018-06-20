@@ -51,15 +51,15 @@
     &__pagelist
         display: inline-block
 
-        li
+        &__item
             display: inline-block
             position: relative
 
-            a,
-            .current
+            &__current,
+            &__link
                 +font(20px dark-grey bold)
                 padding: 0 30px
-            .current
+            &__current
                 +font(primary)
 
             &:after

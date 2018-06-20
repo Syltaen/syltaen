@@ -6,4 +6,35 @@
     min-height: 100%
     background: white
     overflow: hidden
-    animation: fadeIn .5s linear
+
+    &::before
+        content: ""
+        +size(0, 3px)
+        +fixed(top 0 left 0)
+        background: color(primary)
+        z-index: 9999999
+        animation-fill-mode: forwards !important
+
+        .is-loading &
+            animation: loadIn .15s linear
+
+        .is-done-loading &
+            animation: loadOut .3s linear
+
+
+
+@keyframes loadIn
+    0%
+        width: 0
+    100%
+        width: 50%
+
+@keyframes loadOut
+    0%
+        width: 50%
+    50%
+        width: 100%
+        opacity: 1
+    100%
+        opacity: 0
+        width: 100%

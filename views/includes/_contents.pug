@@ -7,31 +7,35 @@ each c in contents
     case c.acf_fc_layout
 
         //- ==================================================
-        //- > TXT 1 COL
+        //- > COLUMNS
         //- ==================================================
-        when "txt_1col"
-            .container
-                != c.txt
+        when "columns"
+            .container: .flex-row(class=c.classes)
+                each col in c.columns
+                    .flex-row__item(style=col.styles class=col.classes)
+                        != col.txt
 
 
         //- ==================================================
-        //- > TXT 2 COLS
+        //- > TEXT + IMAGE
         //- ==================================================
-        when "txt_2col"
-            .container
-                .row.txt-col(class=c.class)
-                    .gr-12-xs(class=c.txt_1_class)!= c.txt_1
-                    .gr-12-xs(class=c.txt_2_class)!= c.txt_2
+        when "txtimg"
+            .txtimg(class="txtimg--".$c["style"]." txtimg--".$c["disposition"]." txtimg--".$c["size"])
+                .txtimg__visual(
+                    style="background-image: url(".\Syltaen\Data::filter($c["img"], "img:url").");"
+                    data-bottom-top="background-position-y: 100%"
+                    data-top-bottom="background-position-y: 0%"
+                )
+                .container: .txtimg__content
+                    != c.txt
+
 
         //- ==================================================
-        //- > TXT 3 COLS
+        //- > FULL WIDTH IMAGE
         //- ==================================================
-        when "txt_3col"
-            .container
-                .row.txt-col(class=c.class)
-                    .gr-12-xs(class=c.txt_1_class)!= c.txt_1
-                    .gr-12-xs(class=c.txt_2_class)!= c.txt_2
-                    .gr-12-xs(class=c.txt_3_class)!= c.txt_3
+        when "full_width_image"
+            .full-width-image(class=c.classes)&attributes(c.attr)
+                != c.image
 
 
         //- ==================================================
@@ -42,12 +46,6 @@ each c in contents
 
                 //- News
                 when "news"
-                    include _archive-news
+                    include archives/_archive-news
 
 
-        //- ==================================================
-        //- > FULL WIDTH IMAGE
-        //- ==================================================
-        when "full_width_image"
-            .full-width-image(class=c.classes)&attributes(c.attr)
-                != c.image

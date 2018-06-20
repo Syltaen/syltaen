@@ -2,18 +2,32 @@
 // > MODULE - INTERACTIVE : BUTTON
 // =============================================================================
 %button
-    +font(18px 1.2 center primary)
-    background: none
+    +font(16px 1.2 center white)
     position: relative
     display: inline-flex
     z-index: 5
     border: 1px solid color(primary)
     cursor: pointer
     padding: 10px 20px
+    transition: all .35s ease
+
+    &::before
+        content: ""
+        +size(100%)
+        background: color(primary)
+        +absolute(top 0 left 0)
+        z-index: -1
+        transition: width .35s ease
 
     &:hover
-        color: white
-        background: color(primary)
+        +font(primary)
+        &::before
+            width: 0
+            left: 100%
+            transition: all .35s ease
+
+.button
+    @extend %button
 
     // ========== MODIFIERS ========== //
     &--fullwidth
@@ -28,5 +42,27 @@
         +font(20px bold)
         padding: 20px
 
-.button
-    @extend %button
+    &--white
+        border-color: white
+        +font(primary)
+        &::before
+            background: white
+        &:hover
+            +font(white)
+
+    &--ghost
+        +font(primary)
+        &::before
+            width: 0
+            left: 100%
+            transition: width .35s ease, left 0s ease .35s
+        &:hover
+            +font(white)
+            &::before
+                width: 100%
+                left: 0
+
+        &.button--white
+            +font(white)
+            &:hover
+                +font(primary)

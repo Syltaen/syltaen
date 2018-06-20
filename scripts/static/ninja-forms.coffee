@@ -7,12 +7,9 @@ import $ from "jquery"
 import "select2"
 import Dropzone from "dropzone"
 
-
 if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
 
-
     initialize: ->
-
         # nfRadio.DEBUG = true
         # console.log nfRadio._channels
 
@@ -20,10 +17,18 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
         @listenTo nfRadio.channel("fields"),               "change:modelValue",     @validateRequired
 
         @listenTo nfRadio.channel("listselect"),           "render:view",           @listselectRender
+        @listenTo nfRadio.channel("listmultiselect"),      "render:view",           @listselectRender
+        @listenTo nfRadio.channel("listcountry"),          "render:view",           @listselectRender
+        @listenTo nfRadio.channel("liststate"),            "render:view",           @listselectRender
+        @listenTo nfRadio.channel("fieldroles"),           "render:view",           @listselectRender
+
         @listenTo nfRadio.channel("fieldfileupload"),      "render:view",           @dropzoneRender
+
+        @listenTo nfRadio.channel("textarea"),             "render:view",           @trimDefault
 
         @listenTo nfRadio.channel("form"),                 "render:view",           @bindConditionalCheck
         @listenTo nfRadio.channel("form"),                 "render:view",           @gridRender
+
 
 
     # ==================================================
@@ -69,8 +74,6 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
                         $(document).trigger("bpostpointfield_display")
 
     bindConditionalCheck: (form) ->
-
-
         for i, field of form.model.attributes.fields.models
             field.attributes.required_base = field.attributes.required
 
@@ -109,6 +112,7 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
             $(@).select2
                 minimumResultsForSearch: 8,
                 placeholder: "Cliquez pour choisir"
+                theme: "classic"
             .change ->
                 view.model.attributes.value = $(@).val()
 
@@ -117,13 +121,13 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
 
             view.model.attributes.value = $(@).val()
 
+
+
     # DROPZONE
     dropzoneRender: (view) ->
 
         $hidden = $(view.el).find(".ninja-forms-field")
         $input  = $(view.el).find("label")
-
-        console.log $input
 
         new Dropzone $input[0],
             url: ajaxurl + "?action=syltaen_ajax_upload"
@@ -144,17 +148,13 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
             success: (file, uploaded) ->
                 $input.removeClass "loading"
                 $input.closest(".nf-form-cont").removeClass "loading"
-                console.log uploaded
                 view.model.attributes.value = uploaded[0].url
                 $hidden.val uploaded[0].url
                 $hidden.change()
 
-            error: ->
-                console.log("erreur")
 
             init: ->
                 @on "addedfile", (file) ->
-                    console.log file
                     if $input.find(".dz-preview").length > 1
                         $input.find(".dz-preview").first().remove()
 
@@ -164,9 +164,13 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
             $input.click()
 
 
+
+    # TRIM DEFAULT
+    trimDefault: (view) -> $(view.el).find(".nf-element").val $(view.el).find(".nf-element").val().trim()
+
+
     # GRID
     gridRender: (form) ->
-
         while form.$el.find(".fieldopentag-wrap").length
 
             column = false
@@ -187,7 +191,7 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
                             $(@).remove()
                             append = false
 
-                # When finding an closetag field
+                # When finding an closingtag field
                 else if $(@).find(".fieldclosetag-wrap").length
                     deph--
                     unless deph
@@ -198,13 +202,14 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
                 if column && append
                     column.append $(@)
 
+
+
+
     # ==================================================
     # > UTILITY
     # ==================================================
     validateEmail: (email) ->
         re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         return re.test(email)
-
-
 
 ))

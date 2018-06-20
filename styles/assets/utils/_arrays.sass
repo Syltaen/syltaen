@@ -50,3 +50,11 @@
         @return list_get($spacing, $slug)
     @else
         @return $slug
+
+
+// ========== EASING ========== //
+@function easing($slug)
+    @if map-has-key($easing, $slug)
+        @return list_get($easing, $slug)
+    @else
+        @return $slug

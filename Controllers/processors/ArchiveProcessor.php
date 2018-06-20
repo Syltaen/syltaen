@@ -12,12 +12,28 @@ abstract class ArchiveProcessor extends DataProcessor
      */
     public static function news(&$c)
     {
-        $pagination   = (new Pagination(new News, $c["perpage"]));
-        $c["walker"]  = $pagination->walker();
-        $c["posts"]   = $pagination->posts();
+        static::paginate($c, new News, $c["perpage"]);
     }
 
 
+
+    // =============================================================================
+    // > TOOLS
+    // =============================================================================
+    /**
+     * Create a pagination from a model
+     *
+     * @param array $c Local context
+     * @param \Syltaen\Model $model
+     * @param int $perpage
+     * @return void
+     */
+    public static function paginate(&$c, $model, $perpage = 6)
+    {
+        $pagination   = (new Pagination($model, $perpage));
+        $c["walker"]  = $pagination->walker();
+        $c["posts"]   = $pagination->posts();
+    }
 
 
     // =============================================================================

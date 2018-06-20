@@ -43,6 +43,7 @@ Files::import("app/config", [
 ]);
 
 Files::import("app/hooks/actions", [
+    "actions-lang",
     // "actions-users",
     // "actions-cron",
     // "actions-posts",

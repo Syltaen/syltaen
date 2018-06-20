@@ -3,3 +3,35 @@
 // =============================================================================
 
 .site-main
+    position: relative
+    overflow: hidden
+
+    .out .container
+        opacity: 1
+        animation: contentLeave .2s linear
+        animation-fill-mode: forwards
+
+    .in .container
+        opacity: 0
+        animation: contentEnter .2s linear
+        animation-fill-mode: forwards
+
+
+
+
+@keyframes contentLeave
+    0%
+        opacity: 1
+        transform: translate(0)
+    100%
+        opacity: 0
+        transform: translate(-40px)
+
+@keyframes contentEnter
+    0%
+        opacity: 0
+        transform: translate(40px)
+    100%
+        opacity: 1
+        transform: translate(0)
+

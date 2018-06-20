@@ -1,6 +1,6 @@
 {
   "name": "syltaen",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "description": "Syltaen theme boilerplate",
   "main": "scripts/build.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "webpack-livereload-plugin": "^0.11.0"
   },
   "dependencies": {
+    "barba.js": "^1.0.0",
     "dropzone": "^5.1.1",
     "jquery": "^3.2.1",
     "jquery-hammerjs": "^2.0.0",

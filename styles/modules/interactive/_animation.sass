@@ -1,0 +1,42 @@
+// =============================================================================
+// > MODULE - INTERACTIVE - ANIMATION
+// =============================================================================
+
+
+.animation
+
+
+    // ==================================================
+    // > IMAGE LOADING
+    // ==================================================
+    &-image
+        position: relative
+        overflow: hidden
+
+        &::before,
+        &::after
+            content: ""
+            @extend %cover
+
+        &::before
+            z-index: 10
+            background: white
+            animation: imageLoadBefore .5s ease forwards .5s
+            .bg-secondary &
+                background: color(secondary)
+
+        &::after
+            z-index: 20
+            background: color(primary)
+            transform: translate(100%)
+            animation: imageLoadAfter .5s ease forwards .5s
+
+
+
+
+// ==================================================
+// > DELAYS
+// ==================================================
+@for $i from 1 through 20
+    .delay-#{$i}
+        animation-delay: #{$i * 0.1}s !important

@@ -6,23 +6,23 @@ extends templates/_base
 //- ==================================================
 //- > INTRO
 //- ==================================================
-block intro
-    .site-intro.page404__intro
-        h1 Erreur 404
+block intro_content
+    h1!= __("Erreur 404", "syltaen")
 
 //- ==================================================
 //- > SECTIONS
 //- ==================================================
 block sections
-    .page404__main: .container
+    section.site-section.md-padding-vertical.bg-white: .container
 
         p
-            | Cette page n'existe pas <br>
-            a(href=site.url) &#8592; Retour à l'accueil
+            != __("Cette page n'existe pas", "syltaen")
+            <br>
+            a(href=site.url)
+                | &#8592;&nbsp;
+                != __("Retour à l'accueil", "syltaen")
 
-
-
-        h2.title.title--two Faire une recherche
+        h2!= __("Faire une recherche", "syltaen")
 
         form(action=site.url)
             input(name="s" value=lookfor)

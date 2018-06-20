@@ -40,12 +40,11 @@ html(lang=site.language)
                                     a.site-header__brand(href=site.url rel="home")= site.name
 
                                 .gr-10
-                                    //- ul.site-header__social.social.social--header
-                                    //-     each soc in site.header.social
-                                    //-         li.social__item
-                                    //-             a(href=soc.link target="_blank")
-                                    //-                 i(class="fa "+soc["icon"])
-                                    //-                 span= soc.name
+                                    ul.site-header__social.social.social--header
+                                        each soc in site.header.social
+                                            li.social__item
+                                                a.social__link(href=soc.link.url target=soc.link.target title=soc.link.title)
+                                                    != soc.icon
 
                                     != site.menus.main
 
@@ -54,13 +53,14 @@ html(lang=site.language)
                 //- > CONTENT
                 //- ==================================================
                 block main
-                    main.site-main(role="main")
+                    main.site-main#site-views(role="main"): .site-view(data-namespace="page")
 
                         //- ========== INTRO ========== -//
                         block intro
                             .site-intro
                                 .container
-                                    h1!= post.post_title
+                                    block intro_content
+                                        h1!= post.post_title
 
 
                         //- ========== BREADCRUMB ========== -//
@@ -113,4 +113,7 @@ html(lang=site.language)
         //- ==================================================
         #scroll-top
 
+        each form in site.forms
+            .nf-form-loaded(data-id=form.id)
+                != form.html
         = wp_footer()

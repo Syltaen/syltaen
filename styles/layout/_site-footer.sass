@@ -4,5 +4,20 @@
 
 .site-footer
     clear: both
-    padding:  20px 0
+    padding: 13px 0 9px
+    +font(14px 15px light #959595)
     background: color(dark-grey)
+
+    &__menu
+        &, li
+            float: left
+        a
+            color: #959595
+            padding: 0 5px
+            border-right: 1px solid #959595
+            &::after
+                display: none
+            &:hover
+                color: white
+        li:last-child a
+            border-right: 0

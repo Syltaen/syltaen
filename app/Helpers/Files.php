@@ -34,7 +34,7 @@ abstract class Files
      */
     public static function path($folder = "", $filename = "")
     {
-        return get_stylesheet_directory() . "/" . $folder . "/" . $filename;
+        return str_replace("\\", "/", get_stylesheet_directory() . "/" . $folder . "/" . $filename);
     }
 
     /**
@@ -74,7 +74,6 @@ abstract class Files
         $folders = array_map(function ($folder) {
             return self::path($folder);
         }, $folders);
-        $folder_pattern = implode(",", $folders);
 
         // Create the depth pattern
         for ($depth_pattern_folder = $depth_pattern = ""; $depth > 0; $depth--) {
@@ -82,8 +81,12 @@ abstract class Files
             $depth_pattern        .= ",$depth_pattern_folder";
         }
 
-        // Glob using the two patterns
-        $results = glob("{" . $folder_pattern . "}" . "{" . $depth_pattern . "}" . $file, GLOB_BRACE);
+        $results = [];
+
+        // Search in each folder, one by one and merge to $result
+        foreach ($folders as $folder) {
+            $results = array_merge($results, glob($folder . "{" . $depth_pattern . "}" . $file, GLOB_BRACE));
+        }
 
         if (empty($results)) return false;
 

@@ -6,72 +6,126 @@
 // > ERRORS
 // ==================================================
 .nf-error-msg,
-.error-msg
-    text-align: center
-    color: red
+.error-msg,
+    +font(12px error center)
+    margin-top: 10px
 
+.ninja-forms-req-symbol
+    +font(error)
+
+.nf-error .ninja-forms-field
+  border-color: color(error)
+
+
+.nf-form-hp
+  position: absolute
+  visibility: hidden
+
+.nf-form-fields-required
+    display: none
+
+
+// ==================================================
+// > LABELS
+// ==================================================
+.field-wrap
+    display: flex
+
+.label-above .nf-field-label
+    margin-bottom: 0
+
+.label-below
+    .nf-field-label
+        margin-top: 0
+        order: 15
+    .nf-field-element
+        order: 5
+
+.label-above,
+.label-below
+    .nf-field-element
+        margin: 0
+        width: 100%
+    .field-wrap
+        flex-flow: column wrap
+
+.label-hidden
+    .field-wrap
+        flex-wrap: wrap
+    .nf-field-label
+        display: none
+    .nf-field-element
+        width: 100%
+
+.label-left
+    .field-wrap
+        flex-flow: row wrap
+    .nf-field-label
+        +flex(row, null, center)
+        padding-right: 10px
+        text-align: right
+        width: 35%
+        order: 5
+        label
+            width: 100%
+    .nf-field-element
+        display: inline-block
+        width: 65%
+        order: 10
+
+
+.label-right
+    .field-wrap
+        flex-direction: row
+    .nf-field-label
+        +flex(row, null, center)
+        padding-left: 10px
+        width: 35%
+        order: 10
+    .nf-field-element
+        display: inline-block
+        width: 65%
+        order: 5
+
+    &.checkbox-container
+        .nf-field-label,
+        .nf-field-element
+            width: auto
+        .nf-field-element
+            +flex(column nowrap, center)
+            margin: 0 0 15px 0
+
+
+
+// ==================================================
+// > LAYOUT
+// ==================================================
 .nf-field-container
-    &.gr-1,
-    &.gr-2,
-    &.gr-3,
-    &.gr-4,
-    &.gr-5,
-    &.gr-6,
-    &.gr-7,
-    &.gr-8,
-    &.gr-9,
-    &.gr-10,
-    &.gr-11,
-    &.gr-12,
-        clear: none !important
+    margin-bottom: 20px
 
 
-.nf-after-form-content
-    clear: both
 
 // ==================================================
-// > FORM
+// > FIELDS
 // ==================================================
-.nf-form-cont
 
-    .nf-form-fields-required
+// > RADIO / CHECKBOX
+.nf-form-cont .list-radio-wrap ul,
+.nf-form-cont .list-checkbox-wrap ul,
+    @extend %unstyled-list
+
+// > SUBMIT
+.submit-container
+    input
+        // width: auto
+    .nf-field-label
         display: none
 
-    // .ninja-forms-req-symbol
-        // color: inherit
 
-    // ==================================================
-    // > WRAP
-    // ==================================================
-    .nf-field-container
-        margin-bottom: 20px
-
-    // ==================================================
-    // > ROWS
-    // ==================================================
-    .row.section
-        padding: 40px 0
-
-    // ==================================================
-    // > RADIO / CHECKBOX
-    // ==================================================
-    .list-radio-wrap ul,
-    .list-checkbox-wrap ul,
-        @extend %unstyled-list
-        li
-            clear: both
-            padding-left: 0
-            input
-                width: 14px !important
-
-    // ==================================================
-    // > SELECT
-    // ==================================================
-    select
-        +size(50px, 100%)
-
-    // ==================================================
-    // > PASSWORD
-    // ==================================================
-    .ninja-forms-pass2
-        margin-top: 20px
+// ==================================================
+// > LOADER
+// ==================================================
+.nf-form-loaded
+    display: none
+.nf-form-loader .nf-form-loaded
+    display: unset

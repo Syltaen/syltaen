@@ -1,0 +1,107 @@
+// =============================================================================
+// > MODULE - TYPOGRAPHY : TEXT + IMG
+// =============================================================================
+
+.txtimg
+    position: relative
+
+    // ==================================================
+    // > VISUAL
+    // ==================================================
+    &__visual
+        +size(50%, 100%)
+        background: center top / cover no-repeat
+        +absolute(top 0)
+        overflow: hidden
+        z-index: 1000
+        &__item
+            @extend %cover
+            background: center top / cover no-repeat
+            &:first-child
+                z-index: 10
+            .slick-slide &
+                position: static
+        .slick-list, .slick-track, .slick-slide div
+            height: 100%
+
+        &.slick-slider .slick-arrow
+            border: none
+            box-shadow: 5px 5px 15px rgba(black, .2)
+            &.slick-prev
+                left: 30px
+            &.slick-next
+                right: 30px
+
+    // ==================================================
+    // > CONTENT
+    // ==================================================
+    &__content
+        width: 50%
+        padding-top: 60px
+        padding-bottom: 60px
+
+    // ==================================================
+    // > POSITIONS
+    // ==================================================
+    &--left &
+        &__visual
+            left: 0
+        &__content
+            float: right
+            padding-left: 30px
+
+    &--right &
+        &__visual
+            right: 0
+        &__content
+            padding-right: 30px
+
+
+    // ==================================================
+    // > STYLE
+    // ==================================================
+    &--desc &__visual::before,
+    &--asc &__visual::before
+        content: ""
+        +size(200%)
+        position: absolute
+        @each $color, $value in $colors
+            .bg-#{$color} &
+                background-color: $value
+
+    &--desc &__visual::before
+        bottom: 0
+    &--asc &__visual::before
+        top: 0
+
+    &--left &__visual::before
+        left: 100%
+    &--right &__visual::before
+        right: 100%
+
+    &--left.txtimg--desc &__visual::before
+        transform-origin: 0% 100%
+        transform: rotate(-7deg)
+    &--left.txtimg--asc &__visual::before
+        transform-origin: 0% 0
+        transform: rotate(7deg)
+    &--right.txtimg--desc &__visual::before
+        transform-origin: 100% 100%
+        transform: rotate(7deg)
+    &--right.txtimg--asc &__visual::before
+        transform-origin: 100% 0%
+        transform: rotate(-7deg)
+
+    // ==================================================
+    // > SIZES
+    // ==================================================
+    &--small &
+        &__visual
+            width: calc(50% - 150px)
+        &__content
+            width: calc(50% + 150px)
+    &--large &
+        &__visual
+            width: calc(50% + 150px)
+        &__content
+            width: calc(50% - 150px)

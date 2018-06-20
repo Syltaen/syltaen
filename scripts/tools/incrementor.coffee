@@ -18,7 +18,6 @@ class Incrementor
 
     constructor: (@$el, @speed, @manual) ->
         @format   = ""
-        @top      = 0
         @goal     = 0
         @value    = 0
         @step     = 0
@@ -28,14 +27,42 @@ class Incrementor
         @txt      = @$el.html()
         @goal     = @getValue @txt
         @format   = @getFormat @txt
-        @top      = parseFloat(@$el.offset().top, 10) - wH
         @step     = @goal / (@speed / STEP_SPEED)
 
+        @createClone()
         @updateText()
         @check 0
         @getFormatedValue()
 
+    ###
+      * Create a non-animated copy of the element to display when printing and to reserve the space needed
+    ###
+    createClone: ->
+        @$wrap      = $("<span class='incrementor-wrap'></span>")
+        @$el.after @$wrap
+        @$clone     = @$el.clone()
 
+        @$wrapEl    = @$el.wrap("<span></span>").parent("span")
+        @$wrapClone = @$clone.wrap("<span></span>").parent("span")
+
+        @$wrap.append @$wrapEl
+        @$wrap.append @$wrapClone
+
+        @$wrap.css
+            "position": "relative"
+            "display": "inline-block"
+
+
+        @$wrapClone.css
+            "opacity": 0
+            "visibility": "hidden"
+
+        @$wrapEl.css
+            "position": "absolute"
+            "top": 0
+            "left": 0
+            "right": 0
+            "bottom": 0
 
     ###
       * Get the format of a value
@@ -90,6 +117,7 @@ class Incrementor
     updateText: ->
         @$el.html @getFormatedValue()
 
+
     ###
       * Start the incrementation for a number
     ###
@@ -109,7 +137,9 @@ class Incrementor
       * Check if the incrementation should start based on the scroll value
     ###
     check: (scroll) ->
-        if (scroll >= @top && !@started && !@manual)
+
+        top = parseFloat(@$el.offset().top, 10) - wH
+        if (scroll >= top && !@started && !@manual)
             @increment()
 
 
@@ -147,6 +177,8 @@ collection = new IncrementorCollection()
 collection.startCheck()
 
 wH = $(window).innerHeight()
+$(window).resize -> wH = $(window).innerHeight()
+
 
 STEP_SPEED = 100
 

@@ -2,33 +2,36 @@
 // > COMPONENTS : DROPZONE
 // =============================================================================
 
-.fileuploadfield-container
+.fieldfileupload-container
 
-    .nf-field-label
+
+    .nf-field-label,
+    .field-wrap
         width: 100%
+        display: block !important
+        padding: 0
+
 
     label
         @extend %input
-        width: 100%
-        text-align: center
+        +size(100%, $input-height)
+        +font(16px $input-height text left)
         display: block
         position: relative
-        text-transform: none
-        overflow: visible
-        font-family: font(bold)
-        background: color(dark-grey)
-        color: white
-        border-width: 2px
-        height: 50px
-        line-height: 50px
+        background: $input-background
+        margin-top: 32px
+        transition: all .25s ease
+        border: $input-border
+        &::before
+            content: $fa-var-upload
+            +font(fa)
+            margin-right: 20px
         &:hover
-            background: none
-            color: color(dark-grey)
-
+            background: color(primary)
+            color: white
 
     .dz-preview
         .dz-image,
-        // .dz-progress,
         .dz-success-mark,
         .dz-error-mark
             display: none
@@ -49,11 +52,13 @@
 
     .dz-filename
         @extend %cover
-        box-sizing: content-box
-        padding: 1px
-        margin: -1px
+        +truncate(100%)
         background: white
-        font-family: font(regular)
-        color: color(dark-grey)
-        text-align: left
         text-indent: 20px
+        background: $input-background
+        &::before
+            content: $fa-var-check
+            +font(fa primary)
+            margin-right: 10px
+        &:hover
+            color: color(primary)

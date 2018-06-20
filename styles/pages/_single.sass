@@ -8,8 +8,39 @@
     // > NAV
     // ==================================================
     &__nav
-        text-align: center
-        margin: 50px 0
+        padding: 10px 0
+
+        &--top
+            border-bottom: 1px solid color(medium-grey)
+        &--bottom
+            border-top: 1px solid color(medium-grey)
+
+        &__archive
+            +font(16px)
+
+        &__prev,
+        &__next
+            float: right
+            +font(20px 44px medium black)
+            transition: all .25s ease
+            &::before
+                content: $fa-var-angle-right
+                +font(20px 30px center fa primary)
+                +size(30px)
+                border: 1px solid color(primary)
+                border-radius: 50%
+                margin: 3px 5px
+                float: left
+                transition: all .25s ease
+            &:hover
+                +font(primary)
+                &::before
+                    background: color(primary)
+                    color: color(white)
+
+        &__prev::before
+            content: $fa-var-angle-left
+            float: right
 
 
     // ==================================================
@@ -17,6 +48,10 @@
     // ==================================================
     &__content
         padding: 40px 0
-        overflow: hidden
 
+    // =============================================================================
+    // > TYPES
+    // =============================================================================
 
+    /* NEWS */
+    // &-news &

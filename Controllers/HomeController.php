@@ -16,25 +16,9 @@ class HomeController extends PageController
 
         Data::store($this->data, [
 
-            "intro" => $this->intro(),
 
-            // content
-            "@sections" => SectionsProcessor::processEach(Data::get("sections")),
 
         ]);
     }
 
-    // ==================================================
-    // > PARTS
-    // ==================================================
-    /**
-     * Handle and return the data for the home intro
-     *
-     * @return array $data
-     */
-    private function intro()
-    {
-        $intro = [];
-        return $intro;
-    }
 }

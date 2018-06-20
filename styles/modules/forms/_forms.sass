@@ -2,6 +2,16 @@
 // > LAYOUTS: MODULES - FORMS
 // =============================================================================
 
+$input-height: 50px
+$input-background: white
+$input-border-radius: 0
+$input-border: 1px solid #e6e6e6
+$input-padding: 18px
+$input-color: text
+
+// ==================================================
+// > FORM
+// ==================================================
 form
     hr
         margin: 50px 0
@@ -21,27 +31,27 @@ fieldset
 // > LABEL
 // ==================================================
 label
-    +font(15px)
+    +font(18px light)
     cursor: pointer
-    margin-bottom: 5px
 
 // ==================================================
 // > PLACEHOLDERS
 // ==================================================
-input
+%input
     +placeholder
-        +font(light rgba(color(dark-grey), .5))
+        +font(light rgba(color(text), .3))
 
 // ==================================================
 // > INPUT
 // ==================================================
 %input
-    +size(100%, 48px)
-    +font(16px 48px)
-    background: none
-    padding: 0 20px
+    +size(100%, $input-height)
+    +font(16px $input-height $input-color)
+    background: $input-background
+    border: $input-border
+    padding: 0 $input-padding
+    border-radius: $input-border-radius
     resize: none
-    border: 1px solid darken(color(light-grey), 5%)
     &.no-border
         border: 0
 
@@ -53,9 +63,9 @@ input
 // ==================================================
 textarea
     @extend %input
-    min-height: 250px
-    padding: 10px 20px
-    line-height: 1.4
+    min-height: 200px
+    padding: 10px $input-padding
+    line-height: 1.2
     display: block
     margin: 0
 
@@ -73,13 +83,13 @@ input[type="checkbox"]
     border: 0
 
     &::before
-        content: "\f096"
+        content: $fa-var-square-o
         +font(16px 20px primary fa)
         +absolute(top 0 left 0)
         height: 14px
 
     &:checked::before
-        content: "\f046"
+        content: $fa-var-check-square-o
 
 input[type="radio"]
     border: 2px solid color(primary)
@@ -104,18 +114,18 @@ input[type="radio"]
 input[type="submit"],
 input[type="button"]
     @extend %button
-    +font(white regular uppercase)
-    background: color(primary)
-    height: 50px
-    float: right
+    +font(16px $input-height white regular center uppercase)
+    padding: 0 $input-padding
+    height: $input-height
+    margin-top: 27px
     cursor: pointer
-    margin-top: 20px !important
     clear: both
-
-    &::hover
-        background: white
+    display: block
+    background: color(primary)
+    border: 2px solid color(primary)
+    &:hover
+        background: none
         color: color(primary)
-        border: 2px solid color(primary)
 
     .loading &
         opacity: .5

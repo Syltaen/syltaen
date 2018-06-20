@@ -22,11 +22,16 @@ class SingleController extends PageController
         parent::__construct($args);
 
         // Get the archive
-        $this->archive = get_page_by_path($this->post->post_type);
+        $this->archive = site_url($this->post->post_type);
 
         // Use the post type as a method
         $this->{$this->post->post_type}();
 
+        // Erase post in render context
+        $this->data["post"] = $this->post;
+
+        // Set the view file
+        $this->view = "single-{$this->post->post_type}";
     }
 
 
@@ -40,18 +45,11 @@ class SingleController extends PageController
      */
     private function news()
     {
-        Data::store($this->data, [
-
-            "@singlenav"     => $this->singleNav(__("Retour à la liste des news", "syltaen"))
-
-        ]);
-
         (new News)->populateResultData($this->post);
 
-        $this->data["post"] = $this->post;
-
-        /* #LOG# */ $this->dlog(null, __CLASS__.":".__LINE__);
-
+        Data::store($this->data, [
+            "@singlenav"     => $this->singleNav(__("Retour à la liste des news", "syltaen"))
+        ]);
     }
 
 

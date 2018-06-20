@@ -63,8 +63,7 @@ class SpecialPageController extends PageController
         $search = $search ?: $this->args["search"];
 
         $models_to_search = [
-            new Pages,
-            new News
+            new Pages
         ];
 
         $this->data["results"] = [];
@@ -82,7 +81,7 @@ class SpecialPageController extends PageController
         $total_results_count = $total_results_count > 1 ? $total_results_count." résultats" : ($total_results_count < 1 ? "Pas de résultat" : "Un seul résultat");
 
         Data::store($this->data, [
-            "@title"       => "<h1>".__("Recherche pour : ", "syltaen")." $search<br><small>$total_results_count</small></h1>",
+            "@title"       => __("Recherche pour : ", "syltaen")." <span class='search-page__title__words'>$search</span><br><small>$total_results_count</small>",
             "@search"      => $search
         ]);
 

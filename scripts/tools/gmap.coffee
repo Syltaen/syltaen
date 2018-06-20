@@ -7,13 +7,10 @@
 
 import $ from "jquery"
 
-
 # ==================================================
 # > JQUERY METHOD
 # ==================================================
-$.fn.gmap = (config) ->
-    if $(this).length then return new GMap $(this), config
-
+$.fn.gmap = (config) -> if $(this).length then return new GMap $(this), config
 
 # ==================================================
 # > CLASS
@@ -55,30 +52,36 @@ class GMap
         afterFilters:       false
         onMarkerClick:      false
 
-    constructor: (@$wrapper, customConfig) ->
+        mapSelector:        ".map"
+        markerSelector:     ".marker"
 
-        # update the config
+        args: {}
+
+
+    constructor: (@$wrapper, customConfig) ->
         @config      = $.extend @config, customConfig
 
-        @$map        = @$wrapper.find ".map"
+        @$map        = @$wrapper.find @config.mapSelector
         @map         = null
 
-        @$markers    = @$map.find(".marker")
+        @$markers    = @$map.find @config.markerSelector
         @markers     = []
 
         @infobox     = null
-        @defaultArgs =
-            zoom: 3
-            center: new (google.maps.LatLng)(0, 0)
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+
+        @defaultArgs = $.extend
+            zoom:        3
+            center:      new (google.maps.LatLng)(0, 0)
+            mapTypeId:   google.maps.MapTypeId.ROADMAP
             scrollwheel: false
+            styles:      false
+        , @config.args
 
         @createMap()
 
         @filters = []
         for filter, selector of @config.filters
             @filters[filter] = new Filter filter, @$wrapper.find(selector), => @applyFilters()
-
         @applyFilters()
 
 
@@ -105,6 +108,7 @@ class GMap
             filters: {}
             icon:
                 url: $marker.data "icon"
+            animation: google.maps.Animation.DROP
 
         # Add filters
         $.each $marker[0].attributes, (i, attr) ->

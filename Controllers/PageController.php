@@ -5,7 +5,7 @@ namespace Syltaen;
 abstract class PageController extends Controller
 {
 
-    protected $view = "page";
+    protected $view = "templates/_base";
 
     /**
      * The current user
@@ -88,8 +88,9 @@ abstract class PageController extends Controller
     protected function header()
     {
         Data::store($header, [
-            "(img) logo",
-            "social"
+            "(img:tag) logo@logo_tag",
+            "(img:url) logo@logo_url",
+            "social" => []
         ], "headerfooter");
 
         return $header;
@@ -103,7 +104,9 @@ abstract class PageController extends Controller
     protected function footer()
     {
         Data::store($footer, [
-            "copyright"
+            "copyright", "@copyright" => function ($footer) {
+                return str_replace("%year%", date("Y"), $footer["copyright"]);
+            }
         ], "headerfooter");
 
         return $footer;
@@ -119,8 +122,24 @@ abstract class PageController extends Controller
     {
         return breadcrumb_trail([
             "show_browse" => false,
-            "echo"        => false
+            "echo"        => false,
         ]);
+    }
+
+
+    /**
+     * Pre-load all the ninja forms so that they can be used with barba.js
+     *
+     * @return array of forms
+     */
+    protected function forms()
+    {
+        return array_map(function ($formModel) {
+            return [
+                "id" => $formModel->get_id(),
+                "html" => "[ninja_forms id={$formModel->get_id()}]"
+            ];
+        }, Ninja_Forms()->form()->get_forms());
     }
 
     /**
@@ -144,6 +163,7 @@ abstract class PageController extends Controller
 
         return $classes;
     }
+
 
     // ==================================================
     // > MESSAGES HANDLING
@@ -184,6 +204,7 @@ abstract class PageController extends Controller
                 "header"       => $this->header(),
                 "footer"       => $this->footer(),
                 // "breadcrumb"   => $this->breadcrumb(),
+                "forms"        => $this->forms(),
 
                 "name"         => get_bloginfo("name"),
                 "url"          => get_bloginfo("url"),

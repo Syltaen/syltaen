@@ -11,8 +11,8 @@ abstract class SectionsProcessor extends DataProcessor
     {
         if (static::shouldHide($section)) return false;
 
-        static::addClasses($section);
         static::addAttributes($section);
+        static::addClasses($section);
 
         $section["content"] = ContentsProcessor::processEach($section["content"]);
 
@@ -31,10 +31,12 @@ abstract class SectionsProcessor extends DataProcessor
         $s["classes"] = ["site-section"];
 
         // ========== PADDING ========== //
-        $s["classes"][] = $s["padding"] . "-padding-vertical";
+        if ($s["padding_top"] != "no") $s["classes"][] = $s["padding_top"] . "-padding-top";
+        if ($s["padding_bottom"] != "no") $s["classes"][] = $s["padding_bottom"] . "-padding-bottom";
 
         // ========== BACKGROUND ========== //
         $s["classes"][] = "bg-" . $s["bg"];
+
         if ($s["bg"] == "image") {
             $s["attr"]["style"] = "background-image: url(" . $s["bg_img"] . ");";
             $s["classes"][]     = "bg-image--" . $s["bg_img_size"];
@@ -64,11 +66,18 @@ abstract class SectionsProcessor extends DataProcessor
 
     private static function addAttributes(&$s)
     {
-        $s["attr"]    = [];
+        $s["attr"]    = empty($s["attr"]) ? [] : $s["attr"];
 
         // ========== ID ========== //
         $s["attr"]["id"] = $s["anchor"] ? sanitize_title($s["anchor"]) : null;
+
+        // ========== PARALLAX ========== //
+        if ($s["bg"] == "image" && $s["bg_img_pos"] == "parallax") {
+            $s["attr"]["data-top-bottom"] = "background-position-y: 100%";
+            $s["attr"]["data-bottom-top"] = "background-position-y: 0%";
+        }
     }
+
 
     /**
      * Check if the section should be hidden
@@ -104,4 +113,5 @@ abstract class SectionsProcessor extends DataProcessor
             return true;
         }
     }
+
 }

@@ -4,41 +4,38 @@ namespace Syltaen;
 
 abstract class ContentsProcessor extends DataProcessor
 {
-    /**
-     * Handle data for the "2 columns" content type
-     *
-     * @param [type] $c
-     * @return void
-     */
-    private static function txt_2col(&$c)
-    {
-        $c["class"]       = "flex-row flex-row-wrap flex-align-".$c["valign"];
-        $c["txt_1_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_1"] : "gr-".substr($c["proportions"], 0, 1);
-        $c["txt_2_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_2"] : "gr-".substr($c["proportions"], 2, 1);
-    }
+
 
     /**
-     * Handle data for the "3 columns" content type
+     * Handle data for the "columns" content type
      *
      * @param [type] $c
      * @return void
      */
-    private static function txt_3col(&$c)
+    private static function columns(&$c)
     {
-        static::txt_2col($c);
-        $c["txt_3_class"] = $c["proportions"] == "custom" ? "gr-".$c["width_3"] : "gr-".substr($c["proportions"], 4, 1);
-    }
+        $c["classes"]       = [
+            "flex-align-" . $c["valign"],
+            "flex-row--responsive-" . $c["responsive"],
+            "flex-row--spacing-" . $c["spacing"],
+        ];
 
-    /**
-     * Handle data for the archive content type.
-     * Delegate to another processor : ArchiveProcessor
-     *
-     * @param [type] $c
-     * @return void
-     */
-    private static function archive(&$c)
-    {
-        $c = ArchiveProcessor::process($c);
+        foreach ($c["columns"] as $i=>&$col) {
+            $col["styles"]  = [];
+            $col["classes"] = [];
+
+            if ($c["custom_proportions"]) {
+                $col["styles"][] = "flex: " . $col["width"] . ";";
+            }
+
+            if ($c["animation"] != "none") {
+                $col["classes"][] = "animation-" . $c["animation"];
+
+                if ($c["delayed"]) {
+                    $col["classes"][] = "delay-" . $i;
+                }
+            }
+        } unset($col);
     }
 
 
@@ -72,6 +69,17 @@ abstract class ContentsProcessor extends DataProcessor
         }
     }
 
+    /**
+     * Handle data for the archive content type.
+     * Delegate to another processor : ArchiveProcessor
+     *
+     * @param [type] $c
+     * @return void
+     */
+    private static function archive(&$c)
+    {
+        $c = ArchiveProcessor::process($c);
+    }
 
 
     // =============================================================================

@@ -1,0 +1,16 @@
+//- =============================================================================
+//- > VIEW : INCLUDE - NEWS ARCHIVE
+//- =============================================================================
+.container.archive.archive--news
+
+    .archive__walker.archive__walker--top!= c.walker
+
+    ul.archive__list
+
+        each news in c.posts
+
+            li.archive__item
+                include ../cards/_card-news
+
+
+    .archive__walker.archive__walker--bottom!= c.walker

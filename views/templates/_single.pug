@@ -1,0 +1,40 @@
+//- =============================================================================
+//- > VIEW : SINGLE
+//- =============================================================================
+extends _base
+
+
+//- ==================================================
+//- > INTRO
+//- ==================================================
+block intro_content
+    h1!= post.post_title
+
+
+//- ==================================================
+//- > SECTIONS
+//- ==================================================
+block sections
+
+    section.bg-white.md-padding-vertical
+
+        block navTop
+            nav.single__nav.single__nav--top.container
+                a.single__nav__archive.button(href=singlenav.archive.url)= singlenav.archive.text
+                a.single__nav__next(href=singlenav.next.url class=singlenav.next.url?"":"is-disabled")= singlenav.next.text
+                a.single__nav__prev(href=singlenav.previous.url class=singlenav.previous.url?"":"is-disabled")= singlenav.previous.text
+
+
+        block content
+            article.single__content.container
+                //- include ./../includes/_content.pug
+                != post.post_content
+
+
+        block navBottom
+            nav.single__nav.single__nav--bottom.container
+                a.single__nav__archive.button(href=singlenav.archive.url)= singlenav.archive.text
+                a.single__nav__next(href=singlenav.next.url class=singlenav.next.url?"":"is-disabled")= singlenav.next.text
+                a.single__nav__prev(href=singlenav.previous.url class=singlenav.previous.url?"":"is-disabled")= singlenav.previous.text
+
+    block more

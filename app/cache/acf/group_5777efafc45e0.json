@@ -1,6 +1,40 @@
 {
     "key": "group_5777efafc45e0",
     "title": "Page - Sections",
+    "location": [
+        [
+            {
+                "param": "post_template",
+                "operator": "!=",
+                "value": "default"
+            },
+            {
+                "param": "post_template",
+                "operator": "==",
+                "value": "default"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "acf_after_title",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content",
+        "excerpt",
+        "discussion",
+        "comments",
+        "author",
+        "format",
+        "page_attributes",
+        "featured_image",
+        "categories",
+        "tags",
+        "send-trackbacks"
+    ],
+    "active": 1,
+    "description": "",
     "fields": [
         {
             "key": "field_5777f074a4edb",
@@ -241,14 +275,43 @@
                 },
                 {
                     "key": "field_57be995981aa3",
-                    "label": "Espacement en haut et en bas",
-                    "name": "padding",
+                    "label": "Espacement en haut",
+                    "name": "padding_top",
                     "type": "select",
                     "instructions": "",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "",
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "lg": "Grand",
+                        "md": "Moyen",
+                        "sm": "Petit",
+                        "no": "Aucun"
+                    },
+                    "default_value": [
+                        "md"
+                    ],
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 0,
+                    "ajax": 0,
+                    "return_format": "value",
+                    "placeholder": ""
+                },
+                {
+                    "key": "field_5b1e76a7068a7",
+                    "label": "Espacement en bas",
+                    "name": "padding_bottom",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
                         "class": "",
                         "id": ""
                     },
@@ -513,39 +576,5 @@
             ]
         }
     ],
-    "location": [
-        [
-            {
-                "param": "post_template",
-                "operator": "!=",
-                "value": "default"
-            },
-            {
-                "param": "post_template",
-                "operator": "==",
-                "value": "default"
-            }
-        ]
-    ],
-    "menu_order": 0,
-    "position": "acf_after_title",
-    "style": "default",
-    "label_placement": "top",
-    "instruction_placement": "label",
-    "hide_on_screen": [
-        "the_content",
-        "excerpt",
-        "discussion",
-        "comments",
-        "author",
-        "format",
-        "page_attributes",
-        "featured_image",
-        "categories",
-        "tags",
-        "send-trackbacks"
-    ],
-    "active": 1,
-    "description": "",
-    "modified": 1525334473
+    "modified": 1529491111
 }

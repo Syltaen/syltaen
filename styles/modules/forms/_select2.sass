@@ -2,8 +2,38 @@
 // > COMPONENTS : SELECT2
 // =============================================================================
 
-@import "assets/vendors/select2/core"
+// DROPDOWN
+$dropdown-background: $input-background
+$dropdown-border: $input-border
+$results-height: 200px
+$option-padding-vertical: 5px
+$dropdown-border-radius: $input-border-radius
+$dropdown-color: $input-color
 
+// ARROW & CLEAR
+$arrow-color: $input-color
+$clear-color: $input-color
+
+// SEARCH
+$search-border: $input-border
+$search-background: $input-background
+$search-spacing: 5px
+
+// SELECTED
+$selected-background: color(primary)
+$selected-color: white
+
+// MULTIPLE - TAG
+$tag-background: $input-background
+$tag-border: 1px solid $input-background
+$tag-border-radius: 0
+$tag-remove-color: $clear-color
+$tag-remove-hover-color: color(error)
+
+
+// =============================================================================
+// > PARTS
+// =============================================================================
 .select2
 
     &--disabled
@@ -13,70 +43,161 @@
     // > CONTAINER
     // ==================================================
     &-container
+        display: block
+        position: relative
         width: 100% !important
 
-        & .select2-selection
-            border-radius: 0
-            border: 1px solid #c0b0a9
+    &-hidden-accessible
+        +absolute(left -9999em)
+        opacity: 0
+        visibility: hidden
 
-            // ==================================================
-            // > SINGLE
-            // ==================================================
-            &--single
-                height: 50px
-                .select2-selection__rendered,
-                .select2-selection__arrow
-                    line-height: 50px
-                    height: 50px
-                    padding-left: 20px
-
-                .select2-selection__arrow
-                    width: 40px
-
-                .select2-selection__clear
-                    margin-right: 20px
-                    position: relative
-                    z-index: 500
-
-            // ==================================================
-            // > MULTIPLE
-            // ==================================================
-            &--multiple
-                height: auto
-                min-height: 50px
-                line-height: 24px
-                .select2-search__field
-                    // height: 30px
-                    line-height: 24px
-                .select2-selection__rendered
-                    li
-                        margin-top: 7px !important
-                        margin-left: 5px !important
-                        line-height: 30px
-                        padding-right: 10px
-
-        .select2
-
-            // ==================================================
-            // > RESULTS
-            // ==================================================
-            &-results
-                &__options
+    // ==================================================
+    // > DROPDOWN
+    // ==================================================
+    &-dropdown
+        background-color: $dropdown-background
+        border: $dropdown-border
+        display: block
+        +absolute(left 9999em)
+        width: 100%
+        z-index: 1051
+        border-radius: $dropdown-border-radius
+        color: $dropdown-color
+        &--above
+            border-bottom: 0
+            border-bottom-left-radius: 0
+            border-bottom-right-radius: 0
+        &--below
+            border-top: 0
+            border-top-left-radius: 0
+            border-top-right-radius: 0
+        .select2-container--open &
+            left: 0
 
 
-                &__option
-                    line-height: 42px
-                    padding: 0 20px !important
+    &-results__option
+        padding: $option-padding-vertical $input-padding
+        user-select: none
+        &[aria-selected]
+            cursor: pointer
+        &[aria-selected="true"]
+            +font(bold)
 
-                    &[aria-selected=true]
-                        +font(bold)
-                        background: none
-                        &::before
-                            content: $fa-var-angle-right !important
-                            display: inline-block !important
-                            position: static
-                            margin-right: 20px
-                            +font(fa)
+    &-search--dropdown
+        display: block
+        padding: $search-spacing
+        .select2-search__field
+            padding: 4px $input-padding
+            width: 100%
+            background: $search-background
+        &.select2-search--hide
+            display: none
 
-                    &--highlighted[aria-selected]
-                        background-color: color(primary)
+
+    // ==================================================
+    // > RESULTS
+    // ==================================================
+    &-results
+        &__options
+            max-height: $results-height
+            overflow-y: auto
+        &__option
+            &--highlighted[aria-selected]
+                color: $selected-color
+                background: $selected-background
+
+
+    // ==================================================
+    // > SELECTION
+    // ==================================================
+    &-selection
+        position: relative
+        display: block
+        height: $input-height
+        user-select: none
+        border: $input-border
+        border-radius: $input-border-radius
+        background: $input-background
+        color: $input-color
+        &--single
+            cursor: pointer
+
+        &--multiple
+            cursor: text
+
+        &__rendered
+            display: block
+            padding: 0 $input-padding
+            overflow: hidden
+            text-overflow: ellipsis
+            white-space: nowrap
+            line-height: $input-height
+
+        &--multiple &__choice
+            background-color: $tag-background
+            border: $tag-border
+            border-radius: $tag-border-radius
+            cursor: default
+            float: left
+
+            height: $input-height - 10px
+            line-height: $input-height - 10px
+            margin: 3px
+            padding: 0 5px
+
+            &__remove
+                color: $tag-remove-color
+                cursor: pointer
+                display: inline-block
+                margin-right: 2px
+                &:hover
+                    color: $tag-remove-hover-color
+
+        &__placeholder
+            color: #999
+
+    // ==================================================
+    // > SEARCH
+    // ==================================================
+    &-search
+
+        // DROPDOWN
+        &--dropdown &
+            &__field
+                border: $search-border
+
+
+        // INLINE
+        &--inline
+            float: left
+        &--inline &
+            &__field
+                height: $input-height - 2px
+                border: none
+                padding: 0
+                background: $input-background
+
+
+    // ==================================================
+    // > ARROW
+    // ==================================================
+    &-selection__arrow
+        height: $input-height
+        +absolute(top 0 right 0)
+        width: 40px
+        +font(fa 16px $input-height center $arrow-color)
+        &::before
+            content: $fa-var-caret-down
+            .select2-container--open &
+                content: $fa-var-caret-up
+
+
+    // ==================================================
+    // > CLEAR
+    // ==================================================
+    &-selection__clear
+        cursor: pointer
+        float: right
+        font-weight: bold
+        margin-right: 20px

@@ -102,20 +102,77 @@
 // ==================================================
 .ninja-forms-no-nest
     margin-left: 40px
-._rowstart-li,
-._rowend-li
-    margin-left: 0
-    .menu-item-handle
-        background: #ccc !important
 
-._colstart-li ,
-._colend-li
-    margin-left: 20px
-    .menu-item-handle
-        background: #e0e0e0 !important
+.nf-field-wrap
+    &.fieldopentag
+        background: #eee linear-gradient(-135deg, #eee 0%, #eee 49.9%, white 50%, white 100%)
+    &.fieldclosetag
+        background: #eee linear-gradient(-135deg, white 0%, white 49.9%, #eee 50%, #eee 100%)
+    &.fieldopentag,
+    &.fieldclosetag
+        margin-left: -40px
+        padding: 5px 20px
+        opacity: .25
+        &:hover
+            opacity: 1
+        .nf-item-controls
+            top: 0px
+.button.nf-insert-form
+    display: none !important
 
+
+// ==================================================
+// > ACF
+// ==================================================
 .acf-ui-datepicker #ui-datepicker-div
     display: none
+
+.acf-horizontal-repeater
+    .acf-table tbody
+        +flex(row nowrap)
+    .acf-row:not(.acf-clone)
+        flex: 1
+        &,
+        .acf-fields
+            +flex(column nowrap)
+    .acf-row
+        td
+            width: 100% !important
+            box-sizing: border-box
+        .acf-field
+            width: 100%  !important
+            height: auto !important
+            // min-height: 0 !important
+    .acf-icon
+        &.-plus
+            left: -9px
+            top: 6px
+        &.-minus
+            left: 50%
+
+    .acf-table > tbody > tr
+        & > td
+            border-width: 0 0 0 1px
+        &:first-child > td
+            border-width: 0
+
+    .acf-repeater
+        padding-right: 10px
+        & > .acf-actions
+            +absolute(top 50% right -10px)
+            .button
+                overflow: hidden
+                text-shadow: none
+                +font(primary)
+                +size(30px)
+                position: relative
+                border-radius: 50%
+                &::before
+                    content: "+"
+                    +absolute(top 0 left 0)
+                    +size(100%)
+                    +font(20px white center)
+
 
 // ==================================================
 // > EDITOR
@@ -177,20 +234,3 @@
 #wpadminbar
     position: fixed !important
 
-
-
-
-// ==================================================
-// > NINJA FORM
-// ==================================================
-.nf-field-wrap
-    &.fieldopentag
-        background: #eee linear-gradient(135deg, #eee 0%, #eee 49.9%, white 50%, white 100%)
-    &.fieldclosetag
-        background: #eee linear-gradient(135deg, white 0%, white 49.9%, #eee 50%, #eee 100%)
-    &.fieldopentag,
-    &.fieldclosetag
-        margin-left: -40px
-        padding: 6px 20px
-        .nf-item-controls
-            top: 0px

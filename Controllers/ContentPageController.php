@@ -13,25 +13,11 @@ class ContentPageController extends PageController
 
         Data::store($this->data, [
 
-            "@aside"    => $this->aside(),
+            "intro_content",
+            "(img:url) intro_bg",
 
             "@sections" => SectionsProcessor::processEach(Data::get("sections")),
 
         ]);
-    }
-
-
-    // ==================================================
-    // > PARTS
-    // ==================================================
-    /**
-     * Handle sidebar
-     *
-     * @return array The aside data
-     */
-    protected function aside()
-    {
-        $aside = [];
-        return $aside;
     }
 }

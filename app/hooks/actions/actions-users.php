@@ -9,8 +9,8 @@ add_action("wp_login_failed", function ($username) {
 
     Data::nextPage([
         "error_message" =>
-            "Votre adresse e-mail ou votre mot de passe est incorrect."
-            ."<br>Mot de passe perdu ? <a class='underlined' href='".wp_lostpassword_url(site_url("connexion"))."'>Demander un nouveau mot de passe</a>"
+            __("Votre adresse e-mail ou votre mot de passe est incorrect.", "syltaen")
+            ."<br>".__("Mot de passe perdu ?", "syltaen")." <a class='underlined' href='".wp_lostpassword_url(site_url("connexion"))."'>".__("Demander un nouveau mot de passe", "syltaen")."</a>"
     ], "connexion");
 
 });
@@ -29,7 +29,7 @@ add_action("wp", function () {
                 Users::logout();
                 Data::nextPage([
                     "error_message" =>
-                        "Votre compte doit être validé pour pouvoir vous connecter."
+                        __("Votre compte doit être validé pour pouvoir vous connecter.", "syltaen")
                 ], "connexion");
                 break;
             default: break;
