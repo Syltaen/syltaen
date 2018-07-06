@@ -94,8 +94,6 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                     ]
                 ],
 
-
-
                 [
                     "title"   => "Texte plus petit",
                     "inline"  => "small"
@@ -198,29 +196,44 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                         [
                             "title"    => "Carets",
                             "selector" => "ul",
-                            "classes"  => "carets"
+                            "classes"  => "list list--carrets"
                         ],
                         [
                             "title"    => "Angles",
                             "selector" => "ul",
-                            "classes"  => "angles"
+                            "classes"  => "list list--angles"
                         ],
                         [
                             "title"    => "FLêches",
                             "selector" => "ul",
-                            "classes"  => "arrows"
+                            "classes"  => "list list--arrows"
                         ],
                         [
                             "title"    => "Checks",
                             "selector" => "ul",
-                            "classes"  => "checks"
+                            "classes"  => "list list--checks"
+                        ],
+                    ],
+                ],
+                [
+                    "title" => "Dispositions",
+                    "items" => [
+                        [
+                            "title"    => "Vertical centré",
+                            "selector" => "ul",
+                            "classes"  => "list list--vertical-centered"
+                        ],
+                        [
+                            "title"    => "Horizontal",
+                            "selector" => "ul",
+                            "classes"  => "list list--horizontal"
                         ],
                     ],
                 ],
                 [
                     "title"    => "Liste sans style",
                     "selector" => "ul",
-                    "classes"  => "unstyled-list"
+                    "classes"  => "unstyled"
                 ]
             ]
         ],

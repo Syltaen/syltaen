@@ -1,12 +1,15 @@
 // =============================================================================
 // > MODULE - INTERACTIVE : BUTTON
 // =============================================================================
+$button_base_color: color(secondary)
+
 %button
     +font(16px 1.2 center white)
     position: relative
     display: inline-flex
+    align-items: center
     z-index: 5
-    border: 1px solid color(primary)
+    border: 1px solid $button_base_color
     cursor: pointer
     padding: 10px 20px
     transition: all .35s ease
@@ -14,22 +17,23 @@
     &::before
         content: ""
         +size(100%)
-        background: color(primary)
+        background: $button_base_color
         +absolute(top 0 left 0)
         z-index: -1
         transition: width .35s ease
 
     &:hover
-        +font(primary)
+        color: $button_base_color
         &::before
             width: 0
             left: 100%
             transition: all .35s ease
 
+
 .button
     @extend %button
 
-    // ========== MODIFIERS ========== //
+    // ========== SIZES ========== //
     &--fullwidth
         display: block
         width: 100%
@@ -42,16 +46,9 @@
         +font(20px bold)
         padding: 20px
 
-    &--white
-        border-color: white
-        +font(primary)
-        &::before
-            background: white
-        &:hover
-            +font(white)
-
-    &--ghost
-        +font(primary)
+    // ========== REVERSE ========== //
+    &--reversed
+        color: $button_base_color
         &::before
             width: 0
             left: 100%
@@ -62,7 +59,19 @@
                 width: 100%
                 left: 0
 
-        &.button--white
-            +font(white)
+    // ========== COLORS ========== //
+    @each $color, $value in $colors
+        &--#{$color}
+            border-color: $value
+            &::before
+                background: $value
             &:hover
-                +font(primary)
+                color: $value
+        &--#{$color}.button--reversed
+            color: $value
+            &:hover
+                color: white
+
+    // ========== ICONS ========== //
+    .fa
+        margin-right: .5em

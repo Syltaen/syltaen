@@ -5,7 +5,7 @@ namespace Syltaen;
 abstract class PageController extends Controller
 {
 
-    protected $view = "templates/_base";
+    protected $view = "page";
 
     /**
      * The current user

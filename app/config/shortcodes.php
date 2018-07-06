@@ -50,6 +50,6 @@ add_shortcode("login_form" , function ($atts, $content = null) {
 // ==================================================
 // > FORMS
 // ==================================================
-// add_shortcode("ninja_form", function ($atts) {
-//     return "<div class='nf-form-loader' data-id='".$atts["id"]."'></div>";
-// });
+add_shortcode("ninja_form", function ($atts) {
+    return "<div class='nf-form-loader' data-id='".$atts["id"]."'></div>";
+});

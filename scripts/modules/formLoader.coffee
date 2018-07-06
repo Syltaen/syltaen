@@ -8,8 +8,6 @@ class FormLoader
         @storedForms = @registerForms()
         @loadedForms = []
 
-        # console.log @storedforms
-
     ###
     # Get all pre-loaded forms and store them out of the DOM
     ###

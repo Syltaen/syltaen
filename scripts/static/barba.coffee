@@ -46,7 +46,6 @@ Barba.Pjax.getTransition = -> Barba.BaseTransition.extend
                 @done()
                 $(@newContainer).addClass "in"
 
-
                 # If anchor, scroll to it
                 if window.location.hash
                     @scrollTo $(window.location.hash).offset().top
