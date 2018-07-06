@@ -94,6 +94,8 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                     ]
                 ],
 
+
+
                 [
                     "title"   => "Texte plus petit",
                     "inline"  => "small"
@@ -129,6 +131,18 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                     "title"   => "Titre 2 - H2",
                     "block"   => "h2",
                     "wrapper" => false
+                ],
+                [
+                    "title"   => "Titre 2 - H2 - alternatif",
+                    "block"   => "h2",
+                    "wrapper" => false,
+                    "classes" => "alt-title"
+                ],
+                [
+                    "title"   => "Titre 2 - H2 - alternatif blanc",
+                    "block"   => "h2",
+                    "wrapper" => false,
+                    "classes" => "alt-title alt-title--white"
                 ],
                 [
                     "title"   => "Titre 3 - H3",
@@ -191,7 +205,7 @@ add_filter("tiny_mce_before_init", function ($init_array) {
             "title"=> "Listes",
             "items" => [
                 [
-                    "title" => "puces",
+                    "title" => "Puces",
                     "items" => [
                         [
                             "title"    => "Carets",
@@ -204,7 +218,7 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                             "classes"  => "list list--angles"
                         ],
                         [
-                            "title"    => "FLêches",
+                            "title"    => "Flêches",
                             "selector" => "ul",
                             "classes"  => "list list--arrows"
                         ],

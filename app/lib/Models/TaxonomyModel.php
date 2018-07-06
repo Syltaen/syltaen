@@ -57,7 +57,7 @@ abstract class TaxonomyModel
      * @return array List of terms
      * see https://developer.wordpress.org/reference/functions/get_terms/
      */
-    public function getTerms($fields = "all", $hide_empty = false, $limit = 0, $orderby = "slug", $order = "ASC", $custom_args = [])
+    public function fetchTerms($fields = "all", $hide_empty = false, $limit = 0, $orderby = "slug", $order = "ASC", $custom_args = [])
     {
         $args = array_merge([
             "taxonomy"   => static::SLUG,
@@ -81,8 +81,46 @@ abstract class TaxonomyModel
             }
         }
 
-        return $this->terms;
+        return $this;
     }
+
+    /**
+     * Run fetchTerms and return the resulting terms
+     *
+     * @return void
+     */
+    public function getTerms($fields = "all", $hide_empty = false, $limit = 0, $orderby = "slug", $order = "ASC", $custom_args = [])
+    {
+        return $this->fetchTerms($fields, $hide_empty, $limit, $orderby, $order, $custom_args)->terms;
+    }
+
+
+    /**
+     * Get all posts corresponding to each terms.
+     * Extend the $terms parameter to store each corresponding posts.
+     * @param \Sytaen\Model\Posts $model the post model.
+     * @param boolean $hide_empty Prevent the return of unused terms
+     * @return array List of terms each storing a list of posts
+     */
+    public function fetchPosts($model, $hide_empty = true, $children = true)
+    {
+        if (!$this->terms) $this->fetchTerms("all", $hide_empty);
+
+        foreach ($this->terms as $term) {
+            $term->posts = $model->tax(static::SLUG, $term->slug, "AND", true, "IN", $children)->get();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Run fetchPosts and return the result
+     */
+    public function getPosts($model, $hide_empty = true, $children = true)
+    {
+        return $this->fetchPosts($model, $hide_empty, $children)->terms;
+    }
+
 
     /**
      * Get terms for a specific post
@@ -110,26 +148,49 @@ abstract class TaxonomyModel
         return $this->terms;
     }
 
-
     /**
-     * Get all posts corresponding to each terms.
-     * Extend the $terms parameter to store each corresponding posts.
-     * @param \Sytaen\Model\Posts $model the post model.
-     * @param boolean $hide_empty Prevent the return of unused terms
-     * @return array List of terms each storing a list of posts
+     * Embed children terms in their parents.
+     *
+     * @return void
      */
-    public function getPosts($model, $hide_empty = true, $children = true)
+    public function getTermsHierarchy()
     {
-        if (!$this->terms) {
-            $this->getTerms("all", $hide_empty);
+        if (!$this->terms) $this->fetchTerms("all", $hide_empty);
+        $hierarchy = [];
+        $terms     = $this->terms;
+
+        while (!empty($terms)) {
+            foreach ($terms as $slug=>$term) {
+
+                // First level : add the term to the list
+                if (!$term->parent) {
+                    $term->children = [];
+                    $hierarchy[] = $term;
+                }
+
+                // Children : add to its parent
+                else {
+
+                    $found = false;
+                    foreach ($hierarchy as $parent) {
+                        if ($parent->term_id == $term->parent) {
+                            $parent->children[] = $term;
+                            $found = true;
+                            break;
+                        }
+                    }
+
+                    // Parent not listed, skip and try again
+                    if (!$found) continue;
+                }
+
+                unset($terms[$slug]);
+            }
         }
 
-        foreach ($this->terms as $term) {
-            $term->posts = $model->tax(static::SLUG, $term->slug, "AND", true, "IN", $children)->get();
-        }
-
-        return $this->terms;
+        return $hierarchy;
     }
+
 
 
     // ==================================================
