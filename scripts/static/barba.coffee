@@ -96,6 +96,9 @@ Barba.Dispatcher.on "newPageReady", (currentStatus, oldStatus, container, html) 
     #     $(".site-header__breadcrumbs").html($(html).find(".site-header__breadcrumbs").html()).removeClass("out").addClass("in")
     # , 150
 
+    # trigger Google Analytics
+    if typeof ga is "function"
+        ga("send", "pageview", location.pathname)
 
 # =============================================================================
 # > INIT

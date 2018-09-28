@@ -727,8 +727,11 @@ abstract class Model implements \Iterator
         foreach ($fields as $key=>$field) {
             // Inherit the parent field's default value, if none is defined
             if (is_int($key) && isset($this->fields[$field])) {
-                unset($fields[$key]);
-                $fields[$field] = $this->fields[$field];
+                $fields = array_merge(
+                    array_slice($fields, 0, $key),
+                    [$field => $this->fields[$field]],
+                    array_slice($fields, $key + 1)
+                );
             }
         }
 
