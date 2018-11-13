@@ -370,6 +370,7 @@ abstract class PostsModel extends Model
         $post->url = get_the_permalink($post->ID);
     }
 
+
     // ==================================================
     // > POST TYPE REGISTRATION
     // ==================================================

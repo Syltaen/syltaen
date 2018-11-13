@@ -9,7 +9,7 @@ class Pages extends PostsModel
     const LABEL    = "Pages";
 
     /**
-     * Prevent the registering of this post type
+     * Prevent the registering of this post type, as it is already by default
      *
      * @return false
      */

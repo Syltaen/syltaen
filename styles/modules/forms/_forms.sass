@@ -7,7 +7,7 @@ $input-background: white
 $input-border-radius: 0
 $input-border: 1px solid #e6e6e6
 $input-padding: 18px
-$input-color: text
+$input-color: color(text)
 
 // ==================================================
 // > FORM
@@ -75,37 +75,41 @@ textarea
 // ==================================================
 input[type="radio"],
 input[type="checkbox"]
-    +size(14px)
+    +size(18px)
     appearance: none
     position: relative
-    margin: 8px 5px 0
+    margin: 5px 5px 0
     padding: 0
-    border: 0
+    background: none
+    // border: 2px solid color(primary)
+    background: white
+    border-radius: 0
+    vertical-align: top
+    cursor: pointer
 
     &::before
-        content: $fa-var-square-o
-        +font(16px 20px primary fa)
+        content: $fa-var-check
         +absolute(top 0 left 0)
-        height: 14px
+        +font(fa 18px 18px primary)
+        opacity: 0
+        transform: scale(2)
+        transition: all .25s ease
 
     &:checked::before
-        content: $fa-var-check-square-o
+        opacity: 1
+        transform: scale(1)
 
 input[type="radio"]
-    border: 2px solid color(primary)
     border-radius: 50%
     &::before
         content: ""
-        +size(6px)
+        border-radius: 50%
+        +size(12px)
         +absolute(top 50% left 50%)
         opacity: 0
         background: color(primary)
-        border-radius: 50%
-        margin-top: -3px
-        margin-left: -3px
-    &:checked::before
-        content: ""
-        opacity: 1
+        margin-top: -6px
+        margin-left: -6px
 
 
 // ==================================================
@@ -130,14 +134,3 @@ input[type="button"]
     .loading &
         opacity: .5
         pointer-events: none
-
-// ==================================================
-// > SELECT
-// ==================================================
-// -> See _select2.sass
-
-
-// ==================================================
-// > UPLOAD
-// ==================================================
-// -> See _dropzone.sass

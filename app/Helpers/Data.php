@@ -268,8 +268,6 @@ abstract class Data
         if ($redirection) {
             Route::redirect($redirection);
         }
-
-        return $result;
     }
 
     /**

@@ -1,0 +1,18 @@
+<script id="tmpl-nf-field-upload" type="text/template">
+    <input
+        type="file"
+
+        id="nf-field-{{{ data.id }}}"
+        name="nf-field-{{{ data.id }}}"
+        class="nf-field-upload"
+
+        data-return="{{ data.return }}"
+        data-label="{{{ data.tooltip }}}"
+
+        multiple="multiple"
+        limit="{{{ data.limit }}}"
+
+        accept="{{{ data.filetypes }}}"
+        data-attachment="{{{ data.create_attachments }}}"
+    >
+</script>

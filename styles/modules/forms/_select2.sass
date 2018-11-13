@@ -5,7 +5,7 @@
 // DROPDOWN
 $dropdown-background: $input-background
 $dropdown-border: $input-border
-$results-height: 200px
+$results-height: 350px
 $option-padding-vertical: 5px
 $dropdown-border-radius: $input-border-radius
 $dropdown-color: $input-color
@@ -35,7 +35,7 @@ $tag-remove-hover-color: color(error)
 // > PARTS
 // =============================================================================
 .select2
-
+    +font(16px $input-height $input-color)
     &--disabled
         opacity: .75
 
@@ -46,6 +46,11 @@ $tag-remove-hover-color: color(error)
         display: block
         position: relative
         width: 100% !important
+
+        &--open .select2-selection
+            border-bottom-left-radius: 0px !important
+            border-bottom-right-radius: 0px !important
+
 
     &-hidden-accessible
         +absolute(left -9999em)
@@ -64,6 +69,7 @@ $tag-remove-hover-color: color(error)
         z-index: 1051
         border-radius: $dropdown-border-radius
         color: $dropdown-color
+        // overflow: hidden
         &--above
             border-bottom: 0
             border-bottom-left-radius: 0
@@ -79,6 +85,10 @@ $tag-remove-hover-color: color(error)
     &-results__option
         padding: $option-padding-vertical $input-padding
         user-select: none
+        padding-top: 10px
+        padding-bottom: 10px
+        transition: all .4s ease
+
         &[aria-selected]
             cursor: pointer
         &[aria-selected="true"]
@@ -102,6 +112,13 @@ $tag-remove-hover-color: color(error)
         &__options
             max-height: $results-height
             overflow-y: auto
+            &--nested
+                max-height: none
+                margin-left: $input-padding * -1
+                margin-right: $input-padding * -1
+                +font(14px)
+                text-indent: 10px
+
         &__option
             &--highlighted[aria-selected]
                 color: $selected-color

@@ -5,9 +5,8 @@
 table
     width: 100%
     max-width: 100%
-    text-align: center
     margin: 1em 0
-    border: 1px solid color(primary)
+    border-bottom: 1px solid #b8b8b8
 
     // ========== TABLE MODIFIERS ========== //
     &.aligncenter
@@ -25,19 +24,20 @@ table
         height: 100%
         width: auto
 
+    tr:nth-child(odd)
+        background: color(light-grey)
 
     // ==================================================
     // > ELEMENTS
     // ==================================================
     td, th
-        padding: 10px
+        padding: 15px
 
     // ========== TH ========== //
     th
         background: color(primary)
-        color: white
-        &.left-strong-border
-            border-left: 1px solid darken(color(primary), 15%)
+        +font(white bold left)
+        border: 1px solid darken(color(primary), 10%)
 
         &.bg-white
             +font(text)
@@ -52,7 +52,8 @@ table
 
     // ========== TD ========== //
     td
-        border: 1px solid darken(color(dark-grey), 5%)
+        border-left: 1px solid #b8b8b8
+        border-right: 1px solid #b8b8b8
         &.left-strong-border
             border-left-color: darken(color(dark-grey), 50%)
         p

@@ -40,7 +40,7 @@ add_filter("acf/settings/load_json", function ($paths) {
 // > GOOGLE MAP KEY
 // ==================================================
 add_action("acf/init", function () {
-    acf_update_setting("google_api_key", "AIzaSyBmI9pIaDuM-Wa8XJJlwypZP8wzu6KK4uQ");
+    acf_update_setting("google_api_key", "__PROVIDE_A_NEW_KEY__");
 });
 
 

@@ -122,7 +122,7 @@ abstract class PageController extends Controller
     {
         return breadcrumb_trail([
             "show_browse" => false,
-            "echo"        => false,
+            "echo"        => false
         ]);
     }
 

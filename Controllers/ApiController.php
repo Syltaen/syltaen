@@ -56,7 +56,7 @@ class ApiController extends Controller
      */
     private function key()
     {
-        wp_die(sha1(microtime(true).mt_rand(10000,90000)));
+        wp_die(Users::generateKey());
     }
 
     /**

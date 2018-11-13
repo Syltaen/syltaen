@@ -10,7 +10,7 @@ import $ from "jquery"
 # ==================================================
 # > ITEM
 # ==================================================
-export class DisplayItem
+class DisplayItem
     constructor: (@$menu, @$content = false, @bind, @index, @selector) ->
         @$menu.click => @set()
 
@@ -23,7 +23,8 @@ export class DisplayItem
             @$content.removeClass "is-hidden"
 
             # Reset slick to debug the display
-            @$content.find(".slick-slider").slick("slickGoTo", 0, true)
+            if @$content.find(".slick-slider").length
+                @$content.find(".slick-slider").slick("slickGoTo", 0, true)
 
             # Trigger all refresh
             $(window).resize()
@@ -51,7 +52,7 @@ export class DisplayItem
 # ==================================================
 # > SELECTOR
 # ==================================================
-export class DisplaySelector
+export default class DisplaySelector
 
     defaults =
         start:        0

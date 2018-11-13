@@ -56,6 +56,9 @@
         display: none
     .nf-field-element
         width: 100%
+        margin-top: 15px
+.html-wrap .nf-field-label
+    display: none
 
 .label-left
     .field-wrap
@@ -97,12 +100,12 @@
 
 
 
+
 // ==================================================
 // > LAYOUT
 // ==================================================
 .nf-field-container
     margin-bottom: 20px
-
 
 
 // ==================================================
@@ -123,9 +126,18 @@
 
 
 // ==================================================
+// > DESCRIPTION
+// ==================================================
+.nf-field-description p
+    +font(12px)
+    margin: .5em 0 0
+
+
+// ==================================================
 // > LOADER
 // ==================================================
 .nf-form-loaded
     display: none
+
 .nf-form-loader .nf-form-loaded
-    display: unset
+    display: block

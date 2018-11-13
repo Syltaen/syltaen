@@ -288,9 +288,11 @@ abstract class Model implements \Iterator
      * Add search filter to the query.
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Search_Parameter
      * @param string $terms
+     * @param array $columns
+     * @param bool $strict
      * @return self
      */
-    public function search($terms, $columns = [])
+    public function search($terms, $columns = [], $strict = false)
     {
         $this->filters["s"] = $terms;
 
@@ -583,7 +585,7 @@ abstract class Model implements \Iterator
 
         // ========== ROWS ========== //
         $rows = [];
-        foreach ($this->get() as $result) $rows[] = $getColumnsData($result);;
+        foreach ($this->get() as $result) $rows[] = $getColumnsData($result);
 
         // ========== HEADER ========== //
         $header = [];
@@ -727,11 +729,8 @@ abstract class Model implements \Iterator
         foreach ($fields as $key=>$field) {
             // Inherit the parent field's default value, if none is defined
             if (is_int($key) && isset($this->fields[$field])) {
-                $fields = array_merge(
-                    array_slice($fields, 0, $key),
-                    [$field => $this->fields[$field]],
-                    array_slice($fields, $key + 1)
-                );
+                unset($fields[$key]);
+                $fields[$field] = $this->fields[$field];
             }
         }
 

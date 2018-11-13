@@ -1,7 +1,8 @@
 import $ from "jquery"
 import "./../tools/incrementor.coffee"
 import parallax from "./../tools/parallax.coffee"
-import "select2"
+import UploadField from "./../tools/uploadField.coffee"
+import SelectField from "./../tools/selectField.coffee"
 
 export default in: ->
 
@@ -45,25 +46,14 @@ export default in: ->
     # =============================================================================
     # > FORMS
     # =============================================================================
-    # USE SELECT 2 FOR SELECT INPUT
+    # ========== SELECT 2 ========== #
     $("select").each (i, el) ->
+        if $(@).closest(".nf-field").length then return false
+        new SelectField $(@)
 
-        $el = $(el)
+    # ========== DROPZONE ========== #
+    $("input[type='file']").not(".nf-field-upload, .dz-hidden-input").each (i, el) -> new UploadField $(@)
 
-        if ($el.data("value") || $el.data("value") is 0) then $el.val $el.data "value"
-
-        disabled       = $el.data "disabled"
-        allowClear     = $el.data "clearable"
-        appendDropdown = $el.data "append"
-        noSearch       = $el.data "nosearch"
-
-        $el.select2
-            minimumResultsForSearch: if noSearch then Infinity else 5
-            placeholder: $el.attr("placeholder") || "Cliquez pour choisir"
-            disabled: disabled
-            allowClear: allowClear
-            dropdownParent: if appendDropdown then $el.parent() else null
-            theme: false
 
     # PATTERN
     $("html").on "keyup", "input[data-pattern]", ->

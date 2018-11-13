@@ -21,17 +21,12 @@ class SingleController extends PageController
     {
         parent::__construct($args);
 
-        // Get the archive
-        $this->archive = site_url($this->post->post_type);
-
         // Use the post type as a method
         $this->{$this->post->post_type}();
 
-        // Erase post in render context
+        // Populate & add the post to the context
+        $this->model->populateResultData($this->post);
         $this->data["post"] = $this->post;
-
-        // Set the view file
-        $this->view = "single-{$this->post->post_type}";
     }
 
 
@@ -45,11 +40,9 @@ class SingleController extends PageController
      */
     private function news()
     {
-        (new News)->populateResultData($this->post);
-
-        Data::store($this->data, [
-            "@singlenav"     => $this->singleNav(__("Retour à la liste des news", "syltaen"))
-        ]);
+        $this->model = new News;
+        $this->view  = "single-news";
+        $this->addSingleNav("Retour à la liste des news", "/");
     }
 
 
@@ -60,24 +53,27 @@ class SingleController extends PageController
      * Add data for the navigation between posts
      *
      * @param string $archive_link_text Text to use for the archive link
+     * @param string $archive_path The slug to the archive, default to post TYPE/REWRITE
      * @return void
      */
-    private function singleNav($archive_link_text = false)
+    private function addSingleNav($archive_link_text = false, $archive_path = false)
     {
-        return [
-            "archive"  => [
-                "url"  => get_the_permalink($this->archive),
-                "text" => $archive_link_text ?: __("Retour à la liste", "syltaen")
-            ],
-            "previous" => [
-                "url"  => get_previous_post() ? get_the_permalink(get_previous_post()->ID): "",
-                "text" => __("Précédent", "syltaen")
-            ],
-            "next" => [
-                "url"  => get_next_post() ? get_the_permalink(get_next_post()->ID): "",
-                "text" => __("Suivant", "syltaen")
+        Data::store($this->data, [
+            "@singlenav"  => [
+                "archive"  => [
+                    "url"  => site_url($archive_path ? $archive_path : ($this->model::CUSTOMPATH ? $this->model::CUSTOMPATH : $this->model::TYPE)),
+                    "text" => $archive_link_text ?: __("Retour", "syltaen")
+                ],
+                "previous" => [
+                    "url"  => get_previous_post() ? get_the_permalink(get_previous_post()->ID): "",
+                    "text" => __("Précédent", "syltaen")
+                ],
+                "next" => [
+                    "url"  => get_next_post() ? get_the_permalink(get_next_post()->ID): "",
+                    "text" => __("Suivant", "syltaen")
+                ]
             ]
-        ];
+        ]);
     }
 
 }

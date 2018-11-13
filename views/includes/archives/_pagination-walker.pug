@@ -6,7 +6,7 @@
 nav.pagination-walker(class=classes)
 
     a(href=first.url title=first.title disabled=first.disabled).pagination-walker__direction.pagination-walker__direction--first= first.title
-    //- a(href=previous.url title=previous.title disabled=previous.disabled).pagination-walker__direction.pagination-walker__direction--previous= previous.title
+    a(href=previous.url title=previous.title disabled=previous.disabled).pagination-walker__direction.pagination-walker__direction--previous= previous.title
 
     ul.pagination-walker__pagelist
         each page in pages
@@ -16,7 +16,7 @@ nav.pagination-walker(class=classes)
                 else
                     a.pagination-walker__pagelist__item__link(href=page.url)= page.number
 
-    //- a(href=next.url title=next.title disabled=next.disabled).pagination-walker__direction.pagination-walker__direction--next= next.title
+    a(href=next.url title=next.title disabled=next.disabled).pagination-walker__direction.pagination-walker__direction--next= next.title
     a(href=last.url title=last.title disabled=last.disabled).pagination-walker__direction.pagination-walker__direction--last= last.title
 
     p!= text

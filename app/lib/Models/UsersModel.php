@@ -36,9 +36,9 @@ abstract class UsersModel extends Model
     }
 
     /* Update parent method */
-    public function search($terms, $columns = [])
+    public function search($terms, $columns = [], $strict = false)
     {
-        $this->filters["search"] = "*$terms*";
+        $this->filters["search"] = $strict ? $terms : "*$terms*";
 
         if (!empty($columns)) $this->filters["search_columns"] = $columns;
 

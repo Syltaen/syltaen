@@ -4,8 +4,8 @@
 ###
 
 import $ from "jquery"
-import "select2"
-import Dropzone from "dropzone"
+import SelectField from "./../tools/selectField.coffee"
+import UploadField from "./../tools/uploadField.coffee"
 
 if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
 
@@ -21,8 +21,9 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
         @listenTo nfRadio.channel("listcountry"),          "render:view",           @listselectRender
         @listenTo nfRadio.channel("liststate"),            "render:view",           @listselectRender
         @listenTo nfRadio.channel("fieldroles"),           "render:view",           @listselectRender
-
         @listenTo nfRadio.channel("fieldfileupload"),      "render:view",           @dropzoneRender
+        @listenTo nfRadio.channel("fieldpassword"),        "render:view",           @passwordRender
+        @listenTo nfRadio.channel("fieldscenario"),        "render:view",           @scenarioRender
 
         @listenTo nfRadio.channel("textarea"),             "render:view",           @trimDefault
 
@@ -35,20 +36,21 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
     # > CONDITIONAL RENDERING
     # ==================================================
     shouldHide: (field) ->
-
         shouldHide = false
+
         if field.attributes.has_conditional_display
             for i, condition of field.attributes.conditional_display
                 for i, f of field.collection.models
                     if f.attributes.key == condition.label
                         fieldValue = f.attributes.value || f.attributes.default
                         pass = false
+
                         switch condition.calc
                             when "!="   then pass = true if fieldValue != condition.value
                             when "==="  then pass = true if fieldValue is condition.value
                             when "!=="  then pass = true if fieldValue isnt condition.value
                             when "in"   then pass = true if fieldValue.indexOf(condition.value) > -1
-                            else             pass = true if fieldValue == condition.value
+                            else             pass = true if fieldValue + "" == condition.value + ""
                         unless pass then shouldHide = true
 
         # Disable requirement if the field is hidden
@@ -61,17 +63,15 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
         return shouldHide
 
     checkConditional: (form) ->
-
         for i, field of form.model.attributes.fields.models
             $container = $("#nf-field-#{field.id}-container")
 
             if @shouldHide field
-                if $container.is ":visible" then $container.hide()
+                $container.hide()
             else
-                unless $container.is ":visible"
-                    $container.show()
-                    if field.attributes.type == "bpostpointfield"
-                        $(document).trigger("bpostpointfield_display")
+                $container.show()
+                if field.attributes.type == "bpostpointfield"
+                    $(document).trigger("bpostpointfield_display")
 
     bindConditionalCheck: (form) ->
         for i, field of form.model.attributes.fields.models
@@ -83,7 +83,9 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
                     @checkConditional form
                 , 100
 
-        @checkConditional form
+        setTimeout =>
+            @checkConditional form
+        , 250
 
 
     # ==================================================
@@ -107,61 +109,38 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
     # ==================================================
     # SELECT 2
     listselectRender: (view) ->
-
         $(view.el).find("select").each ->
-            $(@).select2
-                minimumResultsForSearch: 8,
-                placeholder: "Cliquez pour choisir"
-                theme: "classic"
-            .change ->
-                view.model.attributes.value = $(@).val()
-
-                if view.model.attributes.value
-                    nfRadio.channel("fields").request("remove:error", view.model.id, "required-error")
+            new SelectField $(@), ($el) ->
+                $el.change ->
+                    view.model.attributes.value = $(@).val()
+                    if view.model.attributes.value then nfRadio.channel("fields").request("remove:error", view.model.id, "required-error")
 
             view.model.attributes.value = $(@).val()
 
 
-
     # DROPZONE
     dropzoneRender: (view) ->
-
-        $hidden = $(view.el).find(".ninja-forms-field")
-        $input  = $(view.el).find("label")
-
-        new Dropzone $input[0],
-            url: ajaxurl + "?action=syltaen_ajax_upload"
-            paramName: view.model.attributes.key
-            acceptedFiles: view.model.attributes.filetypes
-            uploadMultiple: false
-            maxFilesize: view.model.attributes.maxupload
-            clickable: true
-            dictDefaultMessage: view.model.attributes.label
-            dictFileTooBig: "This file is too heavy ({{filesize}}Mb) - Max. authorised : {{maxFilesize}}Mb"
-            dictInvalidFileType: "Ce type de fichier n'est pas autorisé."
-
-            accept: (file, done) ->
-                $input.addClass "loading"
-                $input.closest(".nf-form-cont").addClass "loading"
-                done()
-
-            success: (file, uploaded) ->
-                $input.removeClass "loading"
-                $input.closest(".nf-form-cont").removeClass "loading"
-                view.model.attributes.value = uploaded[0].url
-                $hidden.val uploaded[0].url
-                $hidden.change()
+        new UploadField $(view.el).find("input[type='file']").first(), (list, value) ->
+            view.model.attributes.value = value
+            if value then nfRadio.channel("fields").request("remove:error", view.model.id, "required-error")
 
 
-            init: ->
-                @on "addedfile", (file) ->
-                    if $input.find(".dz-preview").length > 1
-                        $input.find(".dz-preview").first().remove()
+    # PASSWORD
+    passwordRender: (view) ->
+        console.log "fieldpassword"
+        $field  = $(view.el).find(".ninja-forms-field")
+        $box    = $field.closest(".passwordbox")
+        $toggle = $box.find(".passwordbox__toggle")
 
-
-        $input.on "click", "div", (e) ->
-            e.stopPropagation()
-            $input.click()
+        $toggle.click ->
+            console.log $field.attr("type")
+            switch $field.attr("type")
+                when "password"
+                    $field.attr "type", "text"
+                    $box.addClass "is-shown"
+                else
+                    $field.attr "type", "password"
+                    $box.removeClass "is-shown"
 
 
 
@@ -186,7 +165,8 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
                     unless column
                         classes = $(@).find("label").text().trim()
                         if classes
-                            column = $("<div class='" + classes + "'></div>")
+                            id = $(@).find(".fieldopentag-container").attr "id"
+                            column = $("<div class='" + classes + "' id='#{id}'></div>")
                             $(@).before(column)
                             $(@).remove()
                             append = false
@@ -201,6 +181,7 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
                 # When finding another field
                 if column && append
                     column.append $(@)
+
 
 
 

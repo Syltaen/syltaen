@@ -139,6 +139,11 @@ abstract class TaxonomyModel
             "orderby"    => $orderby
         ]);
 
+        if (is_wp_error($this->terms)) {
+            $this->terms = [];
+            return $this->terms;
+        }
+
         if ($fields == "all") {
             foreach($this->terms as $term) {
                 $this->populateTermFields($term);

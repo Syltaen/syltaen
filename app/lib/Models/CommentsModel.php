@@ -69,7 +69,7 @@ abstract class CommentsModel extends Model
         return parent::isnt($list, $filter_key);
     }
 
-    public function search($terms, $columns = [])
+    public function search($terms, $columns = [], $strict = false)
     {
         $this->filters["search"] = $terms;
 
@@ -187,6 +187,7 @@ abstract class CommentsModel extends Model
             "comment_post_ID" => $post ? $post->ID : false,
             "user_id"         => $user ? $user->ID : false,
             "comment_content" => "",
+            // "comment_approved" => 0
         ], $attrs);
 
         // Create the comment
