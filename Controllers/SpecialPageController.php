@@ -40,11 +40,14 @@ class SpecialPageController extends PageController
     {
         Data::store($this->data, [
             "@sections"      => [[
-                "classes" => "",
+                "classes" => "lg-padding-vertical",
                 "attr"    => "",
                 "content" => [[
-                    "acf_fc_layout" => "txt_1col",
-                    "txt"           => "[ninja_form id=".$this->args[0]."]"
+                    "acf_fc_layout" => "columns",
+                    "columns"       => [[
+                        "txt" => "[ninja_form id=".$this->args[0]."]"
+
+                    ]]
                 ]]
             ]],
         ]);
