@@ -87,12 +87,12 @@ class Cache
      * @param int $keep Number of cache elements to keep
      * @return void
      */
-    public function get($resultCallback)
+    public function get($resultCallback = false)
     {
 
         $last = $this->getDataFrom(0);
 
-        if ($this->isExpired()) {
+        if ($resultCallback && $this->isExpired()) {
             return static::storeNew($resultCallback($last));
         } else {
             return $last;

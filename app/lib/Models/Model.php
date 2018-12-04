@@ -595,6 +595,24 @@ abstract class Model implements \Iterator
         return array_merge([$header], $rows);
     }
 
+
+    /**
+     * Process the results per group, managing memoy more efficently
+     *
+     * @param int $groupSize
+     * @param callable $process_function
+     * @return void
+     */
+    public function processInGroups($groupSize = 100, $process_function)
+    {
+        $this->limit($groupSize);
+
+        for ($page = 1; $page <= $this->getQuery()->max_num_pages; $page++) {
+            $this->page($page);
+            $process_function($this);
+        }
+    }
+
     // ==================================================
     // > DATA HANDLING FOR EACH RESULT
     // ==================================================

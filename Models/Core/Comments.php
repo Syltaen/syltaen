@@ -5,9 +5,6 @@ namespace Syltaen;
 class Comments extends CommentsModel
 {
 
-    const VALUE = 100;
-    const SUCCESS = "Poster un commentaire";
-
     protected $dateFormats = [
         "short"   => "d/m/Y",
         "full"    => "d/m/Y \\à H\\hi"

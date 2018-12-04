@@ -38,7 +38,7 @@ ol:not([class]),
 .list--numbers
     counter-reset: item
 
-ol:not([class]) > li::before
+ol:not([class]) > li::before,
 .list--numbers > .list__item::before,
 .list--numbers > li::before
     content: counter(item)"."

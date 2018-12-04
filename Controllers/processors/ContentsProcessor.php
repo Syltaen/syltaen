@@ -2,7 +2,7 @@
 
 namespace Syltaen;
 
-abstract class ContentsProcessor extends DataProcessor
+class ContentsProcessor extends DataProcessor
 {
 
 
@@ -12,7 +12,7 @@ abstract class ContentsProcessor extends DataProcessor
      * @param [type] $c
      * @return void
      */
-    private static function columns(&$c)
+    private function columns(&$c)
     {
         $c["classes"]       = [
             "flex-align-" . $c["valign"],
@@ -46,7 +46,7 @@ abstract class ContentsProcessor extends DataProcessor
      * @uses Skrollr.js
      * @return void
      */
-    private static function full_width_image(&$c)
+    private function full_width_image(&$c)
     {
         $c["attr"]    = [];
         $c["classes"] = ["full-width-image", $c["parallax"]];
@@ -76,9 +76,9 @@ abstract class ContentsProcessor extends DataProcessor
      * @param [type] $c
      * @return void
      */
-    private static function archive(&$c)
+    private function archive(&$c)
     {
-        $c = ArchiveProcessor::process($c);
+        $c = (new ArchiveProcessor($this->controller))->process($c);
     }
 
 
@@ -91,7 +91,7 @@ abstract class ContentsProcessor extends DataProcessor
      * @param [type] $content
      * @return void
      */
-    public static function process($content)
+    public function process($content)
     {
         // Run the correct mehtod by looking at the acf_fc_layout
         switch ($content["acf_fc_layout"]) {
@@ -108,7 +108,7 @@ abstract class ContentsProcessor extends DataProcessor
             default:
                 $method = str_replace("-", "_", $content["acf_fc_layout"]);
                 if (method_exists(static::class, $method)) {
-                    static::{$method}($content);
+                    $this->{$method}($content);
                 }
         }
 

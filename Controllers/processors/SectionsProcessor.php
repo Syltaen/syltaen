@@ -2,19 +2,19 @@
 
 namespace Syltaen;
 
-abstract class SectionsProcessor extends DataProcessor
+class SectionsProcessor extends DataProcessor
 {
     /**
      * Processing of each section
      */
-    public static function process($section)
+    public function process($section)
     {
-        if (static::shouldHide($section)) return false;
+        if ($this->shouldHide($section)) return false;
 
-        static::addAttributes($section);
-        static::addClasses($section);
+        $this->addAttributes($section);
+        $this->addClasses($section);
 
-        $section["content"] = ContentsProcessor::processEach($section["content"]);
+        $section["content"] = (new ContentsProcessor($this->controller))->processEach($section["content"]);
 
         return $section;
     }
@@ -26,7 +26,7 @@ abstract class SectionsProcessor extends DataProcessor
      * @param array $s The section data
      * @return void
      */
-    private static function addClasses(&$s)
+    private function addClasses(&$s)
     {
         $s["classes"] = ["site-section"];
 
@@ -64,7 +64,7 @@ abstract class SectionsProcessor extends DataProcessor
         }
     }
 
-    private static function addAttributes(&$s)
+    private function addAttributes(&$s)
     {
         $s["attr"]    = empty($s["attr"]) ? [] : $s["attr"];
 
@@ -85,7 +85,7 @@ abstract class SectionsProcessor extends DataProcessor
      * @param array $s The section's data
      * @return boolean : true if the section should be hidden
      */
-    private static function shouldHide($s)
+    private function shouldHide($s)
     {
         if (empty($s["hide"])) return false;
 

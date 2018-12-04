@@ -23,8 +23,10 @@
             @if not $hasFontSize
                 @if unitless($a) // use px as default unit
                     $a: $a * 1px
+
                 font-size: $a
-                font-size: calculateRem($a)
+                @if unit($a) == "px"
+                    font-size: calculateRem($a)
                 $hasFontSize: true
 
             // Line height

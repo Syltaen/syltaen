@@ -1,4 +1,5 @@
 .DS_Store
 
-/app/vendors/vendor
+
+/app/vendors
 /node_modules

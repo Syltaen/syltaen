@@ -5,12 +5,29 @@ namespace Syltaen;
 abstract class DataProcessor
 {
     /**
+     * A reference to the controller using the processor
+     *
+     * @var boolean
+     */
+    protected $controller = false;
+
+    /**
+     * Initialization
+     *
+     * @param boolean $controller
+     */
+    public function __construct(&$controller = false) {
+        $this->controller = $controller;
+    }
+
+
+    /**
      * Process a set of data and return the result
      *
      * @param mixed $data
      * @return mixed
      */
-    public static function process($raw)
+    public function process($raw)
     {
         throw new \Exception("This " . __CLASS__ . " does not implement process()", 1);
         return false;
@@ -23,14 +40,14 @@ abstract class DataProcessor
      * @param mixed $item
      * @return mixed
      */
-    public static function processEach($raw)
+    public function processEach($raw)
     {
         $proccessed = [];
 
         if (empty($raw)) return [];
 
         foreach ($raw as $rawItem) {
-            $item = static::process($rawItem);
+            $item = $this->process($rawItem);
 
             // Only include the result if it is valid
             if ($item) {

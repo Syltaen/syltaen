@@ -2,7 +2,7 @@
 
 namespace Syltaen;
 
-abstract class ArchiveProcessor extends DataProcessor
+class ArchiveProcessor extends DataProcessor
 {
     /**
      * Archives for News
@@ -10,9 +10,9 @@ abstract class ArchiveProcessor extends DataProcessor
      * @param array $c Local context
      * @return void
      */
-    public static function news(&$c)
+    public function news(&$c)
     {
-        static::paginate($c, new News, $c["perpage"]);
+        $this->paginate($c, new News, $c["perpage"]);
     }
 
 
@@ -28,7 +28,7 @@ abstract class ArchiveProcessor extends DataProcessor
      * @param int $perpage
      * @return void
      */
-    public static function paginate(&$c, $model, $perpage = 6)
+    private function paginate(&$c, $model, $perpage = 6)
     {
         $pagination   = (new Pagination($model, $perpage));
         $c["walker"]  = $pagination->walker();
@@ -42,10 +42,10 @@ abstract class ArchiveProcessor extends DataProcessor
     /**
      * Process a single archive
      *
-     * @param [type] $content
+     * @param array $content
      * @return void
      */
-    public static function process($archive)
+    public function process($archive)
     {
         // Run the correct mehtod by looking at the archive content type
         switch ($archive["type"]) {
@@ -61,7 +61,7 @@ abstract class ArchiveProcessor extends DataProcessor
             default:
                 $method = $archive["type"];
                 if (method_exists(static::class, $method)) {
-                    static::{$method}($archive);
+                    $this->{$method}($archive);
                 } else {
                     throw new \Exception(__CLASS__ . " does not implement {$method}(). Please add it to process this archive type.", 1);
                 }

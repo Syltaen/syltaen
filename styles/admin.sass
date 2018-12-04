@@ -191,36 +191,57 @@
 // ==================================================
 // > LOGIN
 // ==================================================
-#login
+body.login
+    // background: img("") center center / cover no-repeat
     h1 a
         background: img("logo.png") center center / contain no-repeat !important
         background-size: contain
-        width: 100px
-        height: 100px
+        width: 200px
+        height: 200px
         pointer-events: none
-    .button.button-primary
-        text-shadow: none
+        &::after
+            content: none
+    form
+        border-radius: 5px
+
+
+    #wp-submit
+        display: block
+        +size(100%, 48px)
+        height: 48px !important
+        margin: 40px auto 0
+        padding: 0 20px
+        background: color(primary)
         box-shadow: none
-        border-radius: 0
-        margin-top: 20px
-        background: none
-        color: color(primary)
         border: 2px solid color(primary)
-        height: 50px
-        line-height: 50px
+        border-radius: 5px
+        resize: none
+        +font(16px 42px white bold uppercase)
+        text-shadow: none
+        cursor: pointer
+        transition: all .4s ease
+
         &:hover
-            background: color(primary)
-            color: white
+            background: white
+            color: color(primary)
+
+    #nav, #backtoblog
+        text-align: center
+        a
+            +font(14px white)
+            &::after
+                bottom: -4px
+                background: white
 
 
 // ==================================================
 // > USER FORM
 // ==================================================
-// #profile-page
+#profile-page
     .user-rich-editing-wrap,
     .user-admin-color-wrap,
     .user-comment-shortcuts-wrap,
-    .show-admin-bar,
+    // .show-admin-bar,
     .user-language-wrap,
     .user-url-wrap,
     .user-googleplus-wrap,

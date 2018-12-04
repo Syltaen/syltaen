@@ -528,4 +528,31 @@ abstract class PostsModel extends Model
 
         return $post_id;
     }
+
+    /**
+     * Add a comment to all matchin posts
+     *
+     * @param string $content
+     * @param string $author
+     * @param string $email
+     * @param string $url
+     * @param integer $parent
+     * @return void
+     */
+    public function addComment($comment, $author = "", $email = "", $url = "", $parent = 0)
+    {
+        foreach ($this->get() as $post) {
+
+            // Register the new comment
+            Comments::add([
+                "comment_post_ID"      => $post->ID,
+                "comment_author"       => $author,
+                "comment_author_email" => $email,
+                "comment_author_url"   => $url,
+                "comment_type"         => "",
+                "comment_parent"       => $parent,
+                "comment_content"      => wpautop($comment)
+            ]);
+        }
+    }
 }

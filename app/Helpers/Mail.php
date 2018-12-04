@@ -173,6 +173,12 @@ abstract class Mail
         }
     }
 
+    /**
+     * A hook triggered for each default WordPress mail
+     *
+     * @param array $args
+     * @return void
+     */
     public static function hookRelay($args)
     {
         static::send(
