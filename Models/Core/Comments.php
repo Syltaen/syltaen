@@ -26,7 +26,7 @@ class Comments extends CommentsModel
                 // Fake author
                 return (object) [
                     "display_name" => $comment->comment_author,
-                    "photo"        => false, //Files::url("build/img", "bg_noavatar.png"),
+                    "photo"        => false,
                     "profile"      => false
                 ];
             }

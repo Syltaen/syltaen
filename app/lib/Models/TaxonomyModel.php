@@ -269,24 +269,4 @@ abstract class TaxonomyModel
 
         return static::class;
     }
-
-    /**
-     * Bind this taxonomy to a Models\Posts\Posts children
-     *
-     * @param array $posts_models
-     * @return void
-     */
-    public static function useFor($posts_models)
-    {
-        $posts_models = (array) $posts_models;
-
-        foreach ($posts_models as $model) {
-            register_taxonomy_for_object_type(
-                static::SLUG,
-                $model::TYPE
-            );
-        }
-    }
-
-
 }

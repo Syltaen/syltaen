@@ -57,6 +57,18 @@ abstract class PostsModel extends Model
     const CUSTOMPATH  = false;
 
     /**
+     * List of taxonomies' slugs to use for this post type
+     */
+    const TAXONOMIES = false;
+
+    /**
+     * List of custom status to use
+     * Exemple : "old_news"  => ["News dépassée", "News dépassées"]
+     */
+    const CUSTOM_STATUS = false;
+
+
+    /**
      * List of thumbnails formats to store in each post.
      * Specify a key and a format (string or array of sizes).
      * Specify those in one or both of the arrays (url or tag) depending on what you want to be retrieved
@@ -413,6 +425,15 @@ abstract class PostsModel extends Model
                 'index.php?pagename='.$page.'&page=$matches[1]'
             ]]);
         }
+
+        foreach ((array) static::TAXONOMIES as $slug) {
+            register_taxonomy_for_object_type(
+                $slug,
+                static::TYPE
+            );
+        }
+
+        static::addStatusTypes(static::CUSTOM_STATUS);
     }
 
     /**

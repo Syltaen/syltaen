@@ -14,16 +14,34 @@ abstract class Files
      * @param array|string $files
      * @return void
      */
-    public static function import($folder, $files)
+    public static function import($folders = [""], $files = [""])
     {
-        if (is_array($files)) {
+        $folders = (array) $folders;
+        $files   = (array) $files;
+        $list    = [];
+
+        // Create an import list
+        foreach ($folders as $folder) {
             foreach ($files as $file) {
-                require_once(self::path($folder, "$file.php"));
+                $list[] = trim($folder ."/" . $file, "/");
             }
-        } else {
-            return require_once(self::path($folder, "$files.php"));
+        }
+
+        foreach ($list as $item) {
+            // Is a file
+            if (strpos($item, ".")) {
+                require_once(self::path($item));
+                continue;
+            }
+
+            // Is a folder
+            foreach (self::in($item, ".php") as $file) {
+                require_once(self::path($item . "/" . $file));
+            }
         }
     }
+
+
 
     /**
      * File path resolution
@@ -32,9 +50,9 @@ abstract class Files
      * @param string $filename
      * @return string
      */
-    public static function path($folder = "", $filename = "")
+    public static function path($path_from_root = "")
     {
-        return str_replace("\\", "/", get_stylesheet_directory() . "/" . $folder . "/" . $filename);
+        return str_replace("\\", "/", get_stylesheet_directory() . "/" . $path_from_root);
     }
 
     /**
@@ -44,9 +62,9 @@ abstract class Files
      * @param string $filename
      * @return string
      */
-    public static function url($folder = "", $filename = "")
+    public static function url($path_from_root = "")
     {
-        return get_template_directory_uri() . "/" . $folder . "/" . $filename;
+        return get_template_directory_uri() . "/" . $path_from_root;
     }
 
     /**
@@ -56,9 +74,9 @@ abstract class Files
      * @param string $file
      * @return int : number of ms
      */
-    public static function time($folder, $file)
+    public static function time($file)
     {
-        return filemtime(self::path($folder, $file));
+        return filemtime(self::path($file));
     }
 
 
@@ -78,9 +96,9 @@ abstract class Files
         add_action($action, function () use ($file, $requirements ){
             wp_enqueue_script(
                 $file,
-                Files::url("build/js", $file),
+                self::url("build/js/{$file}"),
                 $requirements,
-                Files::time("build/js", $file),
+                self::time("build/js/{$file}"),
                 true
             );
         });
@@ -112,9 +130,9 @@ abstract class Files
         add_action($action, function () use ($file, $requirements) {
             wp_enqueue_style(
                 $file,
-                Files::url("build/css", $file),
+                self::url("build/css/{$file}"),
                 $requirements,
-                Files::time("build/css", $file)
+                self::time("build/css/{$file}")
             );
         });
     }
@@ -191,6 +209,29 @@ abstract class Files
         return $returnAll ? $results : $results[0];
     }
 
+    /**
+     * Return a list of files found in a specific folder
+     *
+     * @param string $folder
+     * @return array
+     */
+    public static function in($folder, $match = false, $show_hidden = false)
+    {
+        $files  = [];
+        foreach (scandir(self::path($folder)) as $file) {
+
+            // Does not list hidden files or navigation
+            if (!$show_hidden && $file[0] == ".") continue;
+
+            // Has to match
+            if ($match && strpos($file, $match) === false) continue;
+
+            $files[] = $file;
+        }
+
+        return $files;
+    }
+
 
     /**
      * Scan all pug files for translations and add them in app/lang/view-strings.php
@@ -211,14 +252,14 @@ abstract class Files
         }
 
         // Get view-strings.php
-        $content = file_get_contents(Files::path("app/lang", "view-strings.php"));
+        $content = file_get_contents(self::path("app/lang/view-strings.php"));
         $content = explode("\n", $content);
         // Keep only the header
         $content = array_slice($content, 0, 7);
         // Add each line
         foreach ($matches as $line) $content[] = $line . ";";
         // Re-write the content into the file
-        file_put_contents(Files::path("app/lang", "view-strings.php"), implode("\n", $content));
+        file_put_contents(self::path("app/lang/view-strings.php"), implode("\n", $content));
     }
 
     // ==================================================

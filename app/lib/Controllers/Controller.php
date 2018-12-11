@@ -49,7 +49,7 @@ class Controller
     {
         $this->renderer = new \Pug\Pug([
             "extension" => ".pug",
-            "cache"     => include Files::path("app/cache/pug-php", "index.php"),
+            "cache"     => include Files::path("app/cache/pug-php/index.php"),
             // "prettyprint" => true,
             // "expressionLanguage" => "js"
         ]);

@@ -4,24 +4,22 @@ namespace Syltaen;
 
 add_action("init", function() {
 
-    // ==================================================
-    // > POST TYPES
-    // ==================================================
-    News::register();
+    /**
+     * Register all custom post types and taxonomies found in these folders.
+     * Prepend the filename with . to prevent it from being registered
+     */
 
-    // ==================================================
-    // > TAXONOMIES
-    // ==================================================
-    NewsTaxonomy::register();
-    NewsTaxonomy::useFor([
-        News::class
-    ]);
+    $registration_folders = [
+        "Models/Taxonomies",
+        "Models/Posts"
+    ];
 
-    // ==================================================
-    // > CUSTOM STATUS
-    // ==================================================
-    // News::addStatusTypes([
-    //     "old_news"  => ["News dépassée", "News dépassées"],
-    // ]);
+    foreach ($registration_folders as $folder) {
+        foreach (Files::in($folder) as $file) {
+            Files::import("$folder/{$file}");
+            $class = "Syltaen\\" . str_replace(".php", "", $file);
+            $class::register();
+        }
+    }
 
 });

@@ -3,61 +3,35 @@
 namespace Syltaen;
 
 // ==================================================
-// > TIMEZONE
+// > Gloabal config
 // ==================================================
 date_default_timezone_set("Europe/Brussels");
 
+
 // ==================================================
-// > CLASSES & ASSETS LOADING
+// > Autoloading & vendors
 // ==================================================
 require __DIR__ . "/app/Helpers/Files.php";
 spl_autoload_register("Syltaen\Files::autoload");
+Files::import("app/vendors/vendor/autoload.php");
+
 
 // ==================================================
-// > COMPOSER AUTOLOADER
-// ==================================================
-Files::import("app/vendors", "vendor/autoload");
-
-// ==================================================
-// > ERROR HANDLING
+// > Custom error-handler
 // ==================================================
 if (WP_DEBUG) {
-    $handler = new \Whoops\Handler\PrettyPageHandler;
-    $handler->setEditor("vscode");
-
+    ($handler = (new \Whoops\Handler\PrettyPageHandler))->setEditor("vscode");
     (new \Whoops\Run)
         // ->silenceErrorsInPaths(["/plugins/"], E_ALL)
-        ->pushHandler($handler)
-        ->register();
+        ->pushHandler($handler)->register();
 }
 
-
 // ==================================================
-// > FILES LOADING
+// > Import all files not starting with _ in theses directories
 // ==================================================
-Files::import("app/config", [
-    "acf",
-    "globals",
-    "registrations",
-    "supports",
-    "menus",
-    "editor",
-    "routes",
-    "shortcodes",
-    "assets"
-]);
-
-Files::import("app/hooks/actions", [
-    "actions-lang",
-    // "actions-users",
-    // "actions-cron",
-    // "actions-posts",
-]);
-
-Files::import("app/hooks/filters", [
-    "filters-mails"
-]);
-
-Files::import("app/hooks/ajax", [
-    "ajax-upload"
+Files::import([
+    "app/config",
+    "app/hooks/actions",
+    "app/hooks/filters",
+    "app/hooks/ajax",
 ]);

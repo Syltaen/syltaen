@@ -13,6 +13,14 @@ class News extends PostsModel
     const HAS_THUMBNAIL = true;
     const HAS_EXCERPT   = true;
 
+    const TAXONOMIES = [
+        NewsTaxonomy::SLUG
+    ];
+
+    const CUSTOM_STATUS = [
+        "old_news"  => ["News dépassée", "News dépassées"]
+    ];
+
     protected $thumbnailsFormats = [
         "tag" => [
             "single"  => [900, null],
