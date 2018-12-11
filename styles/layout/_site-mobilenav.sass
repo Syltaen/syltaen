@@ -1,0 +1,101 @@
+// =============================================================================
+// > LAYOUTS: MODULES - NAVIGATION: MOBILE
+// =============================================================================
+
+.site-mobilenav
+    z-index: 7500
+    +fixed(top 0 right 0)
+    +size(400px, 100%)
+    max-width: 100%
+    transform: translateX(100%)
+    background: white
+    transition: all .2s ease
+    overflow-y: scroll
+    padding: 20px 60px 20px
+    display: none
+    +screen(sm)
+        display: block
+
+    +screen(xs)
+        padding: 80px 20px 20px
+
+    &__nav
+        display: block
+        clear: both
+
+    &__menu
+        +flex(column)
+        padding: 20px 0
+        a
+            +font(18px regular right)
+            display: block
+            padding: 10px 0
+            transition: all 0.2s ease
+            &::after
+                content: none
+
+        .sub-menu a
+            +font(14px #aaa light)
+            padding: 5px 0
+
+    &__header
+        +absolute(top 0 left 0)
+        +size(100%, 40px)
+        padding: 24px 40px
+
+    .is-mobilenav-open &
+        transform: translateX(0)
+
+    // ==================================================
+    // > TRIGGER
+    // ==================================================
+    &__trigger
+        z-index: 9999
+        +fixed(top 35px right 20px)
+        +size(50px)
+        border: 2px solid color(primary)
+        border-radius: 50%
+        opacity: 0
+        visibility: hidden
+        transition: all .2s ease
+        background: none
+
+        +screen(sm)
+            opacity: 1
+            visibility: visible
+
+        span
+            position: absolute
+            width: 60%
+            height: 2px
+            top: 50%
+            left: 50%
+            background: color(primary)
+            transition: all 0.2s ease
+            &:nth-child(1)
+                transform: translate(-50%, calc(-50% - 4px))
+            &:nth-child(2)
+                transform: translate(-50%, -50%)
+            &:nth-child(3)
+                transform: translate(-50%, calc(-50% + 4px))
+
+            .is-mobilenav-open &
+                &:nth-child(1)
+                    transform: translate(-50%, -50%)
+                &:nth-child(2)
+                    opacity: 0
+                    transform: translate(-100%, -50%)
+                &:nth-child(3)
+                    transform: translate(-50%, -50%)
+
+
+
+// ==================================================
+// > OPEN STATE : BODY
+// ==================================================
+.is-mobilenav-open
+    +screen(sm)
+        overflow: hidden
+        .site
+            opacity: .2
+            transform: translateX(-60px)

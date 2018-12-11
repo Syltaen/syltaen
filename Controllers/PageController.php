@@ -65,7 +65,7 @@ abstract class PageController extends Controller
             "mobile" => wp_nav_menu([
                 "theme_location" => "main_menu",
                 "menu_id"        => false,
-                "menu_class"     => "menu mobile-menu",
+                "menu_class"     => "menu site-mobilenav__menu",
                 "container"      => "ul",
                 "echo"           => false
             ]),
