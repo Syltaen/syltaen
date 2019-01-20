@@ -48,6 +48,7 @@ class ApiController extends Controller
         (new Users)->is($user_id)->login("wp-admin");
     }
 
+
     /**
      * Generate a new user key
      *
@@ -58,6 +59,7 @@ class ApiController extends Controller
     {
         wp_die(Users::generateKey());
     }
+
 
     /**
      * Send a test mail to an address
@@ -73,6 +75,7 @@ class ApiController extends Controller
 
         echo Mail::sendTest($address);
     }
+
 
     /**
      * Output the result of phpinfo()

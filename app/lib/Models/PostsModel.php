@@ -507,14 +507,17 @@ abstract class PostsModel extends Model
                 }
             }
         });
+    }
 
-        // ========== Prevent status switch when saving ========== //
-        // add_filter("wp_insert_post_data", function ($data , $postarr) use ($post_type) {
-        //     if ($data["post_type"] == $post_type) {
-        //         $data["post_status"] = $data["post_status"] == "publish" ? $postarr["original_post_status"] : $data["post_status"];
-        //     }
-        //     return $data;
-        // }, "99", 2);
+
+    /**
+     * Return the total number of published post stored in the database
+     *
+     * @return int
+     */
+    public static function totalCount($perm = "")
+    {
+        return wp_count_posts(static::TYPE, $perm);
     }
 
     // ==================================================

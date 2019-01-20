@@ -10,7 +10,7 @@ Route::is("single", "SingleController::render");
 // ==================================================
 // > SEARCH
 // ==================================================
-Route::is("search", "SpecialPageController::search", ["search" => get_search_query(false)]);
+Route::is("search", "PageController::search", ["search" => get_search_query(false)]);
 
 // ==================================================
 // > API
@@ -20,19 +20,19 @@ Route::custom("api", "ApiController", ["method", "target", "mode"]);
 // ==================================================
 // > NINJA FORM PREVIEW
 // ==================================================
-Route::query("nf_preview_form", "SpecialPageController::ninjaFormPreview");
+Route::query("nf_preview_form", "PageController::ninjaFormPreview");
 
 // ==================================================
 // > HOMEPAGE
 // ==================================================
-Route::is(["home", "front_page"], "HomeController::render");
+Route::is(["home", "front_page"], "PageController::home");
 
 // ==================================================
 // > PAGES
 // ==================================================
-Route::is("page", "ContentPageController::render");
+Route::is("page", "PageController::page");
 
 // ==================================================
 // > 404
 // ==================================================
-Route::is("404", "SpecialPageController::error404");
+Route::is("404", "PageController::error404");

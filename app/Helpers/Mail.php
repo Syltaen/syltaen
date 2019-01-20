@@ -36,8 +36,8 @@ abstract class Mail
      *
      * @var string Hexadecimal code
      */
-    public static $primaryColor   = "#a1f2ca";
-    public static $secondaryColor = "#282828";
+    public static $primaryColor   = "#f9b233";
+    public static $secondaryColor = "#3d322d";
 
 
     /**
@@ -87,9 +87,8 @@ abstract class Mail
 
         // ========== SEND OR DEBUG ========== //
         if (static::DEBUG) {
-            Controller::log($mail, "MAIL");
-            echo $body;
-            exit;
+            $mail->Subject = "[TEST] " . $mail->Subject;
+            return static::log($mail);
         } else {
             static::log($mail);
             return $mail->Send();
@@ -129,7 +128,7 @@ abstract class Mail
             "mail"    => $mail,
             "body"    => $body,
 
-            "imgpath"   => Files::url("build/img/mails"),
+            "imgpath"   => Files::url("build/img/mails/"),
             "primary"   => static::$primaryColor,
             "secondary" => static::$secondaryColor,
 

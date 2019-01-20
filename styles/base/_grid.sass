@@ -70,7 +70,7 @@ $gridle-classes-prefix:     ""     // the prefix used for all classes
 
     // Justify content
     @each $jc in start end center space-between space-around
-        &--justify-#{$jc}
+        &-justify-#{$jc}
             @if $jc == start or $jc == end
                 $jc: flex-#{$jc}
             justify-content: $jc

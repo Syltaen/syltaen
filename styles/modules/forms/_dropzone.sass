@@ -1,5 +1,5 @@
 // =============================================================================
-// > MODULES - FORMS : DROPZONE
+// > MOULE - FORMS : DROPZONE
 // =============================================================================
 
 .uploadfield
@@ -20,8 +20,7 @@
         opacity: 0.25
         transition: all .25s ease
         &::before
-            content: $fa-var-paperclip
-            +font(fa)
+            +fa(paperclip)
             font-size: 1.35em
             margin-right: .3em
         .dz-started &
@@ -48,9 +47,9 @@
             border-radius: 50%
             background: white
             &::after
-                content: $fa-var-file
+                +fa(file)
                 @extend %cover
-                +font(20px 80px center fa medium-grey)
+                +font(20px 80px center medium-grey)
 
 
         &.dz-image-preview .dz-image::after
@@ -141,9 +140,9 @@
             background: white
             border-radius: 50%
             &::before
-                content: $fa-var-times-circle
+                +fa(times-circle)
                 @extend %cover
-                +font(25px 1 center fa error)
+                +font(25px 1 center error)
                 text-indent: 0
 
 

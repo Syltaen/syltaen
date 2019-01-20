@@ -53,11 +53,18 @@ abstract class UsersModel extends Model
      */
     public function logged()
     {
-        $current = wp_get_current_user();
-        if ($current->ID == 0) return false;
+        return $this->is(wp_get_current_user()->ID);
+    }
 
-        $this->is($current->ID);
-        return $this;
+
+    /**
+     * Check if there is a logged user
+     *
+     * @return boolean
+     */
+    public static function isLogged()
+    {
+        return is_user_logged_in();
     }
 
 
@@ -160,13 +167,28 @@ abstract class UsersModel extends Model
     /* Update parent method */
     public function count($paginated = true)
     {
-        if ($paginated)
-            return $this->getQuery()->total_users; // TODO check
-        else
-            return intval($this->getQuery()->total_users);
+        $total = $this->getQuery()->total_users;
+
+        if (!$paginated || !isset($this->filters["number"])) return $total;
+
+        // Not on last page : return the limit
+        $page = isset($this->filters["paged"]) ? $this->filters["paged"] : 1;
+
+        if ($page < $this->getPagesCount()) return $this->filters["number"];
+
+        // On last page : return the rest
+        return $total - ($page - 1 ) * $this->filters["number"];
     }
 
+    /* Update parent method */
+    public function getPagesCount()
+    {
+        $total = $this->getQuery()->total_users;
 
+        if (!isset($this->filters["number"])) return $total;
+
+        return ceil($total / $this->filters["number"]);
+    }
 
 
     // =============================================================================
@@ -177,7 +199,6 @@ abstract class UsersModel extends Model
     {
         parent::populateFields($user, $fields_prefix);
     }
-
 
 
     // =============================================================================
@@ -192,6 +213,8 @@ abstract class UsersModel extends Model
      */
     public function can($capability, $relation = "all")
     {
+        if (!$this->found()) return false;
+
         foreach ($this->get() as $user) {
             if (is_array($capability)) {
                 switch ($relation) {

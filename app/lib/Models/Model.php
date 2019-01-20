@@ -47,6 +47,14 @@ abstract class Model implements \Iterator
     protected $attrs = [];
 
 
+    /**
+     * Keep track of the load...() methods so that they are only loaded once
+     *
+     * @var array
+     */
+    protected $loadedModules = [];
+
+
     // ==================================================
     // > MAGIC METHODS
     // ==================================================
@@ -165,6 +173,40 @@ abstract class Model implements \Iterator
     }
 
 
+    /**
+     * Call a function on each items
+     *
+     * @return array Result of each call
+     */
+    public function map($callable)
+    {
+        return array_map($callable, $this->get());
+    }
+
+
+    /**
+     * Reduce the total to a single value
+     *
+     * @return mixed The carried result
+     */
+    public function reduce($callable, $carry)
+    {
+        return array_reduce($this->get(), $callable, $carry);
+    }
+
+
+    /**
+     * Retrieve a list of items based on a callback
+     *
+     * @return array The filtered results
+     */
+    public function filter($callable)
+    {
+        return array_filter($this->get(), $callable);
+    }
+
+
+
     // ==================================================
     // > QUERY MODIFIERS
     // ==================================================
@@ -181,6 +223,7 @@ abstract class Model implements \Iterator
 
         if ($add) {
             if (!$ids) return $this;
+            $this->filters[$filter_key] = empty($this->filters[$filter_key]) ? [] : $this->filters[$filter_key];
             $this->filters[$filter_key] = array_merge($this->filters[$filter_key], $ids);
         } else {
             if (!$ids) {
@@ -562,6 +605,16 @@ abstract class Model implements \Iterator
     }
 
     /**
+     * Return the number of pages the query would return
+     *
+     * @return void
+     */
+    public function getPagesCount()
+    {
+        return $this->getQuery()->max_num_pages;
+    }
+
+    /**
      * Check if there are results
      *
      * @return boolean
@@ -584,15 +637,17 @@ abstract class Model implements \Iterator
         if (!is_callable($getColumnsData)) wp_die("getColumnsData must be a callable function");
 
         // ========== ROWS ========== //
-        $rows = [];
-        foreach ($this->get() as $result) $rows[] = $getColumnsData($result);
-
-        // ========== HEADER ========== //
-        $header = [];
-        foreach ($rows[0] as $name=>$key) $header[] = $name;
+        $rows = $this->map(function ($result) use ($getColumnsData) {
+            return $getColumnsData($result);
+        });
 
         // ========== EXPORT ========== //
-        return array_merge([$header], $rows);
+        return [
+            "header" => array_keys($rows[0]),
+            "rows"   => array_map(function ($row) {
+                return array_values($row);
+            }, $rows)
+        ];
     }
 
 
@@ -605,17 +660,51 @@ abstract class Model implements \Iterator
      */
     public function processInGroups($groupSize = 100, $process_function)
     {
-        $this->limit($groupSize);
+        // Get the Ids without impacting the model
+        $ids = (clone $this)->getIds();
 
-        for ($page = 1; $page <= $this->getQuery()->max_num_pages; $page++) {
+        // Use only the IDs as filter, it's faster and safer (in case of updates during the processing)
+        $this->clearFilters()->is($ids)->limit($groupSize);
+
+        // Process one group at a time
+        for ($page = 1; $page <= $this->getPagesCount(); $page++) {
             $this->page($page);
             $process_function($this);
         }
     }
 
+
+
     // ==================================================
     // > DATA HANDLING FOR EACH RESULT
     // ==================================================
+    /**
+     * Load every computed fields, should be modified by children
+     *
+     * @return void
+     */
+    public function loadEverything()
+    {
+        return $this;
+    }
+
+    /**
+     * Check if a module is already loaded
+     *
+     * @param string $module
+     * @return boolean
+     */
+    protected function isLoaded($module)
+    {
+        // Already loaded
+        if (in_array($module, $this->loadedModules)) return true;
+
+        // Register the new load and say it wasn't loaded before
+        $this->loadedModules[] = $module;
+        return false;
+    }
+
+
     /**
      * Add data to each result based on what the model supports
      *

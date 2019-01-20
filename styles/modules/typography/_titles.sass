@@ -2,54 +2,66 @@
 // > TYPOGRAPHY - TITLES
 // =============================================================================
 
-.title
+%h
     font-weight: normal
     text-rendering: geometricPrecision
     margin: 1.5em 0 1em
 
-    &--1
-        +font(40px bold)
 
-    &--2
-        +font(35px bold)
-
-    &--3
-        +font(30px bold)
-
-    &--4
-        +font(24px bold)
-
-    &--5
-        +font(20px bold)
-
-    &--6
-        +font(16px bold)
+// ==================================================
+// > H1
+// ==================================================
+h1:not([class]),
+.h1
+    @extend %h
+    +font(40px bold)
 
 
 
 // ==================================================
-// > TAGS
+// > H2
 // ==================================================
-h1:not(.title)
-    @extend .title
-    @extend .title--1
+h2:not([class]),
+.h2
+    @extend %h
+    +font(35px bold)
 
-h2:not(.title)
-    @extend .title
-    @extend .title--2
 
-h3:not(.title)
-    @extend .title
-    @extend .title--3
 
-h4:not(.title)
-    @extend .title
-    @extend .title--4
+// ==================================================
+// > H3
+// ==================================================
+h3:not([class]),
+.h3
+    @extend %h
+    +font(30px bold)
 
-h5:not(.title)
-    @extend .title
-    @extend .title--5
 
-h6:not(.title)
-    @extend .title
-    @extend .title--6
+
+// ==================================================
+// > H4
+// ==================================================
+h4:not([class]),
+.h4
+    @extend %h
+    +font(24px bold)
+
+
+
+// ==================================================
+// > H5
+// ==================================================
+h5:not([class]),
+.h5
+    @extend %h
+    +font(20px bold)
+
+
+
+// ==================================================
+// > H6
+// ==================================================
+h6:not([class]),
+.h6
+    @extend %h
+    +font(16px bold)

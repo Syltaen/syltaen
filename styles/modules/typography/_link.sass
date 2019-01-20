@@ -1,0 +1,30 @@
+// =============================================================================
+// > MODULES: TYPOGRAPHY - LINKS
+// =============================================================================
+
+a
+    text-decoration: none
+
+a:not([class]),
+.link
+    +font(primary)
+    position: relative
+    cursor: pointer
+
+    &::after
+        content: ""
+        +absolute(bottom 0 left 0)
+        +size(100%, 1px)
+        background: color(primary)
+        transition: width .35s ease
+
+    &:hover::after
+        width: 0
+        left: 100%
+        transition: all .35s ease
+
+    @each $color, $value in $colors
+        .color-#{$color} &,
+        &.color-#{$color},
+            &::after
+                background: $value

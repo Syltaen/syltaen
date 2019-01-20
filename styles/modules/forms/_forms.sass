@@ -1,22 +1,19 @@
 // =============================================================================
-// > MODULES - FORMS
+// > LAYOUTS: MODULES - FORMS
 // =============================================================================
 
-$input-height: 50px
+$input-height: 48px
 $input-background: white
 $input-border-radius: 0
-$input-border: 1px solid #e6e6e6
-$input-padding: 18px
+$input-border: 1px solid lighten(color(dark-grey), 50%)
+$input-padding: 20px
 $input-color: color(text)
 
 // ==================================================
 // > FORM
 // ==================================================
-form
-    hr
-        margin: 50px 0
-        height: 0
-        margin-bottom: 1px solid color(secondary)
+form,
+.form
 
     .hidden-wrap
         display: none
@@ -25,15 +22,29 @@ form
 // ==================================================
 // > FIELDSET
 // ==================================================
-fieldset
+fieldset,
+.form__fieldset
     margin-bottom: spacing(sm)
+
+
+// ==================================================
+// > ERRORS
+// ==================================================
+.form__error
+    +font(12px right error bold)
+    margin: 0
+
+
 
 // ==================================================
 // > LABEL
 // ==================================================
-label
-    +font(15px regular)
+label,
+.form__label
+    +font(15px bold)
     cursor: pointer
+    margin-bottom: 5px
+    display: inline-block
     &.is-required::after
         content: " *"
         +font(error)
@@ -58,6 +69,8 @@ label
     resize: none
     &.no-border
         border: 0
+    &.has-error
+        border-color: color(error)
 
 input
     @extend %input
@@ -82,19 +95,19 @@ input[type="checkbox"]
     +size(18px)
     appearance: none
     position: relative
-    margin: 5px 5px 0
+    margin: 0 5px 0 0
     padding: 0
     background: none
     // border: 2px solid color(primary)
     background: white
     border-radius: 0
-    vertical-align: top
+    vertical-align: middle
     cursor: pointer
 
     &::before
-        content: $fa-var-check
+        +fa(check)
         +absolute(top 0 left 0)
-        +font(fa 18px 18px primary)
+        +font(18px 18px primary)
         opacity: 0
         transform: scale(2)
         transition: all .25s ease
@@ -122,19 +135,26 @@ input[type="radio"]
 input[type="submit"],
 input[type="button"]
     @extend %button
-    +font(16px $input-height white regular center uppercase)
     padding: 0 $input-padding
-    height: $input-height
-    margin-top: 27px
-    cursor: pointer
+    min-height: $input-height
+    margin-top: 28px // label lh + label mb
     clear: both
-    display: block
+    float: right
     background: color(primary)
-    border: 2px solid color(primary)
+    width: auto
+    position: relative
     &:hover
         background: none
-        color: color(primary)
+        +font(primary)
 
-    .loading &
+    +screen(xs)
+        max-width: 100%
+        white-space: pre-wrap
+        height: auto
+
+
+    .loading &,
+    .is-loading &,
+    &.is-loading
         opacity: .5
         pointer-events: none

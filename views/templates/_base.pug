@@ -73,12 +73,13 @@ html(lang=site.language)
 
                         //- ========== MESSAGES ========== -//
                         block messages
-                            //- - if ($error_message || $success_message)
-                            //-     section.bg-white.small-padding: .container
+                            //- if error_message || success_message
+                            //-     .container
                             //-         if error_message
-                            //-             p.page-message.color-error!= error_message
+                            //-             p.page-message.page-message--error.color-white!= error_message
                             //-         if success_message
-                            //-             p.page-message.color-success!= success_message
+                            //-             p.page-message.page-message--success.color-white!= success_message
+
 
                         //- ========== CONTENT ========== -//
                         block sections

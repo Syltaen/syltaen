@@ -47,25 +47,27 @@ class Controller
      */
     public function __construct($args = [])
     {
-        $this->renderer = new \Pug\Pug([
-            "extension" => ".pug",
-            "cache"     => include Files::path("app/cache/pug-php/index.php"),
-            // "prettyprint" => true,
-            // "expressionLanguage" => "js"
-        ]);
-
-        $this->viewfolder =  get_template_directory() . "/views/";
-
         $this->args = $args;
     }
 
     /**
-     * Get all the controller stored data
+     * Get the controller stored data
      *
      * @return void
      */
     public function data()
     {
+        return $this->data;
+    }
+
+    /**
+     * Get the controller stored data
+     *
+     * @return void
+     */
+    public function addData($data)
+    {
+        Data::store($this->data, $data);
         return $this->data;
     }
 
@@ -78,16 +80,10 @@ class Controller
      */
     public function view($filename = false, $data = false)
     {
-        $filename = $filename ?: $this->view;
-        $filename = $this->viewfolder . $filename . ".pug";
-        $data     = $data ?: $this->data;
-        $data     = Data::recursiveFilter($data, "content");
-
-        if (file_exists($filename)) {
-            return $this->renderer->render($filename, $data);
-        } else {
-            die("View file not found : $filename");
-        }
+        return View::render(
+            $filename ?: $this->view,
+            $data ?: $this->data
+        );
     }
 
     /**
@@ -99,7 +95,10 @@ class Controller
      */
     public function render($filename = false, $data = false)
     {
-        echo $this->view($filename, $data);
+        View::display(
+            $filename ?: $this->view,
+            $data ?: $this->data
+        );
     }
 
     /**
@@ -138,10 +137,10 @@ class Controller
      *
      * @return string
      */
-    public function json()
+    public function json($data = false)
     {
-        header('Content-Type: application/json');
-        return json_encode($this->data);
+        $data = $data ? $data : $this->data;
+        wp_send_json($data);
     }
 
     /**
@@ -171,50 +170,6 @@ class Controller
         echo "</pre>";
     }
 
-    /**
-     * Return a downloadable CSV
-     *
-     * @param string $filename
-     * @param string $delimiter
-     * @param mixed $data
-     * @return void
-     */
-    public function csv($filename = "export.csv", $delimiter = ";", $data = false)
-    {
-        header("Content-Type: application/csv");
-        header("Content-Disposition: attachment; filename='{$filename}';");
-
-        $data = $data ?: $this->data;
-
-        $f = fopen("php://output", "w");
-        foreach ($data as $line) {
-            fputcsv($f, (array) $line, $delimiter);
-        }
-        exit;
-    }
-
-    /**
-     * Return a downloadable .xlxs
-     *
-     * @param string $filename
-     * @param mixed $data
-     * @uses composer require "mk-j/php_xlsxwriter"
-     * @return void
-     */
-    public function excel($filename = "export.xlsx", $data)
-    {
-        header("Content-Type: application/xlsx");
-        header("Content-Disposition: attachment; filename={$filename};");
-
-        $data = $data ?: $this->data;
-
-        $writer = new \XLSXWriter();
-        $writer->writeSheet($data);
-
-        $f = fopen("php://output", "w");
-        fwrite($f, $writer->writeToString());
-        exit;
-    }
 
     /**
      * Force the download of a media
@@ -245,15 +200,15 @@ class Controller
     // ==================================================
     public function message($message, $replace_content = false, $redirection = false, $message_key = "message")
     {
-        $error_data = [
+        $message_data = [
             $message_key    => $message,
             "empty_content" => $replace_content
         ];
 
         if (!$redirection) {
-            Data::currentPage($error_data);
+            Data::currentPage($message_data);
         } else {
-            Data::nextPage($error_data, $redirection);
+            Data::nextPage($message_data, $redirection);
         }
 
     }

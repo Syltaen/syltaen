@@ -180,12 +180,11 @@ abstract class CommentsModel extends Model
     public static function add($attrs = [], $fields = false)
     {
         global $post;
-        $user = Data::globals("user");
 
         // Default attributes
         $attrs = array_merge([
             "comment_post_ID" => $post ? $post->ID : false,
-            "user_id"         => $user ? $user->ID : false,
+            "user_id"         => (new Users)->logged()->ID,
             "comment_content" => "",
             // "comment_approved" => 0
         ], $attrs);

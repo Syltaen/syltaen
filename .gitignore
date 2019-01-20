@@ -1,5 +1,7 @@
 .DS_Store
 
-
-/app/vendors
+/app/vendors/vendor
 /node_modules
+
+/app/cache/*
+!/app/cache/acf/

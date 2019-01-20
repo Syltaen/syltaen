@@ -60,8 +60,7 @@ class Pagination
 
         $this->page        = $force_page ? $force_page : $this->getPage();
         $this->posts       = $model->get($this->perPage, $this->page);
-
-        $this->totalPages  = isset($model->getQuery()->max_num_pages) ? $model->getQuery()->max_num_pages : ceil($model->getQuery()->total_users / $per_page);
+        $this->totalPages  = $model->getPagesCount();
 
         $this->querystring = $_SERVER["QUERY_STRING"] ? "?".$_SERVER["QUERY_STRING"] : "";
     }
@@ -109,7 +108,7 @@ class Pagination
      * Generate Walker
      *
      * @param string $anchor ID to append to each page link
-     * @param string $class Class to add to the navigation
+     * @param boolean $class Class to add to the navigation
      * @param int $pages_span Number of pages to display in the navigation
      * @param bool $hide_alone Return an empty string if the walker only has one page
      * @param string $view The view template to use

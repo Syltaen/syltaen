@@ -27,7 +27,7 @@ $selected-color: white
 $tag-background: $input-background
 $tag-border: 1px solid $input-background
 $tag-border-radius: 0
-$tag-remove-color: $clear-color
+$tag-remove-color: color(primary)
 $tag-remove-hover-color: color(error)
 
 
@@ -36,8 +36,6 @@ $tag-remove-hover-color: color(error)
 // =============================================================================
 .select2
     +font(16px $input-height $input-color)
-    &--disabled
-        opacity: .75
 
     // ==================================================
     // > CONTAINER
@@ -46,6 +44,8 @@ $tag-remove-hover-color: color(error)
         display: block
         position: relative
         width: 100% !important
+        &--disabled
+            opacity: .25
 
         &--open .select2-selection
             border-bottom-left-radius: 0px !important
@@ -142,6 +142,7 @@ $tag-remove-hover-color: color(error)
 
         &--multiple
             cursor: text
+            height: auto
 
         &__rendered
             display: block
@@ -203,11 +204,11 @@ $tag-remove-hover-color: color(error)
         height: $input-height
         +absolute(top 0 right 0)
         width: 40px
-        +font(fa 16px $input-height center $arrow-color)
+        +font(16px $input-height center $arrow-color)
         &::before
-            content: $fa-var-caret-down
+            +fa(caret-down)
             .select2-container--open &
-                content: $fa-var-caret-up
+                +fa(caret-up)
 
 
     // ==================================================

@@ -21,11 +21,10 @@
         @if type-of($a) == "number"
             // Font size
             @if not $hasFontSize
-                @if unitless($a) // use px as default unit
-                    $a: $a * 1px
-
-                font-size: $a
-                @if unit($a) == "px"
+                @if unitless($a)
+                    font-size: $a * 1em
+                @else
+                    font-size: $a
                     font-size: calculateRem($a)
                 $hasFontSize: true
 

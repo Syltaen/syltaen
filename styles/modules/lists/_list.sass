@@ -1,0 +1,114 @@
+// =============================================================================
+// > LAYOUTS: MODULES - LISTS
+// =============================================================================
+
+ol,
+ul
+    list-style: none
+
+ul:not([class]),
+ol:not([class]),
+.list
+    margin: 1em 0
+    padding-left: 1.2em
+
+    // EMBEDED
+    & &
+        margin-top: .5em
+
+ul:not([class]) > li,
+ol:not([class]) > li,
+.list > li,
+.list__item
+    position: relative
+    margin-bottom: .4em
+    &::before
+        +font(primary)
+        font-size: .9em
+        line-height: 1.8em
+        +absolute(left -1.2em top 0)
+
+// =============================================================================
+// > BULLETS
+// =============================================================================
+
+// ========== COLORS ========== //
+@each $slug, $value in $colors
+    .list--bullets-#{$slug} > li::before
+        color: $value !important
+
+// ========== NUMBERS / OL ========== //
+ol:not([class]),
+.list--numbers
+    counter-reset: item
+
+ol:not([class]),
+.list--numbers
+    & > .list__item::before, & > li::before
+        content: counter(item)"."
+        counter-increment: item
+        +font(bold)
+
+// ========== DEFAULT / UL ========== //
+ul:not([class]),
+.list--circle
+    &,
+    & &
+        & > .list__item::before, & > li::before
+            +fa(circle)
+            font-size: .5em
+            line-height: 2.8em
+            left: -1.75em
+    & &
+        & > .list__item::before, & > li::before
+            +far(circle)
+
+
+// ========== CARRETS ========== //
+.list--carrets
+    & > .list__item::before, & > li::before
+        +fa(caret-right)
+
+// ========== ANGLES ========== //
+.list--angles
+    & > .list__item::before, & > li::before
+        +fa(angle-right)
+
+
+// ========== ARROWS ========== //
+.list--arrows
+    padding-left: 1.35em
+    & > .list__item::before, & > li::before
+        +fa(arrow-right)
+        left: -1.35em
+
+// ========== CHECKS ========== //
+.list--checks
+    padding-left: 1.35em
+    & > .list__item::before, & > li::before
+        +fa(check-circle)
+        font-size: 1em
+        line-height: unset
+        +font(secondary)
+        left: -1.35em
+
+// ========== CHOICES (radio/checkbox) ========== //
+.list--choices
+    padding-left: 25px
+    & > .list__item input.list__bullet, & > li input.list__bullet
+        +absolute(top .2em left -25px)
+
+
+// =============================================================================
+// > DISPOSITIONS
+// =============================================================================
+.list--vertical-centered
+    +flex(column nowrap, center, center)
+
+.list--horizontal
+    +flex(row nowrap)
+    margin-left: -10px
+    margin-right: -10px
+    & > li
+        padding-left: 10px
+        padding-right: 10px
