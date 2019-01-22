@@ -295,7 +295,7 @@ add_filter("tiny_mce_before_init", function ($init_array) {
 // > EDITOR STYLESHEET
 // ==================================================
 add_editor_style("build/css/bundle.css");
-
+add_editor_style("build/css/admin.css");
 
 // ==================================================
 // > CONFIG

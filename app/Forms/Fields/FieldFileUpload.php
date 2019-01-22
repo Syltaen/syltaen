@@ -37,7 +37,7 @@ class FieldFileUpload extends \NF_Abstracts_Input
         $this->_settings["filetypes"] = [
             "name"  => "filetypes",
             "type"  => "textbox",
-            "label" => __("Types de fichiers authorisés", "syltaen"),
+            "label" => __("Types de fichiers autorisés", "syltaen"),
             "width" => "full",
             "group" => "primary",
             "value" => ".jpg, .jpeg, .png, .gif",
@@ -48,7 +48,7 @@ class FieldFileUpload extends \NF_Abstracts_Input
         $this->_settings["maxupload"] = [
             "name" => "maxupload",
             "type" => "number",
-            "label" => __("Taille maximum authorisée", "sytlaen"),
+            "label" => __("Taille maximum autorisée", "sytlaen"),
             "width" => "full",
             "group" => "primary",
             "value" => "2",

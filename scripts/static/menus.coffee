@@ -28,7 +28,7 @@ class MobileMenu
         hammermenu = new Hammer @$menu[0]
         hammermenu.on "swipeleft", => @close()
 
-        @$menu.find(".mobile-nav__close").click => @close()
+        @$menu.find(".site-mobilenav__close").click => @close()
 
     toggle: ->
         @$body.toggleClass @openClass
@@ -41,7 +41,7 @@ class MobileMenu
 
 # ========== INIT ========== #
 $ ->
-    new MobileMenu $(".mobile-nav-trigger"), $(".mobile-nav"), "is-mobile-nav-open"
+    new MobileMenu $(".site-mobilenav__trigger"), $(".site-mobilenav"), "is-mobilenav-open"
 
 
 
