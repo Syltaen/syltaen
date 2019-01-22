@@ -19,10 +19,10 @@ Files::import("app/vendors/vendor/autoload.php");
 // ==================================================
 // > Custom error-handler
 // ==================================================
-if (WP_DEBUG) {
+if (WP_DEBUG || isset($_GET["debug"])) {
     ($handler = (new \Whoops\Handler\PrettyPageHandler))->setEditor("vscode");
     (new \Whoops\Run)
-        // ->silenceErrorsInPaths(["/plugins/"], E_ALL)
+    ->silenceErrorsInPaths(["/plugins/", "/wp-admin/", "/wp-includes/"], E_ALL)
         ->pushHandler($handler)->register();
 }
 

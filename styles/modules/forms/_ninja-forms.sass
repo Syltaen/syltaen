@@ -1,5 +1,5 @@
 // =============================================================================
-// > MODULES - FORMS: NINJA FORMS
+// > LAYOUTS: MODULES - FORMS: NINJA FORMS
 // =============================================================================
 
 // ==================================================
@@ -30,6 +30,9 @@
 // ==================================================
 .field-wrap
     display: flex
+
+.nf-field
+    clear: both
 
 .label-above .nf-field-label
     margin-bottom: 0
@@ -94,10 +97,6 @@
         .nf-field-label,
         .nf-field-element
             width: auto
-        .nf-field-element
-            +flex(column nowrap, center)
-            margin: 0 0 15px 0
-
 
 
 
@@ -116,6 +115,8 @@
 .nf-form-cont .list-radio-wrap ul,
 .nf-form-cont .list-checkbox-wrap ul,
     @extend %unstyled-list
+    label
+        +font(regular)
 
 // > SUBMIT
 .submit-container

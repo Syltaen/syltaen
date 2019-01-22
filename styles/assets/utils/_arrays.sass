@@ -8,7 +8,7 @@
 @function list_get($array, $index)
     @if map-has-key($array, $index)
         @return map-get($array, $index)
-    @warn "Unkown '#{$slug}' in '#{$array}'"
+    @warn "Unkown '#{$index}' in array"
     @return null
 
 

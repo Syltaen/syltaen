@@ -20,10 +20,6 @@ Files::addInlineScript(
     "bundle.js"
 );
 
-// GOOGLE MAPS
-// add_action("wp_enqueue_scripts", function () {
-//     wp_enqueue_script("google.maps", "https://maps.googleapis.com/maps/api/js?key=AIzaSyBqGY0yfAyCACo3JUJbdgppD2aYcgV8sC0");
-// });
 
 // ==================================================
 // > CSS
@@ -33,7 +29,6 @@ Files::addStyle("bundle.css");
 if (is_admin_bar_showing()) {
     Files::addStyle("admin.css");
 }
-
 
 // ==================================================
 // > REMOVE UNWANTED
@@ -74,5 +69,6 @@ Files::addScript("admin.js", [], "admin_enqueue_scripts");
 Files::addStyle("admin.css", [], "admin_enqueue_scripts");
 
 add_action("login_head", function () {
+    echo '<link rel="stylesheet" type="text/css" href="' . Files::url("build/css/bundle.css") .'" />';
     echo '<link rel="stylesheet" type="text/css" href="' . Files::url("build/css/admin.css") .'" />';
 });

@@ -10,7 +10,7 @@ $roots = $("html, body")
 # > SCROLL TOP
 # ==================================================
 $ ->
-    $("#scroll-top").addClassAt(100, "shown").click ->
+    $("#scroll-top").addClassAt(100, "is-shown").click ->
         $roots.animate
             scrollTop: 0
         , 500

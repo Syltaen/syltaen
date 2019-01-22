@@ -1,45 +1,46 @@
 // =============================================================================
-// > MODULES - FORMS : CONNEXION
+// > MODULES - FORMS: LOGIN
 // =============================================================================
 
 #loginform
-    max-width: 400px
-    margin: 0 auto
     overflow: hidden
     clear: both
+    position: relative
+    max-width: 400px
+    margin: 0 auto
+
+    label
+        width: 100%
 
     p
         margin-bottom: 10px
 
         #user_login,
         #user_pass
-            +size(100%, 40px)
-            +font(15px 40px bold)
-            padding: 0 10px
-
-        &.login-password a
-            float: right
-            +font(12px 2)
+            // +size(100%, 40px)
+            // +font(15px 40px bold)
+            // padding: 0 10px
 
         &.login-remember
             float: left
             width: 40%
-            margin-top: 35px
+            +screen(xs)
+                width: 100%
             label
                 height: 50px
-                +font(14px 50px)
+                line-height: 50px
+                +font(14px)
 
         &.login-submit
             width: 60%
             float: right
+            +screen(xs)
+                width: 100%
+            input
+                margin-top: 0
 
-        #wp-submit
-            @extend %button
-            +font(16px primary)
-            background: none
-            text-transform: uppercase
+        &.login-password a
             float: right
-            cursor: pointer
+            +font(12px 2 light secondary)
             &:hover
-                background: primary
-                color: white
+                +font(primary)

@@ -2,7 +2,7 @@
 
 namespace Syltaen;
 
-class SingleController extends PageController
+class SingleController extends BaseController
 {
 
     protected $view = "single";
@@ -58,7 +58,7 @@ class SingleController extends PageController
      */
     private function addSingleNav($archive_link_text = false, $archive_path = false)
     {
-        Data::store($this->data, [
+        $this->addData([
             "@singlenav"  => [
                 "archive"  => [
                     "url"  => site_url($archive_path ? $archive_path : ($this->model::CUSTOMPATH ? $this->model::CUSTOMPATH : $this->model::TYPE)),

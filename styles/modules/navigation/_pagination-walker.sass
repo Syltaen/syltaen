@@ -10,7 +10,7 @@
     // ========== DIRECTIONS ========== //
     &__direction
         +size(40px)
-        +font(18px 35px primary fa center)
+        +font(18px 35px primary center)
         position: relative
         border-radius: 50%
         border: 2px solid color(primary)
@@ -20,17 +20,16 @@
         margin: 0 10px
 
         &::before
-            +font(fa)
             text-indent: 0
             @extend %cover
         &--first:before
-            content: $fa-var-angle-double-left
+            +fa(angle-double-left)
         &--previous:before
-            content: $fa-var-angle-left
+            +fa(angle-left)
         &--next:before
-            content: $fa-var-angle-right
+            +fa(angle-right)
         &--last:before
-            content: $fa-var-angle-double-right
+            +fa(angle-double-right)
 
         &--first,
         &--last

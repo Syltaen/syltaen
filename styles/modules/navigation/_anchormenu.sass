@@ -1,0 +1,66 @@
+// =============================================================================
+// > LAYOUTS: MODULES - NAVIGATION: ANCHOR MENU
+// =============================================================================
+
+.anchormenu
+
+    margin: 40px -20px
+    +flex(flow wrap, space-between)
+    +screen(xs)
+        flex-flow: column nowrap
+
+    &__item
+        flex: 1
+        padding: 1px 20px
+        overflow: hidden
+        +screen(xs)
+            margin: 5px 0
+
+    &__link
+        display: block
+        padding: 10px
+        border: 1px dashed color(secondary)
+        text-align: center
+        +font(18px secondary center)
+        position: relative
+        transition: all .5s ease
+        &.current
+            background: color(primary)
+            color: white
+            border-color: color(primary)
+            &:after
+                border-color: color(primary)
+        &::after
+            content: ""
+            @extend %cover
+            margin-top: -1px
+            margin-left: -1px
+            border: 1px solid color(secondary)
+            transition: all .5s ease
+            opacity: 0
+
+        &:hover::after
+            opacity: 1
+        &:hover &
+            &__text
+                transform: translateY(200%)
+                &--hovered
+                    transform: translateY(0)
+
+        &__text
+            transition: transform .5s ease
+            display: block
+            position: relative
+
+            &--hovered
+                +font(bold)
+                padding: 10px
+                &,
+                &::after
+                    +absolute(top 0 left 0)
+                    +size(100%)
+                    transform: translateY(-200%)
+                &::after
+                    +fa(angle-down)
+                    font-size: 2em
+                    transform: translateY(100%)

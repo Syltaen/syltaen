@@ -75,9 +75,11 @@ class Cache
         $this->keep      = $keep;
 
         $this->now       = time();
-        $this->directory = Files::path("app/cache/{$this->key}");
-        $this->files     = $this->getAllFiles();
+        $this->directory = static::getDirectory($this->key);
+        $this->files     = static::getAllFiles($this->directory, $this->format);
     }
+
+
 
     /**
      * Get data from the last cache file, or create a new one if its expired
@@ -89,7 +91,6 @@ class Cache
      */
     public function get($resultCallback = false)
     {
-
         $last = $this->getDataFrom(0);
 
         if ($resultCallback && $this->isExpired()) {
@@ -122,6 +123,7 @@ class Cache
 
         // Rewrite the file
         fwrite($file, $content);
+        chmod($filename, 0777);
         fclose($file);
     }
 
@@ -146,6 +148,34 @@ class Cache
         $this->checkGarbage(0);
     }
 
+
+    // ==================================================
+    // > STATIC TOOLS
+    // ==================================================
+    /**
+     * Get the timestamp of the last cached file
+     *
+     * @param string $key
+     * @return void
+     */
+    public static function getTime($key)
+    {
+        $files = static::getAllFiles(static::getDirectory($key));
+        return empty($files) ? 0 : intval($files[0]);
+    }
+
+    /**
+     * Get the timestamp of the last cached file
+     *
+     * @param string $key
+     * @return void
+     */
+    public static function getDirectory($key)
+    {
+        return Files::path("app/cache/{$key}");
+    }
+
+
     // ==================================================
     // > PRIVATE
     // ==================================================
@@ -154,19 +184,19 @@ class Cache
      *
      * @return void
      */
-    private function getAllFiles()
+    private static function getAllFiles($directory, $format = "json")
     {
         $files = [];
-        if (is_dir($this->directory)) {
-            foreach (scandir($this->directory, SCANDIR_SORT_DESCENDING) as $file) {
-                if (strpos($file, ".".$this->format)) {
+        if (is_dir($directory)) {
+            foreach (scandir($directory, SCANDIR_SORT_DESCENDING) as $file) {
+                if (strpos($file, ".".$format)) {
                     $files[] = $file;
                 }
             }
 
         // Or create the cache directory if there is none
         } else {
-            mkdir($this->directory);
+            mkdir($directory);
         }
 
         return $files;
@@ -183,7 +213,8 @@ class Cache
     {
         // Get the file to write in
         $filename = $this->now . "." . $this->format;
-        $file     = fopen($this->directory . "/" . $filename, "w");
+        $filepath = $this->directory . "/" . $filename;
+        $file     = fopen($filepath, "w");
 
         // Encode the content
         switch ($this->format) {
@@ -198,6 +229,7 @@ class Cache
 
         // Store the content in the file
         fwrite($file, $txt);
+        chmod($filepath, 0777);
         fclose($file);
 
         // Add file to the list and delete files that are too old

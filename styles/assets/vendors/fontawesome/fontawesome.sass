@@ -1,0 +1,81 @@
+
+// =============================================================================
+// > CONFIG
+// =============================================================================
+$fa-font-path:                "../../styles/assets/vendors/fontawesome/webfonts" !default;
+$fa-font-size-base:           16px !default;
+$fa-css-prefix:               fa !default;
+$fa-version:                  "5.6.3" !default;
+$fa-border-color:             #eee !default;
+$fa-inverse:                  #fff !default;
+$fa-li-width:                 2em !default;
+$fa-fw-width:                 (20em / 16);
+
+
+// =============================================================================
+// > IMPORTS
+// =============================================================================
+
+@import "fa-icons"
+@import "mixins"
+@import "core"
+// @import "larger"
+// @import "fixed-width"
+// @import "list"
+// @import "bordered-pulled"
+// @import "animated"
+// @import "rotated-flipped"
+// @import "stacked"
+@import "icons"
+// @import "screen-reader"
+
+
+// =============================================================================
+// > VARIANTS
+// =============================================================================
+
+// ========== SOLID ========== //
+@font-face
+    font-family: "Font Awesome Solid"
+    src: url("#{$fa-font-path}/fa-solid-900.eot")
+    src: url("#{$fa-font-path}/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("#{$fa-font-path}/fa-solid-900.woff2") format("woff2"), url("#{$fa-font-path}/fa-solid-900.woff") format("woff"), url("#{$fa-font-path}/fa-solid-900.ttf") format("truetype"), url("#{$fa-font-path}/fa-solid-900.svg#fontawesome") format("svg")
+
+
+=fa($icon_var: false)
+    font-family: "Font Awesome Solid"
+    @if $icon_var
+        content: fa-content($icon_var)
+
+.fa
+    +fa()
+
+
+// ========== REGULAR ========== //
+@font-face
+    font-family: "Font Awesome Regular"
+    src: url("#{$fa-font-path}/fa-regular-400.eot")
+    src: url("#{$fa-font-path}/fa-regular-400.eot?#iefix") format("embedded-opentype"), url("#{$fa-font-path}/fa-regular-400.woff2") format("woff2"), url("#{$fa-font-path}/fa-regular-400.woff") format("woff"), url("#{$fa-font-path}/fa-regular-400.ttf") format("truetype"), url("#{$fa-font-path}/fa-regular-400.svg#fontawesome") format("svg")
+
+=far($icon_var: false)
+    font-family: "Font Awesome Regular"
+    @if $icon_var
+        content: fa-content($icon_var)
+
+.far
+    +far()
+
+
+
+// ========== BRANDS ========== //
+@font-face
+    font-family: "Font Awesome Brands"
+    src: url("#{$fa-font-path}/fa-brands-400.eot")
+    src: url("#{$fa-font-path}/fa-brands-400.eot?#iefix") format("embedded-opentype"), url("#{$fa-font-path}/fa-brands-400.woff2") format("woff2"), url("#{$fa-font-path}/fa-brands-400.woff") format("woff"), url("#{$fa-font-path}/fa-brands-400.ttf") format("truetype"), url("#{$fa-font-path}/fa-brands-400.svg#fontawesome") format("svg")
+
+=fab($icon_var: false)
+    font-family: "Font Awesome Brands"
+    @if $icon_var
+        content: fa-content($icon_var)
+
+.fab
+    +fab()

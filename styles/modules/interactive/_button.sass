@@ -22,6 +22,7 @@ $button_base_color: color(primary)
         z-index: -1
         transition: width .35s ease
 
+    .button__parent:hover &,
     &:hover
         color: $button_base_color
         &::before
@@ -81,9 +82,9 @@ $button_base_color: color(primary)
         opacity: 0.5
         pointer-events: none
         &::after
-            content: $fa-var-circle-o-notch
+            +fa(circle-notch)
             +absolute(top 50% left 100%)
-            +font(30px 40px fa secondary center)
+            +font(30px 40px secondary center)
             +size(40px)
             margin-top: -20px
             margin-left: 10px

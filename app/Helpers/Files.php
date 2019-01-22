@@ -168,7 +168,14 @@ abstract class Files
         $classname = substr($classname, 8);
 
         // Find the file in one of the classes folders
-        if ($found = self::findIn("{$classname}.php", ["app/lib", "app/Helpers", "Controllers", "Models", "app/Forms"])) {
+        if ($found = self::findIn("{$classname}.php", [
+            "app/lib",
+            "app/Helpers",
+            "Controllers",
+            "Controllers/processors",
+            "Models",
+            "app/Forms"
+        ])) {
             require_once $found;
         }
     }

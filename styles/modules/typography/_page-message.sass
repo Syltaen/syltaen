@@ -1,0 +1,74 @@
+// =============================================================================
+// > LAYOUT : SITE MESSAGE
+// =============================================================================
+
+.page-message
+    background: color(primary)
+    +font(bold white)
+    padding: 20px 40px
+    margin: 20px 0
+    +screen(xs)
+        padding: 10px 20px
+
+    // ==================================================
+    // > TYPES
+    // ==================================================
+    &--error
+        background: color(error)
+        +font(center)
+
+    &--success
+        background: color(success)
+        +font(center)
+
+    &--info
+        border: 2px solid color(green)
+        background: none
+        +font(regular text)
+
+    &--warning
+        border: 2px solid color(primary)
+        background: none
+        +font(regular text)
+        padding: 10px 20px 10px 80px
+        position: relative
+        &::before
+            +fa(exclamation-triangle)
+            +font(2 primary)
+            +absolute(top 10px left 20px)
+
+
+    &--explaination
+        background: color(secondary)
+
+
+    // ==================================================
+    // > SIZES
+    // ==================================================
+    &--small
+        padding: 5px 20px
+
+
+    // ==================================================
+    // > CLOSABLE
+    // ==================================================
+    &--closable
+        position: relative
+
+    &--closable &__close
+        +font(12px 30px center white)
+        +size(30px)
+        +absolute(top 0 right 0)
+        cursor: pointer
+        text-indent: -9999px
+        &::after
+            +fa(times)
+            @extend %cover
+            text-indent: 0
+
+
+    // ==================================================
+    // > ELEMENTS
+    // ==================================================
+    &__title
+        +font(18px)

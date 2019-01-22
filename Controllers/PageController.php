@@ -2,273 +2,132 @@
 
 namespace Syltaen;
 
-abstract class PageController extends Controller
+class PageController extends BaseController
 {
 
-    protected $view = "page";
-
     /**
-     * The current user
+     * Handle context & rendering for content pages
      *
-     * @var Syltaen\Users
+     * @return void
      */
-    protected $user;
-
-    /**
-     * The current post
-     *
-     * @var WP_Posts
-     */
-    protected $post;
-
-    /**
-     * Add data for the rendering
-     */
-    public function __construct($args = [])
+    public function page()
     {
-        global $post;
+        $this->addData([
+            "intro_content",
+            "(img:url) intro_bg",
 
-        parent::__construct($args);
+            "@sections" => (new SectionsProcessor($this))->processEach(Data::get("sections")),
+        ]);
 
-        // Global post
-        $this->post = $post;
-        $this->data["post"] = $this->post;
 
-        // Store the current user of internal use
-        $this->user = Data::globals("user");
-        $this->userData = $this->user ? $this->user->getOne() : false;
-
-        // Add common data needed all pages
-        $this->setBase();
+        $this->render();
     }
 
 
-    // ==================================================
-    // > PARTS
-    // ==================================================
     /**
-     * Rendering of all the websites menus
+     * Handle context & rendering for the homepage
      *
-     * @return array
+     * @return void
      */
-    protected function menus()
+    public function home()
     {
-        return [
-            "main" => wp_nav_menu([
-                "theme_location" => "main_menu",
-                "menu_id"        => false,
-                "menu_class"     => "menu site-header__menu",
-                "container"      => "ul",
-                "echo"           => false
-            ]),
+        $this->addData([
 
-            "mobile" => wp_nav_menu([
-                "theme_location" => "main_menu",
-                "menu_id"        => false,
-                "menu_class"     => "menu site-mobilenav__menu",
-                "container"      => "ul",
-                "echo"           => false
-            ]),
+        ]);
 
-            "footer" =>	wp_nav_menu([
-                "theme_location" => "footer_menu",
-                "menu_id"        => false,
-                "menu_class"     => "menu site-footer__menu",
-                "container"      => "ul",
-                "echo"           => false
-            ])
+        $this->render("home");
+    }
+
+
+
+    // ==================================================
+    // > SPECIAL PAGES
+    // ==================================================
+
+    /**
+     * Error 404 page display
+     *
+     * @return output HTML
+     */
+    public function error404()
+    {
+        global $pagename;
+
+        $this->addData([
+            "@lookfor" => $pagename
+        ]);
+
+        // Make sure the error404 is set on the body
+        $this->addBodyClass("page404");
+
+        // Remove the breadcrumb
+        // $this->data["site"]["breadcrumb"] = "";
+
+        // Make sure the correcet header is set
+        status_header("404");
+        $this->render("404");
+    }
+
+    /**
+     * Display a form
+     *
+     * @param int $form_id The ID of the form to display
+     * @return void
+     */
+    public function ninjaFormPreview()
+    {
+        $this->addData([
+            "@sections"      => [[
+                "classes" => "lg-padding-vertical",
+                "attr"    => "",
+                "content" => [[
+                    "acf_fc_layout" => "columns",
+                    "columns"       => [[
+                        "txt" => "[ninja_form id=".$this->args[0]."]"
+
+                    ]]
+                ]]
+            ]],
+        ]);
+
+        $this->render();
+    }
+
+    /**
+     * Search results page
+     *
+     * @param string $search Terms to search for
+     * @return output HTML
+     */
+    public function search($search = false)
+    {
+        $search = $search ?: $this->args["search"];
+
+        $models_to_search = [
+            new Pages
         ];
-    }
 
-    /**
-     * Data for the website main header
-     *
-     * @return array
-     */
-    protected function header()
-    {
-        Data::store($header, [
-            "(img:tag) logo@logo_tag",
-            "(img:url) logo@logo_url",
-            "social" => []
-        ], "headerfooter");
+        $this->data["results"] = [];
+        $total_results_count   = 0;
 
-        return $header;
-    }
-
-    /**
-     * Data for the website main footer
-     *
-     * @return array
-     */
-    protected function footer()
-    {
-        Data::store($footer, [
-            "copyright", "@copyright" => function ($footer) {
-                return str_replace("%year%", date("Y"), $footer["copyright"]);
-            }
-        ], "headerfooter");
-
-        return $footer;
-    }
-
-    /**
-     * Generate a breadcrumb
-     *
-     * @uses Plugin : Breadcrumb Trail
-     * @return string The Rendered breadcrumb
-     */
-    protected function breadcrumb()
-    {
-        return breadcrumb_trail([
-            "show_browse" => false,
-            "echo"        => false
-        ]);
-    }
-
-
-    /**
-     * Pre-load all the ninja forms so that they can be used with barba.js
-     *
-     * @return array of forms
-     */
-    protected function forms()
-    {
-        return array_map(function ($formModel) {
-            return [
-                "id" => $formModel->get_id(),
-                "html" => "[ninja_forms id={$formModel->get_id()}]"
+        foreach ($models_to_search as $model) {
+            $this->data["results"][$model::TYPE] = [
+                "posts" => $model->search($search)->get(),
+                "count" => $model->count(),
+                "label" => $model::LABEL
             ];
-        }, Ninja_Forms()->form()->get_forms());
-    }
-
-    /**
-     * Generated the classes used on the body tag
-     *
-     * @return array of string
-     */
-    protected function bodyClasses()
-    {
-        $classes = get_body_class();
-
-        // Logged as admin
-        if ($this->userData) {
-            $classes[] = "is-logged";
-            if ($this->user->can("administrator")) {
-                $classes[] = "is-logged--admin";
-            }
-        } else {
-            $classes[] = "is-unlogged";
+            $total_results_count += $model->count();
         }
 
-        return $classes;
-    }
+        $total_results_count = $total_results_count > 1 ? $total_results_count." résultats" : ($total_results_count < 1 ? "Pas de résultat" : "Un seul résultat");
 
-
-    // ==================================================
-    // > MESSAGES HANDLING
-    // ==================================================
-    /**
-     * Update the view method to catch any message set in the controller
-     *
-     * @param boolean $filename
-     * @param boolean $data
-     * @return void
-     */
-    public function view($filename = false, $data = false)
-    {
-        $this->data["error_message"]   = Data::currentPage("error_message");
-        $this->data["success_message"] = Data::currentPage("success_message");
-
-        if (Data::currentPage("empty_content")) {
-            $this->data["sections"] = [];
-        }
-
-        return parent::view($filename, $data);
-    }
-
-
-    // ==================================================
-    // > SETTERS / ADDERS
-    // ==================================================
-    /**
-     * Add common data needed each page
-     * Can be launched after modifing the global $post to refresh data
-     * @return void
-     */
-    protected function setBase()
-    {
-        Data::store($this->data, [
-            "@site"       => [
-                "menus"        => $this->menus(),
-                "header"       => $this->header(),
-                "footer"       => $this->footer(),
-                // "breadcrumb"   => $this->breadcrumb(),
-                "forms"        => $this->forms(),
-
-                "name"         => get_bloginfo("name"),
-                "url"          => get_bloginfo("url"),
-                "language"     => get_locale(),
-                "charset"      => get_bloginfo("charset"),
-                "description"  => get_bloginfo("description"),
-                "pingback_url" => get_bloginfo("pingback_url"),
-                "body_class"   => $this->bodyClasses(),
-            ]
+        $this->addData([
+            "@title"       => __("Recherche pour : ", "syltaen")." <span class='search-page__title__words'>$search</span><br><small>$total_results_count</small>",
+            "@search"      => $search
         ]);
-    }
 
-    /**
-     * Change the document title
-     *
-     * @param string $title
-     * @return void
-     */
-    protected function setPageTitle($title)
-    {
-        add_filter("document_title_parts", function ($parts) use ($title) {
-            $parts["title"] = $title;
-            return $parts;
-        }, 10, 1);
-    }
-
-    /**
-     * Add class to the body
-     *
-     * @param array|string $classes Class(es) to add
-     * @return void
-     */
-    public function addBodyClass($classes)
-    {
-        $this->data["site"]["body_class"] = array_merge(
-            $this->data["site"]["body_class"],
-            (array) $classes
-        );
-    }
-
-    /**
-     * Set the current page/post to a model result.
-     * Usefull to create aliases and/or displaying a page/post that is not found by default
-     * @param mixed $model The model used to get the page/post.
-     * @param string $responce Specify an other controller method to handle the post
-     * @param array $args
-     * @return void
-     */
-    protected function setPage($model, $refreshBase = false, $responce = false, $args = false)
-    {
-        global $wp_query;
-        global $post;
-
-        $wp_query   = $model->limit(1)->getSingularQuery();
-        $post       = $model->getOne();
-        $this->post = $post;
-
-        if ($refreshBase) {
-            $this->setBase();
-        }
-
-        if ($responce) {
-            Route::respond($resp, $args, true);
-        }
+        $this->addBodyClass("search-page");
+        $this->render("search");
     }
 
 }

@@ -139,6 +139,12 @@ abstract class Data
             if (is_int($key)) {
                 $key = $value;
                 $value = false;
+
+                // Anonym function
+                if (is_callable($key)) {
+                    $key($array);
+                    continue;
+                }
             }
 
             // check if the value's type is suggested
@@ -188,19 +194,12 @@ abstract class Data
         if (is_object($data) && isset($data->ID)) return [$data->ID];
         if (is_int($data)) return [$data];
         if (is_string($data)) return [intval($data)];
+        if ($data instanceof Model) return (array) $data->ID;
+        if (is_array($data)) return array_map(function ($data) {
+            return static::extractIds($data)[0];
+        }, $data);
 
-        if ($data) {
-            $ids = [];
-            foreach ($data as $d) {
-                if (is_int($d)) {
-                    $ids[] = $d;
-                } else {
-                    if (is_array($d) && isset($d["ID"])) $ids[] = $d["ID"];
-                    if (is_object($d) && isset($d->ID)) $ids[] = $d->ID;
-                }
-            }
-            return $ids;
-        }
+        return false;
     }
 
     // ==================================================
