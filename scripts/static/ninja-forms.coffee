@@ -38,22 +38,14 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
     # > CONDITIONAL RENDERING
     # ==================================================
     shouldHide: (field) ->
+        unless field.attributes.has_conditional_display then return false
+
         shouldHide = false
-
-        if field.attributes.has_conditional_display
-            for i, condition of field.attributes.conditional_display
-                for i, f of field.collection.models
-                    if f.attributes.key == condition.label
-                        fieldValue = f.attributes.value || f.attributes.default
-                        pass = false
-
-                        switch condition.calc
-                            when "!="   then pass = true if fieldValue != condition.value
-                            when "==="  then pass = true if fieldValue is condition.value
-                            when "!=="  then pass = true if fieldValue isnt condition.value
-                            when "in"   then pass = true if fieldValue.indexOf(condition.value) > -1
-                            else             pass = true if fieldValue + "" == condition.value + ""
-                        unless pass then shouldHide = true
+        for i, condition of field.attributes.conditional_display
+            for i, f of field.collection.models
+                unless f.attributes.key == condition.label then continue
+                fieldValue = f.attributes.value || f.attributes.default
+                shouldHide = !@valuesMatch fieldValue, condition.value, condition.calc
 
         # Disable requirement if the field is hidden
         if shouldHide
@@ -63,6 +55,22 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
             field.attributes.required = field.attributes.required_base
 
         return shouldHide
+
+    valuesMatch: (a, b, compare) ->
+        switch compare
+            when "!="
+                if fieldValue != condition.value then return true
+            when "==="
+                if fieldValue is condition.value then return true
+            when "!=="
+                if fieldValue isnt condition.value then return true
+            when "in"
+                if fieldValue.indexOf(condition.value) > -1 then return true
+            else
+                if fieldValue + "" == condition.value + "" then return true
+
+        return false
+
 
     checkConditional: (form) ->
         for i, field of form.model.attributes.fields.models

@@ -24,11 +24,11 @@ class FilterableTable
     findRows: ->
         rows = []
 
-        @$table.find("tr").each (i, el) =>
+        @$table.find("tr").each (i, el) ->
             row =
                 $el: $(el)
                 filters: {}
-            $.each el.attributes, (i, attr) =>
+            $.each el.attributes, (i, attr) ->
                 if attr.name.startsWith("data-filter-")
                     filter =  attr.name.replace("data-filter-", "")
                     row.filters[filter] = attr.value
