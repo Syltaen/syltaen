@@ -59,15 +59,15 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
     valuesMatch: (a, b, compare) ->
         switch compare
             when "!="
-                if fieldValue != condition.value then return true
+                if a != b then return true
             when "==="
-                if fieldValue is condition.value then return true
+                if a is b then return true
             when "!=="
-                if fieldValue isnt condition.value then return true
+                if a isnt b then return true
             when "in"
-                if fieldValue.indexOf(condition.value) > -1 then return true
+                if a.indexOf(b) > -1 then return true
             else
-                if fieldValue + "" == condition.value + "" then return true
+                if a + "" == b + "" then return true
 
         return false
 
