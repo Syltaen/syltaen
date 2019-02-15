@@ -1,0 +1,317 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Syltaen\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-23 13:21+0000\n"
+"PO-Revision-Date: 2018-08-23 13:23+0000\n"
+"Last-Translator: Syltaen <stanley.lambot@hungryminds.be>\n"
+"Language-Team: German\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/"
+
+#: Controllers/HomeController.php:25 Controllers/SingleController.php:51
+msgid "Applications"
+msgstr "Anwendungen"
+
+#. > _applications-slide.pug;
+#: Controllers/SingleController.php:63
+msgid "Découvrez les autres applications"
+msgstr "Entdecken Sie unsere anderen Anwendungen"
+
+#: Controllers/SingleController.php:75
+msgid "Retour à la liste des news"
+msgstr "Zurück zur News-Liste"
+
+#: Controllers/SingleController.php:100
+msgid "Retour à la liste des jobs"
+msgstr "Zurück zur Stellenangebotsliste"
+
+#: Controllers/SingleController.php:101
+msgid "[ninja_form id=3]"
+msgstr "[ninja_form id=9]"
+
+#: Controllers/SingleController.php:124
+msgid "Retour à la liste"
+msgstr "Zurück"
+
+#: Controllers/SingleController.php:128 app/lang/view-strings.php:54
+msgid "Précédent"
+msgstr "Zurück"
+
+#: Controllers/SingleController.php:132 app/lang/view-strings.php:55
+msgid "Suivant"
+msgstr "Weiter"
+
+#: Controllers/SpecialPageController.php:91
+msgid "Recherche pour : "
+msgstr "Forschung :"
+
+#: app/config/shortcodes.php:35
+msgid "Adresse e-mail"
+msgstr "E-Mail"
+
+#: app/config/shortcodes.php:36
+msgid "Mot de passe #reset#"
+msgstr "Mot de passe #reset#"
+
+#: app/config/shortcodes.php:42
+msgid "Mot de passe oublié ?"
+msgstr "Mot de passe oublié ?"
+
+#: app/Helpers/Pagination.php:127
+msgid "Première page"
+msgstr "Erste Seite"
+
+#: app/Helpers/Pagination.php:132
+msgid "Page précédente"
+msgstr "Vorherige Seite"
+
+#: app/Helpers/Pagination.php:137
+msgid "Page suivante"
+msgstr "Nächste Seite"
+
+#: app/Helpers/Pagination.php:142
+msgid "Dernière page"
+msgstr "Letzte Seite"
+
+#: app/Helpers/Pagination.php:145
+#, php-format
+msgid "Page %s sur %s"
+msgstr "Seite %s von %s"
+
+#. > 404.pug;
+#: app/lang/view-strings.php:11
+msgid " Erreur 404"
+msgstr "404"
+
+#: app/lang/view-strings.php:12
+msgid "Cette page n'existe pas"
+msgstr "Eine URL wurde falsch eingegeben oder die von Ihnen gesuchte Seite existiert nicht mehr."
+
+#: app/lang/view-strings.php:13
+msgid "Retour à l'accueil"
+msgstr "Rückkehr"
+
+#: app/lang/view-strings.php:14
+msgid "Faire une recherche"
+msgstr "Forschung :"
+
+#. > search.pug;
+#. > _base.pug;
+#: app/lang/view-strings.php:18 app/lang/view-strings.php:59 app/lang/view-strings.php:60 app/lang/view-strings.php:80
+msgid "Recherche"
+msgstr "Forschung"
+
+#. > single-applications.pug;
+#. > single-products.pug;
+#: app/lang/view-strings.php:22 app/lang/view-strings.php:38
+msgid "Gamme"
+msgstr "Sortiment"
+
+#: app/lang/view-strings.php:23
+msgid "Plus d'infos"
+msgstr "Mehr ..."
+
+#: app/lang/view-strings.php:24 app/lang/view-strings.php:41
+msgid "Intéressé par nos produits ?"
+msgstr "Interessiert an unseren Produkten?"
+
+#: app/lang/view-strings.php:25 app/lang/view-strings.php:42
+msgid "Contactez-nous maintenant"
+msgstr "Kontaktieren Sie uns gleich jetzt."
+
+#. > single-jobs.pug;
+#: app/lang/view-strings.php:29
+msgid "Jobs"
+msgstr "Jobs"
+
+#: app/lang/view-strings.php:30
+msgid "Postuler"
+msgstr "Bewerben"
+
+#. > single-news.pug;
+#: app/lang/view-strings.php:34
+msgid "News"
+msgstr "News"
+
+#: app/lang/view-strings.php:39
+msgid "Nouveau"
+msgstr "Neu"
+
+#: app/lang/view-strings.php:40
+msgid "Packaging"
+msgstr "Verpackung"
+
+#: app/lang/view-strings.php:43
+msgid "Découvrez nos autres produits"
+msgstr "Entdecken Sie unsere anderen Produkte"
+
+#. > single-recipes.pug;
+#: app/lang/view-strings.php:47
+msgid "Recette"
+msgstr "Rezept"
+
+#: app/lang/view-strings.php:48
+msgid "Ingrédients"
+msgstr "Zutaten"
+
+#: app/lang/view-strings.php:49
+msgid "Préparation"
+msgstr "Zubereitung"
+
+#: app/lang/view-strings.php:50
+msgid "Ça pourrait vous intéresser"
+msgstr "Das könnte Sie interessieren"
+
+#. > _archive-dispensers.pug;
+#: app/lang/view-strings.php:64
+msgid "Pays"
+msgstr "Land"
+
+#: app/lang/view-strings.php:65
+msgid "Type de distributeur"
+msgstr "Art von Handelspartner"
+
+#: app/lang/view-strings.php:66
+msgid "Recherche par nom"
+msgstr "Suche nach Namen"
+
+#. > _archive-jobs.pug;
+#: app/lang/view-strings.php:70
+msgid "Aucune offre d'emploi actuellement"
+msgstr "Derzeit gibt es keine Stellenangebote."
+
+#. > _archive-news.pug;
+#: app/lang/view-strings.php:74 app/lang/view-strings.php:82
+msgid "Voir plus"
+msgstr "Mehr ..."
+
+#. > _archive-recipes.pug;
+#: app/lang/view-strings.php:78
+msgid "Produit"
+msgstr "Produkte"
+
+#: app/lang/view-strings.php:79
+msgid "Application"
+msgstr "Anwendung"
+
+#: app/lang/view-strings.php:81
+msgid "Aucun résultat pour votre recherche"
+msgstr "Keine Ergebnisse"
+
+#. > _card-job.pug;
+#: app/lang/view-strings.php:86
+msgid "Postuler pour ce job"
+msgstr "Für diese Stelle bewerben"
+
+#. > _card-news.pug;
+#: app/lang/view-strings.php:90
+msgid "Lire plus"
+msgstr "Mehr ..."
+
+#. > _card-recipe.pug;
+#: app/lang/view-strings.php:94 app/lang/view-strings.php:99 app/lang/view-strings.php:104 app/lang/view-strings.php:111
+msgid "En savoir plus"
+msgstr "Mehr ..."
+
+#: app/lang/view-strings.php:98
+msgid "Voir toutes les applications"
+msgstr "Alle Anwendungen anzeigen"
+
+#. > _products-slide.pug;
+#: app/lang/view-strings.php:103
+msgid "Nos produits"
+msgstr "Unsere Produkte"
+
+#. > _recipes-slide.pug;
+#: app/lang/view-strings.php:108
+msgid "Recettes"
+msgstr "Rezepte"
+
+#: app/lang/view-strings.php:109
+msgid "/recettes"
+msgstr "/de/rezepte"
+
+#: app/lang/view-strings.php:110
+msgid "Voir toutes les recettes"
+msgstr "Alle Rezepte anzeigen"
+
+#: Controllers/processors/ArchiveProcessor.php:96
+msgid "Toutes nos applications"
+msgstr "Alle Anwendungen"
+
+#: Models/Users/Users.php:47
+msgid "Cette clef de validation ne correspond à aucun utilisateur."
+msgstr "Cette clef de validation ne correspond à aucun utilisateur."
+
+#: Models/Users/Users.php:50
+msgid "Votre compte a été désactivé par un administrateur."
+msgstr "Votre compte a été désactivé par un administrateur."
+
+#: Models/Users/Users.php:51
+msgid "Votre compte a déjà été validé."
+msgstr "Votre compte a déjà été validé."
+
+#: app/Forms/Actions/ActionRegisterJobApplication.php:34
+msgid "Candidature à une offre d'emploi"
+msgstr "Candidature à une offre d'emploi"
+
+#: app/Forms/Actions/ActionRegisterJobApplication.php:74
+msgid "Désolé, l'offre d'emploi pour laquelle vous postulez n'a pas été trouvée. Veuillez réessayer plus tard ou prendre contact avec nous. :"
+msgstr "Das Stellenangebot, auf das Sie sich bewerben, wurde leider nicht gefunden. Bitte versuchen Sie es später noch einmal oder kontaktieren Sie uns:"
+
+#: app/Forms/Actions/ActionRegisterUser.php:34
+msgid "Inscription utilisateur"
+msgstr "User registration"
+
+#: app/Forms/Actions/ActionRegisterUser.php:100
+msgid "Une erreur s'est produite lors de votre inscription :"
+msgstr "An error occurred during your registration"
+
+#: app/Forms/Fields/FieldAdvancedListSelect.php:13
+msgid "Choisir (avancé)"
+msgstr "Choisir (avancé)"
+
+#: app/Forms/Fields/FieldAdvancedMultiSelect.php:15
+msgid "Sélection multiple (avancé)"
+msgstr "Sélection multiple (avancé)"
+
+#: app/Forms/Fields/FieldFileUpload.php:28
+msgid "Types de fichiers authorisés"
+msgstr "Types de fichiers authorisés"
+
+#: app/Forms/Fields/FieldFileUpload.php:32
+msgid "Une liste d\\'extensions de fichiers, séparées par des virgules."
+msgstr "Une liste d\\'extensions de fichiers, séparées par des virgules."
+
+#: app/Forms/Fields/FieldRoles.php:18
+msgid "Rôles"
+msgstr "Rôles"
+
+#: app/Forms/MergeTags/MergeTagsUser.php:21
+msgid "Utilisateur site"
+msgstr "Website user"
+
+#. Name of the theme
+msgid "Syltaen"
+msgstr "Syltaen"
+
+#. Description of the theme
+msgid "MVC framework and boilerplate for every Hungry Mind's WordPress projects"
+msgstr "MVC framework and boilerplate for every Hungry Mind's WordPress projects"
+
+#. URI of the theme
+msgid "https://github.com/Syltaen/syltaen"
+msgstr "https://github.com/Syltaen/syltaen"
+
+#. Author of the theme
+msgid "Stanley Lambot (Hunrgy Minds)"
+msgstr "Stanley Lambot (Hunrgy Minds)"
+
+#. Author URI of the theme
+msgid "http://www.stanleylambot.be"
+msgstr "http://www.stanleylambot.be"

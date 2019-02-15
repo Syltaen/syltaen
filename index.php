@@ -23,14 +23,10 @@ Route::custom("api", "ApiController", ["method", "target", "mode"]);
 Route::query("nf_preview_form", "PageController::ninjaFormPreview");
 
 // ==================================================
-// > HOMEPAGE
-// ==================================================
-Route::is(["home", "front_page"], "PageController::home");
-
-// ==================================================
 // > PAGES
 // ==================================================
-Route::is("page", "PageController::page");
+Route::is(["home", "front_page"], "PageController::home");
+Route::is("page", "PageController::default");
 
 // ==================================================
 // > 404

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Syltaen\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-15 08:30+0000\n"
+"POT-Creation-Date: 2018-08-23 13:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -14,32 +14,74 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/"
 
-#: Controllers/SingleController.php:65
-msgid "Retour"
+#: Controllers/HomeController.php:25 Controllers/SingleController.php:51
+msgid "Applications"
 msgstr ""
 
-#: Controllers/SingleController.php:69 app/lang/view-strings.php:54
+#. > _applications-slide.pug;
+#: Controllers/SingleController.php:63
+msgid "Découvrez les autres applications"
+msgstr ""
+
+#: Controllers/SingleController.php:75
+msgid "Retour à la liste des news"
+msgstr ""
+
+#: Controllers/SingleController.php:100
+msgid "Retour à la liste des jobs"
+msgstr ""
+
+#: Controllers/SingleController.php:101
+msgid "[ninja_form id=3]"
+msgstr ""
+
+#: Controllers/SingleController.php:124
+msgid "Retour à la liste"
+msgstr ""
+
+#: Controllers/SingleController.php:128 app/lang/view-strings.php:54
 msgid "Précédent"
 msgstr ""
 
-#: Controllers/SingleController.php:73 app/lang/view-strings.php:55
+#: Controllers/SingleController.php:132 app/lang/view-strings.php:55
 msgid "Suivant"
 msgstr ""
 
-#: Controllers/PageController.php:125
+#: Controllers/SpecialPageController.php:91
 msgid "Recherche pour : "
 msgstr ""
 
-#: app/Forms/_syltaen_ninjaforms_autoload.php:136
-msgid "Valeurs requises"
-msgstr ""
-
-#: app/config/shortcodes.php:43
+#: app/config/shortcodes.php:35
 msgid "Adresse e-mail"
 msgstr ""
 
-#: app/config/shortcodes.php:44
+#: app/config/shortcodes.php:36
 msgid "Mot de passe #reset#"
+msgstr ""
+
+#: app/config/shortcodes.php:42
+msgid "Mot de passe oublié ?"
+msgstr ""
+
+#: app/Helpers/Pagination.php:127
+msgid "Première page"
+msgstr ""
+
+#: app/Helpers/Pagination.php:132
+msgid "Page précédente"
+msgstr ""
+
+#: app/Helpers/Pagination.php:137
+msgid "Page suivante"
+msgstr ""
+
+#: app/Helpers/Pagination.php:142
+msgid "Dernière page"
+msgstr ""
+
+#: app/Helpers/Pagination.php:145
+#, php-format
+msgid "Page %s sur %s"
 msgstr ""
 
 #. > 404.pug;
@@ -61,8 +103,7 @@ msgstr ""
 
 #. > search.pug;
 #. > _base.pug;
-#: app/lang/view-strings.php:18 app/lang/view-strings.php:59
-#: app/lang/view-strings.php:60 app/lang/view-strings.php:80
+#: app/lang/view-strings.php:18 app/lang/view-strings.php:59 app/lang/view-strings.php:60 app/lang/view-strings.php:80
 msgid "Recherche"
 msgstr ""
 
@@ -174,12 +215,10 @@ msgid "Lire plus"
 msgstr ""
 
 #. > _card-recipe.pug;
-#: app/lang/view-strings.php:94 app/lang/view-strings.php:99
-#: app/lang/view-strings.php:104 app/lang/view-strings.php:111
+#: app/lang/view-strings.php:94 app/lang/view-strings.php:99 app/lang/view-strings.php:104 app/lang/view-strings.php:111
 msgid "En savoir plus"
 msgstr ""
 
-#. > _applications-slide.pug;
 #: app/lang/view-strings.php:98
 msgid "Voir toutes les applications"
 msgstr ""
@@ -202,33 +241,36 @@ msgstr ""
 msgid "Voir toutes les recettes"
 msgstr ""
 
-#: app/Helpers/Pagination.php:126
-msgid "Première page"
+#: Controllers/processors/ArchiveProcessor.php:96
+msgid "Toutes nos applications"
 msgstr ""
 
-#: app/Helpers/Pagination.php:131
-msgid "Page précédente"
+#: Models/Users/Users.php:47
+msgid "Cette clef de validation ne correspond à aucun utilisateur."
 msgstr ""
 
-#: app/Helpers/Pagination.php:136
-msgid "Page suivante"
+#: Models/Users/Users.php:50
+msgid "Votre compte a été désactivé par un administrateur."
 msgstr ""
 
-#: app/Helpers/Pagination.php:141
-msgid "Dernière page"
+#: Models/Users/Users.php:51
+msgid "Votre compte a déjà été validé."
 msgstr ""
 
-#: app/Helpers/Pagination.php:144
-#, php-format
-msgid "Page %s sur %s"
+#: app/Forms/Actions/ActionRegisterJobApplication.php:34
+msgid "Candidature à une offre d'emploi"
 msgstr ""
 
-#: app/Forms/MergeTags/MergeTagsUser.php:21
-msgid "Utilisateur site"
+#: app/Forms/Actions/ActionRegisterJobApplication.php:74
+msgid "Désolé, l'offre d'emploi pour laquelle vous postulez n'a pas été trouvée. Veuillez réessayer plus tard ou prendre contact avec nous. :"
 msgstr ""
 
 #: app/Forms/Actions/ActionRegisterUser.php:34
 msgid "Inscription utilisateur"
+msgstr ""
+
+#: app/Forms/Actions/ActionRegisterUser.php:100
+msgid "Une erreur s'est produite lors de votre inscription :"
 msgstr ""
 
 #: app/Forms/Fields/FieldAdvancedListSelect.php:13
@@ -239,28 +281,20 @@ msgstr ""
 msgid "Sélection multiple (avancé)"
 msgstr ""
 
-#: app/Forms/Fields/FieldFileUpload.php:40
-msgid "Types de fichiers autorisés"
+#: app/Forms/Fields/FieldFileUpload.php:28
+msgid "Types de fichiers authorisés"
 msgstr ""
 
-#: app/Forms/Fields/FieldFileUpload.php:44
+#: app/Forms/Fields/FieldFileUpload.php:32
 msgid "Une liste d\\'extensions de fichiers, séparées par des virgules."
-msgstr ""
-
-#: app/Forms/Fields/FieldFileUpload.php:66
-msgid "Renseigner un nombre très grand pour ne pas mettre de limite"
-msgstr ""
-
-#: app/Forms/Fields/FieldFileUpload.php:75
-msgid "Données sauvées"
-msgstr ""
-
-#: app/Forms/Fields/FieldFileUpload.php:100
-msgid "Ne cocher que si c'est nécéssaire"
 msgstr ""
 
 #: app/Forms/Fields/FieldRoles.php:18
 msgid "Rôles"
+msgstr ""
+
+#: app/Forms/MergeTags/MergeTagsUser.php:21
+msgid "Utilisateur site"
 msgstr ""
 
 #. Name of the theme
@@ -268,8 +302,7 @@ msgid "Syltaen"
 msgstr ""
 
 #. Description of the theme
-msgid ""
-"MVC framework and boilerplate for every Hungry Mind's WordPress projects"
+msgid "MVC framework and boilerplate for every Hungry Mind's WordPress projects"
 msgstr ""
 
 #. URI of the theme
