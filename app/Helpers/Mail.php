@@ -4,10 +4,12 @@ namespace Syltaen;
 
 abstract class Mail
 {
+
     /**
      * If set to true, does not send the mail but display it and log all its information
      */
     const DEBUG = false;
+
 
     /**
      * Define the sending mode.
@@ -31,13 +33,14 @@ abstract class Mail
      */
     public static $fromAddr = "";
 
+
     /**
      * Colors used in the mail template
      *
      * @var string Hexadecimal code
      */
-    public static $primaryColor   = "#f9b233";
-    public static $secondaryColor = "#3d322d";
+    public static $primaryColor   = "#42b38e";
+    public static $secondaryColor = "#275aa2";
 
 
     /**
@@ -96,6 +99,27 @@ abstract class Mail
     }
 
 
+    /**
+     * Render the mail in a preview box
+     *
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @return void
+     */
+    public static function preview($to, $subject, $body, $actions = [])
+    {
+        echo static::parseBody((object) [
+            "Subject"  => $subject,
+            "CharSet"  => get_bloginfo("charset"),
+            "From"     => static::$fromAddr,
+            "FromName" => static::$fromName,
+        ], $body, "mail-preview", [
+            "to" => $to,
+            "actions" => $actions
+        ]);
+    }
+
     // ==================================================
     // > PARSERS
     // ==================================================
@@ -116,15 +140,16 @@ abstract class Mail
         return (array) $to;
     }
 
+
     /**
      * Put the text body into a mail template
      *
      * @param string $body
      * @return string
      */
-    private static function parseBody($mail, $body, $template)
+    private static function parseBody($mail, $body, $template, $additional_context = [])
     {
-        return (new Controller)->view("mails/".$template, [
+        return (new Controller)->view("mails/".$template, array_merge([
             "mail"    => $mail,
             "body"    => $body,
 
@@ -133,7 +158,7 @@ abstract class Mail
             "secondary" => static::$secondaryColor,
 
             "url"  => get_bloginfo("url")
-        ]);
+        ], $additional_context));
     }
 
     // ==================================================
@@ -212,6 +237,7 @@ abstract class Mail
         // self::dkimSetup($mail);
     }
 
+
     /**
      * Setup a SMTP connection
      *
@@ -235,6 +261,7 @@ abstract class Mail
         // self::dkimSetup($mail);
     }
 
+
     /**
      * Configure Dkim
      *
@@ -249,6 +276,7 @@ abstract class Mail
         $mail->DKIM_passphrase = "";
         $mail->DKIM_identity   = $mail->From;
     }
+
 
     /**
      * Add custom headers to decrease spam-flag probability
