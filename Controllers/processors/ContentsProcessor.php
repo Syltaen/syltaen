@@ -17,8 +17,14 @@ class ContentsProcessor extends DataProcessor
         $c["classes"]       = [
             "flex-align-" . $c["valign"],
             "flex-row--responsive-" . $c["responsive"],
-            "flex-row--spacing-" . $c["spacing"],
+            "flex-row--spacing-" . $c["spacing"]
         ];
+
+        $c["attrs"] = [];
+        if ($c["animation"] != "none") {
+            $c["attrs"]["data-bottom-top"]  = "";
+            $c["attrs"]["data-top-bottom"] = "";
+        }
 
         foreach ($c["columns"] as $i=>&$col) {
             $col["styles"]  = [];
@@ -29,10 +35,10 @@ class ContentsProcessor extends DataProcessor
             }
 
             if ($c["animation"] != "none") {
-                $col["classes"][] = "animation-" . $c["animation"];
+                $col["classes"][] = "animation animation--" . $c["animation"];
 
                 if ($c["delayed"]) {
-                    $col["classes"][] = "delay-" . $i;
+                    $col["classes"][] = "delay-" . ($i * 2);
                 }
             }
         } unset($col);

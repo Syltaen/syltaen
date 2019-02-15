@@ -10,11 +10,19 @@ each c in contents
         //- > COLUMNS
         //- ==================================================
         when "columns"
-            .container: .flex-row(class=c.classes)
-                each col in c.columns
-                    .flex-row__item(style=col.styles class=col.classes)
-                        != col.txt
-
+            .container
+                mixin columns
+                    .flex-row(class=c.classes)&attributes(c.attrs)
+                        each col in c.columns
+                            .flex-row__item(style=col.styles class=col.classes)
+                                != col.txt
+                if c.collapsable
+                    .collapsable
+                        .collapsable__header.trigger!= c.collapsable
+                        .collapsable__content
+                            +columns
+                else
+                    +columns
 
         //- ==================================================
         //- > TEXT + IMAGE

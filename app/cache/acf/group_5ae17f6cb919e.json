@@ -246,10 +246,12 @@
                             },
                             "choices": {
                                 "none": "Aucun",
-                                "fade-in": "Fade in",
-                                "fade-in-left": "Fade in depuis la gauche",
-                                "fade-in-right": "Fade in depuis la droite",
-                                "fade-in-bottom": "Fade in depuis le bas"
+                                "fadein": "Fade in",
+                                "fadein-left": "Fade in depuis la gauche",
+                                "fadein-right": "Fade in depuis la droite",
+                                "fadein-top": "Fade in depuis le dessus",
+                                "fadein-bottom": "Fade in depuis le bas",
+                                "fadein-sides": "Fade in depuis tous les côtés"
                             },
                             "default_value": [
                                 "none"
@@ -257,8 +259,8 @@
                             "allow_null": 0,
                             "multiple": 0,
                             "ui": 0,
-                            "ajax": 0,
                             "return_format": "value",
+                            "ajax": 0,
                             "placeholder": ""
                         },
                         {
@@ -279,6 +281,25 @@
                             "ui": 0,
                             "ui_on_text": "",
                             "ui_off_text": ""
+                        },
+                        {
+                            "key": "field_5c1ba5bd20bc5",
+                            "label": "Ascenseur",
+                            "name": "collapsable",
+                            "type": "text",
+                            "instructions": "Renseigner un titre pour inclure ces colonnes dans une boite refermable",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
                         }
                     ],
                     "min": "",
