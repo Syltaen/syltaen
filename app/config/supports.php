@@ -37,6 +37,7 @@ add_action("after_setup_theme", function () {
         $existing_mimes["eps"] = "application/postscript";
         $existing_mimes["zip"] = "application/zip";
         $existing_mimes["ai"]  = "application/postscript";
+        $existing_mimes["svg"] = "image/svg+xml";
         return $existing_mimes;
     });
 
