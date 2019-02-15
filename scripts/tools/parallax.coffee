@@ -7,8 +7,10 @@ parallax = skrollr.init
     smoothScrolling: false
     smoothScrollingDuration: 0
 
-
-if parallax.isMobile() then parallax.destroy()
-$(window).resize -> parallax.refresh()
+if parallax.isMobile()
+    parallax.destroy()
+    parallax = false
+else
+    $(window).resize -> parallax.refresh()
 
 export default parallax

@@ -15,7 +15,7 @@ export default in: ->
 
     # PARALLAX
     setTimeout ->
-        parallax.refresh()
+        if parallax then parallax.refresh()
     , 500
 
     # CONTAINERS DELAY
@@ -46,12 +46,13 @@ export default in: ->
     # =============================================================================
     # > FORMS
     # =============================================================================
-    # ========== SELECT 2 ========== #
+
+    # SELECT 2
     $("select").each (i, el) ->
         if $(@).closest(".nf-field").length then return false
         new SelectField $(@)
 
-    # ========== DROPZONE ========== #
+    # DROPZONE
     $("input[type='file']").not(".nf-field-upload, .dz-hidden-input").each (i, el) -> new UploadField $(@)
 
 

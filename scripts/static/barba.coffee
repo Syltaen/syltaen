@@ -9,7 +9,7 @@ import Barba from "barba.js"
 # =============================================================================
 # > CONFIG
 # =============================================================================
-# Barba.Pjax.cacheEnabled       = true
+# Barba.Pjax.cacheEnabled       = false
 # Barba.Pjax.ignoreClassLink    = "no-barba"
 Barba.Pjax.Dom.wrapperId      = "site-views"
 Barba.Pjax.Dom.containerClass = "site-view"
@@ -33,7 +33,9 @@ Barba.Pjax.getTransition = -> Barba.BaseTransition.extend
         @$html.addClass "is-loading"
         @$html.removeClass "is-done-loading"
 
-        unless window.location.hash then @scrollTo 0
+        unless window.location.hash then $("html, body").stop().animate
+            "scrollTop": 0
+        , 400
 
         @newContainerLoading.then =>
 
@@ -48,14 +50,9 @@ Barba.Pjax.getTransition = -> Barba.BaseTransition.extend
 
                 # If anchor, scroll to it
                 if window.location.hash
-                    @scrollTo $(window.location.hash).offset().top
+                    $(window).trigger "hashchange"
 
             , 180
-
-    scrollTo: (value) ->
-        $("html, body").stop().animate
-            "scrollTop": value
-        , 400
 
 # PAGE LOADING
 $(".site-view").addClass "in"
@@ -71,6 +68,7 @@ Barba.Pjax.preventCheck = (e, el) ->
 
     # DefaultPrevent
     unless Barba.Pjax.defaultPreventCheck(e, el) then return false
+    if $(el).closest(".no-barba").length then return false
 
     # wp-admin stop
     if /wp-admin/.test el.href.toLowerCase() then return false
@@ -82,6 +80,7 @@ Barba.Pjax.preventCheck = (e, el) ->
 # > EVENTS
 # =============================================================================
 Barba.Dispatcher.on "newPageReady", (currentStatus, oldStatus, container, html) ->
+
     # Add body classes
     html        = html.replace /(<\/?)body( .+?)?>/gi, '$1notbody$2>'
     bodyClasses = $(html).filter("notbody").attr("class")
@@ -99,6 +98,7 @@ Barba.Dispatcher.on "newPageReady", (currentStatus, oldStatus, container, html) 
     # trigger Google Analytics
     if typeof ga is "function"
         ga("send", "pageview", location.pathname)
+
 
 # =============================================================================
 # > INIT
