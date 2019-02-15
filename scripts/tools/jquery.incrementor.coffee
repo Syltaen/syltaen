@@ -14,25 +14,29 @@ import $ from "jquery"
   * @param {*}
   * @param int speed The speed to use
 ###
-class Incrementor
+export default class Incrementor
 
-    constructor: (@$el, @speed, @manual) ->
-        @format   = ""
-        @goal     = 0
-        @value    = 0
-        @step     = 0
+    constructor: (@$el, @speed, @manual, incFrom = 0, incTo = false, @callBack = false) ->
+        @txt      = @$el.html()
+        @value    = @getValue(incFrom)
+        @goal     = @getValue(incTo) || @getValue(@txt)
+        @format   = @getFormat incFrom, (incTo || @txt)
+        @step     = (@goal - @value) / (@speed / STEP_SPEED)
         @started  = false
         @interval = null
 
-        @txt      = @$el.html()
-        @goal     = @getValue @txt
-        @format   = @getFormat @txt
-        @step     = @goal / (@speed / STEP_SPEED)
+        # console.log "value", @value
+        # console.log "goal", @goal
+        # console.log "speed", @speed
+        # console.log "step", @step
+        # console.log "step_speed", STEP_SPEED
+        # console.log "format", @format
 
         @createClone()
         @updateText()
         @check 0
         @getFormatedValue()
+
 
     ###
       * Create a non-animated copy of the element to display when printing and to reserve the space needed
@@ -67,15 +71,18 @@ class Incrementor
     ###
       * Get the format of a value
     ###
-    getFormat: (txt) ->
-        return txt.replace(/[\d]/g, "0").toString()
+    getFormat: (fromTxt, toTxt) ->
+        fromTxt = fromTxt + ""
+        toTxt   = toTxt + ""
+        refText = if fromTxt.length > toTxt.length then fromTxt else toTxt
+        return refText.replace(/[\d]/g, "0").toString()
 
 
     ###
       * Get the value of a number, overlooking its formating
     ###
     getValue: (txt) ->
-        return parseFloat(txt.replace(/[^\d]/g, ""), 10)
+        return parseFloat(("" + txt).replace(/[^\d]/g, ""), 10)
 
 
     ###
@@ -125,12 +132,15 @@ class Incrementor
         @started = true
         @interval = setInterval =>
             @value += @step
-            @updateText()
 
-            if @value >= @goal
+            if (@step > 0 && @value < @goal) || (@step < 0 && @value > @goal)
+                @updateText()
+            else
                 clearInterval @interval
                 @value = @goal
                 @$el.html @txt
+                if @callBack then @callBack()
+
         , STEP_SPEED
 
     ###
@@ -202,4 +212,3 @@ $.fn.incrementor = (speed = 1000, manual = false) ->
   * Trigger the incrementation for a number manualy
 ###
 $.fn.increment = -> collection.get($(this)).increment()
-

@@ -11,8 +11,12 @@ import $ from "jquery";
 # ==================================================
 # > JQUERY METHOD
 # ==================================================
-$.fn.collapsable = (trigger = ".trigger") ->
-    $(this).each -> new Collapsable $(this), trigger
+$.fn.collapsable = ($trigger = false, $content = false) ->
+
+    $trigger = $(this).find("[data-collapsable-trigger], .collapsable__header")
+    $content = $(this).find("[data-collapsable-content], .collapsable__content")
+
+    $(this).each -> new Collapsable $(this), $trigger, $content
     return $(this)
 
 
@@ -21,24 +25,19 @@ $.fn.collapsable = (trigger = ".trigger") ->
 # ==================================================
 class Collapsable
 
-    constructor: (@$el, @trigger) ->
-        @$trigger     = @$el.find(@trigger)
+    constructor: (@$el, @$trigger, @$content) ->
 
-        @openHeight   = @$el.innerHeight()
-        @closedHeight = @$trigger.innerHeight()
-
-        @close()
-
+        unless @$el.hasClass "is-open" then @close 0
         @bindClick()
 
-    close: ->
+    close: (speed = 300) ->
+        @$content.slideUp speed
         @$el.removeClass "is-open"
-        @$el.css "height", @closedHeight
         @opened = false
 
-    open: ->
+    open: (speed = 300) ->
+        @$content.slideDown speed
         @$el.addClass "is-open"
-        @$el.css "height", @openHeight
         @opened = true
 
     toggle: ->
@@ -46,6 +45,3 @@ class Collapsable
 
     bindClick: ->
         @$trigger.click => @toggle()
-
-
-

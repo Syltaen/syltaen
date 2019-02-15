@@ -4,8 +4,10 @@
 ###
 
 import $ from "jquery"
-import SelectField from "./../tools/selectField.coffee"
-import UploadField from "./../tools/uploadField.coffee"
+import SelectField from "./../tools/SelectField.coffee"
+import UploadField from "./../tools/UploadField.coffee"
+import PasswordBox from "./../tools/PasswordBox.coffee"
+
 
 if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
 
@@ -127,20 +129,23 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
 
     # PASSWORD
     passwordRender: (view) ->
-        console.log "fieldpassword"
         $field  = $(view.el).find(".ninja-forms-field")
-        $box    = $field.closest(".passwordbox")
-        $toggle = $box.find(".passwordbox__toggle")
+        new PasswordBox $field
 
-        $toggle.click ->
-            console.log $field.attr("type")
-            switch $field.attr("type")
-                when "password"
-                    $field.attr "type", "text"
-                    $box.addClass "is-shown"
-                else
-                    $field.attr "type", "password"
-                    $box.removeClass "is-shown"
+
+
+        # $box    = $field.closest(".passwordbox")
+        # $toggle = $box.find(".passwordbox__toggle")
+
+        # $toggle.click ->
+        #     console.log $field.attr("type")
+        #     switch $field.attr("type")
+        #         when "password"
+        #             $field.attr "type", "text"
+        #             $box.addClass "is-shown"
+        #         else
+        #             $field.attr "type", "password"
+        #             $box.removeClass "is-shown"
 
 
 

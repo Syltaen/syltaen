@@ -1,8 +1,16 @@
 import $ from "jquery"
-import "./../tools/incrementor.coffee"
+
 import parallax from "./../tools/parallax.coffee"
-import UploadField from "./../tools/uploadField.coffee"
-import SelectField from "./../tools/selectField.coffee"
+import UploadField from "./../tools/UploadField.coffee"
+import SelectField from "./../tools/SelectField.coffee"
+import PasswordBox from "./../tools/PasswordBox.coffee"
+import ConfirmationModal from "./../tools/ConfirmationModal.coffee"
+import Shadowbox from "./../tools/Shadowbox.coffee"
+
+import "./../tools/jquery.showif.coffee"
+import "./../tools/jquery.collapsable.coffee"
+import "./../tools/jquery.scrollnav.coffee"
+import "./../tools/jquery.incrementor.coffee"
 
 export default in: ->
 
@@ -28,6 +36,8 @@ export default in: ->
     # =============================================================================
     # > CONTENTS
     # =============================================================================
+    # COLLAPSABLES
+    $(".elevator-box, .collapsable, [data-collapsable]").each (i, el) -> $(el).collapsable()
 
     # SLICK GALLERY
     $(".gallery").each ->
@@ -40,7 +50,8 @@ export default in: ->
             autoplaySpeed: 6000
             slidesToShow: columns[1] || 1
 
-
+    # CONFIRM POPUP
+    $("[data-confirm]").each -> new ConfirmationModal $(@)
 
 
     # =============================================================================
@@ -55,6 +66,13 @@ export default in: ->
     # DROPZONE
     $("input[type='file']").not(".nf-field-upload, .dz-hidden-input").each (i, el) -> new UploadField $(@)
 
+    # PASSWORDBOX
+    $("input[type='password']").not(".ninja-forms-field, .passwordbox__field").each -> new PasswordBox $(@)
+
+    # DOUBLE-SUBMIT PREVENTION
+    $("form").submit ->
+        $(@).find("button, input[type='submit']").addClass "is-disabled"
+        $(@).submit (e) -> e.preventDefault()
 
     # PATTERN
     $("html").on "keyup", "input[data-pattern]", ->

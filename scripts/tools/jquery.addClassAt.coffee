@@ -50,6 +50,6 @@ $.fn.addClassAt = (scrollTop, classToAdd) ->
         top: parseInt(scrollTop, 10) + toAdd,
         hasClass: false,
         class: classToAdd
-    });
+    })
 
     return $(this)

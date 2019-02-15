@@ -1,8 +1,9 @@
 import Barba from "barba.js"
 import $ from "jquery"
 import "hammerjs"
-import "./../tools/addClassAt.coffee"
 import "jquery.transit"
+
+import "./../tools/jquery.addClassAt.coffee"
 
 $roots = $("html, body")
 

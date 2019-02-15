@@ -1,61 +1,73 @@
-import $ from "jquery"
-
 ###
-  * Create a shadowbox
+  * Create a Google Map and add filterable pins to it
   * @package Syltaen
   * @author Stanley Lambot
   * @requires jQuery
 ###
 
+import $ from "jquery"
+
 export default class Shadowbox
 
     constructor: ->
         @$html = $("html")
+        @$body = $("body")
         @addNew()
-
-        @$close.click => @hide()
-        @$content.click => @hide()
+        @$sb.on "click", "[data-action='close']", (e) =>
+            if $(e.target).data("action") == "close" # no bubling
+                @hide()
 
     addNew: ->
         @$sb      = $("<div class='shadowbox'></div>")
-        @$close   = $("<span class='fermer'>Fermer</span>")
-        @$content = $("<div class='content'></div>")
+        @$close   = $("<span class='shadowbox__close' data-action='close'>Fermer</span>")
+        @$content = $("<div class='shadowbox__content' data-action='close'></div>")
 
-        @$html.append @$sb.append(@$close).append(@$content)
+        @$body.append @$sb.append(@$close).append(@$content)
 
         return @$sb
 
+
     # ==================================================
-    # > CONTENT TYPES
+    # > CONTENTS
     # ==================================================
     empty: () ->
         @$content.html ""
-        return this
+        return @
 
     video: (url, attrs = "loop autoplay controls") ->
         @$content.append "<video #{attrs}><source src='#{url}'></source></video>"
-        return this
+        return @
+
+    iframe: (url, attrs = "frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen") ->
+        @$content.append "<iframe src='#{url}' #{attrs}></iframe>"
+        return @
 
     image: (url) ->
         @$content.append "<img src='" + url + "'>"
-        return this
+        return @
 
     html: (html) ->
         @$content.html html
-        return this
+        return @
+
 
     # ==================================================
     # > ACTIONS
     # ==================================================
     show: (speed = 350) ->
         @$sb.fadeIn speed
-        @$html.addClass "shadowbox-open"
+        @$sb.addClass "is-shown"
+        @$html.addClass "is-scroll-locked"
         return this
 
     hide: (speed = 350) ->
         @$sb.fadeOut speed
-        @$html.removeClass "shadowbox-open"
+        @$sb.removeClass "is-shown"
+        @$html.removeClass "is-scroll-locked"
         return this
 
-
-
+    # ==================================================
+    # > CHECKERS
+    # ==================================================
+    isShown: () ->
+        return @$sb.is(":visible")

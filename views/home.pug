@@ -57,7 +57,7 @@ block sections
                     | Conditional display
 
             .gr-9
-                .collapsable.open
+                .collapsable
                     .collapsable__header.trigger Collapsable
                     .collapsable__content
                         .row
@@ -66,16 +66,16 @@ block sections
 
         hr
 
-        nav.scrollnav: ul
-            li: a(href="#title-1")
-                span.hovered Navigation item 1
-                span Navigation item 1
-            li: a(href="#title-2")
-                span.hovered Navigation item 2
-                span Navigation item 2
-            li: a(href="#title-3")
-                span.hovered Navigation item 3
-                span Navigation item 3
+        ul.anchormenu
+            li.anchormenu__item: a.anchormenu__link(href="#title-1")
+                span.anchormenu__link__text.anchormenu__link__text--hovered Navigation item 1
+                span.anchormenu__link__text Navigation item 1
+            li.anchormenu__item: a.anchormenu__link(href="#title-2")
+                span.anchormenu__link__text.anchormenu__link__text--hovered Navigation item 2
+                span.anchormenu__link__text Navigation item 2
+            li.anchormenu__item: a.anchormenu__link(href="#title-3")
+                span.anchormenu__link__text.anchormenu__link__text--hovered Navigation item 3
+                span.anchormenu__link__text Navigation item 3
 
         hr
 

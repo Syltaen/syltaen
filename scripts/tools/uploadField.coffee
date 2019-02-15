@@ -1,7 +1,7 @@
 import $ from "jquery"
 import Dropzone from "dropzone"
 
-export default class UplaodField
+export default class UploadField
 
     constructor: (@$field, @onChange = false) ->
         @$loader  = $("body")
@@ -107,9 +107,7 @@ export default class UplaodField
                 # Add a file
                 @on "addedfile", ->
                     _UplaodField.$loader.addClass "is-loading"
-                    console.log "loading", _UplaodField.$loader
 
                 # Upload is done
                 @on "complete", ->
                     _UplaodField.$loader.removeClass "is-loading"
-                    console.log "/loading"
