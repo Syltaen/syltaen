@@ -5,14 +5,8 @@ namespace Syltaen;
 class SingleController extends BaseController
 {
 
-    protected $view = "single";
+    public $view = "single";
 
-    /**
-     * Page used for the post type archive
-     *
-     * @var WP_Post
-     */
-    protected $archive;
 
     /**
      * Populate $this->data

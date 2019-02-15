@@ -26,7 +26,7 @@ Route::query("nf_preview_form", "PageController::ninjaFormPreview");
 // > PAGES
 // ==================================================
 Route::is(["home", "front_page"], "PageController::home");
-Route::is("page", "PageController::default");
+Route::is("page", "PageController::page");
 
 // ==================================================
 // > 404

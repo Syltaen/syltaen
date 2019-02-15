@@ -5,21 +5,21 @@ namespace Syltaen;
 abstract class BaseController extends Controller
 {
 
-    protected $view = "page";
+    public $view = "page";
 
     /**
      * The current user
      *
      * @var Syltaen\Users
      */
-    protected $user;
+    public $user;
 
     /**
      * The current post
      *
      * @var WP_Posts
      */
-    protected $post;
+    public $post;
 
     /**
      * Add data for the rendering
