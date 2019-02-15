@@ -54,6 +54,10 @@ abstract class Data
                 return wp_get_attachment_image(static::extractIds($value)[0], "full");
             case "img:url":
                 return wp_get_attachment_url(static::extractIds($value)[0], "full");
+            case "img:svg":
+                return file_get_contents(static::filter($value, "img:url"));
+            case "json_decode":
+                if (is_object($value) || is_array($value)) return $value;
             case "url":
                 if (!preg_match("~^(?:f|ht)tps?://~i", $value)) return "http://" . $value;
                 return $value;

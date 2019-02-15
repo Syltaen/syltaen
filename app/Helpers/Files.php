@@ -228,7 +228,7 @@ abstract class Files
         foreach (scandir(self::path($folder)) as $file) {
 
             // Does not list hidden files or navigation
-            if (!$show_hidden && $file[0] == ".") continue;
+            if (!$show_hidden && ($file[0] == "." || $file[0] == "_")) continue;
 
             // Has to match
             if ($match && strpos($file, $match) === false) continue;

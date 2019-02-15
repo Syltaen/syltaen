@@ -10,28 +10,16 @@ class Controller
      *
      * @var array
      */
-    protected $data = [];
+    public $data = [];
 
-    /**
-     * Handle the conversion of pug to php
-     *
-     * @var Pug\Pug
-     */
-    private $renderer;
-
-    /**
-     * Path to the folder containg all views
-     *
-     * @var string
-     */
-    private $viewfolder;
 
     /**
      * Default view used by the controller
      *
      * @var string
      */
-    protected $view = false;
+    public $view = false;
+
 
     /**
      * List of custom arguments set in the constructor
@@ -39,6 +27,7 @@ class Controller
      * @var array
      */
     protected $args = [];
+
 
     /**
      * Dependencies creation
@@ -50,26 +39,18 @@ class Controller
         $this->args = $args;
     }
 
+
     /**
-     * Get the controller stored data
+     * Add data to the context
      *
-     * @return void
+     * @return array of data
      */
-    public function data()
+    public function addData($array)
     {
+        Data::store($this->data, $array);
         return $this->data;
     }
 
-    /**
-     * Get the controller stored data
-     *
-     * @return void
-     */
-    public function addData($data)
-    {
-        Data::store($this->data, $data);
-        return $this->data;
-    }
 
     /**
      * Return rendered HTML by passing a view filename
@@ -86,6 +67,7 @@ class Controller
         );
     }
 
+
     /**
      * Display a view
      *
@@ -101,6 +83,7 @@ class Controller
         );
     }
 
+
     /**
      * Log data into the console
      *
@@ -115,6 +98,7 @@ class Controller
         $connector->setDebugDispatcher(new \PhpConsole\Dispatcher\Debug($connector, $dumper));
         $connector->getDebugDispatcher()->dispatchDebug($data, $tags, 1);
     }
+
 
     /**
      * Log the controller data into the console
@@ -132,6 +116,7 @@ class Controller
         }
     }
 
+
     /**
      * Return data in JSON format
      *
@@ -143,6 +128,7 @@ class Controller
         wp_send_json($data);
     }
 
+
     /**
      * Return data in XML format
      *
@@ -153,6 +139,7 @@ class Controller
         header("Content-type: text/xml; charset=utf-8");
         return $this->data;
     }
+
 
     /**
      * Return data in a PHP format
@@ -168,6 +155,72 @@ class Controller
             print($this->data);
         }
         echo "</pre>";
+    }
+
+
+    /**
+     * Make and send an excel file form an array of data
+     *
+     * @param array $table
+     * @return void
+     */
+    public static function excel($rows, $header = false, $filename = "export")
+    {
+        header("Content-Type: application/xlsx");
+        header("Content-Disposition: attachment; filename={$filename}.xlsx;");
+
+        $writer = new \XLSXWriter();
+
+        $writer->setAuthor(App::config("project"));
+        $writer->setCompany(App::config("client"));
+
+        // Add sytled header
+        if ($header) {
+            $writer->writeSheetRow("Export", $header, [
+                "font-style" => "bold",
+                "fill"       => App::config("color_primary"),
+                "color"      => "#fff",
+                "font-size"  => 9,
+                "border"     => "bottom",
+                "halign"     => "left",
+                "valign"     => "center",
+                "height"     => 20
+            ]);
+        }
+
+        // Add each rows
+        foreach ($rows as $row) $writer->writeSheetRow("Export", $row, [
+            "height"     => 15,
+            "font-size"  => 8,
+            "halign"     => "left",
+            "valign"     => "center",
+        ]);
+
+
+        // Send file
+        $f = fopen("php://output", "w");
+        fwrite($f, $writer->writeToString());
+        exit;
+    }
+
+
+
+    /**
+     * Make and send a CSV file form an array of data
+     *
+     * @param array $table
+     * @return void
+     */
+    public static function csv($table, $filename = "export.csv", $delimiter = ";")
+    {
+        header("Content-Type: application/csv");
+        header("Content-Disposition: attachment; filename='{$filename}';");
+
+        $f = fopen("php://output", "w");
+        foreach ($table as $row) {
+            fputcsv($f, (array) $row, $delimiter);
+        }
+        exit;
     }
 
 

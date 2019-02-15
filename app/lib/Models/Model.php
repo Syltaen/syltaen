@@ -443,6 +443,20 @@ abstract class Model implements \Iterator
 
 
     /**
+     * Run all the current filters and combine them into one using the results' IDs
+     * Allow to add new filters that would have confilcted the previous ones
+     * @return self
+     */
+    public function applyFilters()
+    {
+        $ids = $this->getIDs();
+        $this->clearFilters();
+        $this->is($ids);
+        return $this;
+    }
+
+
+    /**
      * Update filters in the hard way
      *
      * @param array $filters
