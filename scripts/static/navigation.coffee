@@ -17,6 +17,34 @@ $ ->
 
 
 # ==================================================
+# > HASH SCROLL
+# ==================================================
+$(window).on "hashchange", ->
+    # No hash
+    unless window.location.hash then return false
+
+    # No element
+    $el = $(window.location.hash)
+    unless $el.length then return false
+
+    # Animation scroll
+    $roots.stop().animate
+        "scrollTop": $el.offset().top
+    , 400
+
+
+# On anchor click
+$("body").on "click.anchor", "a[href*='#']", -> setTimeout ->
+        $(window).trigger "hashchange"
+    , 100
+
+# On new page load
+setTimeout ->
+    $(window).trigger "hashchange"
+, 350
+
+
+# ==================================================
 # > MOBILE
 # ==================================================
 class MobileMenu
@@ -51,18 +79,22 @@ $ ->
 class Menu
     constructor: ->
         @$menu  = $(".site-header__menu")
-
         @$indicator = $("<div class='site-header__menu__indicator'></div>")
         @$menu.append @$indicator
+        @selector = ".site-header__menu .current-menu-item, .site-header__menu > .current-menu-ancestor"
 
-        @selector = ".site-header__menu > .current-menu-item, .site-header__menu > .current-menu-ancestor"
-        Barba.Dispatcher.on "newPageReady", (o, s, ef, html) =>
-            @setCurrent @$menu.find "#" + $(html).find(@selector).attr("id")
+        # Set on new page load
         @setCurrent $(@selector)
 
+        # Set on pajax load
+        Barba.Dispatcher.on "newPageReady", (o, s, ef, html) =>
+            ids = $.map $(html).find(@selector), (item) -> "#" + $(item).attr("id")
+            @setCurrent @$menu.find ids.join ", "
 
     setCurrent: ($item) ->
-        @$current = $item
+        @$menu.find(".is-current").removeClass "is-current"
+        $item.addClass "is-current"
+        @$current = $item.first()
 
         if @$current.length
             @$indicator.css
