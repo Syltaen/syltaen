@@ -15,6 +15,11 @@ class FieldCloseTag extends \NF_Abstracts_Input
     {
         parent::__construct();
         $this->_nicename = "/end div";
+
+        add_filter("nf_sub_hidden_field_types", function ($field_types) {
+            $field_types[] = $this->_name;
+            return $field_types;
+        });
     }
 
 }
