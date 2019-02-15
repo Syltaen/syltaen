@@ -4,45 +4,6 @@ namespace Syltaen;
 
 abstract class Mail
 {
-
-    /**
-     * If set to true, does not send the mail but display it and log all its information
-     */
-    const DEBUG = false;
-
-
-    /**
-     * Define the sending mode.
-     * Either WEB or SMTP
-     */
-    const MODE  = "WEB";
-
-
-    /**
-     * The sender name used in all mails
-     *
-     * @var string
-     */
-    public static $fromName = "";
-
-
-    /**
-     * The address used to send all mails
-     *
-     * @var string
-     */
-    public static $fromAddr = "";
-
-
-    /**
-     * Colors used in the mail template
-     *
-     * @var string Hexadecimal code
-     */
-    public static $primaryColor   = "#42b38e";
-    public static $secondaryColor = "#275aa2";
-
-
     /**
      * Send a mail
      *
@@ -56,42 +17,41 @@ abstract class Mail
     {
         $mail = new \PHPMailer\PHPMailer\PHPMailer();
 
-        // ========== FROM ========== //
-        $mail->From     = static::$fromAddr;
-        $mail->FromName = static::$fromName;
+        // Force "from" with config values
+        $mail->From     = App::config("mail_from_addr");
+        $mail->FromName = App::config("mail_from_name");
 
-        // ========== TO ========== //
-        foreach (static::parseTo($to) as $addr) {
-            $mail->AddAddress(trim($addr));
-        }
+        // Parse "to"
+        foreach (static::parseTo($to) as $addr) $mail->AddAddress(trim($addr));
 
-        // ========== SUBJECT ========== //
+        // Add subject
         $mail->Subject = $subject;
 
-
-        // ========== BODY ========== //
+        // Parse body into the template
         $mail->CharSet = get_bloginfo("charset");
         $body = static::parseBody($mail, $body, $template);
         $mail->msgHTML($body);
 
-        // ========== ATTACHEMENTS ========== //
+        // Attachements : TODO
 
 
-        // ========== SETUPS ========== //
-        switch (self::MODE) {
-            case "SMTP": static::smtpSetup($mail); break;
-            case "WEB":
-            default:     static::webSetup($mail); break;
+        // Setup SMTP if the config is provided
+        if (App::config("mail_smtp")["host"]) {
+            static::smtpSetup($mail);
+        } else {
+            $mail->IsMail();
         }
+
+        // Dkim, unsubscribe, ...
         static::antispamSetup($mail);
 
-        // ========== MAIL MODIFICATION HOOK ========== //
+        // Hook to update the mail before sending it
         if (is_callable($mail_hook)) $mail_hook($mail);
 
-        // ========== SEND OR DEBUG ========== //
-        if (static::DEBUG) {
+        // Log the mail and send it
+        if (App::config("mail_debug")) {
             $mail->Subject = "[TEST] " . $mail->Subject;
-            return static::log($mail);
+            static::log($mail);
         } else {
             static::log($mail);
             return $mail->Send();
@@ -112,8 +72,8 @@ abstract class Mail
         echo static::parseBody((object) [
             "Subject"  => $subject,
             "CharSet"  => get_bloginfo("charset"),
-            "From"     => static::$fromAddr,
-            "FromName" => static::$fromName,
+            "From"     => App::config("mail_from_addr"),
+            "FromName" => App::config("mail_from_name"),
         ], $body, "mail-preview", [
             "to" => $to,
             "actions" => $actions
@@ -154,12 +114,13 @@ abstract class Mail
             "body"    => $body,
 
             "imgpath"   => Files::url("build/img/mails/"),
-            "primary"   => static::$primaryColor,
-            "secondary" => static::$secondaryColor,
+            "primary"   => App::config("color_primary"),
+            "secondary" => App::config("color_secondary"),
 
             "url"  => get_bloginfo("url")
         ], $additional_context));
     }
+
 
     // ==================================================
     // > TOOLS
@@ -182,6 +143,7 @@ abstract class Mail
         }
     }
 
+
     /**
      * Send a test mail with generic content
      *
@@ -196,6 +158,7 @@ abstract class Mail
             return "An error occured";
         }
     }
+
 
     /**
      * A hook triggered for each default WordPress mail
@@ -223,22 +186,6 @@ abstract class Mail
     // > CONFIGS
     // ==================================================
     /**
-     * Setup a classic authentification via DKIM
-     *
-     * @param PHPMailer $mail
-     * @return void
-     */
-    private static function webSetup(&$mail)
-    {
-        // Use PHP mail()
-        $mail->IsMail();
-
-        // DKIM & antispam
-        // self::dkimSetup($mail);
-    }
-
-
-    /**
      * Setup a SMTP connection
      *
      * @param PHPMailer $mail
@@ -248,34 +195,16 @@ abstract class Mail
     {
         $mail->isSMTP();
 
-        $mail->SMTPDebug = 2;
+        if (App::config("mail_debug")) $mail->SMTPDebug = 2;
 
-        $mail->Host       = "";
+        $mail->Host       = App::config("mail_smtp")["host"];
         $mail->Port       = 587;
         $mail->SMTPAuth   = true;
         $mail->SMTPSecure = "tls";
-        $mail->Username   = "";
-        $mail->Password   = "";
-
-        // DKIM & antispam
-        // self::dkimSetup($mail);
+        $mail->Username   = $mail->From;
+        $mail->Password   = App::config("mail_smtp")["password"];
     }
 
-
-    /**
-     * Configure Dkim
-     *
-     * @param [type] $mail
-     * @return void
-     */
-    private static function dkimSetup(&$mail)
-    {
-        $mail->DKIM_domain     = "...";
-        $mail->DKIM_selector   = "phpmailer";
-        $mail->DKIM_private    = "/var/www/vhosts/.../httpdocs/dkim/dkim.private";
-        $mail->DKIM_passphrase = "";
-        $mail->DKIM_identity   = $mail->From;
-    }
 
 
     /**
@@ -293,9 +222,18 @@ abstract class Mail
         $mail->XMailer = " ";
 
         // Organization
-        $mail->addCustomHeader("Organization" , get_bloginfo("name"));
+        $mail->addCustomHeader("Organization" , App::config("client"));
 
         // Sender enveloppe & bounce address
         $mail->Sender = $mail->From;
+
+        // DKIM
+        if (App::config("mail_dkim")["domain"]) {
+            $mail->DKIM_domain     = App::config("mail_dkim")["domain"];
+            $mail->DKIM_selector   = App::config("mail_dkim")["selector"];
+            $mail->DKIM_private    = App::config("mail_dkim")["private"];
+            $mail->DKIM_passphrase = App::config("mail_dkim")["passphrase"];
+            $mail->DKIM_identity   = $mail->From;
+        }
     }
 }

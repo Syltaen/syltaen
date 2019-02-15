@@ -52,7 +52,6 @@ class ApiController extends Controller
     /**
      * Generate a new user key
      *
-     * @param [type] $target
      * @return void
      */
     private function key()
