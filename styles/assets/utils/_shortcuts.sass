@@ -57,21 +57,23 @@
 // ==================================================
 // > POSITIONS
 // ==================================================
-=pos($position, $args)
-    position: $position;
+=pos($args)
     @each $o in top right bottom left
         $i: index($args, $o)
         @if $i and $i + 1 <= length($args) and type-of(nth($args, $i + 1)) == number
             #{$o}: nth($args, $i + 1)
 
 =absolute($args: "")
-    +pos(absolute, $args)
+    position: absolute
+    +pos($args)
 
 =fixed($args: "")
-    +pos(fixed, $args)
+    position: fixed
+    +pos($args)
 
 =relative($args: "")
-    +pos(relative, $args)
+    position: relative
+    +pos($args)
 
 
 // ==================================================

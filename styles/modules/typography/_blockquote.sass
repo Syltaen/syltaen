@@ -2,30 +2,57 @@
 // > MODULES: TXT - QUOTES
 // =============================================================================
 
-blockquote
-    border-left: 3px solid lighten(color(primary), 10%)
-    padding: 20px 20px 0
-    position: relative
-    margin-bottom: 40px
+blockquote,
+.blockquote
+    padding: 0 20px
+    margin: 30px 50px 80px 30px
+    +screen(sm)
+        margin-right: 0
+    +screen(xs)
+        margin: 0 0 40px 0
+        padding: 0
 
-    cite
-        background: color(light-grey)
-        text-align: right
+    cite,
+    &__author
         display: block
-        margin: 20px -20px -20px
-        padding: 10px 20px
-        font-style: italic
+        background: color(light-grey)
+        position: relative
+
+        +font(semibold white)
+        margin: 0 -20px
+        padding: 10px 20px 10px 60px
+
+        font-style: normal
         color: lighten(color(dark-grey), 10%)
 
-    &::before,
-    &::after
-        +fa(quote-left)
-        +font(30px light-grey)
-        +absolute(top -20px left -40px)
+        +screen(xs)
+            margin: 200px 0 0
+            padding: 10px 20px
 
-    &::after
-        +fa(quote-right)
-        left: auto
-        top: auto
-        right: -40px
-        bottom: -20px
+    &__picture
+        border-radius: 50%
+        +size(90px)
+        +absolute(top 50% left 0)
+        transform: translate(-50%, -50%)
+        border: 3px solid color(light-grey)
+        +screen(xs)
+            +pos(top -180px left 50%)
+            transform: translate(-50%, 0)
+            +size(170px)
+
+    &__quote
+        font-style: italic
+        position: relative
+        margin: 30px 40px
+        +screen(xs)
+            margin: 0
+
+        &::before,
+        &::after
+            +font(30px light-grey)
+        &::before
+            +fa(quote-left)
+            +absolute(top -20px left -40px)
+        &::after
+            +fa(quote-right)
+            +absolute(right -40px bottom -20px)

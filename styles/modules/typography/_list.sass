@@ -54,38 +54,44 @@ ul:not([class]),
 .list--circle
     &,
     & &
-        & > .list__item::before, & > li::before
+        & > .list__item::before,
+        & > li::before
             +fa(circle)
             font-size: .5em
             line-height: 2.8em
             left: -1.75em
     & &
-        & > .list__item::before, & > li::before
+        & > .list__item::before,
+        & > li::before
             +far(circle)
 
 
 // ========== CARRETS ========== //
 .list--carrets
-    & > .list__item::before, & > li::before
+    & > .list__item::before,
+    & > li::before
         +fa(caret-right)
 
 // ========== ANGLES ========== //
 .list--angles
-    & > .list__item::before, & > li::before
+    & > .list__item::before,
+    & > li::before
         +fa(angle-right)
 
 
 // ========== ARROWS ========== //
 .list--arrows
     padding-left: 1.35em
-    & > .list__item::before, & > li::before
+    & > .list__item::before,
+    & > li::before
         +fa(arrow-right)
         left: -1.35em
 
 // ========== CHECKS ========== //
 .list--checks
     padding-left: 1.35em
-    & > .list__item::before, & > li::before
+    & > .list__item::before,
+    & > li::before
         +fa(check-circle)
         font-size: 1em
         line-height: unset
@@ -95,7 +101,8 @@ ul:not([class]),
 // ========== CHOICES (radio/checkbox) ========== //
 .list--choices
     padding-left: 25px
-    & > .list__item input.list__bullet, & > li input.list__bullet
+    & > .list__item input.list__bullet,
+    & > li input.list__bullet
         +absolute(top .2em left -25px)
 
 

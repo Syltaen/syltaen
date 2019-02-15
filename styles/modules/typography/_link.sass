@@ -2,26 +2,26 @@
 // > MODULES: TYPOGRAPHY - LINKS
 // =============================================================================
 
-a
-    text-decoration: none
-
-a:not([class]),
+a,
 .link
     +font(primary)
+    text-decoration: none
     position: relative
     cursor: pointer
 
-    &::after
-        content: ""
-        +absolute(bottom 0 left 0)
-        +size(100%, 1px)
-        background: color(primary)
-        transition: width .35s ease
+    &:not([class]),
+    &.link
+        &::after
+            content: ""
+            +absolute(bottom 0 left 0)
+            +size(100%, 1px)
+            background: color(primary)
+            transition: width .35s ease
 
-    &:hover::after
-        width: 0
-        left: 100%
-        transition: all .35s ease
+        &:hover::after
+            width: 0
+            left: 100%
+            transition: all .35s ease
 
     @each $color, $value in $colors
         .color-#{$color} &,
