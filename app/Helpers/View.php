@@ -104,6 +104,12 @@ class View
     {
         if (!$context) return [];
 
+        // Add helper functions
+        $context = array_merge(
+            $context,
+            static::helpers()
+        );
+
         // Add messages
         $context["error_message"]   = Data::currentPage("error_message");
         $context["success_message"] = Data::currentPage("success_message");
@@ -132,5 +138,31 @@ class View
 
 
         static::$renderer;
+    }
+
+
+    /**
+     * Add helpers function to the context
+     *
+     * @return void
+     */
+    private static function helpers()
+    {
+        return [
+
+            // Return an image url
+            "_img" => function ($image) {
+
+                // Image ID, from WordPress
+                if (is_int($image)) {
+                    return Data::filter($image, "img:url");
+                }
+
+                // Else image in asset
+                return Files::url("build/img/" . $image);
+            },
+
+
+        ];
     }
 };
