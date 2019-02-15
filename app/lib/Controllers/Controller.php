@@ -164,7 +164,7 @@ class Controller
      * @param array $table
      * @return void
      */
-    public static function excel($rows, $header = false, $filename = "export")
+    public static function excel($table, $filename = "export")
     {
         header("Content-Type: application/xlsx");
         header("Content-Disposition: attachment; filename={$filename}.xlsx;");
@@ -175,8 +175,8 @@ class Controller
         $writer->setCompany(App::config("client"));
 
         // Add sytled header
-        if ($header) {
-            $writer->writeSheetRow("Export", $header, [
+        if (!empty($table["header"])) {
+            $writer->writeSheetRow("Export", $table["header"], [
                 "font-style" => "bold",
                 "fill"       => App::config("color_primary"),
                 "color"      => "#fff",
@@ -189,7 +189,7 @@ class Controller
         }
 
         // Add each rows
-        foreach ($rows as $row) $writer->writeSheetRow("Export", $row, [
+        foreach ($table["rows"] as $row) $writer->writeSheetRow("Export", $row, [
             "height"     => 15,
             "font-size"  => 8,
             "halign"     => "left",
