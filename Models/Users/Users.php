@@ -24,7 +24,7 @@ class Users extends UsersModel
      * @param string $key
      * @return self
      */
-    public function key($key)
+    public function withKey($key)
     {
         return $this->meta("key", $key);
     }

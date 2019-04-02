@@ -23,14 +23,14 @@
         transform: scale(1.3)
 
 // ========== FADE IN ========== //
-@keyframe fadeIn
+@keyframes fadeIn
     from
         opacity: 0
     to
         opacity: 1
 
-// ========== FADE UP ========== //
-@keyframes fadeUp
+// ========== FADE from BOTTOM ========== //
+@keyframes fadeInBottom
     from
         opacity: 0
         transform: translate(0, 100px)
@@ -38,8 +38,26 @@
         opacity: 1
         transform: translate(0, 0)
 
-// ========== FADE LEFT ========== //
-@keyframes fadeLeft
+// ========== FADE from TOP ========== //
+@keyframes fadeInTop
+    from
+        opacity: 0
+        transform: translate(0, -100px)
+    to
+        opacity: 1
+        transform: translate(0, 0)
+
+// ========== FADE from LEFT ========== //
+@keyframes fadeInLeft
+    from
+        opacity: 0
+        transform: translate(-100px, 0)
+    to
+        opacity: 1
+        transform: translate(0, 0)
+
+// ========== FADE from RIGHT ========== //
+@keyframes fadeInRight
     from
         opacity: 0
         transform: translate(100px, 0)

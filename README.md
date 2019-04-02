@@ -34,6 +34,7 @@ wp plugin install duplicate-post
 wp plugin install wp-fastest-cache
 wp plugin install wordpress-seo
 wp plugin install google-analytics-dashboard-for-wp
+wp plugin install https://github.com/Hungry-Minds/hungryminds-cookies --activate
 
 mv app/Forms/_syltaen_ninjaforms_autoload.php ../../plugins
 wp plugin activate _syltaen_ninjaforms_autoload

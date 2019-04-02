@@ -22,7 +22,7 @@ Files::import("app/vendors/vendor/autoload.php");
 if (WP_DEBUG || isset($_GET["debug"])) {
     ($handler = (new \Whoops\Handler\PrettyPageHandler))->setEditor("vscode");
     (new \Whoops\Run)
-    ->silenceErrorsInPaths(["/plugins/", "/wp-admin/", "/wp-includes/"], E_ALL)
+        ->silenceErrorsInPaths(["/plugins/", "/wp-admin/", "/wp-includes/"], E_ALL)
         ->pushHandler($handler)->register();
 }
 
