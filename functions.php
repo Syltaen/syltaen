@@ -21,15 +21,15 @@ Files::import("app/vendors", "vendor/autoload");
 // ==================================================
 // > ERROR HANDLING
 // ==================================================
-if (WP_DEBUG) {
-    $handler = new \Whoops\Handler\PrettyPageHandler;
-    $handler->setEditor("vscode");
+// if (WP_DEBUG) {
+//     $handler = new \Whoops\Handler\PrettyPageHandler;
+//     $handler->setEditor("vscode");
 
-    (new \Whoops\Run)
-        // ->silenceErrorsInPaths(["/plugins/"], E_ALL)
-        ->pushHandler($handler)
-        ->register();
-}
+//     (new \Whoops\Run)
+//         // ->silenceErrorsInPaths(["/plugins/"], E_ALL)
+//         ->pushHandler($handler)
+//         ->register();
+// }
 
 
 // ==================================================
@@ -37,6 +37,7 @@ if (WP_DEBUG) {
 // ==================================================
 Files::import("app/config", [
     "acf",
+    "gutenberg",
     "globals",
     "registrations",
     "supports",
@@ -61,3 +62,51 @@ Files::import("app/hooks/filters", [
 Files::import("app/hooks/ajax", [
     "ajax-upload"
 ]);
+
+
+
+
+// ==================================================
+// > TMP
+// ==================================================
+
+Files::import("Controllers/Blocs/core/section", "block.section");
+
+// add_filter("allowed_block_types", function () {
+//     return [
+//         // "core/paragraph",
+//         "syltaen/section"
+//     ];
+// });
+
+
+
+
+return;
+// Register a testimonial ACF Block
+if( function_exists('acf_register_block') ) {
+
+    $result = acf_register_block(array(
+        'name'				=> 'testimonial',
+        'title'				=> __('Testimonial'),
+        'description'		=> __('A custom testimonial block.'),
+        'render_callback'	=> function () {
+            $testimonial = "salut";
+            $author = "ouioiuioiu";
+
+            ?>
+            <blockquote class="testimonial">
+                <p><?php echo $testimonial; ?></p>
+                <cite>
+                    <span><?php echo $author; ?></span>
+                </cite>
+            </blockquote>
+            <?php
+
+
+        }
+        //'category'		=> '',
+        //'icon'			=> '',
+        //'keywords'		=> array(),
+    ));
+}

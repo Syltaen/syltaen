@@ -47,15 +47,6 @@ class Controller
      */
     public function __construct($args = [])
     {
-        $this->renderer = new \Pug\Pug([
-            "extension" => ".pug",
-            "cache"     => include Files::path("app/cache/pug-php", "index.php"),
-            // "prettyprint" => true,
-            // "expressionLanguage" => "js"
-        ]);
-
-        $this->viewfolder =  get_template_directory() . "/views/";
-
         $this->args = $args;
     }
 
@@ -79,15 +70,9 @@ class Controller
     public function view($filename = false, $data = false)
     {
         $filename = $filename ?: $this->view;
-        $filename = $this->viewfolder . $filename . ".pug";
         $data     = $data ?: $this->data;
-        $data     = Data::recursiveFilter($data, "content");
 
-        if (file_exists($filename)) {
-            return $this->renderer->render($filename, $data);
-        } else {
-            die("View file not found : $filename");
-        }
+        return View::render($filename, $data);
     }
 
     /**

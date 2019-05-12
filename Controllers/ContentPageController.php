@@ -16,7 +16,10 @@ class ContentPageController extends PageController
             "intro_content",
             "(img:url) intro_bg",
 
-            "@sections" => (new SectionsProcessor($this))->processEach(Data::get("sections")),
+            // "@sections" => (new SectionsProcessor($this))->processEach(Data::get("sections")),
+
+
+            "@content" => $this->post->post_content
 
         ]);
     }

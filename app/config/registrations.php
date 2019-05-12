@@ -8,6 +8,7 @@ add_action("init", function() {
     // > POST TYPES
     // ==================================================
     News::register();
+    Teams::register();
 
     // ==================================================
     // > TAXONOMIES
@@ -23,5 +24,11 @@ add_action("init", function() {
     // News::addStatusTypes([
     //     "old_news"  => ["News dépassée", "News dépassées"],
     // ]);
+
+
+    // ==================================================
+    // > BLOCKS
+    // ==================================================
+    // ACFBLock::register();
 
 });

@@ -1,0 +1,15 @@
+.wp-block[data-type="syltaen/section"] {
+    max-width:    none;
+    margin-left:  -46px;
+    margin-right: -46px;
+    padding: 0;
+}
+
+.wp-block-syltaen-section {
+    padding: 20px 46px;
+}
+
+.wp-block-syltaen-section > .container {
+    padding: 20px;
+    border: 1px dashed rgb(204, 204, 204);
+}

@@ -87,6 +87,25 @@ abstract class Files
     }
 
     /**
+     * Register a script stored in the js folder
+     *
+     * @param string $file
+     * @param array $requirements
+     * @param string $action
+     * @return void
+     */
+    public static function registerScript($file, $requirements = [])
+    {
+        wp_register_script(
+            $file,
+            Files::url("build/js", $file),
+            $requirements,
+            Files::time("build/js", $file),
+            true
+        );
+    }
+
+    /**
      * De-register a script by its name
      *
      * @param string $name
