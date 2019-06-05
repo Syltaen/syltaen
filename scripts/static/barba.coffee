@@ -39,7 +39,7 @@ Barba.Pjax.getTransition = -> Barba.BaseTransition.extend
 
         @newContainerLoading.then =>
 
-            @$html.removeClass "is-loading"
+            @$html.removeClass "is-loading is-mobilenav-open"
             @$html.addClass "is-done-loading"
 
             $(@oldContainer).removeClass("in").addClass("out")
@@ -63,15 +63,32 @@ $(".site-view").addClass "in"
 Barba.Pjax.defaultPreventCheck = Barba.Pjax.preventCheck
 Barba.Pjax.preventCheck = (e, el) ->
 
-    # Make it work with anchors
-    if $(el).attr("href") && $(el).attr("href").indexOf("#") > -1 then return true
+    href = $(el).attr("href")
+
+    # No href, ignore
+    unless href then return false
+
+    # Make it work with anchors on same page
+    if href.indexOf("#") is 0 then return true
+
+    # Not the same webiste
+    if href.indexOf(window.location.site) < 0 then return false
+
+    # Make it work with anchors to other pages
+    if href.indexOf("#") > -1 then return true
 
     # DefaultPrevent
     unless Barba.Pjax.defaultPreventCheck(e, el) then return false
     if $(el).closest(".no-barba").length then return false
 
+    # Prevent common extensions
+    if href.match /(\.pdf|\.jpg|\.png|\.gif)$/ then return false
+
     # wp-admin stop
     if /wp-admin/.test el.href.toLowerCase() then return false
+
+    # lang switcher
+    # if $(el).closest(".lang-menu").length then return false
 
     return true
 
@@ -88,6 +105,9 @@ Barba.Dispatcher.on "newPageReady", (currentStatus, oldStatus, container, html) 
 
     # Replace the admin tool bar
     $("#wpadminbar").html $(html).find("#wpadminbar").html()
+
+    # Replace the lang menus
+    # $(".lang-menu").html $(html).find(".lang-menu").html()
 
     # Replace breadcrumb
     # $(".site-header__breadcrumbs").addClass("out").removeClass("in")

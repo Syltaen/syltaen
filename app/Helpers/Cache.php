@@ -219,6 +219,7 @@ class Cache
         // Encode the content
         switch ($this->format) {
             case "json":
+            case "json:array":
                 $txt = json_encode($content);
                 break;
             case "txt":
@@ -285,11 +286,12 @@ class Cache
 
         switch ($this->format) {
             case "json":
+                return json_decode($content);
+            case "json:array":
                 return json_decode($content, true);
             case "txt":
             default:
                 return $content;
         }
     }
-
 }

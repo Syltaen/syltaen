@@ -42,6 +42,39 @@ class View
     }
 
 
+    /**
+     * Return the HTML view of a WordPress menu
+     *
+     * @param string|int $menu Either a menu ID or a menu location
+     * @param string $classes List of classes to add to the menu
+     * @return string HTML output
+     */
+    public static function menu($menu, $menu_classes = "", $link_classes = "", $custom_options = [])
+    {
+        $menu = wp_nav_menu(array_merge([
+            "menu"           => $menu,
+            "theme_location" => is_string($menu) ? $menu : false,
+            "menu_class"     => "menu " . $menu_classes,
+            "container"      => "ul",
+            "echo"           => false
+        ], $custom_options));
+
+
+        // Remove all IDs
+        $menu = preg_replace("/id=\"[^\"]+\"\s?/", "", $menu);
+
+        // Replace classes
+        $menu = preg_replace("/menu-item-/", "menu__item--", $menu);
+        $menu = preg_replace("/menu-item/", "menu__item", $menu);
+        $menu = preg_replace("/sub-menu/", "menu__sub", $menu);
+
+        // Add anchor classes
+        $menu = preg_replace("/<a/", "<a class=\"menu__link $link_classes\"", $menu);
+
+        // wp_send_json($menu);
+        return $menu;
+    }
+
     // ==================================================
     // > PRIVATE
     // ==================================================

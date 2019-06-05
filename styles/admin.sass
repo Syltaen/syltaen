@@ -103,6 +103,11 @@
     content: "\f469" !important
     top: 2px
 
+#wp-admin-bar-new_draft,
+#wp-admin-bar-customize
+    display: none
+
+
 // ==================================================
 // > NINJA FORM
 // ==================================================
@@ -134,36 +139,41 @@
     display: none
 
 .acf-horizontal-repeater
-    .acf-table tbody
-        +flex(row nowrap)
-    .acf-row:not(.acf-clone)
-        flex: 1
-        &,
-        .acf-fields
-            +flex(column nowrap)
-    .acf-row
-        td
-            width: 100% !important
-            box-sizing: border-box
-        .acf-field
-            width: 100%  !important
-            height: auto !important
-            // min-height: 0 !important
-    .acf-icon
-        &.-plus
-            left: -9px
-            top: 6px
-        &.-minus
-            left: 50%
 
-    .acf-table > tbody > tr
-        & > td
-            border-width: 0 0 0 1px
-        &:first-child > td
-            border-width: 0
-
-    .acf-repeater
+    & > .acf-input > .acf-repeater
         padding-right: 10px
+
+        & > .acf-table > tbody
+            +flex(row nowrap)
+            & > .acf-row:not(.acf-clone)
+                flex: 1
+                &,
+                & > .acf-fields
+                    +flex(column nowrap)
+
+            & > .acf-row
+                &,
+                & > td
+                    width: 100% !important
+                    box-sizing: border-box
+                    & > .acf-field
+                        width: 100%  !important
+                        height: auto !important
+
+                & > td > .acf-icon
+                    &.-plus
+                        left: -9px
+                        top: 6px
+                    &.-minus
+                        left: 50%
+
+            & > tr
+                & > td
+                    border-width: 0 0 0 1px
+                &:first-child > td
+                    border-width: 0
+
+
         & > .acf-actions
             +absolute(top 50% right -10px)
             .button
@@ -179,6 +189,45 @@
                     +size(100%)
                     +font(20px white center)
 
+.acf-page-sections > .acf-input > .acf-repeater
+    padding-left: 50px
+    & > .acf-table > tbody > .acf-row
+        position: relative
+        & > td
+            border-bottom: 20px solid color(light-grey)
+        & > .acf-fields.-sidebar
+            position: static
+            height: auto !important
+            padding: 0 !important
+            &::before
+                content: none
+            & > .acf-tab-wrap.-left > .acf-hl.acf-tab-group
+                width: 50px
+                // left: -84px
+                & > li
+                    a
+                        display: block
+                        text-indent: -9999px
+                        +size(50px, 40px)
+                        position: relative
+                        padding: 0
+                        border: 0
+                        +font(20px 40px medium-grey center)
+                        &:hover
+                            +font(text)
+                        &::before
+                            +absolute(top 0 left 0)
+                            +size(100%)
+                            text-indent: 0
+                    &:nth-child(1) a::before
+                        +fa(align-left)
+                    &:nth-child(2) a::before
+                        +fa(paint-brush)
+                    &:nth-child(3) a::before
+                        +fa(cog)
+                    &.active a
+                        +font(primary)
+
 
 // ==================================================
 // > EDITOR
@@ -192,9 +241,7 @@
 // > LOGIN
 // ==================================================
 body.login
-    // background: img("") center center / cover no-repeat
-    h1
-        margin: 0
+    background: img("bg_intro_default.jpg") center center / cover no-repeat
     h1 a
         background: img("logo.png") center center / contain no-repeat !important
         background-size: contain
@@ -223,14 +270,15 @@ body.login
         cursor: pointer
         transition: all .4s ease
 
-        &:hover
+        &:hover,
+        &:focus
             background: white
             color: color(primary)
 
     #nav, #backtoblog
         text-align: center
         a
-            +font(14px primary)
+            +font(14px white)
             &::after
                 bottom: -4px
                 background: white

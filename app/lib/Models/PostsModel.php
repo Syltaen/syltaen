@@ -179,11 +179,24 @@ abstract class PostsModel extends Model
      * Filter by author(s)
      *
      * @param int $ids
-     * @return void
+     * @return self
      */
     public function author($authors)
     {
         $this->filters["author__in"] = (array) $authors;
+        return $this;
+    }
+
+
+    /**
+     * Filter by lang
+     *
+     * @param string Lang slug
+     * @return self
+     */
+    public function lang($lang)
+    {
+        $this->filters["lang"] = $lang;
         return $this;
     }
 

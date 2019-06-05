@@ -53,29 +53,18 @@ abstract class BaseController extends Controller
     protected function menus()
     {
         return [
-            "main" => wp_nav_menu([
-                "theme_location" => "main_menu",
-                "menu_id"        => false,
-                "menu_class"     => "menu site-header__menu",
-                "container"      => "ul",
-                "echo"           => false
-            ]),
-
-            "mobile" => wp_nav_menu([
-                "theme_location" => "main_menu",
-                "menu_id"        => false,
-                "menu_class"     => "menu site-mobilenav__menu",
-                "container"      => "ul",
-                "echo"           => false
-            ]),
-
-            "footer" =>	wp_nav_menu([
-                "theme_location" => "footer_menu",
-                "menu_id"        => false,
-                "menu_class"     => "menu site-footer__menu",
-                "container"      => "ul",
-                "echo"           => false
-            ])
+            "main" => View::menu(
+                "main_menu",
+                "site-header__menu"
+            ),
+            "mobile" => View::menu(
+                "main_menu",
+                "site-mobilenav__menu"
+            ),
+            "footer" => View::menu(
+                "footer_menu",
+                "site-footer__menu"
+            )
         ];
     }
 

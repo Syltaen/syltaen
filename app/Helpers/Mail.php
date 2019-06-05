@@ -195,12 +195,13 @@ abstract class Mail
     {
         $mail->isSMTP();
 
-        if (App::config("mail_debug")) $mail->SMTPDebug = 2;
+        if (App::config("mail_smtp")["debug"]) $mail->SMTPDebug = 3;
 
         $mail->Host       = App::config("mail_smtp")["host"];
         $mail->Port       = 587;
         $mail->SMTPAuth   = true;
         $mail->SMTPSecure = "tls";
+
         $mail->Username   = $mail->From;
         $mail->Password   = App::config("mail_smtp")["password"];
     }

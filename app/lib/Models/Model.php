@@ -8,7 +8,7 @@ abstract class Model implements \Iterator
     /**
      * Store the query and its arguments to be modified by the model
      *
-     * @var boolean
+     * @var array
      */
     protected $filters       = [];
     protected $cachedQuery   = false;
@@ -680,7 +680,7 @@ abstract class Model implements \Iterator
         // Use only the IDs as filter, it's faster and safer (in case of updates during the processing)
         $cluster = clone $this;
 
-        $cluster->clearFilters()->is($ids)->limit($groupSize);
+        $cluster->clearFilters()->is($ids)->status("all")->limit($groupSize);
 
         // Process one group at a time
         for ($page = 1; $page <= $cluster->getPagesCount(); $page++) {

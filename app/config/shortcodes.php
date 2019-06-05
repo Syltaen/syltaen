@@ -15,13 +15,9 @@ add_shortcode("page_title", function () {
 // MENUS
 add_shortcode("menu", function ($atts, $content = null) {
     extract(shortcode_atts(["id" => null], $atts));
-
-    return wp_nav_menu([
-        "menu"      => $id,
-        "container" => "nav",
-        "echo"      => false
-    ]);
+    return View::menu($id);
 });
+
 
 
 // =============================================================================

@@ -42,8 +42,10 @@ return [
     // Define SMTP credentials to send mails, fallback to php mail() when not specified
     "mail_smtp" => [
         "host"     => "",
-        "password" => ""
+        "password" => '',
+        "debug"    => false
     ],
+
 
     // Setup DKIM authentification if provided
     "mail_dkim" => [

@@ -145,13 +145,26 @@ abstract class Files
      * @param string $handle script name used by the $position argument
      * @return void
      */
-    public static function addInlineScript($js, $position, $handle)
+    public static function addInlineScript($js, $position, $handle = "bundle.js")
     {
         add_action("wp_enqueue_scripts", function () use ($js, $position, $handle) {
             wp_add_inline_script($handle, $js, $position);
         });
     }
 
+    /**
+     * Write custom css with php
+     *
+     * @param string $css the CSS code to be written
+     * @param string $handle script name used by the $position argument
+     * @return void
+     */
+    public static function addInlineStyles($css, $handle = "bundle.css")
+    {
+        add_action("wp_enqueue_scripts", function () use ($css, $handle) {
+            wp_add_inline_style($handle, $css);
+        });
+    }
 
     /**
      * Autoloader matching PHP-FIG PSR-4 and PSR-0 standarts

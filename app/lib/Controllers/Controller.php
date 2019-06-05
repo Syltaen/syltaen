@@ -45,9 +45,9 @@ class Controller
      *
      * @return array of data
      */
-    public function addData($array)
+    public function addData($array, $post_id = null)
     {
-        Data::store($this->data, $array);
+        Data::store($this->data, (array) $array, $post_id);
         return $this->data;
     }
 
