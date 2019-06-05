@@ -133,7 +133,7 @@ abstract class Mail
                 $to[] = $reciever[0];
             }
 
-            (new \No3x\WPML\WPML_Plugin)->log_email([
+            (new \No3x\WPML\WPML_Plugin(["raw", "html", "json"], []))->log_email([
                 "to"          => $to,
                 "subject"     => $mail->Subject,
                 "message"     => $mail->Body,
