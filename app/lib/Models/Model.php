@@ -678,12 +678,14 @@ abstract class Model implements \Iterator
         $ids = (clone $this)->getIds();
 
         // Use only the IDs as filter, it's faster and safer (in case of updates during the processing)
-        $this->clearFilters()->is($ids)->limit($groupSize);
+        $cluster = clone $this;
+
+        $cluster->clearFilters()->is($ids)->limit($groupSize);
 
         // Process one group at a time
-        for ($page = 1; $page <= $this->getPagesCount(); $page++) {
-            $this->page($page);
-            $process_function($this);
+        for ($page = 1; $page <= $cluster->getPagesCount(); $page++) {
+            $cluster->page($page);
+            $process_function($cluster);
         }
     }
 
