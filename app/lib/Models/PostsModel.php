@@ -428,7 +428,8 @@ abstract class PostsModel extends Model
             "menu_icon"          => static::ICON,
             "supports"           => $supports,
             "rewrite"            => $rewrite,
-            "has_archive"        => false
+            "has_archive"        => false,
+            "show_in_rest"       => true
         ]);
 
         if (static::HAS_PAGINATION) {

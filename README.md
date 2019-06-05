@@ -1,3 +1,15 @@
+- Block section : spacing, colors, conditional display (?)
+- Blokcs pour les post types
+- Rendu block ACF ?
+- Rendu block Ninja Form ?
+- classe pour les blocs non-acf
+- Section obliée, puis contenu
+- anciennes options tinyMCE ?
+- auto-register des models, taxonomies, blocs, ...
+- Couleurs auto-générées depuis varables.scss ?
+
+
+
 # Syltaen
 
 MVC framework and boilerplate for every Hungry Mind's WordPress projects.
