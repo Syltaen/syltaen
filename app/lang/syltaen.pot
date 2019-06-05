@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Syltaen\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-23 13:21+0000\n"
+"POT-Creation-Date: 2019-06-05 13:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -14,79 +14,37 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/"
 
-#: Controllers/HomeController.php:25 Controllers/SingleController.php:51
-msgid "Applications"
+#: Controllers/SingleController.php:59
+msgid "Retour"
 msgstr ""
 
-#. > _applications-slide.pug;
 #: Controllers/SingleController.php:63
-msgid "Découvrez les autres applications"
-msgstr ""
-
-#: Controllers/SingleController.php:75
-msgid "Retour à la liste des news"
-msgstr ""
-
-#: Controllers/SingleController.php:100
-msgid "Retour à la liste des jobs"
-msgstr ""
-
-#: Controllers/SingleController.php:101
-msgid "[ninja_form id=3]"
-msgstr ""
-
-#: Controllers/SingleController.php:124
-msgid "Retour à la liste"
-msgstr ""
-
-#: Controllers/SingleController.php:128 app/lang/view-strings.php:54
 msgid "Précédent"
 msgstr ""
 
-#: Controllers/SingleController.php:132 app/lang/view-strings.php:55
+#: Controllers/SingleController.php:67
 msgid "Suivant"
 msgstr ""
 
-#: Controllers/SpecialPageController.php:91
+#: Controllers/PageController.php:125
 msgid "Recherche pour : "
 msgstr ""
 
-#: app/config/shortcodes.php:35
+#: app/Forms/_syltaen_ninjaforms_autoload.php:136
+msgid "Valeurs requises"
+msgstr ""
+
+#: app/config/shortcodes.php:43
 msgid "Adresse e-mail"
 msgstr ""
 
-#: app/config/shortcodes.php:36
+#: app/config/shortcodes.php:44
 msgid "Mot de passe #reset#"
-msgstr ""
-
-#: app/config/shortcodes.php:42
-msgid "Mot de passe oublié ?"
-msgstr ""
-
-#: app/Helpers/Pagination.php:127
-msgid "Première page"
-msgstr ""
-
-#: app/Helpers/Pagination.php:132
-msgid "Page précédente"
-msgstr ""
-
-#: app/Helpers/Pagination.php:137
-msgid "Page suivante"
-msgstr ""
-
-#: app/Helpers/Pagination.php:142
-msgid "Dernière page"
-msgstr ""
-
-#: app/Helpers/Pagination.php:145
-#, php-format
-msgid "Page %s sur %s"
 msgstr ""
 
 #. > 404.pug;
 #: app/lang/view-strings.php:11
-msgid " Erreur 404"
+msgid "Erreur 404"
 msgstr ""
 
 #: app/lang/view-strings.php:12
@@ -97,204 +55,69 @@ msgstr ""
 msgid "Retour à l'accueil"
 msgstr ""
 
-#: app/lang/view-strings.php:14
-msgid "Faire une recherche"
+#. > _card-news.pug;
+#: app/lang/view-strings.php:17
+#: app/cache/pug-php/axcrJjKVZshFGNNpT5Uva2CU5jXAPvP-EMuuKd3qyUE.php:745
+msgid "Lire plus"
 msgstr ""
 
 #. > search.pug;
 #. > _base.pug;
-#: app/lang/view-strings.php:18 app/lang/view-strings.php:59 app/lang/view-strings.php:60 app/lang/view-strings.php:80
+#: app/lang/view-strings.php:21
 msgid "Recherche"
 msgstr ""
 
-#. > single-applications.pug;
-#. > single-products.pug;
-#: app/lang/view-strings.php:22 app/lang/view-strings.php:38
-msgid "Gamme"
+#: app/lang/view-strings.php:22
+msgid "Modifier votre recherche"
 msgstr ""
 
-#: app/lang/view-strings.php:23
-msgid "Plus d'infos"
+#: app/Helpers/Pagination.php:126
+msgid "Première page"
 msgstr ""
 
-#: app/lang/view-strings.php:24 app/lang/view-strings.php:41
-msgid "Intéressé par nos produits ?"
+#: app/Helpers/Pagination.php:131
+msgid "Page précédente"
 msgstr ""
 
-#: app/lang/view-strings.php:25 app/lang/view-strings.php:42
-msgid "Contactez-nous maintenant"
+#: app/Helpers/Pagination.php:136
+msgid "Page suivante"
 msgstr ""
 
-#. > single-jobs.pug;
-#: app/lang/view-strings.php:29
-msgid "Jobs"
+#: app/Helpers/Pagination.php:141
+msgid "Dernière page"
 msgstr ""
 
-#: app/lang/view-strings.php:30
-msgid "Postuler"
+#: app/Helpers/Pagination.php:144
+#, php-format
+msgid "Page %s sur %s"
 msgstr ""
 
-#. > single-news.pug;
-#: app/lang/view-strings.php:34
-msgid "News"
-msgstr ""
-
-#: app/lang/view-strings.php:39
-msgid "Nouveau"
-msgstr ""
-
-#: app/lang/view-strings.php:40
-msgid "Packaging"
-msgstr ""
-
-#: app/lang/view-strings.php:43
-msgid "Découvrez nos autres produits"
-msgstr ""
-
-#. > single-recipes.pug;
-#: app/lang/view-strings.php:47
-msgid "Recette"
-msgstr ""
-
-#: app/lang/view-strings.php:48
-msgid "Ingrédients"
-msgstr ""
-
-#: app/lang/view-strings.php:49
-msgid "Préparation"
-msgstr ""
-
-#: app/lang/view-strings.php:50
-msgid "Ça pourrait vous intéresser"
-msgstr ""
-
-#. > _archive-dispensers.pug;
-#: app/lang/view-strings.php:64
-msgid "Pays"
-msgstr ""
-
-#: app/lang/view-strings.php:65
-msgid "Type de distributeur"
-msgstr ""
-
-#: app/lang/view-strings.php:66
-msgid "Recherche par nom"
-msgstr ""
-
-#. > _archive-jobs.pug;
-#: app/lang/view-strings.php:70
-msgid "Aucune offre d'emploi actuellement"
-msgstr ""
-
-#. > _archive-news.pug;
-#: app/lang/view-strings.php:74 app/lang/view-strings.php:82
-msgid "Voir plus"
-msgstr ""
-
-#. > _archive-recipes.pug;
-#: app/lang/view-strings.php:78
-msgid "Produit"
-msgstr ""
-
-#: app/lang/view-strings.php:79
-msgid "Application"
-msgstr ""
-
-#: app/lang/view-strings.php:81
-msgid "Aucun résultat pour votre recherche"
-msgstr ""
-
-#. > _card-job.pug;
-#: app/lang/view-strings.php:86
-msgid "Postuler pour ce job"
-msgstr ""
-
-#. > _card-news.pug;
-#: app/lang/view-strings.php:90
-msgid "Lire plus"
-msgstr ""
-
-#. > _card-recipe.pug;
-#: app/lang/view-strings.php:94 app/lang/view-strings.php:99 app/lang/view-strings.php:104 app/lang/view-strings.php:111
-msgid "En savoir plus"
-msgstr ""
-
-#: app/lang/view-strings.php:98
-msgid "Voir toutes les applications"
-msgstr ""
-
-#. > _products-slide.pug;
-#: app/lang/view-strings.php:103
-msgid "Nos produits"
-msgstr ""
-
-#. > _recipes-slide.pug;
-#: app/lang/view-strings.php:108
-msgid "Recettes"
-msgstr ""
-
-#: app/lang/view-strings.php:109
-msgid "/recettes"
-msgstr ""
-
-#: app/lang/view-strings.php:110
-msgid "Voir toutes les recettes"
-msgstr ""
-
-#: Controllers/processors/ArchiveProcessor.php:96
-msgid "Toutes nos applications"
-msgstr ""
-
-#: Models/Users/Users.php:47
-msgid "Cette clef de validation ne correspond à aucun utilisateur."
-msgstr ""
-
-#: Models/Users/Users.php:50
-msgid "Votre compte a été désactivé par un administrateur."
-msgstr ""
-
-#: Models/Users/Users.php:51
-msgid "Votre compte a déjà été validé."
-msgstr ""
-
-#: app/Forms/Actions/ActionRegisterJobApplication.php:34
-msgid "Candidature à une offre d'emploi"
-msgstr ""
-
-#: app/Forms/Actions/ActionRegisterJobApplication.php:74
-msgid "Désolé, l'offre d'emploi pour laquelle vous postulez n'a pas été trouvée. Veuillez réessayer plus tard ou prendre contact avec nous. :"
+#: app/Forms/MergeTags/MergeTagsUser.php:21
+msgid "Utilisateur site"
 msgstr ""
 
 #: app/Forms/Actions/ActionRegisterUser.php:34
 msgid "Inscription utilisateur"
 msgstr ""
 
-#: app/Forms/Actions/ActionRegisterUser.php:100
-msgid "Une erreur s'est produite lors de votre inscription :"
-msgstr ""
-
 #: app/Forms/Fields/FieldAdvancedListSelect.php:13
 msgid "Choisir (avancé)"
 msgstr ""
 
-#: app/Forms/Fields/FieldAdvancedMultiSelect.php:15
-msgid "Sélection multiple (avancé)"
+#: app/hooks/actions/_actions-users.php:12
+msgid "Votre adresse e-mail ou votre mot de passe est incorrect."
 msgstr ""
 
-#: app/Forms/Fields/FieldFileUpload.php:28
-msgid "Types de fichiers authorisés"
+#: app/hooks/actions/_actions-users.php:13
+msgid "Mot de passe perdu ?"
 msgstr ""
 
-#: app/Forms/Fields/FieldFileUpload.php:32
-msgid "Une liste d\\'extensions de fichiers, séparées par des virgules."
+#: app/hooks/actions/_actions-users.php:13
+msgid "Demander un nouveau mot de passe"
 msgstr ""
 
-#: app/Forms/Fields/FieldRoles.php:18
-msgid "Rôles"
-msgstr ""
-
-#: app/Forms/MergeTags/MergeTagsUser.php:21
-msgid "Utilisateur site"
+#: app/hooks/actions/_actions-users.php:32
+msgid "Votre compte doit être validé pour pouvoir vous connecter."
 msgstr ""
 
 #. Name of the theme
@@ -302,7 +125,8 @@ msgid "Syltaen"
 msgstr ""
 
 #. Description of the theme
-msgid "MVC framework and boilerplate for every Hungry Mind's WordPress projects"
+msgid ""
+"MVC framework and boilerplate for every Hungry Mind's WordPress projects"
 msgstr ""
 
 #. URI of the theme

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Syltaen\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-05 13:49+0000\n"
-"PO-Revision-Date: 2019-06-05 13:50+0000\n"
+"PO-Revision-Date: 2019-06-05 13:49+0000\n"
 "Last-Translator: Syltaen <stanley.lambot@hungryminds.be>\n"
 "Language-Team: Dutch\n"
 "Language: nl_NL\n"
@@ -16,7 +16,7 @@ msgstr ""
 
 #: Controllers/SingleController.php:59
 msgid "Retour"
-msgstr "Terug"
+msgstr ""
 
 #: Controllers/SingleController.php:63
 msgid "Précédent"

@@ -15,7 +15,7 @@ class FieldRoles extends FieldAdvancedListSelect
     public function __construct()
     {
         parent::__construct();
-        $this->_nicename = __("Rôles", "syltaen");
+        $this->_nicename = "Rôles";
     }
 
     /**

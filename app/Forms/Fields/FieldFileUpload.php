@@ -37,33 +37,33 @@ class FieldFileUpload extends \NF_Abstracts_Input
         $this->_settings["filetypes"] = [
             "name"  => "filetypes",
             "type"  => "textbox",
-            "label" => __("Types de fichiers autorisés", "syltaen"),
+            "label" => "Types de fichiers autorisés",
             "width" => "full",
             "group" => "primary",
             "value" => ".jpg, .jpeg, .png, .gif",
-            "help"  => __("Une liste d\'extensions de fichiers, séparées par des virgules.", "syltaen"),
+            "help"  => "Une liste d\'extensions de fichiers, séparées par des virgules."
         ];
 
 
         $this->_settings["maxupload"] = [
             "name" => "maxupload",
             "type" => "number",
-            "label" => __("Taille maximum autorisée", "sytlaen"),
+            "label" => "Taille maximum autorisée",
             "width" => "full",
             "group" => "primary",
             "value" => "2",
-            "help" => __("Taille en Mo. Ne peut pas dépasser la limite imposée par le serveur : ".ini_get("upload_max_filesize"), "syltaen"),
+            "help" => "Taille en Mo. Ne peut pas dépasser la limite imposée par le serveur : ".ini_get("upload_max_filesize")
         ];
 
 
         $this->_settings["limit"] = [
             "name" => "limit",
             "type" => "number",
-            "label" => __("Nombre de fichiers max. autorisés", "sytlaen"),
+            "label" => "Nombre de fichiers max. autorisés",
             "width" => "full",
             "group" => "primary",
             "value" => "1",
-            "help" => __("Renseigner un nombre très grand pour ne pas mettre de limite", "syltaen"),
+            "help" => "Renseigner un nombre très grand pour ne pas mettre de limite"
         ];
 
 
@@ -72,7 +72,7 @@ class FieldFileUpload extends \NF_Abstracts_Input
 
         $this->_settings["return"] = [
             "name"  => "return",
-            "label" => __("Données sauvées", "syltaen"),
+            "label" => "Données sauvées",
             "type"  => "select",
             "options" => [
                 [
@@ -97,7 +97,7 @@ class FieldFileUpload extends \NF_Abstracts_Input
             "placeholder"    => "",
             "value"          => "",
             "width"          => "full",
-            "help"           => __("Ne cocher que si c'est nécéssaire", "syltaen"),
+            "help"           => "Ne cocher que si c'est nécéssaire"
         ];
 
     }

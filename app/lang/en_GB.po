@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Syltaen\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-15 08:30+0000\n"
-"PO-Revision-Date: 2019-02-15 08:31+0000\n"
+"POT-Creation-Date: 2019-06-05 13:49+0000\n"
+"PO-Revision-Date: 2019-06-05 13:51+0000\n"
 "Last-Translator: Syltaen <stanley.lambot@hungryminds.be>\n"
 "Language-Team: English (UK)\n"
 "Language: en_GB\n"
@@ -12,17 +12,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.2.0; wp-5.0.3"
+"X-Loco-Version: 2.3.0; wp-5.2.1"
 
-#: Controllers/SingleController.php:65
+#: Controllers/SingleController.php:59
 msgid "Retour"
-msgstr ""
+msgstr "Back"
 
-#: Controllers/SingleController.php:69 app/lang/view-strings.php:54
+#: Controllers/SingleController.php:63
 msgid "Précédent"
 msgstr "Previous"
 
-#: Controllers/SingleController.php:73 app/lang/view-strings.php:55
+#: Controllers/SingleController.php:67
 msgid "Suivant"
 msgstr "Next"
 
@@ -32,7 +32,7 @@ msgstr "Search for:"
 
 #: app/Forms/_syltaen_ninjaforms_autoload.php:136
 msgid "Valeurs requises"
-msgstr ""
+msgstr "Required fields"
 
 #: app/config/shortcodes.php:43
 msgid "Adresse e-mail"
@@ -44,8 +44,8 @@ msgstr "Password #reset#"
 
 #. > 404.pug;
 #: app/lang/view-strings.php:11
-msgid " Erreur 404"
-msgstr "404 Error"
+msgid "Erreur 404"
+msgstr "Error 404"
 
 #: app/lang/view-strings.php:12
 msgid "Cette page n'existe pas"
@@ -55,151 +55,21 @@ msgstr "This page does not exist"
 msgid "Retour à l'accueil"
 msgstr "Back to the homepage"
 
-#: app/lang/view-strings.php:14
-msgid "Faire une recherche"
-msgstr "Search :"
-
-#. > search.pug;
-#. > _base.pug;
-#: app/lang/view-strings.php:18 app/lang/view-strings.php:59
-#: app/lang/view-strings.php:60 app/lang/view-strings.php:80
-msgid "Recherche"
-msgstr "Search"
-
-#. > single-applications.pug;
-#. > single-products.pug;
-#: app/lang/view-strings.php:22 app/lang/view-strings.php:38
-msgid "Gamme"
-msgstr "Range"
-
-#: app/lang/view-strings.php:23
-msgid "Plus d'infos"
-msgstr "Read more"
-
-#: app/lang/view-strings.php:24 app/lang/view-strings.php:41
-msgid "Intéressé par nos produits ?"
-msgstr "Interested by our products?"
-
-#: app/lang/view-strings.php:25 app/lang/view-strings.php:42
-msgid "Contactez-nous maintenant"
-msgstr "Contact us"
-
-#. > single-jobs.pug;
-#: app/lang/view-strings.php:29
-msgid "Jobs"
-msgstr "Jobs"
-
-#: app/lang/view-strings.php:30
-msgid "Postuler"
-msgstr "Apply"
-
-#. > single-news.pug;
-#: app/lang/view-strings.php:34
-msgid "News"
-msgstr "News"
-
-#: app/lang/view-strings.php:39
-msgid "Nouveau"
-msgstr "New"
-
-#: app/lang/view-strings.php:40
-msgid "Packaging"
-msgstr "Packaging"
-
-#: app/lang/view-strings.php:43
-msgid "Découvrez nos autres produits"
-msgstr "Discover our other products"
-
-#. > single-recipes.pug;
-#: app/lang/view-strings.php:47
-msgid "Recette"
-msgstr "Recipe"
-
-#: app/lang/view-strings.php:48
-msgid "Ingrédients"
-msgstr "Ingredients"
-
-#: app/lang/view-strings.php:49
-msgid "Préparation"
-msgstr "Preparation"
-
-#: app/lang/view-strings.php:50
-msgid "Ça pourrait vous intéresser"
-msgstr "This could interest you"
-
-#. > _archive-dispensers.pug;
-#: app/lang/view-strings.php:64
-msgid "Pays"
-msgstr "Country"
-
-#: app/lang/view-strings.php:65
-msgid "Type de distributeur"
-msgstr "Type of distributor"
-
-#: app/lang/view-strings.php:66
-msgid "Recherche par nom"
-msgstr "Search by name"
-
-#. > _archive-jobs.pug;
-#: app/lang/view-strings.php:70
-msgid "Aucune offre d'emploi actuellement"
-msgstr "There are currently no vacancies available"
-
-#. > _archive-news.pug;
-#: app/lang/view-strings.php:74 app/lang/view-strings.php:82
-msgid "Voir plus"
-msgstr "Read more"
-
-#. > _archive-recipes.pug;
-#: app/lang/view-strings.php:78
-msgid "Produit"
-msgstr "Product"
-
-#: app/lang/view-strings.php:79
-msgid "Application"
-msgstr "Application"
-
-#: app/lang/view-strings.php:81
-msgid "Aucun résultat pour votre recherche"
-msgstr "No result found"
-
-#. > _card-job.pug;
-#: app/lang/view-strings.php:86
-msgid "Postuler pour ce job"
-msgstr "Apply for this job"
-
 #. > _card-news.pug;
-#: app/lang/view-strings.php:90
+#: app/lang/view-strings.php:17
+#: app/cache/pug-php/axcrJjKVZshFGNNpT5Uva2CU5jXAPvP-EMuuKd3qyUE.php:745
 msgid "Lire plus"
 msgstr "Read more"
 
-#. > _card-recipe.pug;
-#: app/lang/view-strings.php:94 app/lang/view-strings.php:99
-#: app/lang/view-strings.php:104 app/lang/view-strings.php:111
-msgid "En savoir plus"
-msgstr "Read more"
+#. > search.pug;
+#. > _base.pug;
+#: app/lang/view-strings.php:21
+msgid "Recherche"
+msgstr "Search"
 
-#: app/lang/view-strings.php:98
-msgid "Voir toutes les applications"
-msgstr "See all applications"
-
-#. > _products-slide.pug;
-#: app/lang/view-strings.php:103
-msgid "Nos produits"
-msgstr "Our products"
-
-#. > _recipes-slide.pug;
-#: app/lang/view-strings.php:108
-msgid "Recettes"
-msgstr "Recipes"
-
-#: app/lang/view-strings.php:109
-msgid "/recettes"
-msgstr "/en/recipes"
-
-#: app/lang/view-strings.php:110
-msgid "Voir toutes les recettes"
-msgstr "See all recipes"
+#: app/lang/view-strings.php:22
+msgid "Modifier votre recherche"
+msgstr "Update your search"
 
 #: app/Helpers/Pagination.php:126
 msgid "Première page"
@@ -234,33 +104,21 @@ msgstr "User registration"
 msgid "Choisir (avancé)"
 msgstr "Choice (advanced)"
 
-#: app/Forms/Fields/FieldAdvancedMultiSelect.php:15
-msgid "Sélection multiple (avancé)"
-msgstr "Multiple choice (advanced)"
+#: app/hooks/actions/_actions-users.php:12
+msgid "Votre adresse e-mail ou votre mot de passe est incorrect."
+msgstr "Your email address or your password is incorrect."
 
-#: app/Forms/Fields/FieldFileUpload.php:40
-msgid "Types de fichiers autorisés"
-msgstr ""
+#: app/hooks/actions/_actions-users.php:13
+msgid "Mot de passe perdu ?"
+msgstr "Lost password?"
 
-#: app/Forms/Fields/FieldFileUpload.php:44
-msgid "Une liste d\\'extensions de fichiers, séparées par des virgules."
-msgstr "A list of file extensions separated by comas."
+#: app/hooks/actions/_actions-users.php:13
+msgid "Demander un nouveau mot de passe"
+msgstr "Ask for a new password"
 
-#: app/Forms/Fields/FieldFileUpload.php:66
-msgid "Renseigner un nombre très grand pour ne pas mettre de limite"
-msgstr ""
-
-#: app/Forms/Fields/FieldFileUpload.php:75
-msgid "Données sauvées"
-msgstr ""
-
-#: app/Forms/Fields/FieldFileUpload.php:100
-msgid "Ne cocher que si c'est nécéssaire"
-msgstr ""
-
-#: app/Forms/Fields/FieldRoles.php:18
-msgid "Rôles"
-msgstr "Roles"
+#: app/hooks/actions/_actions-users.php:32
+msgid "Votre compte doit être validé pour pouvoir vous connecter."
+msgstr "Your account must be activated before you can log in."
 
 #. Name of the theme
 msgid "Syltaen"

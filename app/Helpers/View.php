@@ -97,7 +97,7 @@ class View
     /**
      * Get the full path of a view file
      *
-     * @param string $filename
+     * @param array|bool $context
      * @return string
      */
     private static function prepareContext($context = false)

@@ -12,7 +12,7 @@ class FieldAdvancedMultiSelect extends FieldAdvancedListSelect
     public function __construct()
     {
         parent::__construct();
-        $this->_nicename = __("Sélection multiple (avancé)", "syltaen");
+        $this->_nicename = "Sélection multiple (avancé)";
 
 
     }
