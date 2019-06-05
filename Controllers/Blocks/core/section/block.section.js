@@ -6,7 +6,7 @@ var el                = wp.element.createElement,
     PanelBody         = wp.components.PanelBody,
     SelectControl     = wp.components.SelectControl;
 
-
+    console.log("yes?");
 
     wp.blocks.registerBlockType("syltaen/section", {
 

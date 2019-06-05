@@ -41,7 +41,7 @@ Files::import([
 // > TMP
 // ==================================================
 
-Files::import("Controllers/Blocs/core/section", "block.section");
+Files::import("Controllers/Blocks/core/section", "block.section.php");
 
 // add_filter("allowed_block_types", function () {
 //     return [
@@ -53,7 +53,7 @@ Files::import("Controllers/Blocs/core/section", "block.section");
 
 
 
-return;
+// return;
 // Register a testimonial ACF Block
 if( function_exists('acf_register_block') ) {
 

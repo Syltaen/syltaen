@@ -7,13 +7,13 @@ add_action("init", function () {
 
     wp_register_script(
         "syltaen.section",
-        Files::url("Controllers/Blocs/core/section", "block.section.js"),
+        Files::url("Controllers/Blocks/core/section/block.section.js"),
         ["wp-blocks", "wp-element"]
     );
 
     wp_register_style(
         "syltaen.section",
-        Files::url("Controllers/Blocs/core/section", "block.section.css"),
+        Files::url("Controllers/Blocks/core/section/block.section.css"),
         ["wp-edit-blocks"],
         filemtime(__DIR__ . "/block.section.css")
     );

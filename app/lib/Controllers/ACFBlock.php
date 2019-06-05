@@ -45,7 +45,7 @@ class ACFBLock
      */
     public function render()
     {
-        View::render("blocks/monsuperblock", $this->data);
+        View::display("blocks/monsuperblock", $this->data);
     }
 
 
@@ -87,7 +87,15 @@ class ACFBLock
             "title"           => static::NAME,
             "description"     => static::DESC,
             "render_callback" => function () {
-                return (new static)->render();
+
+                View::display("includes/archives/_archive-news", [
+                    "c" => [
+                        "posts" => (new News)->get(6),
+                        "walker" => ""
+                    ]
+                ]);
+
+                // return (new static)->render();
             }
         ]);
 
