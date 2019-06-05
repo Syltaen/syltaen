@@ -252,21 +252,21 @@ abstract class Files
 
         // Scan the files for stings
         foreach ($pugs as $pug) {
-            preg_match_all('/_.\(.+(?!\"\).)\)/', file_get_contents($pug), $match);
+            preg_match_all('/_.\(\"([^"]+)\",\s?\"syltaen\"\)/', file_get_contents($pug), $match);
 
             if (!empty($match[0])) $matches[] = "\n\n//> " . basename($pug);
             $matches = array_merge($matches, $match[0]);
         }
 
         // Get view-strings.php
-        $content = file_get_contents(self::path("app/lang/view-strings.php"));
+        $content = file_get_contents(static::path("app/lang/view-strings.php"));
         $content = explode("\n", $content);
         // Keep only the header
         $content = array_slice($content, 0, 7);
         // Add each line
         foreach ($matches as $line) $content[] = $line . ";";
         // Re-write the content into the file
-        file_put_contents(self::path("app/lang/view-strings.php"), implode("\n", $content));
+        file_put_contents(static::path("app/lang/view-strings.php"), implode("\n", $content));
     }
 
     // ==================================================
