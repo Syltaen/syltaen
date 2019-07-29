@@ -24,7 +24,7 @@ ol:not([class]) > li,
     margin-bottom: .4em
     &::before
         +font(primary)
-        font-size: .9em
+        font-size: .75em
         line-height: 1.8em
         +absolute(left -1.2em top 0)
 
@@ -57,8 +57,8 @@ ul:not([class]),
         & > .list__item::before,
         & > li::before
             +fa(circle)
-            font-size: .5em
-            line-height: 2.8em
+            font-size: .4em
+            line-height: 4.2em
             left: -1.75em
     & &
         & > .list__item::before,
@@ -100,11 +100,10 @@ ul:not([class]),
 
 // ========== CHOICES (radio/checkbox) ========== //
 .list--choices
-    padding-left: 25px
-    & > .list__item input.list__bullet,
-    & > li input.list__bullet
-        +absolute(top .2em left -25px)
-
+    padding-left: 0
+    & > .list__item
+    & > li
+        +flex(row nowrap)
 
 // =============================================================================
 // > DISPOSITIONS

@@ -6,8 +6,9 @@
 import $ from "jquery"
 import SelectField from "./../tools/SelectField.coffee"
 import UploadField from "./../tools/UploadField.coffee"
+import RangeField from "./../tools/RangeField.coffee"
+import FormSteps from "./../tools/FormSteps.coffee"
 import PasswordBox from "./../tools/PasswordBox.coffee"
-
 
 if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
 
@@ -23,14 +24,19 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
         @listenTo nfRadio.channel("listcountry"),          "render:view",           @listselectRender
         @listenTo nfRadio.channel("liststate"),            "render:view",           @listselectRender
         @listenTo nfRadio.channel("fieldroles"),           "render:view",           @listselectRender
+        @listenTo nfRadio.channel("fieldrange"),           "render:view",           @rangeRender
+
         @listenTo nfRadio.channel("fieldfileupload"),      "render:view",           @dropzoneRender
         @listenTo nfRadio.channel("fieldpassword"),        "render:view",           @passwordRender
-        @listenTo nfRadio.channel("fieldscenario"),        "render:view",           @scenarioRender
 
         @listenTo nfRadio.channel("textarea"),             "render:view",           @trimDefault
 
         @listenTo nfRadio.channel("form"),                 "render:view",           @bindConditionalCheck
-        @listenTo nfRadio.channel("form"),                 "render:view",           @gridRender
+
+
+        @listenTo nfRadio.channel("form"),                 "render:view",           @stepRender
+        @listenTo nfRadio.channel("fieldopentag"),         "render:view",           @wrapAttributes
+        @listenTo nfRadio.channel("form"),                 "render:view",           @wrapRender
 
 
 
@@ -40,12 +46,34 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
     shouldHide: (field) ->
         unless field.attributes.has_conditional_display then return false
 
-        shouldHide = false
+        # Parse conditions
+        conditions = { allOf: [], oneOf: [] }
         for i, condition of field.attributes.conditional_display
             for i, f of field.collection.models
                 unless f.attributes.key == condition.label then continue
-                fieldValue = f.attributes.value || f.attributes.default
-                shouldHide = !@valuesMatch fieldValue, condition.value, condition.calc
+                c =
+                    value:   f.attributes.value || f.attributes.default
+                    require: condition.value
+                    compare: condition.calc
+
+                if condition.selected
+                    conditions.oneOf.push c
+                else
+                    conditions.allOf.push c
+
+        # Parse results
+        results = { allOf: conditions.allOf.length > 0, oneOf: false }
+        for c in conditions.allOf
+            if !@valuesMatch c.value, c.require, c.compare
+                results.allOf = false
+                break
+
+        for c in conditions.oneOf
+            if @valuesMatch c.value, c.require, c.compare
+                results.oneOf = true
+                break
+
+        shouldHide = !(results.allOf || results.oneOf)
 
         # Disable requirement if the field is hidden
         if shouldHide
@@ -70,7 +98,6 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
                 if a + "" == b + "" then return true
 
         return false
-
 
     checkConditional: (form) ->
         for i, field of form.model.attributes.fields.models
@@ -135,37 +162,69 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
             if value then nfRadio.channel("fields").request("remove:error", view.model.id, "required-error")
 
 
+    # RANGE
+    rangeRender: (view) ->
+        $field = $(view.el).find("input")
+        view.model.attributes.value = $field.val()
+
+        setTimeout ->
+            $field.each -> new RangeField $(@), (value) ->
+                view.model.attributes.value = value
+                nfRadio.channel("fields").request("remove:error", view.model.id, "required-error")
+        , 0
+
     # PASSWORD
     passwordRender: (view) ->
         $field  = $(view.el).find(".ninja-forms-field")
         new PasswordBox $field
 
+    # GOOGLE ADDRESS AUTOFILL
+    addressAutocomplete: (view) ->
+        return false #TODO
+        $binds =
+            field_num:
+                component: "street_number"
+            field_cp:
+                component: "postal_code"
+            field_town:
+                component: "locality"
 
+        for field, b of $binds
+            b.key = view.model.attributes[field].replace("{field:", "").replace("}", "")
 
-        # $box    = $field.closest(".passwordbox")
-        # $toggle = $box.find(".passwordbox__toggle")
+        for m, model of view.model.collection.models
+            for field, b of $binds
+                if model.attributes.key == b.key
+                    b.selector = "#nf-field-" + model.id
+                    b.model    = model
 
-        # $toggle.click ->
-        #     console.log $field.attr("type")
-        #     switch $field.attr("type")
-        #         when "password"
-        #             $field.attr "type", "text"
-        #             $box.addClass "is-shown"
-        #         else
-        #             $field.attr "type", "password"
-        #             $box.removeClass "is-shown"
+        # STREET BIND
+        $binds.field_street =
+            selector: view.$el.find("input")[0]
+            component: "route"
 
+        # EVENT
+        $(view.el).find("input").geoloc (data) ->
+            for b, field of $binds
+                if data[field.component]
+                    $(field.selector).val(data[field.component])
+                    if field.model
+                        field.model.attributes.value = data[field.component]
 
+            view.model.attributes.value = $(view.el).find("input").val()
 
     # TRIM DEFAULT
     trimDefault: (view) -> $(view.el).find(".nf-element").val $(view.el).find(".nf-element").val().trim()
 
 
-    # GRID
-    gridRender: (form) ->
+    # WRAPPERS
+    wrapAttributes: (view) ->
+        $(view.$el).data "attrs", view.model.attributes.attrs
+
+    wrapRender: (form) ->
         while form.$el.find(".fieldopentag-wrap").length
 
-            column = false
+            $column = false
             deph   = 0
 
             form.$el.find("nf-field").each ->
@@ -175,25 +234,49 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
                 # When finding an opentag field
                 if $(@).find(".fieldopentag-wrap").length
                     deph++
-                    unless column
-                        classes = $(@).find("label").text().trim()
-                        if classes
-                            id = $(@).find(".fieldopentag-container").attr "id"
-                            column = $("<div class='" + classes + "' id='#{id}'></div>")
-                            $(@).before(column)
-                            $(@).remove()
-                            append = false
+                    unless $column
+                        attrs       = $(@).find(".fieldopentag-wrap").data("attrs") || []
+                        attrs.push { label: "class", value: $(@).find("label").text().trim() }
+                        attrs.push { label: "id", value: $(@).find(".fieldopentag-container").attr("id") }
 
-                # When finding an closingtag field
+                        $column = $("<div></div>")
+                        for attr in attrs then $column.attr attr.label, attr.value
+
+                        $(@).before($column)
+                        $(@).remove()
+                        append = false
+
+                # When finding a closingtag field
                 else if $(@).find(".fieldclosetag-wrap").length
                     deph--
                     unless deph
-                        column = false
+                        $column = false
                         $(@).remove()
 
                 # When finding another field
-                if column && append
-                    column.append $(@)
+                if $column && append
+                    $column.append $(@)
+
+
+    # STEPS
+    stepRender: (form) ->
+        if form.$el.find(".fieldstep-wrap").length
+            $step = false
+
+            # Create steps
+            form.$el.find("nf-field").each ->
+                if $(@).find(".fieldstep-wrap").length
+                    $step = $("<li data-name='" + $(@).find("label").text().trim() + "' class='form-steps__step'></li>")
+                    $(@).before($step).remove()
+                else if $step
+                    $step.append $(@)
+
+            # Wrap all steps
+            $list = $("<div class='form-steps'><ul class='form-steps__slide'></ul></div>")
+            $(".form-steps__step").first().before $list
+            $(".form-steps__step").each -> $list.find(".form-steps__slide").append $(@)
+
+            new FormSteps $list
 
 
 

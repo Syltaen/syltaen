@@ -298,6 +298,20 @@ abstract class Model implements \Iterator
         return static::isnt($list);
     }
 
+
+    /**
+     * Filter by status. Must be extended
+     *
+     * @param string $status
+     * @return self
+     */
+    public function status($status = false)
+    {
+        return $this;
+    }
+
+
+
     /**
      * Limit the number of posts returned.
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Pagination_Parameters
@@ -903,21 +917,24 @@ abstract class Model implements \Iterator
      * @param bool $merge Only update data that is not already set
      * @return self
      */
-    public function update($attrs = [], $fields = false, $merge = false)
+    public function update($attrs = [], $fields = [], $tax = [], $merge = false)
     {
         foreach ($this->get() as $result) {
             // Default attributes
-            if ($attrs && !empty($attrs)) {
+            if (!empty($attrs)) {
                 static::updateAttrs($result, $attrs, $merge);
             }
 
             // Custom fields
-            if ($fields && !empty($fields)) {
+            if (!empty($fields)) {
                 static::updateFields($result, $fields, $merge);
             }
 
             // Taxonomy
-            // TODO
+            if (!empty($tax)) {
+                static::updateTaxonomies($result, $tax, $merge);
+            }
+
         }
 
         // Force get refresh
@@ -971,6 +988,25 @@ abstract class Model implements \Iterator
             }
         }
     }
+
+
+    /**
+     * Update the terms of the given object
+     *
+     * @param object $result
+     * @param array $terms key : taxonomy, value : term(s)
+     * @param boolean $merge Add terms and do not remove any
+     * @return void
+     */
+    public static function updateTaxonomies($result, $tax, $merge = false)
+    {
+        $result_id = Data::filter($result, "id");
+
+        foreach ((array) $tax as $taxonomy=>$terms) {
+            wp_set_object_terms($result_id, $terms, $taxonomy, $merge);
+        }
+    }
+
 
     /**
      * Delete all posts matching the query

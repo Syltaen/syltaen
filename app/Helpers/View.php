@@ -195,7 +195,17 @@ class View
                 return Files::url("build/img/" . $image);
             },
 
+            "_imgtag" => function ($id) {
+                return Data::filter($id, "img:tag");
+            },
 
+            "_tel" => function ($tel) {
+                return "tel:" . preg_replace("/[^0-9]/", "", $tel);
+            },
+
+            "_mailto" => function ($mail) {
+                return "mailto:" . $mail;
+            }
         ];
     }
 };

@@ -20,6 +20,13 @@ Files::addInlineScript(
     "bundle.js"
 );
 
+add_action("wp", function () {
+    Data::registerJSVars([
+        "var ajaxurl" => admin_url("admin-ajax.php"),
+        "var post_id" => get_the_ID(),
+        "window.location.site" => site_url("/"),
+    ]);
+});
 
 // ==================================================
 // > CSS

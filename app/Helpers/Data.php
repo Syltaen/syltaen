@@ -12,7 +12,7 @@ abstract class Data
      * @param int|string $post_id
      * @param $default Default value if none found
      * @param $filter Auto filter the value
-     * @return Field value
+     * @return mixed A field value
      */
     public static function get($key, $post_id = null, $default = "", $filter = false)
     {
@@ -56,13 +56,12 @@ abstract class Data
                 return wp_get_attachment_url(static::extractIds($value)[0], "full");
             case "img:svg":
                 return file_get_contents(static::filter($value, "img:url"));
-            case "json_decode":
-                if (is_object($value) || is_array($value)) return $value;
             case "url":
                 if (!preg_match("~^(?:f|ht)tps?://~i", $value)) return "http://" . $value;
                 return $value;
             case "json_decode":
-                return json_decode($value);
+                if (is_object($value) || is_array($value)) return $value;
+                return json_decode(stripslashes($value));
             case "content":
                 return do_shortcode($value);
             default: // use a/several specific model(s)
@@ -242,6 +241,32 @@ abstract class Data
 
         return $_SESSION;
     }
+
+
+    // ==================================================
+    // > JAVASCRIPT
+    // ==================================================
+    /**
+     * Register variables in the global JS scrope, from the back-end
+     *
+     * @param array $variables variable_name => variable_value
+     * @return void
+     */
+    public static function registerJSVars($vars)
+    {
+        $lines = [];
+
+        foreach ($vars as $var=>$val) {
+            $lines[] = "$var = " . json_encode($val) . ";";
+        }
+
+        Files::addInlineScript(
+            implode("\n", $lines),
+            "before",
+            "bundle.js"
+        );
+    }
+
 
 
     // ==================================================

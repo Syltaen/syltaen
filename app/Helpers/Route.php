@@ -167,6 +167,19 @@ abstract class Route
     }
 
 
+    /**
+     * Website is in maintenance mode
+     *
+     * @param boolean $resp
+     * @return void
+     */
+    public static function maintenance($resp = false)
+    {
+        if (Data::get("maintenance_mode", "option") && !current_user_can("administrator")) {
+            static::respond($resp);
+        }
+    }
+
     // ==================================================
     // > CUSTOM ROUTES
     // ==================================================

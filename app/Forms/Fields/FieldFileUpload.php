@@ -41,25 +41,25 @@ class FieldFileUpload extends \NF_Abstracts_Input
             "width" => "full",
             "group" => "primary",
             "value" => ".jpg, .jpeg, .png, .gif",
-            "help"  => "Une liste d\'extensions de fichiers, séparées par des virgules."
+            "help"  => "Une liste d\'extensions de fichiers, séparées par des virgules.",
         ];
 
 
         $this->_settings["maxupload"] = [
             "name" => "maxupload",
             "type" => "number",
-            "label" => "Taille maximum autorisée",
+            "label" => __("Taille maximum authorisée", "sytlaen"),
             "width" => "full",
             "group" => "primary",
             "value" => "2",
-            "help" => "Taille en Mo. Ne peut pas dépasser la limite imposée par le serveur : ".ini_get("upload_max_filesize")
+            "help" => "Taille en Mo. Ne peut pas dépasser la limite imposée par le serveur : ".ini_get("upload_max_filesize"),
         ];
 
 
         $this->_settings["limit"] = [
             "name" => "limit",
             "type" => "number",
-            "label" => "Nombre de fichiers max. autorisés",
+            "label" => __("Nombre de fichiers max. autorisés", "sytlaen"),
             "width" => "full",
             "group" => "primary",
             "value" => "1",
@@ -97,7 +97,18 @@ class FieldFileUpload extends \NF_Abstracts_Input
             "placeholder"    => "",
             "value"          => "",
             "width"          => "full",
-            "help"           => "Ne cocher que si c'est nécéssaire"
+            "help"           => "Ne cocher que si c'est nécéssaire",
+        ];
+
+        $this->_settings["custom_folder"] = [
+            "name"           => "custom_folder",
+            "type"           => "textbox",
+            "group"          => "advanced",
+            "label"          => "Dossier personnalisé",
+            "placeholder"    => "Non",
+            "value"          => "",
+            "width"          => "full",
+            "help"           => "Permet de séparer ces fichiers dans un dossier à part se trouvant dans ". site_url("wp-content/uploads/")
         ];
 
     }

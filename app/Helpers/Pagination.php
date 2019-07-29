@@ -74,8 +74,19 @@ class Pagination
     public function getLink($page, $anchor = "")
     {
         if ($this->isDisabled($page)) return "";
-        $page = $page == 1 ? "" : $page."/";
-        return get_the_permalink() . $page . $this->querystring . $anchor;
+
+        // Clean stem
+        $url = Route::getFullUrl([], false);
+        $url = preg_replace("/\/$/", "", $url);
+        $url = preg_replace("/\/[0-9]*$/", "", $url);
+
+        // Add page
+        $url .= $page == 1 ? "/" : "/$page/";
+
+        // Add querystring and anchor
+        $url .= $this->querystring . $anchor;
+
+        return $url;
     }
 
     /**

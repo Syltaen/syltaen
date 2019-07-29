@@ -112,7 +112,7 @@ abstract class Files
      */
     public static function removeScript($name)
     {
-        add_action("wp_footer", function () use ($name) {
+        add_action("wp_print_scripts", function () use ($name) {
             wp_dequeue_script($name);
         });
     }
@@ -151,6 +151,7 @@ abstract class Files
             wp_add_inline_script($handle, $js, $position);
         });
     }
+
 
     /**
      * Write custom css with php
@@ -353,12 +354,21 @@ abstract class Files
      * @param string $folder A custom folder to store the files. Default : yyyy/mm
      * @return array of files
      */
-    public static function upload($files, $generateAttachement = false, $parent_post_id = 0)
+    public static function upload($files, $generateAttachement = false, $parent_post_id = 0, $folder = false)
     {
         if (empty($files)) return [];
 
         require_once(ABSPATH . "wp-admin/includes/file.php");
         $uploaded_files = [];
+
+        // If custom folder, add filter
+        if ($folder) add_filter("upload_dir", function ($dir) use ($folder) {
+            return array_merge($dir, [
+                "path"   => $dir["basedir"] . "/" . $folder,
+                "url"    => $dir["baseurl"] . "/" . $folder,
+                "subdir" => "/" . $folder,
+            ]);
+        });
 
         // Upload the files
         foreach (static::flattenFilesArray($files) as $file) {

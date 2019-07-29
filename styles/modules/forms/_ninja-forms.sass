@@ -60,8 +60,12 @@
     .nf-field-element
         width: 100%
         margin-top: 15px
-.html-wrap .nf-field-label
-    display: none
+
+.html-wrap,
+.hr-wrap
+    .nf-field-label
+        display: none
+
 
 .label-left
     .field-wrap
@@ -113,10 +117,20 @@
 
 // > RADIO / CHECKBOX
 .nf-form-cont .list-radio-wrap ul,
-.nf-form-cont .list-checkbox-wrap ul,
+.nf-form-cont .list-checkbox-wrap ul
     @extend %unstyled-list
     label
         +font(regular)
+    li
+        +flex(row nowrap, null)
+
+// HORIZONTAL
+.nf-form-cont .list-radio-wrap--horizontal ul,
+.nf-form-cont .list-checkbox-wrap--horizontal ul
+    +flex(row wrap, flex-start)
+    margin: 0 -20px
+    & > li
+        padding: 0 20px
 
 // > SUBMIT
 .submit-container
@@ -133,6 +147,12 @@
     +font(12px)
     margin: .5em 0 0
 
+// ==================================================
+// > INPUT LIMIT
+// ==================================================
+.nf-input-limit
+    +font(12px right bold)
+    text-transform: lowercase
 
 // ==================================================
 // > LOADER

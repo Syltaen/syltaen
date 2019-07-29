@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Syltaen\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-05 13:49+0000\n"
-"PO-Revision-Date: 2019-06-05 13:51+0000\n"
+"POT-Creation-Date: 2019-07-29 10:30+0000\n"
+"PO-Revision-Date: 2019-07-29 10:30+0000\n"
 "Last-Translator: Syltaen <stanley.lambot@hungryminds.be>\n"
 "Language-Team: English (UK)\n"
 "Language: en_GB\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.3.0; wp-5.2.1"
+"X-Loco-Version: 2.3.0; wp-5.2.2"
 
 #: Controllers/SingleController.php:59
 msgid "Retour"
@@ -34,29 +34,33 @@ msgstr "Search for:"
 msgid "Valeurs requises"
 msgstr "Required fields"
 
-#: app/config/shortcodes.php:43
+#: app/config/shortcodes.php:39
 msgid "Adresse e-mail"
 msgstr "E-mail address"
 
-#: app/config/shortcodes.php:44
+#: app/config/shortcodes.php:40
 msgid "Mot de passe #reset#"
 msgstr "Password #reset#"
 
 #. > 404.pug;
 #: app/lang/view-strings.php:11
+#: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:476
 msgid "Erreur 404"
 msgstr "Error 404"
 
 #: app/lang/view-strings.php:12
+#: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:488
 msgid "Cette page n'existe pas"
 msgstr "This page does not exist"
 
 #: app/lang/view-strings.php:13
+#: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:500
 msgid "Retour à l'accueil"
 msgstr "Back to the homepage"
 
 #. > _card-news.pug;
 #: app/lang/view-strings.php:17
+#: app/cache/pug-php/iRSob5JvPI4qG-xzGMZecd4ZaHfbTa5SOLk4Q47N8vw.php:440
 #: app/cache/pug-php/axcrJjKVZshFGNNpT5Uva2CU5jXAPvP-EMuuKd3qyUE.php:745
 msgid "Lire plus"
 msgstr "Read more"
@@ -71,23 +75,23 @@ msgstr "Search"
 msgid "Modifier votre recherche"
 msgstr "Update your search"
 
-#: app/Helpers/Pagination.php:126
+#: app/Helpers/Pagination.php:137
 msgid "Première page"
 msgstr "First page"
 
-#: app/Helpers/Pagination.php:131
+#: app/Helpers/Pagination.php:142
 msgid "Page précédente"
 msgstr "Previous page"
 
-#: app/Helpers/Pagination.php:136
+#: app/Helpers/Pagination.php:147
 msgid "Page suivante"
 msgstr "Next page"
 
-#: app/Helpers/Pagination.php:141
+#: app/Helpers/Pagination.php:152
 msgid "Dernière page"
 msgstr "Last page"
 
-#: app/Helpers/Pagination.php:144
+#: app/Helpers/Pagination.php:155
 #, php-format
 msgid "Page %s sur %s"
 msgstr "Page %s of %s"

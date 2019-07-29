@@ -1,13 +1,15 @@
 import $ from "jquery"
 import Dropzone from "dropzone"
 
-export default class UploadField
+export default class UplaodField
 
     constructor: (@$field, @onChange = false) ->
         @$loader  = $("body")
         @config = @defaultConfig()
         @value  = {}
         @setup()
+
+        @prefill()
 
 
     ###
@@ -20,8 +22,10 @@ export default class UploadField
             accept:      @$field.attr("accept") || null
             maxupload:   parseInt(@$field.attr("maxupload"), 10) || 10 # in Mb
             message:     @$field.attr("data-label") || "Fichier(s)"
-            action:      if @$field.attr("data-attachment") then "syltaen_ajax_upload_attachment" else "syltaen_ajax_upload"
             return:      @$field.attr("data-return") || "all"
+
+            attachement: if @$field.attr("data-attachment") then 1 else 0
+            folder:      @$field.attr("data-folder") || 0
 
     ###
     # Update hidden field value with @value
@@ -52,7 +56,6 @@ export default class UploadField
     # Setup the HTML and Dropzone
     ###
     setup: ->
-
         # Wrap in .uploadfield
         @$field.wrap("<div class='uploadfield'></div>")
         @$wrap = @$field.closest ".uploadfield"
@@ -75,7 +78,11 @@ export default class UploadField
         # Dropzone
         _UplaodField = @
         @dropzone = new Dropzone @$zone[0],
-            url:            ajaxurl + "?action=" + @config.action
+            url:            ajaxurl + "?action=syltaen_ajax_upload"
+            params:
+                folder:      @config.folder
+                attachement: @config.attachement
+
 
             paramName:      @config.name
             maxFiles:       @config.limit
@@ -94,13 +101,16 @@ export default class UploadField
 
                 # Upload is successful
                 @on "success", (file, uploaded) ->
-                    _UplaodField.value[file.upload.uuid] = uploaded
+                    file.uuid = "file" + Date.now()
+                    _UplaodField.value[file.uuid] = uploaded
                     _UplaodField.syncHidden()
-
 
                 # Remove a file
                 @on "removedfile", (file) ->
-                    delete _UplaodField.value[file.upload.uuid]
+                    console.log file
+
+
+                    delete _UplaodField.value[file.uuid]
                     _UplaodField.syncHidden()
 
 
@@ -111,3 +121,28 @@ export default class UploadField
                 # Upload is done
                 @on "complete", ->
                     _UplaodField.$loader.removeClass "is-loading"
+
+
+    ###
+    # Prefill with custom thumbnails
+    ###
+    prefill: ->
+
+        unless @$field.data("value") then return false
+
+        for file, i in @$field.data("value")
+
+            file.uuid = "file" + Date.now()
+            file.size = 0
+            file.name = file.url.substring(file.url.lastIndexOf('/') + 1)
+
+            @dropzone.options.addedfile.call @dropzone, file
+            @dropzone.options.thumbnail.call @dropzone, file, file.url
+            @dropzone.options.complete.call @dropzone, file
+            @dropzone.files.push file
+            @dropzone.options.maxFiles--
+
+            # Add the file to the list
+            @value[file.uuid] = file
+
+            @syncHidden()

@@ -1,146 +1,169 @@
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Syltaen\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-29 10:30+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"POT-Creation-Date: 2019-07-29 10:28+0000\n"
+"PO-Revision-Date: 2019-07-29 10:28+0000\n"
+"Last-Translator: Syltaen <stanley.lambot@hungryminds.be>\n"
+"Language-Team: German\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.3.0; wp-5.2.2"
 
 #: Controllers/SingleController.php:59
 msgid "Retour"
-msgstr ""
+msgstr "Rückkehr"
 
 #: Controllers/SingleController.php:63
 msgid "Précédent"
-msgstr ""
+msgstr "Zurück"
 
 #: Controllers/SingleController.php:67
 msgid "Suivant"
-msgstr ""
+msgstr "Weiter"
 
 #: Controllers/PageController.php:125
 msgid "Recherche pour : "
-msgstr ""
+msgstr "Forschung :"
 
 #: app/Forms/_syltaen_ninjaforms_autoload.php:136
 msgid "Valeurs requises"
-msgstr ""
+msgstr "Erforderliche Werte"
 
 #: app/config/shortcodes.php:39
 msgid "Adresse e-mail"
-msgstr ""
+msgstr "E-Mail"
 
 #: app/config/shortcodes.php:40
 msgid "Mot de passe #reset#"
-msgstr ""
+msgstr "Mot de passe #reset#"
 
 #. > 404.pug;
 #: app/lang/view-strings.php:11
 #: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:476
 msgid "Erreur 404"
-msgstr ""
+msgstr "Fehler 404"
 
 #: app/lang/view-strings.php:12
 #: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:488
 msgid "Cette page n'existe pas"
 msgstr ""
+"Eine URL wurde falsch eingegeben oder die von Ihnen gesuchte Seite existiert "
+"nicht mehr."
 
 #: app/lang/view-strings.php:13
 #: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:500
 msgid "Retour à l'accueil"
-msgstr ""
+msgstr "Rückkehr"
 
 #. > _card-news.pug;
 #: app/lang/view-strings.php:17
 #: app/cache/pug-php/iRSob5JvPI4qG-xzGMZecd4ZaHfbTa5SOLk4Q47N8vw.php:440
 #: app/cache/pug-php/axcrJjKVZshFGNNpT5Uva2CU5jXAPvP-EMuuKd3qyUE.php:745
 msgid "Lire plus"
-msgstr ""
+msgstr "Mehr ..."
 
 #. > search.pug;
 #. > _base.pug;
 #: app/lang/view-strings.php:21
 msgid "Recherche"
-msgstr ""
+msgstr "Forschung"
 
 #: app/lang/view-strings.php:22
 msgid "Modifier votre recherche"
-msgstr ""
+msgstr "Ändern Sie Ihre Suche"
 
 #: app/Helpers/Pagination.php:137
 msgid "Première page"
-msgstr ""
+msgstr "Erste Seite"
 
 #: app/Helpers/Pagination.php:142
 msgid "Page précédente"
-msgstr ""
+msgstr "Vorherige Seite"
 
 #: app/Helpers/Pagination.php:147
 msgid "Page suivante"
-msgstr ""
+msgstr "Nächste Seite"
 
 #: app/Helpers/Pagination.php:152
 msgid "Dernière page"
-msgstr ""
+msgstr "Letzte Seite"
 
 #: app/Helpers/Pagination.php:155
 #, php-format
 msgid "Page %s sur %s"
-msgstr ""
+msgstr "Seite %s von %s"
 
 #: app/Forms/MergeTags/MergeTagsUser.php:21
 msgid "Utilisateur site"
-msgstr ""
+msgstr "Website user"
 
 #: app/Forms/Actions/ActionRegisterUser.php:34
 msgid "Inscription utilisateur"
-msgstr ""
+msgstr "User registration"
 
 #: app/Forms/Fields/FieldAdvancedListSelect.php:13
 msgid "Choisir (avancé)"
+msgstr "Choisir (avancé)"
+
+#: app/Forms/Fields/FieldFileUpload.php:40
+msgid "Types de fichiers authorisés"
+msgstr ""
+
+#: app/Forms/Fields/FieldFileUpload.php:44
+msgid "Une liste d\\'extensions de fichiers, séparées par des virgules."
+msgstr ""
+
+#: app/Forms/Fields/FieldFileUpload.php:66
+msgid "Renseigner un nombre très grand pour ne pas mettre de limite"
+msgstr ""
+
+#: app/Forms/Fields/FieldFileUpload.php:75
+msgid "Données sauvées"
+msgstr ""
+
+#: app/Forms/Fields/FieldFileUpload.php:100
+msgid "Ne cocher que si c'est nécéssaire"
 msgstr ""
 
 #: app/hooks/actions/_actions-users.php:12
 msgid "Votre adresse e-mail ou votre mot de passe est incorrect."
-msgstr ""
+msgstr "Ihre E-Mail-Adresse oder Ihr Passwort ist falsch."
 
 #: app/hooks/actions/_actions-users.php:13
 msgid "Mot de passe perdu ?"
-msgstr ""
+msgstr "Passwort vergessen?"
 
 #: app/hooks/actions/_actions-users.php:13
 msgid "Demander un nouveau mot de passe"
-msgstr ""
+msgstr "Fordern Sie ein neues Passwort an"
 
 #: app/hooks/actions/_actions-users.php:32
 msgid "Votre compte doit être validé pour pouvoir vous connecter."
-msgstr ""
+msgstr "Ihr Konto muss validiert sein, um sich anmelden zu können."
 
 #. Name of the theme
 msgid "Syltaen"
-msgstr ""
+msgstr "Syltaen"
 
 #. Description of the theme
 msgid ""
 "MVC framework and boilerplate for every Hungry Mind's WordPress projects"
 msgstr ""
+"MVC framework and boilerplate for every Hungry Mind's WordPress projects"
 
 #. URI of the theme
 msgid "https://github.com/Syltaen/syltaen"
-msgstr ""
+msgstr "https://github.com/Syltaen/syltaen"
 
 #. Author of the theme
 msgid "Stanley Lambot (Hunrgy Minds)"
-msgstr ""
+msgstr "Stanley Lambot (Hunrgy Minds)"
 
 #. Author URI of the theme
 msgid "http://www.stanleylambot.be"
-msgstr ""
+msgstr "http://www.stanleylambot.be"
