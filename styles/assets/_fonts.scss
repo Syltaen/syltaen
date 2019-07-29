@@ -1,0 +1,18 @@
+// =============================================================================
+// > ASSETS: FONTS
+// =============================================================================
+
+// Use https://transfonter.org/ to convert font files to the formats bellow
+
+@each $font in $fonts {
+    @font-face {
+        font-family: $font;
+        src: fontpath("#{$font}.eot");                                                  /* IE9 Compat Modes */
+        src: fontpath("#{$font}.eot?#iefix")        format("embedded-opentype"),        /* IE6-IE8 */
+             fontpath("#{$font}.woff2")             format("woff2"),                    /* Super Modern Browsers */
+             fontpath("#{$font}.woff")              format("woff"),                     /* Pretty Modern Browsers */
+             fontpath("#{$font}.ttf")               format("truetype"),                 /* Safari, Android, iOS */
+            //  fontpath("#{$font}.otf")               format("opentype")
+             fontpath("#{$font}.svg#svgFontName")   format("svg");                      /* Legacy iOS */
+    }
+}

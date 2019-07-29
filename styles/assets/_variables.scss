@@ -31,11 +31,17 @@ $colors: (
 // ==================================================
 // > FONTS
 // ==================================================
+$fonts: (
+    "Roboto-Light",
+    "Roboto-Regular",
+    "Roboto-Bold"
+);
+
 // Usage : font(regular)
 $fonts-stacks: (
-    regular: ("Raleway-Regular", "Raleway-Light", "Helvetica", "Arial", sans-serif),
-    light:   ("Raleway-Light", "Raleway-Regular", "Helvetica", "Arial", sans-serif),
-    bold:    ("Raleway-Bold", "Raleway-Regular", "Helvetica", "Arial", sans-serif),
+    regular: ("Roboto-Regular", "Roboto-Light", "Helvetica", "Arial", sans-serif),
+    light:   ("Roboto-Light", "Roboto-Regular", "Helvetica", "Arial", sans-serif),
+    bold:    ("Roboto-Bold", "Roboto-Regular", "Helvetica", "Arial", sans-serif),
 );
 
 
