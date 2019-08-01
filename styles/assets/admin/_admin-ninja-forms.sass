@@ -1,0 +1,68 @@
+// =============================================================================
+// > ADMIN : NINJA FORMS
+// =============================================================================
+
+.ninja-forms-no-nest
+    margin-left: 40px
+
+.nf-app-area
+    overflow: hidden
+
+.nf-field-wrap
+    position: relative
+    &.fieldopentag,
+    &.fieldclosetag,
+    &.fieldrepeater
+        margin-left: -5px
+        padding: 5px 5px 0 5px
+        position: relative
+        & > div
+            // opacity: 0.5
+            +font(12px #1ea9ea)
+        &::after
+            content: ""
+            +size(1px, 9999px)
+            background: #1ea9ea
+            +absolute(top 100% left 10px)
+            margin-top: 1px
+
+        .nf-item-controls
+            top: 0px
+
+        &.active
+            border: 1px solid transparent !important
+            box-shadow: 0 0 5px #1ea9ea
+
+    &.fieldclosetag
+        .nf-field-label
+            display: none
+        &::after
+            background: white
+
+
+
+    &.fieldstep
+        margin: 50px 0 0 -60px
+        padding-bottom: 5px
+        background: #1ea9ea
+        color: white !important
+        +font(20px)
+        position: relative
+        &:first-child
+            margin-top: 0
+        &::after
+            content: ""
+            +size(5px, 9999px)
+            background: color(light-grey)
+            +absolute(top 100% left 10px)
+            margin-top: 2px
+
+    &.fieldrepeater
+        & > div
+            color: #95C11F
+        &::after
+            background: #95C11F
+
+
+.button.nf-insert-form
+    display: none !important

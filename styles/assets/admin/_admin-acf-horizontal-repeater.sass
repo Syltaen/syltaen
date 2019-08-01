@@ -1,0 +1,45 @@
+// =============================================================================
+// > ADMIN : ACF-HORIZONTAL-REPEATER
+// =============================================================================
+
+.acf-horizontal-repeater
+    & > .acf-input > .acf-repeater
+        padding-right: 40px
+
+        & > .acf-table > tbody
+            +flex(row nowrap)
+            & > .acf-row:not(.acf-clone)
+                flex: 1
+                &,
+                & > .acf-fields
+                    +flex(column nowrap)
+                    // flex-grow: 1
+
+                    & > .acf-row-handle
+                        order: -1
+
+            & > .acf-row
+                &,
+                & > td
+                    width: 100% !important
+                    box-sizing: border-box
+                    & > .acf-field
+                        width: 100%  !important
+                        height: auto !important
+
+                & > td > .acf-icon
+                    &.-plus
+                        left: -9px
+                        top: 6px
+                    &.-minus
+                        left: 50%
+
+            & > tr
+                & > td
+                    border-width: 0 0 0 1px
+                &:first-child > td
+                    border-width: 0
+
+        & > .acf-actions
+            +absolute(top 50% right 5px)
+            margin-top: -30px

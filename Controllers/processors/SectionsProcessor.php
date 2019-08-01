@@ -14,7 +14,7 @@ class SectionsProcessor extends DataProcessor
         $this->addAttributes($section);
         $this->addClasses($section);
 
-        $section["content"] = (new ContentsProcessor($this->controller))->processEach($section["content"]);
+        $section["rows"] = (new RowsProcessor($this->controller))->processEach($section["rows"]);
 
         return $section;
     }

@@ -1,0 +1,49 @@
+// =============================================================================
+// > ADMIN : ACF-LIGHT-REPEATER
+// =============================================================================
+
+.acf-light-repeater
+    & > .acf-input > .acf-repeater
+        & > .acf-table
+            border: 0
+            &> tbody > .acf-row
+                background: white
+                & > .acf-row-handle
+                    +size(10px)
+                    padding: 0
+                    opacity: 0
+                    &:hover
+                        opacity: 1
+                    &.order
+                        height: 15px
+                        line-height: 15px
+                        +font(10px)
+                & > .acf-fields
+                    border: 0
+                    & > .acf-field
+                        &.acf-field-flexible-content,
+                        &.acf-field-repeater
+                            padding: 5px
+                    & > .acf-field > .acf-input > div >
+                        .acf-actions
+                            +flex(row nowrap, center)
+                            .button
+                                overflow: hidden
+                                text-shadow: none
+                                background: #F5F5F5
+                                border: 1px solid #F5F5F5
+                                box-shadow: none
+                                +font(#F5F5F5)
+                                +size(30px)
+                                position: relative
+                                border-radius: 50%
+                                &::before
+                                    content: "+"
+                                    +absolute(top 0 left 0)
+                                    +size(100%)
+                                    +font(20px #72777c center)
+                                &:hover
+                                    background: color(primary)
+                                    +font(primary)
+                                    &::before
+                                        +font(white)

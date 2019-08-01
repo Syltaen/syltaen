@@ -7,45 +7,6 @@ class ContentsProcessor extends DataProcessor
 
 
     /**
-     * Handle data for the "columns" content type
-     *
-     * @param [type] $c
-     * @return void
-     */
-    private function columns(&$c)
-    {
-        $c["classes"]       = [
-            "flex-align-" . $c["valign"],
-            "flex-row--responsive-" . $c["responsive"],
-            "flex-row--spacing-" . $c["spacing"]
-        ];
-
-        $c["attrs"] = [];
-        if ($c["animation"] != "none") {
-            $c["attrs"]["data-bottom-top"]  = "";
-            $c["attrs"]["data-top-bottom"] = "";
-        }
-
-        foreach ($c["columns"] as $i=>&$col) {
-            $col["styles"]  = [];
-            $col["classes"] = [];
-
-            if ($c["custom_proportions"]) {
-                $col["styles"][] = "flex: " . $col["width"] . ";";
-            }
-
-            if ($c["animation"] != "none") {
-                $col["classes"][] = "animation animation--" . $c["animation"];
-
-                if ($c["delayed"]) {
-                    $col["classes"][] = "delay-" . ($i * 2);
-                }
-            }
-        } unset($col);
-    }
-
-
-    /**
      * Handle content for full-width images content type
      *
      * @param array $c

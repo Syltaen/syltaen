@@ -18,288 +18,28 @@
             "layouts": {
                 "5b22175adc035": {
                     "key": "5b22175adc035",
-                    "name": "columns",
-                    "label": "Contenu en colonnes",
+                    "name": "txt",
+                    "label": "Texte",
                     "display": "block",
                     "sub_fields": [
                         {
-                            "key": "field_5b221af1894bb",
-                            "label": "Contenu",
-                            "name": "",
-                            "type": "tab",
+                            "key": "field_5b22195fdc03c",
+                            "label": "",
+                            "name": "txt",
+                            "type": "wysiwyg",
                             "instructions": "",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "placement": "top",
-                            "endpoint": 0
-                        },
-                        {
-                            "key": "field_5b22193ddc03b",
-                            "label": "Colonnes",
-                            "name": "columns",
-                            "type": "repeater",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "acf-horizontal-repeater",
-                                "id": ""
-                            },
-                            "collapsed": "",
-                            "min": 1,
-                            "max": 0,
-                            "layout": "block",
-                            "button_label": "Ajouter une colonne",
-                            "sub_fields": [
-                                {
-                                    "key": "field_5b22195fdc03c",
-                                    "label": "Texte",
-                                    "name": "txt",
-                                    "type": "wysiwyg",
-                                    "instructions": "",
-                                    "required": 0,
-                                    "conditional_logic": 0,
-                                    "wrapper": {
-                                        "width": "90",
-                                        "class": "",
-                                        "id": ""
-                                    },
-                                    "default_value": "",
-                                    "tabs": "all",
-                                    "toolbar": "full",
-                                    "media_upload": 1,
-                                    "delay": 0
-                                },
-                                {
-                                    "key": "field_5b22196fdc03d",
-                                    "label": "Indice de largeur",
-                                    "name": "width",
-                                    "type": "number",
-                                    "instructions": "",
-                                    "required": 0,
-                                    "conditional_logic": [
-                                        [
-                                            {
-                                                "field": "field_5b221b2e894be",
-                                                "operator": "==",
-                                                "value": "1"
-                                            }
-                                        ]
-                                    ],
-                                    "wrapper": {
-                                        "width": "10",
-                                        "class": "",
-                                        "id": ""
-                                    },
-                                    "default_value": 1,
-                                    "placeholder": "",
-                                    "prepend": "",
-                                    "append": "",
-                                    "min": "",
-                                    "max": "",
-                                    "step": ""
-                                }
-                            ]
-                        },
-                        {
-                            "key": "field_5b221afb894bc",
-                            "label": "Paramètres",
-                            "name": "",
-                            "type": "tab",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "placement": "top",
-                            "endpoint": 0
-                        },
-                        {
-                            "key": "field_5b221b2e894be",
-                            "label": "Proportions personnalisée",
-                            "name": "custom_proportions",
-                            "type": "true_false",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "message": "Définir des proportions personnalisées pour chaque colonne",
-                            "default_value": 0,
-                            "ui": 0,
-                            "ui_on_text": "",
-                            "ui_off_text": ""
-                        },
-                        {
-                            "key": "field_5b22177fdc038",
-                            "label": "Espacement entre les colonnes",
-                            "name": "spacing",
-                            "type": "select",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "choices": {
-                                "no": "Aucun",
-                                "xs": "Très petit",
-                                "sm": "Petit",
-                                "ms": "Moyen",
-                                "md": "Grand",
-                                "lg": "Très grand",
-                                "xl": "Très très grand"
-                            },
-                            "default_value": [
-                                "sm"
-                            ],
-                            "allow_null": 0,
-                            "multiple": 0,
-                            "ui": 0,
-                            "ajax": 0,
-                            "return_format": "value",
-                            "placeholder": ""
-                        },
-                        {
-                            "key": "field_5b2218acdc03a",
-                            "label": "Alignement vertical",
-                            "name": "valign",
-                            "type": "select",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "choices": {
-                                "start": "Haut",
-                                "center": "Centré",
-                                "end": "Bas"
-                            },
-                            "default_value": [
-                                "top"
-                            ],
-                            "allow_null": 0,
-                            "multiple": 0,
-                            "ui": 0,
-                            "ajax": 0,
-                            "return_format": "value",
-                            "placeholder": ""
-                        },
-                        {
-                            "key": "field_5b221fbf19e13",
-                            "label": "Passer les colonnes les unes en dessous des autres à partir de",
-                            "name": "responsive",
-                            "type": "select",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "choices": {
-                                "never": "Jamais",
-                                "xs": "Mobile",
-                                "sm": "Tablette",
-                                "md": "Desktop"
-                            },
-                            "default_value": [
-                                "sm"
-                            ],
-                            "allow_null": 0,
-                            "multiple": 0,
-                            "ui": 0,
-                            "ajax": 0,
-                            "return_format": "value",
-                            "placeholder": ""
-                        },
-                        {
-                            "key": "field_5b221c9567a0b",
-                            "label": "Animation",
-                            "name": "animation",
-                            "type": "select",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "",
-                                "id": ""
-                            },
-                            "choices": {
-                                "none": "Aucun",
-                                "fadein": "Fade in",
-                                "fadein-left": "Fade in depuis la gauche",
-                                "fadein-right": "Fade in depuis la droite",
-                                "fadein-top": "Fade in depuis le dessus",
-                                "fadein-bottom": "Fade in depuis le bas",
-                                "fadein-sides": "Fade in depuis tous les côtés"
-                            },
-                            "default_value": [
-                                "none"
-                            ],
-                            "allow_null": 0,
-                            "multiple": 0,
-                            "ui": 0,
-                            "return_format": "value",
-                            "ajax": 0,
-                            "placeholder": ""
-                        },
-                        {
-                            "key": "field_5b221cdc67a0c",
-                            "label": "Délai pour chaque colonne",
-                            "name": "delayed",
-                            "type": "true_false",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "",
-                                "id": ""
-                            },
-                            "message": "Mettre un délai différent pour chaque colonne",
-                            "default_value": 0,
-                            "ui": 0,
-                            "ui_on_text": "",
-                            "ui_off_text": ""
-                        },
-                        {
-                            "key": "field_5c1ba5bd20bc5",
-                            "label": "Ascenseur",
-                            "name": "collapsable",
-                            "type": "text",
-                            "instructions": "Renseigner un titre pour inclure ces colonnes dans une boite refermable",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
+                                "width": "90",
                                 "class": "",
                                 "id": ""
                             },
                             "default_value": "",
-                            "placeholder": "",
-                            "prepend": "",
-                            "append": "",
-                            "maxlength": ""
+                            "tabs": "visual",
+                            "toolbar": "full",
+                            "media_upload": 0,
+                            "delay": 0
                         }
                     ],
                     "min": "",
@@ -608,5 +348,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1529491343
+    "modified": 1564649168
 }

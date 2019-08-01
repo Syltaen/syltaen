@@ -1,0 +1,44 @@
+// =============================================================================
+// > ADMIN : LOGIN
+// =============================================================================
+
+body.login
+    h1 a
+        background: img("admin_logo.png") center center / contain no-repeat !important
+        background-size: contain
+        width: 200px
+        height: 200px
+        pointer-events: none
+        &::after
+            content: none
+    form
+        border-radius: 5px
+
+    #wp-submit
+        display: block
+        +size(100%, 48px)
+        height: 48px !important
+        margin: 40px auto 0
+        padding: 0 20px
+        background: color(primary)
+        box-shadow: none
+        border: 2px solid color(primary)
+        border-radius: 5px
+        resize: none
+        +font(16px 42px white bold uppercase)
+        text-shadow: none
+        cursor: pointer
+        transition: all .4s ease
+
+        &:hover,
+        &:focus
+            background: white
+            color: color(primary)
+
+    #nav, #backtoblog
+        text-align: center
+        a
+            +font(14px white)
+            &::after
+                bottom: -4px
+                background: white

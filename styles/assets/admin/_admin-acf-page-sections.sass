@@ -1,0 +1,71 @@
+// =============================================================================
+// > ADMIN : ADMIN-ACF-PAGE-SECTIONS
+// =============================================================================
+
+.acf-page-sections > .acf-input > .acf-repeater
+    padding-left: 50px
+    & > .acf-actions
+        +flex(row nowrap, center)
+        .button
+            +font(20px 1)
+            padding: 10px 30px
+            height: auto
+            margin-top: 50px
+
+    & > .acf-table > tbody > .acf-row
+        position: relative
+        & > td
+            border-bottom: 20px solid color(light-grey)
+        & > .acf-row-handle
+            padding: 0
+            +size(15px)
+        & > .acf-fields.-sidebar
+            position: static
+            height: auto !important
+            padding: 0 !important
+            &::before
+                content: none
+            & > .acf-field > .acf-input > div > .acf-actions
+                +flex(row nowrap, center)
+                padding-right: 40px
+                padding-top: 15px
+                border-top: 1px solid #eee
+            & > .acf-tab-wrap.-left > .acf-hl.acf-tab-group
+                width: 50px
+                & > li
+                    a
+                        display: block
+                        text-indent: -9999px
+                        +size(50px, 40px)
+                        position: relative
+                        padding: 0
+                        border: 0
+                        +font(20px 40px #ccc center)
+                        &:hover
+                            +font(text)
+                        &::before
+                            +absolute(top 0 left 0)
+                            +size(100%)
+                            text-indent: 0
+                    &:nth-child(1) a::before
+                        +fa(align-left)
+                    &:nth-child(2) a::before
+                        +fa(paint-brush)
+                    &:nth-child(3) a::before
+                        +fa(cog)
+                    &.active a
+                        +font(primary)
+
+.acf-page-sections__handle
+    background-position: center center !important
+    background-size: cover !important
+    background-repeat: no-repeat !important
+
+@each $color, $value in $colors
+    .color-#{$color}
+        &, *
+            color: $value !important
+
+@each $color, $value in $colors
+    .bg-#{$color}
+        background-color: $value !important

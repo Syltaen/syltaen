@@ -1,59 +1,46 @@
 //- =============================================================================
 //- > VIEW : INCLUDE - CONTENTS
 //- =============================================================================
-
-each c in contents
-
-    case c.acf_fc_layout
-
-        //- ==================================================
-        //- > COLUMNS
-        //- ==================================================
-        when "columns"
-            .container
-                mixin columns
-                    .flex-row(class=c.classes)&attributes(c.attrs)
-                        each col in c.columns
-                            .flex-row__item(style=col.styles class=col.classes)
-                                != col.txt
-                if c.collapsable
-                    .collapsable
-                        .collapsable__header.trigger!= c.collapsable
-                        .collapsable__content
-                            +columns
-                else
-                    +columns
-
-        //- ==================================================
-        //- > TEXT + IMAGE
-        //- ==================================================
-        when "txtimg"
-            .txtimg(class="txtimg--".$c["style"]." txtimg--".$c["disposition"]." txtimg--".$c["size"])
-                .txtimg__visual(
-                    style="background-image: url(".\Syltaen\Data::filter($c["img"], "img:url").");"
-                    data-bottom-top="background-position-y: 100%"
-                    data-top-bottom="background-position-y: 0%"
-                )
-                .container: .txtimg__content
-                    != c.txt
+case c.acf_fc_layout
 
 
-        //- ==================================================
-        //- > FULL WIDTH IMAGE
-        //- ==================================================
-        when "full_width_image"
-            .full-width-image(class=c.classes)&attributes(c.attr)
-                != c.image
+    //- ==================================================
+    //- > TEXT
+    //- ==================================================
+    when "txt"
+        != c.txt
 
 
-        //- ==================================================
-        //- > ARCHIVE
-        //- ==================================================
-        when "archive"
-            case c.type
+    //- ==================================================
+    //- > TEXT + IMAGE
+    //- ==================================================
+    when "txtimg"
+        .txtimg(class="txtimg--".$c["style"]." txtimg--".$c["disposition"]." txtimg--".$c["size"])
+            .txtimg__visual(
+                style="background-image: url(".\Syltaen\Data::filter($c["img"], "img:url").");"
+                data-bottom-top="background-position-y: 100%"
+                data-top-bottom="background-position-y: 0%"
+            )
+            .container: .txtimg__content
+                != c.txt
 
-                //- News
-                when "news"
-                    include archives/_archive-news
+
+    //- ==================================================
+    //- > FULL WIDTH IMAGE
+    //- ==================================================
+    when "full_width_image"
+        .full-width-image(class=c.classes)&attributes(c.attr)
+            != c.image
+
+
+    //- ==================================================
+    //- > ARCHIVE
+    //- ==================================================
+    when "archive"
+        case c.type
+
+            //- News
+            when "news"
+                include archives/_archive-news
 
 
