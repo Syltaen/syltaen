@@ -4,11 +4,11 @@
     "fields": [
         {
             "key": "field_5ae17f6cbf3bf",
-            "label": "Contenu",
+            "label": "",
             "name": "content",
             "type": "flexible_content",
             "instructions": "",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -307,6 +307,54 @@
                     ],
                     "min": "",
                     "max": ""
+                },
+                "layout_5d4305a33583e": {
+                    "key": "layout_5d4305a33583e",
+                    "name": "collapsable",
+                    "label": "Ascenseur",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_5d4305b33583f",
+                            "label": "Titre",
+                            "name": "title",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
+                        },
+                        {
+                            "key": "field_5d4305ba35840",
+                            "label": "Contenu",
+                            "name": "content",
+                            "type": "wysiwyg",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "tabs": "all",
+                            "toolbar": "full",
+                            "media_upload": 1,
+                            "delay": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
                 }
             },
             "button_label": "Ajouter du contenu à cette section",
@@ -348,5 +396,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1564649168
+    "modified": 1565070705
 }

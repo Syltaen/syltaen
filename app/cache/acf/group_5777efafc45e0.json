@@ -177,25 +177,6 @@
                             "esc_html": 0
                         },
                         {
-                            "key": "field_5b221b2e894be",
-                            "label": "Proportions personnalisée",
-                            "name": "custom_proportions",
-                            "type": "true_false",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "",
-                                "id": ""
-                            },
-                            "message": "Définir des proportions personnalisées pour chaque colonne",
-                            "default_value": 0,
-                            "ui": 0,
-                            "ui_on_text": "",
-                            "ui_off_text": ""
-                        },
-                        {
                             "key": "field_5d400218252c5",
                             "label": "Prendre toute la larguer",
                             "name": "fullwidth",
@@ -209,6 +190,25 @@
                                 "id": ""
                             },
                             "message": "Prendre toute la larguer du site",
+                            "default_value": 0,
+                            "ui": 0,
+                            "ui_on_text": "",
+                            "ui_off_text": ""
+                        },
+                        {
+                            "key": "field_5b221b2e894be",
+                            "label": "Proportions personnalisée",
+                            "name": "custom_proportions",
+                            "type": "true_false",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "message": "Définir des proportions personnalisées pour chaque colonne",
                             "default_value": 0,
                             "ui": 0,
                             "ui_on_text": "",
@@ -395,13 +395,13 @@
                     "key": "field_5777f0dca4ede",
                     "label": "Fond",
                     "name": "bg",
-                    "type": "select",
+                    "type": "radio",
                     "instructions": "Permet de définir une couleur de fond pour la section",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "50",
-                        "class": "acf-page-sections__bg",
+                        "class": "acf-page-sections__bg acf-choice acf-choice--color",
                         "id": ""
                     },
                     "choices": {
@@ -412,27 +412,24 @@
                         "secondary": "Couleur secondaire",
                         "image": "Image"
                     },
-                    "default_value": [
-                        "white"
-                    ],
                     "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 0,
+                    "other_choice": 0,
+                    "default_value": "white",
+                    "layout": "horizontal",
                     "return_format": "value",
-                    "ajax": 0,
-                    "placeholder": ""
+                    "save_other_choice": 0
                 },
                 {
-                    "key": "field_5a0ea3d236f44",
+                    "key": "field_5d430acb4e5aa",
                     "label": "Couleur du texte",
                     "name": "text_color",
-                    "type": "select",
-                    "instructions": "Force la couleur du texte à l'intérieur de la section.\r\nUtile si le texte n'est pas lisible sur la couleur choisie.",
+                    "type": "radio",
+                    "instructions": "Force la couleur du texte à l'intérieur de la section.",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "50",
-                        "class": "acf-page-sections__color",
+                        "class": "acf-page-sections__color acf-choice acf-choice--color",
                         "id": ""
                     },
                     "choices": {
@@ -443,15 +440,12 @@
                         "primary": "Couleur principale",
                         "secondary": "Couleur secondaire"
                     },
-                    "default_value": [
-                        "none"
-                    ],
                     "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 0,
+                    "other_choice": 0,
+                    "default_value": "none",
+                    "layout": "horizontal",
                     "return_format": "value",
-                    "ajax": 0,
-                    "placeholder": ""
+                    "save_other_choice": 0
                 },
                 {
                     "key": "field_5777f159a4edf",
@@ -487,7 +481,7 @@
                 },
                 {
                     "key": "field_582d6ef846b5d",
-                    "label": "Image de fond - taille",
+                    "label": "Image de fond - Taille",
                     "name": "bg_img_size",
                     "type": "select",
                     "instructions": "",
@@ -508,21 +502,21 @@
                     },
                     "choices": {
                         "default": "Default",
-                        "cover": "Cover"
+                        "cover": "Couvrire"
                     },
                     "default_value": [
-                        "default"
+                        "cover"
                     ],
                     "allow_null": 0,
                     "multiple": 0,
                     "ui": 0,
-                    "ajax": 0,
                     "return_format": "value",
+                    "ajax": 0,
                     "placeholder": ""
                 },
                 {
                     "key": "field_5878aac9906fd",
-                    "label": "Image de fond - position",
+                    "label": "Image de fond - Position",
                     "name": "bg_img_pos",
                     "type": "select",
                     "instructions": "",
@@ -542,42 +536,12 @@
                         "id": ""
                     },
                     "choices": {
-                        "center": "Centered",
-                        "top": "Top",
-                        "bottom": "Bottom"
+                        "center": "Centrée",
+                        "top": "En haut",
+                        "bottom": "En bas"
                     },
                     "default_value": [
                         "center"
-                    ],
-                    "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 0,
-                    "ajax": 0,
-                    "return_format": "value",
-                    "placeholder": ""
-                },
-                {
-                    "key": "field_57be995981aa3",
-                    "label": "Espacement en haut",
-                    "name": "padding_top",
-                    "type": "select",
-                    "instructions": "",
-                    "required": 1,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "50",
-                        "class": "",
-                        "id": ""
-                    },
-                    "choices": {
-                        "lg": "Très grand",
-                        "md": "Grand",
-                        "ms": "Moyen",
-                        "sm": "Petit",
-                        "no": "Aucun"
-                    },
-                    "default_value": [
-                        "md"
                     ],
                     "allow_null": 0,
                     "multiple": 0,
@@ -590,43 +554,67 @@
                     "key": "field_5b1e76a7068a7",
                     "label": "Espacement en bas",
                     "name": "padding_bottom",
-                    "type": "select",
+                    "type": "radio",
                     "instructions": "",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "50",
-                        "class": "",
+                        "class": "acf-choice acf-choice--spacing acf-choice acf-choice--spacing--bottom",
                         "id": ""
                     },
                     "choices": {
-                        "lg": "Très grand",
-                        "md": "Grand",
-                        "ms": "Moyen",
+                        "no": "Aucun",
                         "sm": "Petit",
-                        "no": "Aucun"
+                        "ms": "Moyen",
+                        "md": "Grand",
+                        "lg": "Très grand"
                     },
-                    "default_value": [
-                        "md"
-                    ],
                     "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 0,
+                    "other_choice": 0,
+                    "default_value": "md",
+                    "layout": "horizontal",
                     "return_format": "value",
-                    "ajax": 0,
-                    "placeholder": ""
+                    "save_other_choice": 0
+                },
+                {
+                    "key": "field_57be995981aa3",
+                    "label": "Espacement en haut",
+                    "name": "padding_top",
+                    "type": "radio",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "acf-choice acf-choice--spacing acf-choice acf-choice--spacing--top",
+                        "id": ""
+                    },
+                    "choices": {
+                        "no": "Aucun",
+                        "sm": "Petit",
+                        "ms": "Moyen",
+                        "md": "Grand",
+                        "lg": "Très grand"
+                    },
+                    "allow_null": 0,
+                    "other_choice": 0,
+                    "default_value": "md",
+                    "layout": "horizontal",
+                    "return_format": "value",
+                    "save_other_choice": 0
                 },
                 {
                     "key": "field_5a0ea20a36f3f",
                     "label": "Bord supérieur",
                     "name": "top_edge",
-                    "type": "select",
+                    "type": "radio",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "50",
-                        "class": "",
+                        "width": "55",
+                        "class": "acf-choice acf-choice--edge acf-choice--edge--top",
                         "id": ""
                     },
                     "choices": {
@@ -636,21 +624,18 @@
                         "out-ascending": "Extérieur montant",
                         "out-descending": "Extérieur descendant"
                     },
-                    "default_value": [
-                        "none"
-                    ],
                     "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 0,
-                    "ajax": 0,
+                    "other_choice": 0,
+                    "default_value": "none",
+                    "layout": "horizontal",
                     "return_format": "value",
-                    "placeholder": ""
+                    "save_other_choice": 0
                 },
                 {
                     "key": "field_5a0ea28136f41",
                     "label": "Bord supérieur - couleur",
                     "name": "top_edge_color",
-                    "type": "select",
+                    "type": "radio",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": [
@@ -663,8 +648,8 @@
                         ]
                     ],
                     "wrapper": {
-                        "width": "50",
-                        "class": "",
+                        "width": "45",
+                        "class": "acf-choice acf-choice--color",
                         "id": ""
                     },
                     "choices": {
@@ -675,27 +660,24 @@
                         "primary": "Couleur principale",
                         "secondary": "Couleur secondaire"
                     },
-                    "default_value": [
-                        "section"
-                    ],
                     "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 0,
-                    "ajax": 0,
+                    "other_choice": 0,
+                    "default_value": "section",
+                    "layout": "horizontal",
                     "return_format": "value",
-                    "placeholder": ""
+                    "save_other_choice": 0
                 },
                 {
                     "key": "field_5a0ea27436f40",
                     "label": "Bord inférieur",
                     "name": "bottom_edge",
-                    "type": "select",
+                    "type": "radio",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "50",
-                        "class": "",
+                        "width": "55",
+                        "class": "acf-choice acf-choice--edge acf-choice--edge--bottom",
                         "id": ""
                     },
                     "choices": {
@@ -705,21 +687,18 @@
                         "out-ascending": "Extérieur montant",
                         "out-descending": "Extérieur descendant"
                     },
-                    "default_value": [
-                        "none"
-                    ],
                     "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 0,
-                    "ajax": 0,
+                    "other_choice": 0,
+                    "default_value": "none",
+                    "layout": "horizontal",
                     "return_format": "value",
-                    "placeholder": ""
+                    "save_other_choice": 0
                 },
                 {
                     "key": "field_5a0ea32536f43",
                     "label": "Bord inférieur - couleur",
                     "name": "bottom_edge_color",
-                    "type": "select",
+                    "type": "radio",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": [
@@ -732,8 +711,8 @@
                         ]
                     ],
                     "wrapper": {
-                        "width": "50",
-                        "class": "",
+                        "width": "45",
+                        "class": "acf-choice acf-choice--color",
                         "id": ""
                     },
                     "choices": {
@@ -744,15 +723,12 @@
                         "primary": "Couleur principale",
                         "secondary": "Couleur secondaire"
                     },
-                    "default_value": [
-                        "section"
-                    ],
                     "allow_null": 0,
-                    "multiple": 0,
-                    "ui": 0,
-                    "ajax": 0,
+                    "other_choice": 0,
+                    "default_value": "",
+                    "layout": "horizontal",
                     "return_format": "value",
-                    "placeholder": ""
+                    "save_other_choice": 0
                 },
                 {
                     "key": "field_5777f0a0a4edd",
@@ -895,5 +871,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1564645060
+    "modified": 1565070967
 }

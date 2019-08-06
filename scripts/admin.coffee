@@ -8,8 +8,8 @@ class ACFSection
     constructor: (@$section) ->
         @$section.attr "data-processed", true
 
-        @$bgPicker    = @$section.find(".acf-page-sections__bg select").change => @updateHandle()
-        @$colorPicker = @$section.find(".acf-page-sections__color select").change => @updateHandle()
+        @$bgPicker    = @$section.find(".acf-page-sections__bg input").change => @updateHandle()
+        @$colorPicker = @$section.find(".acf-page-sections__color input").change => @updateHandle()
         @$imagePicker = jQuery(@$colorPicker.closest(".acf-page-sections__color").next().find("input[type='hidden']")[0]).change => @updateHandle()
 
         @$handle = @$section.children(".acf-row-handle.order")
@@ -17,9 +17,9 @@ class ACFSection
         @updateHandle()
 
     updateHandle: ->
-        @$handle.attr("class", "acf-page-sections__handle acf-row-handle order ui-sortable-handle bg-" + @$bgPicker.val() + " color-" + @$colorPicker.val())
+        @$handle.attr("class", "acf-page-sections__handle acf-row-handle order ui-sortable-handle bg-" + @$bgPicker.filter(":checked").val() + " color-" + @$colorPicker.filter(":checked").val())
 
-        if (($img =  @$imagePicker.next(".image-wrap").find("img")) && (@$bgPicker.val() == "image"))
+        if (($img =  @$imagePicker.next(".image-wrap").find("img")) && (@$bgPicker.filter(":checked").val() == "image"))
             @$handle.css("background-image", "url(" + $img.attr("src") + ")")
         else
             @$handle.css("background-image", "")
@@ -34,8 +34,13 @@ $ ->
     , 1000
 
     # Columns width
-    $(".acf-sections-row__columns__width input[type='number']").on "keyup change", ->
+    $("body").on "keyup change", ".acf-sections-row__columns__width input[type='number']", ->
+        console.log "change"
         $(@).closest(".acf-row").css "flex", $(@).val()
+
+    # Choice input
+    $(".acf-choice .acf-input").find("label").each ->
+        $(@).append "<span>" + $(@).text() + "</span>"
 
 
 # =============================================================================

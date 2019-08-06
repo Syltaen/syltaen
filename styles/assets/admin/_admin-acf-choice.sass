@@ -1,0 +1,153 @@
+// =============================================================================
+// > ADMIN : ACF CHOICE
+// =============================================================================
+
+.acf-choice .acf-input
+
+    .acf-radio-list
+        +flex(row wrap)
+
+    li
+        position: relative
+        +size(40px)
+        min-width: 40px
+        margin: 3px !important
+
+    label
+        text-indent: -9999px
+        position: relative
+        display: block
+
+        span
+            text-indent: 0
+            +absolute(bottom 100% left 50%)
+            transform: translate(-50%, -5px)
+            +font(12px)
+            font-weight: bold
+            background: #eee
+            padding: 3px 8px
+            white-space: nowrap
+            z-index: 1000
+            opacity: 0
+            visibility: hidden
+            transition: all .35s ease
+            &::before
+                content: ""
+                border-top: 10px solid #eee
+                border-left: 4px solid transparent
+                border-right: 4px solid transparent
+                +absolute(top 100% left 50%)
+                margin-left: -4px
+
+        &:hover span
+            opacity: 1
+            visibility: visible
+            transform: translate(-50%, 0)
+
+
+    input
+        +absolute(top 0 left 0)
+        +size(40px)
+        opacity: .8
+        transition: all .25s ease
+        outline: 0 !important
+        box-shadow: none !important
+        border-color: #b4b9be !important
+        transform: scale(.5)
+        &::before
+            display: none
+        &:checked
+            opacity: 1 !important
+            transform: scale(1)
+
+        // ==================================================
+        // > COLORS
+        // ==================================================
+        @each $color, $value in $colors
+            &[value="#{$color}"]
+                background: $value !important
+
+        &[value="section"]
+            background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%)
+            background-size: 20px 20px
+
+        // ==================================================
+        // > ICONS
+        // ==================================================
+        &[value="none"],
+        &[value="image"]
+            border-color: white !important
+            &::after
+                +font(40px 40px center #666)
+                +absolute(top 0 left 0)
+                +size(100%)
+
+        &[value="none"]::after
+            +fa(times)
+
+        &[value="image"]::after
+            +fa(image)
+
+
+        // ==================================================
+        // > EDGES
+        // ==================================================
+        &[value="in-ascending"],
+        &[value="in-descending"],
+        &[value="out-ascending"],
+        &[value="out-descending"]
+            +size(50px, 30px)
+            border-radius: 0
+            border: 0
+            background: #F5F5F5
+            position: absolute !important
+            opacity: .4
+
+.acf-choice--edge--top .acf-input input
+    &::before
+        display: block
+        border-radius: 0 !important
+        background: none !important
+        margin: 0 !important
+    &[value="in-ascending"]
+        @extend .has-edge-top--in-ascending
+    &[value="in-descending"]
+        @extend .has-edge-top--in-descending
+    &[value="out-ascending"]
+        @extend .has-edge-top--out-ascending
+    &[value="out-descending"]
+        @extend .has-edge-top--out-descending
+    &[value="in-ascending"]::before,
+    &[value="out-descending"]::before
+        border-right-width: 50px
+    &[value="in-descending"]::before,
+    &[value="out-ascending"]::before
+        border-left-width: 50px
+    &[value="in-ascending"]::before,
+    &[value="in-descending"]::before
+        border-top-width: 20px
+    &[value="out-ascending"]::before,
+    &[value="out-descending"]::before
+        border-bottom-width: 20px
+
+.acf-choice--edge--bottom .acf-input input
+    &[value="in-ascending"]
+        @extend .has-edge-bottom--in-ascending
+    &[value="in-descending"]
+        @extend .has-edge-bottom--in-descending
+    &[value="out-ascending"]
+        @extend .has-edge-bottom--out-ascending
+    &[value="out-descending"]
+        @extend .has-edge-bottom--out-descending
+    &[value="in-ascending"]::after,
+    &[value="out-descending"]::after
+        border-left-width: 50px
+    &[value="in-descending"]::after,
+    &[value="out-ascending"]::after
+        border-right-width: 50px
+    &[value="in-ascending"]::after,
+    &[value="in-descending"]::after
+        border-bottom-width: 20px
+    &[value="out-ascending"]::after,
+    &[value="out-descending"]::after
+        border-top-width: 20px
