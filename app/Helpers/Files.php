@@ -239,6 +239,10 @@ abstract class Files
     public static function in($folder, $match = false, $show_hidden = false)
     {
         $files  = [];
+
+        // Nothing
+        if (!is_dir(self::path($folder))) return [];
+
         foreach (scandir(self::path($folder)) as $file) {
 
             // Does not list hidden files or navigation

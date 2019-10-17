@@ -5,7 +5,7 @@ namespace Syltaen;
 // ==================================================
 // > UPLOAD A FILE WITH AJAX
 // ==================================================
-Ajax::register("syltaen_ajax_upload", function () {
+Hooks::ajax("syltaen_ajax_upload", function () {
 
     wp_send_json(
         Files::upload(

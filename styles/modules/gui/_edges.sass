@@ -21,17 +21,21 @@ $edge-height: 42px
                 content: ""
                 +size(0)
                 +absolute(left 0)
-                z-index: 1000
+                z-index: 1
 
         &--in-ascending::before,
         &--in-descending::before
             top: 0
-            border-top: $edge-height solid color(primary)
+            border-top: $edge-height solid white
+            +screen(xs)
+                border-top-width: $edge-height / 2
 
         &--out-ascending::before,
         &--out-descending::before
             bottom: 100%
-            border-bottom: $edge-height solid color(primary)
+            border-bottom: $edge-height solid white
+            +screen(xs)
+                border-bottom-width: $edge-height / 2
 
         &--in-ascending::before,
         &--out-descending::before
@@ -55,17 +59,20 @@ $edge-height: 42px
                 content: ""
                 +size(0)
                 +absolute(left 0)
-                z-index: 1000
 
         &--in-ascending::after,
         &--in-descending::after
             bottom: 0
-            border-bottom: $edge-height solid color(primary)
+            border-bottom: $edge-height solid white
+            +screen(xs)
+                border-bottom-width: $edge-height / 2
 
         &--out-ascending::after,
         &--out-descending::after
             top: 100%
-            border-top: $edge-height solid color(primary)
+            border-top: $edge-height solid white
+            +screen(xs)
+                border-top-width: $edge-height / 2
 
         &--in-ascending::after,
         &--out-descending::after
@@ -80,7 +87,26 @@ $edge-height: 42px
 // > COLORS
 // ==================================================
 @each $color, $value in $colors
-    .bg-#{$color},
+    .bg-#{$color}
+        &.has-edge-top
+            &--in-ascending::before,
+            &--in-descending::before
+                border-top-color: $value
+
+            &--out-ascending::before,
+            &--out-descending::before
+                border-bottom-color: $value
+
+        &.has-edge-bottom
+            &--in-ascending::after,
+            &--in-descending::after
+                border-bottom-color: $value
+
+            &--out-ascending::after,
+            &--out-descending::after
+                border-top-color: $value
+
+@each $color, $value in $colors
     .has-edge-top--#{$color}
         &.has-edge-top
             &--in-ascending::before,
@@ -91,7 +117,6 @@ $edge-height: 42px
             &--out-descending::before
                 border-bottom-color: $value
 
-    .bg-#{$color},
     .has-edge-bottom--#{$color}
         &.has-edge-bottom
             &--in-ascending::after,
@@ -101,3 +126,39 @@ $edge-height: 42px
             &--out-ascending::after,
             &--out-descending::after
                 border-top-color: $value
+
+
+// ==================================================
+// > SIZES
+// ==================================================
+.has-edge-top
+    &--small
+        &.has-edge-top--in-ascending::before
+        &.has-edge-top--in-descending::before
+            border-top-width: $edge-height / 2
+        &.has-edge-top--out-ascending::before,
+        &.has-edge-top--out-descending::before
+            border-bottom-width: $edge-height / 2
+    &--large
+        &.has-edge-top--in-ascending::before
+        &.has-edge-top--in-descending::before
+            border-top-width: $edge-height * 2
+        &.has-edge-top--out-ascending::before,
+        &.has-edge-top--out-descending::before
+            border-bottom-width: $edge-height * 2
+
+.has-edge-bottom
+    &--small
+        &.has-edge-bottom--in-ascending::before
+        &.has-edge-bottom--in-descending::before
+            border-bottom-width: $edge-height / 2
+        &.has-edge-top--out-ascending::before,
+        &.has-edge-top--out-descending::before
+            border-top-width: $edge-height / 2
+    &--large
+        &.has-edge-bottom--in-ascending::before
+        &.has-edge-bottom--in-descending::before
+            border-bottom-width: $edge-height * 2
+        &.has-edge-top--out-ascending::before,
+        &.has-edge-top--out-descending::before
+            border-top-width: $edge-height * 2

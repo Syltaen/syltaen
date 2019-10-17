@@ -1,16 +1,7 @@
 <?php
 
-/*
- * Plugin Name: Ninja Forms - Syltaen register
- * Plugin URI: http://hungryminds.be
- * Description: Register all custom actions and fields from the theme
- * Version: 1.0.0
- * Author: Stanley Lambot
- * Author URI: http://hungryminds.be
- * Text Domain: ninja-forms-syltaen
- *
- * Copyright 2017 Stanley Lambot.
- * NOTE : SHOULD BE PLACED IN THE "PLUGINS" FOLDER.
+/**
+ * Register all custom actions and fields from the theme
  */
 
 namespace Syltaen;
@@ -165,5 +156,3 @@ class FormRegisterer
         return $settings;
     }
 }
-
-new FormRegisterer();

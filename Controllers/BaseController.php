@@ -281,7 +281,7 @@ abstract class BaseController extends Controller
         }
 
         if ($responce) {
-            Route::respond($resp, $args, true);
+            Route::respond($responce, $args, true);
         }
     }
 
