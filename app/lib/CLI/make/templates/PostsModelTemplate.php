@@ -5,7 +5,7 @@ namespace Syltaen;
 class ClassName extends PostsModel
 {
     const TYPE     = "postsmodeltemplate";
-    const LABEL    = "PostsModelTemplate";
+    const LABEL    = "ClassName";
     const ICON     = "dashicons-megaphone";
 
     // const HAS_EDITOR    = true;
