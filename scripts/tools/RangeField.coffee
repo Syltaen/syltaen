@@ -18,12 +18,27 @@ export default class RangeField
 
             onSlide: (position, value) => @updateValue value
 
+        @step = @$input.attr("step") || 1
+        @min  = @$input.attr("min") || 1
+        @max  = @$input.attr("max") || 100
+
+
         @$el = @$input.next(".rangefield")
 
         @labels = @getLabels()
 
+        @addThemes()
         @addGraduations()
         @addValue()
+
+
+    ###
+    # Add custom themes
+    ###
+    addThemes: ->
+        @themes = @$input.data("theme").split(" ")
+        unless @themes.length then return false
+        for theme in @themes then @$el.addClass "rangefield--#{theme}"
 
 
     ###
@@ -51,9 +66,7 @@ export default class RangeField
     # Update the displayed value
     ###
     updateValue: (value) ->
-
-        @$value.text @labels[value]
-
+        @$value.text @labels[value / @step]
         if @onUpdate then @onUpdate value
 
 
@@ -61,7 +74,7 @@ export default class RangeField
     getLabels: ->
         customLabels = if @$input.data("labels") then @$input.data("labels").split "," else false
         labels = []
-        values = [@$input.attr("min")..@$input.attr("max")]
+        values = [(@min / @step) .. (@max / @step)]
 
         for value, i in values
             labels[value] = if customLabels then customLabels[i] else value

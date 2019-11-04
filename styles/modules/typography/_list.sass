@@ -24,9 +24,12 @@ ol:not([class]) > li,
     margin-bottom: .4em
     &::before
         +font(primary)
-        font-size: .75em
+        font-size: .9em
         line-height: 1.8em
         +absolute(left -1.2em top 0)
+
+    &[data-collapsable]
+        padding-right: 1.5em
 
 // =============================================================================
 // > BULLETS
@@ -57,8 +60,8 @@ ul:not([class]),
         & > .list__item::before,
         & > li::before
             +fa(circle)
-            font-size: .4em
-            line-height: 4.2em
+            font-size: .5em
+            line-height: 2.8em
             left: -1.75em
     & &
         & > .list__item::before,
@@ -100,10 +103,77 @@ ul:not([class]),
 
 // ========== CHOICES (radio/checkbox) ========== //
 .list--choices
-    padding-left: 0
-    & > .list__item
-    & > li
-        +flex(row nowrap)
+    padding-left: 1.5em
+    & > .list__item input.list__bullet,
+    & > li input.list__bullet
+        +absolute(top .25em left -1.5em)
+
+    // ========== EMBEDED ========== //
+    &--embeded
+        margin-left: -1em
+        padding-left: 2em
+        margin-top: -.25em
+        padding-top: .5em
+        overflow: hidden
+
+    &--embeded > .list__item,
+    &--embeded > li,
+    &--embeded > .list__item input.list__bullet,
+    &--embeded > li input.list__bullet
+        font-size: .9em
+
+    // Horizontal bars
+    &--embeded > .list__item::before,
+    &--embeded > li::before
+        content: ""
+        +size(10em, 2px)
+        background: color(medium-grey)
+        +absolute(top .75em right 100%)
+        left: auto
+        transform: translate(-1em)
+        z-index: -1
+
+    // Vertical bar
+    &--embeded > .list__item:last-child::after,
+    &--embeded > li:last-child::after
+        content: ""
+        +size(2px, 999em)
+        +absolute(bottom 100% left -2.25em)
+        transform: translateY(.75em)
+        background: color(medium-grey)
+
+
+// =============================================================================
+// > COLLAPSABLE
+// =============================================================================
+.list__item__collapse
+    +absolute(top 0 right 0)
+    +size(1.5em)
+    cursor: pointer
+    border-radius: 50%
+    transition: all .35s ease
+    &::before
+        content: ""
+        +size(100em, 100%)
+        +absolute(top 0 right 0)
+    &::after
+        +fa(angle-down)
+        vertical-align: middle
+        +font(center medium-grey)
+        transition: transform .35s ease
+        transform: translateY(5%)
+        @extend %cover
+
+    &:hover
+        background: color(primary)
+        &::after
+            +font(white)
+
+    .is-open > &::after
+        transform: rotate(-180deg) translateY(5%)
+
+
+
 
 // =============================================================================
 // > DISPOSITIONS

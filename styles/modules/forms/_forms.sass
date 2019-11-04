@@ -6,7 +6,7 @@ $input-height: 48px
 $input-background: white
 $input-border-radius: 0
 $input-border: 1px solid darken(color(light-grey), 10%)
-$input-padding: 20px
+$input-padding: 1em
 $input-color: color(text)
 
 // ==================================================
@@ -24,7 +24,7 @@ form,
 // ==================================================
 fieldset,
 .form__fieldset
-    margin-bottom: spacing(sm)
+    margin-bottom: 1.5em
 
 
 // ==================================================
@@ -41,27 +41,30 @@ fieldset,
 // ==================================================
 label,
 .form__label
-    +font(15px bold)
+    +font(bold)
     cursor: pointer
-    margin-bottom: 5px
+    margin-bottom: .35em
     display: inline-block
     &.is-required::after
         content: " *"
         +font(error)
+    [data-collapsable] > &
+        position: relative
+        z-index: 10
 
 // ==================================================
 // > PLACEHOLDERS
 // ==================================================
 %input
     +placeholder
-        +font(light rgba(color(text), .3))
+        +font(regular medium-grey)
 
 // ==================================================
 // > INPUT
 // ==================================================
 %input
     +size(100%, $input-height)
-    +font(16px $input-height $input-color)
+    +font(1 $input-color bold)
     background: $input-background
     border: $input-border
     padding: 0 $input-padding
@@ -92,22 +95,26 @@ textarea
 // ==================================================
 input[type="radio"],
 input[type="checkbox"]
-    +size(18px)
+    +size(1em)
     appearance: none
     position: relative
-    margin: 0 5px 0 0
+    margin: .2em .5em 0 0
     padding: 0
-    background: none
-    // border: 2px solid color(primary)
     background: white
     border-radius: 0
     vertical-align: middle
     cursor: pointer
+    border-radius: 3px
+
+    label:hover &
+        border-color: color(primary)
 
     &::before
         +fa(check)
         +absolute(top 0 left 0)
-        +font(18px 18px primary)
+        font-size: 1em
+        line-height: 1
+        +font(text)
         opacity: 0
         transform: scale(2)
         transition: all .25s ease
@@ -121,40 +128,41 @@ input[type="radio"]
     &::before
         content: ""
         border-radius: 50%
-        +size(12px)
+        +size(50%)
         +absolute(top 50% left 50%)
         opacity: 0
-        background: color(primary)
-        margin-top: -6px
-        margin-left: -6px
+        background: color(text)
+        transform: translate(-50%, -50%) scale(2)
+    &:checked::before
+        transform: translate(-50%, -50%) scale(1)
+
 
 
 // ==================================================
 // > SUBMIT
 // ==================================================
 input[type="submit"],
-input[type="button"]
+input[type="button"],
+.form__submit
     @extend %button
-    padding: 0 $input-padding
-    min-height: $input-height
-    margin-top: 28px // label lh + label mb
+    margin-top: 1.85em // label lh + label mb
     clear: both
     float: right
     background: color(primary)
-    width: auto
-    position: relative
     &:hover
         background: none
         +font(primary)
-
     +screen(xs)
         max-width: 100%
         white-space: pre-wrap
         height: auto
 
-
     .loading &,
     .is-loading &,
     &.is-loading
+        // opacity: .5
+        pointer-events: none
+
+    .is-sending &
         opacity: .5
         pointer-events: none

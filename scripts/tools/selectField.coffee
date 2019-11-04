@@ -1,5 +1,6 @@
 import $ from "jquery"
 import "select2"
+import fr from "select2/src/js/select2/i18n/fr"
 
 export default class SelectField
 
@@ -23,14 +24,44 @@ export default class SelectField
         allowClear     = @$el.data "clearable"
         appendDropdown = @$el.data "append"
         noSearch       = @$el.data "nosearch"
+        autoSubmit     = @$el.data "autosubmit"
+        source         = if @$el.data("source") then ajaxurl + "?action=" + @$el.data("source") else null
 
-        @$el.select2
+        # Create the field
+        @select2 = @$el.select2
+            language: fr
             minimumResultsForSearch: if noSearch then Infinity else 8
             placeholder: @$el.attr("placeholder") || "Cliquez pour choisir"
             disabled: disabled
             allowClear: allowClear
             dropdownParent: if appendDropdown then @$el.parent() else null
-            theme: false
+            theme: @$el.data("theme") || false
+
+            # Ajax
+            minimumInputLength: if source then 3 else 0
+            ajax: unless source then null else
+                url: source
+                dataType: "json"
+
+            # Templating
+            templateResult: (d) ->
+                optionClass = $(d.element).data("class") || d.class
+                text = d.result || d.text
+                unless optionClass then return text
+                return $("<span class='#{optionClass}'>" + text.replace(/<%/g, "<") + "</span>")
+
+            templateSelection: (d) ->
+                optionClass = $(d.element).data("class") || d.class
+                text = d.selection || d.text
+                unless optionClass then return text
+                return $("<span class='#{optionClass}'>" + text.replace(/<%/g, "<") + "</span>")
+
+        # Autosubmit
+        if autoSubmit then @$el.change -> $(@).closest("form").submit()
+
+        # appendDropdown
+        if appendDropdown
+            @$el.parent().css("position", "relative")
 
 
     ###

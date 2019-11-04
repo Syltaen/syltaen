@@ -14,8 +14,11 @@
     @if map-has-key($responsive, $bp)
         $bp: breakpoint($bp)
 
+    @if not $bp
+        @content
+
     // Max width
-    @if $compare == "-"
+    @else if $compare == "-"
         @media screen and (max-#{$dim}: $bp)
             @content
 

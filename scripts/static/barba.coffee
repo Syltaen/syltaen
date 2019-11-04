@@ -102,6 +102,7 @@ Barba.Dispatcher.on "newPageReady", (currentStatus, oldStatus, container, html) 
     html        = html.replace /(<\/?)body( .+?)?>/gi, '$1notbody$2>'
     bodyClasses = $(html).filter("notbody").attr("class")
     $("body").attr "class", bodyClasses
+    $("html").removeClass "is-mobilenav-open"
 
     # Replace the admin tool bar
     $("#wpadminbar").html $(html).find("#wpadminbar").html()

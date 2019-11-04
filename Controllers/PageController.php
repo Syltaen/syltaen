@@ -58,7 +58,7 @@ class PageController extends BaseController
         ]);
 
         // Make sure the error404 is set on the body
-        $this->addBodyClass("page404");
+        $this->addBodyClass("error404");
 
         // Remove the breadcrumb
         // $this->data["site"]["breadcrumb"] = "";

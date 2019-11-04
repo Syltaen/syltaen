@@ -87,7 +87,7 @@ abstract class TaxonomyModel
     /**
      * Run fetchTerms and return the resulting terms
      *
-     * @return void
+     * @return array
      */
     public function getTerms($fields = "all", $hide_empty = false, $limit = 0, $orderby = "slug", $order = "ASC", $custom_args = [])
     {

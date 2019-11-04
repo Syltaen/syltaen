@@ -27,8 +27,7 @@ class ApiController extends Controller
      */
     private function lab($target = false)
     {
-        require Files::path("app/lib/CLI/make/CLI_Make.php");
-        CLI_Make::script("test");
+
     }
 
 

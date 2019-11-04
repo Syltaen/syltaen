@@ -2,57 +2,24 @@
 // > MODULES: TXT - QUOTES
 // =============================================================================
 
-blockquote,
+blockquote:not([class]),
 .blockquote
-    padding: 0 20px
-    margin: 30px 50px 80px 30px
-    +screen(sm)
-        margin-right: 0
-    +screen(xs)
-        margin: 0 0 40px 0
-        padding: 0
+    padding: 3px 1em
+    margin: 2em 0
+    border-left: 5px solid color(light-grey)
+    font-style: italic
+    position: relative
+
+    *
+        position: relative
+
+    &::before
+        +fa(quote-right)
+        +absolute(top 0 right 0)
+        +font(2 light-grey)
 
     cite,
-    &__author
+    .blockquote__author
         display: block
-        background: color(light-grey)
-        position: relative
-
-        +font(semibold white)
-        margin: 0 -20px
-        padding: 10px 20px 10px 60px
-
+        +font(bold primary right)
         font-style: normal
-        color: lighten(color(dark-grey), 10%)
-
-        +screen(xs)
-            margin: 200px 0 0
-            padding: 10px 20px
-
-    &__picture
-        border-radius: 50%
-        +size(90px)
-        +absolute(top 50% left 0)
-        transform: translate(-50%, -50%)
-        border: 3px solid color(light-grey)
-        +screen(xs)
-            +pos(top -180px left 50%)
-            transform: translate(-50%, 0)
-            +size(170px)
-
-    &__quote
-        font-style: italic
-        position: relative
-        margin: 30px 40px
-        +screen(xs)
-            margin: 0
-
-        &::before,
-        &::after
-            +font(30px light-grey)
-        &::before
-            +fa(quote-left)
-            +absolute(top -20px left -40px)
-        &::after
-            +fa(quote-right)
-            +absolute(right -40px bottom -20px)

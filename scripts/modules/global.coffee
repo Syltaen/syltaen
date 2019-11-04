@@ -70,9 +70,11 @@ export default in: ->
     $("input[type='password']").not(".ninja-forms-field, .passwordbox__field").each -> new PasswordBox $(@)
 
     # DOUBLE-SUBMIT PREVENTION
-    $("form").submit ->
-        $(@).find("button, input[type='submit']").addClass "is-disabled"
-        $(@).submit (e) -> e.preventDefault()
+    $("form").submit (e) ->
+        if ($(@).hasClass("is-sending")) then e.preventDefault()
+        $(@).addClass "is-sending"
+    $("form").change ->
+        $(@).removeClass "is-sending"
 
     # PATTERN
     $("html").on "keyup", "input[data-pattern]", ->
@@ -83,3 +85,6 @@ export default in: ->
             val = val.substr(0, val.length - 1)
 
         $(@).val val
+
+    # CONDITIONAL DISPLAY
+    $("[data-showif]").each -> $(@).showif $(@).data("showif")

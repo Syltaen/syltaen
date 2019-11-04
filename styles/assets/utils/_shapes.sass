@@ -40,3 +40,15 @@
         border-bottom: $size solid transparent
         border-right: $size solid $color
         margin-left: -$size
+
+
+// ==================================================
+// > CIRCLE
+// ==================================================
+=circle($diameter: 100%, $color: false)
+    +size($diameter)
+    border-radius: 50%
+
+    @if $color
+        background: color($color)
+

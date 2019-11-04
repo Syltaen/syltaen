@@ -23,6 +23,11 @@ class CLI_Make
             ]
         );
     }
+    // Alias for static::post()
+    public static function model($name)
+    {
+        return static::post($name);
+    }
 
 
     /**

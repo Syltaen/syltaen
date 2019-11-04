@@ -533,6 +533,26 @@ abstract class PostsModel extends Model
         return wp_count_posts(static::TYPE, $perm);
     }
 
+    /**
+     * Get final slug used by the model
+     *
+     * @return void
+     */
+    public static function getCustomSlug()
+    {
+        return static::CUSTOMPATH ? static::CUSTOMPATH : static::TYPE;
+    }
+
+    /**
+     * Get the URL of this post archive
+     *
+     * @return string
+     */
+    public static function getArchiveURL()
+    {
+        return get_post_type_archive_link(static::TYPE);
+    }
+
     // ==================================================
     // > ACTIONS
     // ==================================================

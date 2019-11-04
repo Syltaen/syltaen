@@ -4,7 +4,8 @@
 $button_base_color: color(primary)
 
 %button
-    +font(16px 1.2 center white bold uppercase)
+    +font(center white bold uppercase)
+    line-height: 1.2
     position: relative
     display: inline-flex
     align-items: center
@@ -73,10 +74,19 @@ $button_base_color: color(primary)
             &:hover
                 color: white
 
+    // ==================================================
+    // > ELEMENTS
+    // ==================================================
     // ========== ICONS ========== //
-    .fa
+    .fa, .fab, .fal, .far
         margin-right: .5em
+        &.on-right
+            margin-left: .5em
+            margin-right: 0
 
+    // ==================================================
+    // > STATES
+    // ==================================================
     // ========== LOADING ========== //
     &.is-loading
         opacity: 0.5

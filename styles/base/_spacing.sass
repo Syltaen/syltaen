@@ -6,56 +6,69 @@
 // > PADDINGS
 // > Ex: .lg-padding-vertical
 // ==================================================
-@each $slug, $value  in $spacing
+@each $res, $bp in $responsive
+    +screen($res)
+        @if $res == md
+            $res: ""
+        @else
+            $res: "-#{$res}"
 
-    .#{$slug}-padding
-        padding: $value !important
+        @each $sp, $value in $spacing
+            .#{$sp}-padding#{$res}
+                padding: $value !important
 
-    .#{$slug}-padding-top
-        padding-top: $value !important
+            .#{$sp}-padding-top#{$res}
+                padding-top: $value !important
 
-    .#{$slug}-padding-bottom
-        padding-bottom: $value !important
+            .#{$sp}-padding-bottom#{$res}
+                padding-bottom: $value !important
 
-    .#{$slug}-padding-left
-        padding-left: $value !important
+            .#{$sp}-padding-left#{$res}
+                padding-left: $value !important
 
-    .#{$slug}-padding-right
-        padding-right: $value !important
+            .#{$sp}-padding-right#{$res}
+                padding-right: $value !important
 
-    .#{$slug}-padding-vertical
-        padding-top: $value !important
-        padding-bottom: $value !important
+            .#{$sp}-padding-vertical#{$res}
+                padding-top: $value !important
+                padding-bottom: $value !important
 
-    .#{$slug}-padding-horizontal
-        padding-left: $value !important
-        padding-right: $value !important
+            .#{$sp}-padding-horizontal#{$res}
+                padding-left: $value !important
+                padding-right: $value !important
+
 
 // ==================================================
 // > MARGINS
 // > Ex: .sm-margin-bottom
 // ==================================================
-@each $slug, $value  in $spacing
+@each $res, $bp in $responsive
+    +screen($res)
+        @if $res == md
+            $res: ""
+        @else
+            $res: "-#{$res}"
 
-    .#{$slug}-margin
-        margin: $value !important
+        @each $sp, $value in $spacing
+            .#{$sp}-margin#{$res}
+                margin: $value !important
 
-    .#{$slug}-margin-top
-        margin-top: $value !important
+            .#{$sp}-margin-top#{$res}
+                margin-top: $value !important
 
-    .#{$slug}-margin-bottom
-        margin-bottom: $value !important
+            .#{$sp}-margin-bottom#{$res}
+                margin-bottom: $value !important
 
-    .#{$slug}-margin-left
-        margin-left: $value !important
+            .#{$sp}-margin-left#{$res}
+                margin-left: $value !important
 
-    .#{$slug}-margin-right
-        margin-right: $value !important
+            .#{$sp}-margin-right#{$res}
+                margin-right: $value !important
 
-    .#{$slug}-margin-vertical
-        margin-top: $value !important
-        margin-bottom: $value !important
+            .#{$sp}-margin-vertical#{$res}
+                margin-top: $value !important
+                margin-bottom: $value !important
 
-    .#{$slug}-margin-horizontal
-        margin-left: $value !important
-        margin-right: $value !important
+            .#{$sp}-margin-horizontal#{$res}
+                margin-left: $value !important
+                margin-right: $value !important
