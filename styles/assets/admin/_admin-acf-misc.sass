@@ -12,3 +12,50 @@
     padding: 20px
     *:first-child
         margin-top: 0
+
+.wp-admin .acf-field select
+    padding: 4px 8px
+
+.acf-label-tooltip
+    text-indent: 0
+    +absolute(bottom 100% left 50%)
+    transform: translate(-50%, -5px)
+    +font(12px white)
+    background: #2F353E
+    border-radius: 5px
+    padding: 3px 8px
+    white-space: nowrap
+    z-index: 1000
+    opacity: 0
+    visibility: hidden
+    transition: all .15s ease
+    &::before
+        content: ""
+        border-top: 10px solid #2F353E
+        border-left: 4px solid transparent
+        border-right: 4px solid transparent
+        +absolute(top 100% left 50%)
+        margin-left: -4px
+
+    &__parent
+        position: relative
+    &__parent:hover &
+        opacity: 1
+        visibility: visible
+        transform: translate(-50%, 0)
+
+    &--right
+        +pos(left 100% top 50%)
+        bottom: auto
+        transform: translate(15px, -50%)
+        &::before
+            border-top: 4px solid transparent
+            border-bottom: 4px solid transparent
+            border-left: 0
+            border-right: 10px solid #2F353E
+            +pos(top 50% right 100%)
+            left: auto
+            margin-left: 0
+            margin-top: -4px
+    &__parent:hover &--right
+        transform: translate(10px, -50%)

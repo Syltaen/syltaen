@@ -357,7 +357,7 @@
                     "max": ""
                 }
             },
-            "button_label": "Ajouter du contenu à cette section",
+            "button_label": "Ajouter du contenu à cette colonne",
             "min": "",
             "max": ""
         }
@@ -396,5 +396,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1565070705
+    "modified": 1573723552
 }

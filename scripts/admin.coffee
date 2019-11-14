@@ -38,9 +38,14 @@ $ ->
         console.log "change"
         $(@).closest(".acf-row").css "flex", $(@).val()
 
-    # Choice input
-    $(".acf-choice .acf-input").find("label").each ->
-        $(@).append "<span>" + $(@).text() + "</span>"
+    # Label tooltips
+    $(".acf-choice .acf-input label").each ->
+        $(@).append "<span class='acf-label-tooltip'>" + $(@).text() + "</span>"
+        $(@).addClass "acf-label-tooltip__parent"
+
+    $(".acf-light-repeater > .acf-input > .acf-repeater > .acf-table > tbody > .acf-row > .acf-fields > .acf-field > .acf-input > div > .acf-actions .button, .acf-horizontal-repeater > .acf-input > .acf-repeater > .acf-actions .button").each ->
+        $(@).html "<span class='acf-label-tooltip acf-label-tooltip--right'>" + $(@).text() + "</span>"
+        $(@).addClass "acf-label-tooltip__parent"
 
 
 # =============================================================================

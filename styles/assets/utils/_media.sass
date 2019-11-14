@@ -9,33 +9,31 @@
 // >    color: red
 // ==================================================
 
-=screen($bp, $compare: "-", $dim: "width")
+=screen($max_width, $min_width: null, $max_height: null, $min_height: null)
 
-    @if map-has-key($responsive, $bp)
-        $bp: breakpoint($bp)
+    $query: "screen"
 
-    @if not $bp
+    // max width
+    @if breakpoint($max_width) != null
+        $query: $query + " and (max-width: #{breakpoint($max_width)})"
+
+    // min width
+    @if breakpoint($min_width) != null
+        $query: $query + " and (min-width: #{breakpoint($min_width)})"
+
+    // max height
+    @if breakpoint($max_height) != null
+        $query: $query + " and (max-height: #{breakpoint($max_height)})"
+
+    // min height
+    @if breakpoint($min_height) != null
+        $query: $query + " and (min-height: #{breakpoint($min_height)})"
+
+    @if $query == "screen"
         @content
-
-    // Max width
-    @else if $compare == "-"
-        @media screen and (max-#{$dim}: $bp)
-            @content
-
-    // Min width
-    @else if $compare == "+"
-        @media screen and (min-#{$dim}: $bp)
-            @content
-
-    // Between
     @else
-        @if map-has-key($responsive, $compare)
-            $compare: breakpoint($compare)
-
-        @media screen and (min-#{$dim}: $bp) and (max-#{$dim}: $compare)
+        @media #{$query}
             @content
-
-
 
 
 

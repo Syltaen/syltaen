@@ -3,33 +3,35 @@
 // =============================================================================
 
 body.login
+    background: #f5f5f5
+
     h1 a
         background: img("admin_logo.png") center center / contain no-repeat !important
-        background-size: contain
-        width: 200px
-        height: 200px
+        +size(200px)
         pointer-events: none
         &::after
             content: none
+
+    #login
+        width: auto
+        max-width: 420px
+
     form
         border-radius: 5px
+
+    .wp-pwd button
+        +font(primary)
 
     #wp-submit
         display: block
         +size(100%, 48px)
         height: 48px !important
-        margin: 40px auto 0
+        margin: 20px 0 0
         padding: 0 20px
         background: color(primary)
-        box-shadow: none
         border: 2px solid color(primary)
-        border-radius: 5px
-        resize: none
         +font(16px 42px white bold uppercase)
-        text-shadow: none
-        cursor: pointer
-        transition: all .4s ease
-
+        transition: all .34s ease
         &:hover,
         &:focus
             background: white
@@ -38,7 +40,23 @@ body.login
     #nav, #backtoblog
         text-align: center
         a
-            +font(14px white)
-            &::after
-                bottom: -4px
-                background: white
+            +font(14px)
+            &:hover
+                +font(primary)
+
+    // ==================================================
+    // > FORM
+    // ==================================================
+    input[type=checkbox]:focus,
+    input[type=email]:focus,
+    input[type=password]:focus,
+    input[type=radio]:focus,
+    input[type=text]:focus,
+    select:focus,
+    textarea:focus
+        border-color: color(primary)
+        box-shadow: 0 0 0 1px color(primary)
+
+    select:hover,
+    select:focus
+        color: color(primary)

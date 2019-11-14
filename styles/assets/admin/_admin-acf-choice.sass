@@ -15,35 +15,7 @@
 
     label
         text-indent: -9999px
-        position: relative
         display: block
-
-        span
-            text-indent: 0
-            +absolute(bottom 100% left 50%)
-            transform: translate(-50%, -5px)
-            +font(12px)
-            font-weight: bold
-            background: #eee
-            padding: 3px 8px
-            white-space: nowrap
-            z-index: 1000
-            opacity: 0
-            visibility: hidden
-            transition: all .35s ease
-            &::before
-                content: ""
-                border-top: 10px solid #eee
-                border-left: 4px solid transparent
-                border-right: 4px solid transparent
-                +absolute(top 100% left 50%)
-                margin-left: -4px
-
-        &:hover span
-            opacity: 1
-            visibility: visible
-            transform: translate(-50%, 0)
-
 
     input
         +absolute(top 0 left 0)
@@ -99,7 +71,7 @@
             +size(50px, 30px)
             border-radius: 0
             border: 0
-            background: #F5F5F5
+            background: #ccc
             position: absolute !important
             opacity: .4
 

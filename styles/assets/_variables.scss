@@ -52,15 +52,18 @@ $fonts-stacks: (
 $responsive: (
     md: (
         breakpoint: null,
-        container: 960px
+        container: 960px,
+        spacingratio: 1
     ),
     sm: (
         breakpoint: 1040px,
-        container: 600px
+        container: 600px,
+        spacingratio: .75
     ),
     xs: (
         breakpoint: 640px,
-        container: 300px
+        container: 300px,
+        spacingratio: .5
     )
 );
 

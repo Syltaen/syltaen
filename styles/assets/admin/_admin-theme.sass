@@ -4,6 +4,11 @@
 
 .admin-color-fresh,
 .logged-in.admin-bar
+
+    // ==================================================
+    // > ADMIN
+    // ==================================================
+    // Site name
     #wp-admin-bar-site-name > a:before
         content: "" !important
         height: 32px
@@ -12,6 +17,7 @@
         padding: 0
         background: img("admin_logo.png") center center / contain no-repeat !important
 
+    // Clean admin bar
     #wp-admin-bar-wp-logo,
     #wp-admin-bar-comments,
     #wp-admin-bar-updates,
@@ -19,29 +25,7 @@
     .update-plugins
         display: none !important
 
-    #adminmenu,
-    #adminmenuback,
-    #adminmenuwrap
-        background: #333
-
-    #adminmenu .wp-submenu
-        background: #444
-
-    #adminmenu div.wp-menu-image:before,
-    #adminmenu li a:focus div.wp-menu-image:before, #adminmenu li.opensub div.wp-menu-image:before, #adminmenu li:hover div.wp-menu-image:before
-        color: #555
-    #adminmenu .current div.wp-menu-image:before, #adminmenu .wp-has-current-submenu div.wp-menu-image:before, #adminmenu a.current:hover div.wp-menu-image:before, #adminmenu a.wp-has-current-submenu:hover div.wp-menu-image:before, #adminmenu li.wp-has-current-submenu a:focus div.wp-menu-image:before, #adminmenu li.wp-has-current-submenu.opensub div.wp-menu-image:before, #adminmenu li.wp-has-current-submenu:hover div.wp-menu-image:before
-        color: white
-
-    #adminmenu .wp-has-current-submenu .wp-submenu .wp-submenu-head,
-    #adminmenu .wp-menu-arrow,
-    #adminmenu .wp-menu-arrow div,
-    #adminmenu li.current a.menu-top,
-    #adminmenu li.wp-has-current-submenu a.wp-has-current-submenu,
-    .folded #adminmenu li.current.menu-top,
-    .folded #adminmenu li.wp-has-current-submenu
-        background: color(primary)
-
+    // Text color
     #wpadminbar .ab-top-menu>li.hover>.ab-item,
     #wpadminbar.nojq .quicklinks .ab-top-menu>li>.ab-item:focus,
     #wpadminbar:not(.mobile) .ab-top-menu>li:hover>.ab-item,
@@ -71,6 +55,32 @@
     #wpadminbar>#wp-toolbar li.hover span.ab-label
         color: color(primary)
 
+    // ==================================================
+    // > ADMIN MENU
+    // ==================================================
+    #adminmenu,
+    #adminmenuback,
+    #adminmenuwrap
+        background: #333
+
+    #adminmenu .wp-submenu
+        background: #444
+
+    #adminmenu div.wp-menu-image:before,
+    #adminmenu li a:focus div.wp-menu-image:before, #adminmenu li.opensub div.wp-menu-image:before, #adminmenu li:hover div.wp-menu-image:before
+        color: #555
+    #adminmenu .current div.wp-menu-image:before, #adminmenu .wp-has-current-submenu div.wp-menu-image:before, #adminmenu a.current:hover div.wp-menu-image:before, #adminmenu a.wp-has-current-submenu:hover div.wp-menu-image:before, #adminmenu li.wp-has-current-submenu a:focus div.wp-menu-image:before, #adminmenu li.wp-has-current-submenu.opensub div.wp-menu-image:before, #adminmenu li.wp-has-current-submenu:hover div.wp-menu-image:before
+        color: white
+
+    #adminmenu .wp-has-current-submenu .wp-submenu .wp-submenu-head,
+    #adminmenu .wp-menu-arrow,
+    #adminmenu .wp-menu-arrow div,
+    #adminmenu li.current a.menu-top,
+    #adminmenu li.wp-has-current-submenu a.wp-has-current-submenu,
+    .folded #adminmenu li.current.menu-top,
+    .folded #adminmenu li.wp-has-current-submenu
+        background: color(primary)
+
 
     #adminmenu .wp-submenu a:focus, #adminmenu .wp-submenu a:hover, #adminmenu a:hover, #adminmenu li.menu-top>a:focus,
     #adminmenu li.menu-top:hover, #adminmenu li.opensub>a.menu-top, #adminmenu li>a.menu-top:focus,
@@ -78,14 +88,56 @@
         color: color(primary)
 
 
+    // ==================================================
+    // > BUTTONS
+    // ==================================================
+    &.wp-core-ui .button,
+    &.wp-core-ui .button-secondary
+        color: color(primary)
+        border-color: color(primary)
+        &.focus,
+        &:focus
+            box-shadow: 0 0 0 1px color(primary)
+
     &.wp-core-ui .button-primary
         background: color(primary)
-        border-color: darken(color(primary), 5%) darken(color(primary), 10%) darken(color(primary), 10%)
-        box-shadow: 0 1px 0 darken(color(primary), 10%)
-        text-shadow: 0 -1px 1px darken(color(primary), 10%), 1px 0 1px darken(color(primary), 10%), 0 1px 1px darken(color(primary), 10%), -1px 0 1px darken(color(primary), 10%)
+        border-color: color(primary)
         color: white
+        &.focus,
+        &.hover,
+        &:focus,
         &:hover
             background: darken(color(primary), 5%)
+            border-color: darken(color(primary), 5%)
+        &.focus,
+        &:focus
+            box-shadow: 0 0 0 1px #fff, 0 0 0 3px color(primary)
 
-    &.wp-core-ui .button.button-primary.button-hero
-        box-shadow: 0 2px 0 darken(color(primary), 10%)
+
+    // ==================================================
+    // > FORM
+    // ==================================================
+    input[type=checkbox]:focus,
+    input[type=color]:focus,
+    input[type=date]:focus,
+    input[type=datetime-local]:focus,
+    input[type=datetime]:focus,
+    input[type=email]:focus,
+    input[type=month]:focus,
+    input[type=number]:focus,
+    input[type=password]:focus,
+    input[type=radio]:focus,
+    input[type=search]:focus,
+    input[type=tel]:focus,
+    input[type=text]:focus,
+    input[type=time]:focus,
+    input[type=url]:focus,
+    input[type=week]:focus,
+    select:focus,
+    textarea:focus
+        border-color: color(primary)
+        box-shadow: 0 0 0 1px color(primary)
+
+    select:hover,
+    select:focus
+        color: color(primary)

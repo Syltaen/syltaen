@@ -17,9 +17,19 @@
 // ==================================================
 
 // ========== BREAKPOINTS ========== //
-@function breakpoint($slug)
-    $resp: list_get($responsive, $slug)
-    @return list_get($resp, breakpoint)
+@function breakpoint($slug: null)
+
+    @if not $slug
+        @return null
+
+    @if $slug == null
+        @return null
+
+    @if map-has-key($responsive, $slug)
+        $resp: list_get($responsive, $slug)
+        @return list_get($resp, breakpoint)
+    @else
+        @return $slug
 
 
 // ========== CONTAINERS ========== //

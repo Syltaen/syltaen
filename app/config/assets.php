@@ -76,6 +76,5 @@ Files::addScript("admin.js", [], "admin_enqueue_scripts");
 Files::addStyle("admin.css", [], "admin_enqueue_scripts");
 
 add_action("login_head", function () {
-    echo '<link rel="stylesheet" type="text/css" href="' . Files::url("build/css/bundle.css") .'" />';
     echo '<link rel="stylesheet" type="text/css" href="' . Files::url("build/css/admin.css") .'" />';
 });

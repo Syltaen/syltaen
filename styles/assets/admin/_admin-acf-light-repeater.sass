@@ -12,12 +12,14 @@
                     +size(10px)
                     padding: 0
                     opacity: 0
-                    &:hover
-                        opacity: 1
+                    // &:hover
+                    //     opacity: 1
                     &.order
                         height: 15px
                         line-height: 15px
                         +font(10px)
+                &:hover > .acf-row-handle
+                    opacity: 1
                 & > .acf-fields
                     border: 0
                     & > .acf-field
@@ -27,13 +29,14 @@
                     & > .acf-field > .acf-input > div >
                         .acf-actions
                             +flex(row nowrap, center)
+
                             .button
-                                overflow: hidden
+                                display: block
                                 text-shadow: none
                                 background: #F5F5F5
                                 border: 1px solid #F5F5F5
                                 box-shadow: none
-                                +font(#F5F5F5)
+                                +font(white)
                                 +size(30px)
                                 position: relative
                                 border-radius: 50%
@@ -41,9 +44,10 @@
                                     content: "+"
                                     +absolute(top 0 left 0)
                                     +size(100%)
-                                    +font(20px #72777c center)
+                                    +font(20px 25px #72777c center)
                                 &:hover
                                     background: color(primary)
                                     +font(primary)
+                                    border-color: color(primary)
                                     &::before
                                         +font(white)
