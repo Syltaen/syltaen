@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Syltaen\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-29 10:29+0000\n"
+"POT-Creation-Date: 2019-07-29 10:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -106,14 +106,6 @@ msgstr ""
 
 #: app/Forms/Fields/FieldAdvancedListSelect.php:13
 msgid "Choisir (avancé)"
-msgstr ""
-
-#: app/Forms/Fields/FieldFileUpload.php:40
-msgid "Types de fichiers authorisés"
-msgstr ""
-
-#: app/Forms/Fields/FieldFileUpload.php:100
-msgid "Ne cocher que si c'est nécéssaire"
 msgstr ""
 
 #: app/hooks/actions/_actions-users.php:12

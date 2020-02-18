@@ -133,18 +133,6 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                     "wrapper" => false
                 ],
                 [
-                    "title"   => "Titre 2 - H2 - alternatif",
-                    "block"   => "h2",
-                    "wrapper" => false,
-                    "classes" => "alt-title"
-                ],
-                [
-                    "title"   => "Titre 2 - H2 - alternatif blanc",
-                    "block"   => "h2",
-                    "wrapper" => false,
-                    "classes" => "alt-title alt-title--white"
-                ],
-                [
                     "title"   => "Titre 3 - H3",
                     "block"   => "h3",
                     "wrapper" => false
@@ -181,12 +169,6 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                     "title"    => "Bouton pleine largueur",
                     "selector" => "a",
                     "classes"  => "button button--fullwidth",
-                    "wrapper"  => false
-                ],
-                [
-                    "title"    => "Lien à crochets",
-                    "selector" => "a",
-                    "classes"  => "croched-link",
                     "wrapper"  => false
                 ],
                 [

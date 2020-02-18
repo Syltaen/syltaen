@@ -70,17 +70,6 @@ html(lang=site.language)
                         block aside
                             //- .site-aside
 
-
-                        //- ========== MESSAGES ========== -//
-                        block messages
-                            //- if error_message || success_message
-                            //-     .container
-                            //-         if error_message
-                            //-             p.page-message.page-message--error.color-white!= error_message
-                            //-         if success_message
-                            //-             p.page-message.page-message--success.color-white!= success_message
-
-
                         //- ========== CONTENT ========== -//
                         block sections
                             include ../includes/_sections
@@ -106,6 +95,20 @@ html(lang=site.language)
 
         .site-mobilenav
             nav.site-mobilenav__nav!= site.menus.mobile
+
+
+        //- ==================================================
+        //- > ERROR & SUCCESS MESSAGES
+        //- ==================================================
+        block messages
+            if error_message
+                p.site-message.site-message--error.color-white
+                    span.site-message__close
+                    != error_message
+            if success_message
+                p.site-message.site-message--success.color-white
+                    span.site-message__close
+                    != success_message
 
 
         //- ==================================================

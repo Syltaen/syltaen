@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Syltaen\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-29 10:30+0000\n"
+"POT-Creation-Date: 2020-02-18 08:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -30,10 +30,6 @@ msgstr ""
 msgid "Recherche pour : "
 msgstr ""
 
-#: app/Forms/_syltaen_ninjaforms_autoload.php:136
-msgid "Valeurs requises"
-msgstr ""
-
 #: app/config/shortcodes.php:39
 msgid "Adresse e-mail"
 msgstr ""
@@ -44,23 +40,24 @@ msgstr ""
 
 #. > 404.pug;
 #: app/lang/view-strings.php:11
-#: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:476
+#: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:677
 msgid "Erreur 404"
 msgstr ""
 
 #: app/lang/view-strings.php:12
-#: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:488
-msgid "Cette page n'existe pas"
+#: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:719
+msgid "Désolé, cette page n'existe pas ou plus."
 msgstr ""
 
 #: app/lang/view-strings.php:13
-#: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:500
+#: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:731
 msgid "Retour à l'accueil"
 msgstr ""
 
 #. > _card-news.pug;
 #: app/lang/view-strings.php:17
 #: app/cache/pug-php/iRSob5JvPI4qG-xzGMZecd4ZaHfbTa5SOLk4Q47N8vw.php:440
+#: app/cache/pug-php/axcrJjKVZshFGNNpT5Uva2CU5jXAPvP-EMuuKd3qyUE.php:622
 #: app/cache/pug-php/axcrJjKVZshFGNNpT5Uva2CU5jXAPvP-EMuuKd3qyUE.php:745
 msgid "Lire plus"
 msgstr ""
@@ -122,6 +119,10 @@ msgstr ""
 
 #: app/hooks/actions/_actions-users.php:32
 msgid "Votre compte doit être validé pour pouvoir vous connecter."
+msgstr ""
+
+#: app/lib/plugin/form_register.php:127
+msgid "Valeurs requises"
 msgstr ""
 
 #. Name of the theme

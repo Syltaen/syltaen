@@ -180,7 +180,7 @@ abstract class BaseController extends Controller
         $error = $error ? $error : "Veuillez vous connecter pour accéder à cette page.<br>Une problème ? <a href=".site_url("contact").">Contactez un administrateur.</a>";
 
         if (!Users::isLogged()) {
-            (new Controller)->error($error, false, $page . "?ref=" . $post->ID . "&" . $_SERVER["QUERY_STRING"]);
+            (new Controller)->error($error, $page . "?ref=" . $post->ID . "&" . $_SERVER["QUERY_STRING"]);
         }
     }
 
@@ -198,7 +198,7 @@ abstract class BaseController extends Controller
         $error = $error ? $error : "Vous n'avez pas le droit d'accéder à cette page.<br>Une problème ? <a href=".site_url("contact").">Contactez un administrateur.</a>";
 
         if (!$this->user->can($roles, "any")) {
-            (new Controller)->error($error, false, $page . "?ref=" . $post->ID . "&" . $_SERVER["QUERY_STRING"]);
+            (new Controller)->error($error, $page . "?ref=" . $post->ID . "&" . $_SERVER["QUERY_STRING"]);
         }
     }
 

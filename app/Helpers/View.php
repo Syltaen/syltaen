@@ -49,27 +49,29 @@ class View
      * @param string $classes List of classes to add to the menu
      * @return string HTML output
      */
-    public static function menu($menu, $menu_classes = "", $link_classes = "", $custom_options = [])
+    public static function menu($menu, $menu_classes = "menu", $item_classes = "", $link_classes = "", $custom_options = [], $custom_processing = false)
     {
         $menu = wp_nav_menu(array_merge([
             "menu"           => $menu,
             "theme_location" => is_string($menu) ? $menu : false,
-            "menu_class"     => "menu " . $menu_classes,
+            "menu_class"     => $menu_classes,
             "container"      => "ul",
             "echo"           => false
         ], $custom_options));
-
 
         // Remove all IDs
         $menu = preg_replace("/id=\"[^\"]+\"\s?/", "", $menu);
 
         // Replace classes
-        $menu = preg_replace("/menu-item-/", "menu__item--", $menu);
-        $menu = preg_replace("/menu-item/", "menu__item", $menu);
-        $menu = preg_replace("/sub-menu/", "menu__sub", $menu);
+        $menu = preg_replace("/menu-item-/", "{$menu_classes}__item--", $menu);
+        $menu = preg_replace("/menu-item/", "{$menu_classes}__item", $menu);
+        $menu = preg_replace("/sub-menu/", "{$menu_classes}__sub ", $menu);
 
         // Add anchor classes
-        $menu = preg_replace("/<a/", "<a class=\"menu__link $link_classes\"", $menu);
+        $menu = preg_replace("/<a/", "<a class=\"{$menu_classes}__link $link_classes\"", $menu);
+
+        // Custom processing
+        if ($custom_processing) $menu = $custom_processing($menu);
 
         // wp_send_json($menu);
         return $menu;

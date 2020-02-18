@@ -11,6 +11,7 @@ import "./../tools/jquery.showif.coffee"
 import "./../tools/jquery.collapsable.coffee"
 import "./../tools/jquery.scrollnav.coffee"
 import "./../tools/jquery.incrementor.coffee"
+import "./../tools/jquery.siteMessage.coffee"
 
 export default in: ->
 
@@ -53,6 +54,8 @@ export default in: ->
     # CONFIRM POPUP
     $("[data-confirm]").each -> new ConfirmationModal $(@)
 
+    # SITE MESSAGE
+    $(".site-message").siteMessage()
 
     # =============================================================================
     # > FORMS

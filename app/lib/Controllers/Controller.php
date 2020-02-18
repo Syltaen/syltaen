@@ -251,7 +251,7 @@ class Controller
     // ==================================================
     // > MESSAGES : Errors, success, warnings...
     // ==================================================
-    public function message($message, $replace_content = false, $redirection = false, $message_key = "message")
+    public function message($message, $redirection = false, $replace_content = false, $message_key = "message")
     {
         $message_data = [
             $message_key    => $message,
@@ -269,16 +269,16 @@ class Controller
     /**
      * Shortcut to send an error message
      */
-    public function error($message, $replace_content = false, $redirection = false)
+    public function error($message, $redirection = false, $replace_content = false)
     {
-        $this->message($message, $replace_content, $redirection, "error_message");
+        $this->message($message, $redirection, $replace_content, "error_message");
     }
 
     /**
      * Shortcut to Send a success message
      */
-    public function success($message, $replace_content = false, $redirection = false)
+    public function success($message, $redirection = false, $replace_content = false)
     {
-        $this->message($message, $replace_content, $redirection, "success_message");
+        $this->message($message, $redirection, $replace_content, "success_message");
     }
 }
