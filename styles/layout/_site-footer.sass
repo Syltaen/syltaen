@@ -4,20 +4,38 @@
 
 .site-footer
     clear: both
-    padding: 13px 0 9px
-    +font(14px 15px light #959595)
-    background: color(dark-grey)
+
+    // =============================================================================
+    // > TOP
+    // =============================================================================
+    &__top
+        background: color(light-grey)
+        padding: 1em 0
+
+    // =============================================================================
+    // > BOTTOM
+    // =============================================================================
+    &__bottom
+        padding: 5px 0
+        background: white
+        +font(12px #7B7E7F)
+        +screen(xs)
+            padding: 10px 0
+            +font(14px 30px)
 
     &__menu
-        &, li
-            float: left
-        a
-            color: #959595
-            padding: 0 5px
-            border-right: 1px solid #959595
-            &::after
-                display: none
+        +flex(row nowrap)
+        margin: 0 -10px
+        +screen(xs)
+            flex-direction: column
+        &__item
+            padding: 0 10px
+
+        &__link
+            +font(#7B7E7F)
             &:hover
-                color: white
-        li:last-child a
-            border-right: 0
+                +font(primary)
+
+
+    &__copyright
+        margin: 0

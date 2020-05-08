@@ -25,7 +25,7 @@ class RowsProcessor extends DataProcessor
 
         // Columns
         $row["columns"] = $this->processColumns($row);
-        $row["light"]   = count($row["columns"]) <= 1;
+        $row["light"]   = count($row["columns"]) <= 1 && $row["animation"] == "none";
 
         return $row;
     }
@@ -40,7 +40,7 @@ class RowsProcessor extends DataProcessor
     {
         $i = 0;
 
-        return array_map(function ($col) use ($row, $i) {
+        return array_map(function ($col) use ($row, &$i) {
 
             $col["styles"]  = [];
             $col["classes"] = [];

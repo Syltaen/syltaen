@@ -15,4 +15,153 @@ block intro
 //- > SECTIONS
 //- ==================================================
 block sections
-    section.site-section.md-padding-vertical.bg-white: .container
+    section.site-section.md-padding-vertical.bg-white: .container.clearfix
+
+
+        p.color-medium-grey.font-bold TITRES & TEXTS
+        hr.no-margin-top
+        h1 Titre de niveau 1
+        p Lorem ipsum dolor sit amet consectetur <strong>adipisicing elit</strong>. Aspernatur ad, id corrupti numquam <span class="color-primary">ipsam voluptatibus architecto</span> enim accusamus impedit veniam soluta, natus distinctio iusto magni commodi, <span class="font-light">inventore amet voluptas</span> officia!
+        h2 Titre de niveau 2
+        p Lorem ipsum dolor sit amet consectetur <strong>adipisicing elit</strong>. Aspernatur ad, id corrupti numquam <span class="color-primary">ipsam voluptatibus architecto</span> enim accusamus impedit veniam soluta, natus distinctio iusto magni commodi, <span class="font-light">inventore amet voluptas</span> officia!
+        h3 Titre de niveau 3
+        p Lorem ipsum dolor sit amet consectetur <strong>adipisicing elit</strong>. Aspernatur ad, id corrupti numquam <span class="color-primary">ipsam voluptatibus architecto</span> enim accusamus impedit veniam soluta, natus distinctio iusto magni commodi, <span class="font-light">inventore amet voluptas</span> officia!
+        h4 Titre de niveau 4
+        p Lorem ipsum dolor sit amet consectetur <strong>adipisicing elit</strong>. Aspernatur ad, id corrupti numquam <span class="color-primary">ipsam voluptatibus architecto</span> enim accusamus impedit veniam soluta, natus distinctio iusto magni commodi, <span class="font-light">inventore amet voluptas</span> officia!
+        h5 Titre de niveau 5
+        p Lorem ipsum dolor sit amet consectetur <strong>adipisicing elit</strong>. Aspernatur ad, id corrupti numquam <span class="color-primary">ipsam voluptatibus architecto</span> enim accusamus impedit veniam soluta, natus distinctio iusto magni commodi, <span class="font-light">inventore amet voluptas</span> officia!
+        h6 Titre de niveau 6
+        p Lorem ipsum dolor sit amet consectetur <strong>adipisicing elit</strong>. Aspernatur ad, id corrupti numquam <span class="color-primary">ipsam voluptatibus architecto</span> enim accusamus impedit veniam soluta, natus distinctio iusto magni commodi, <span class="font-light">inventore amet voluptas</span> officia!
+
+
+        p.bg-light-grey.sm-padding.sm-margin-vertical Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat dolores neque animi tempora magnam, ad saepe, praesentium dignissimos dolor nam quam et temporibus! Libero nulla provident eos exercitationem aut minima.
+
+
+        p.color-medium-grey.font-bold.md-margin-top BOUTONS, LIENS & TOOLTIPS
+        hr.no-margin-top
+        .flex-row
+            p.flex-row__item: a Un lien normal
+            p.flex-row__item Une bulle d'info <span class="tooltip tooltip--info"><span class="tooltip__message">Un message</span></>
+        .flex-row
+            .flex-row__item
+                span.tooltip(style="display: inline-block;")
+                    a.button Bouton normal
+                    span.tooltip__message Ceci est un message de tooltip
+
+                p: a.button.button--reversed Bouton inversé
+                p: a.button.button--reversed.button--secondary Bouton inversé secondaire
+
+            .flex-row__item
+                span.tooltip.tooltip--onright.tooltip--secondary(style="display: inline-block;")
+                    a.button Bouton primaire
+                    span.tooltip__message Ceci est un message de tooltip
+                p: a.button.button--secondary Bouton secondaire
+                p: a.button.button--text Bouton text
+
+            .flex-row__item
+                p: a.button.button--small Bouton small
+                p: a.button.button--medium Bouton medium
+                p: a.button.button--big Bouton big
+
+
+        p.color-medium-grey.font-bold.md-margin-top LISTES
+        hr.no-margin-top
+        .flex-row
+            .flex-row__item: ul
+                li Liste à puces
+                li Liste à puces
+                li Liste à puces
+            .flex-row__item: ul.list.list--arrows
+                li Liste à puces
+                li Liste à puces
+                li Liste à puces
+            .flex-row__item: ul.list.list--angles
+                li Liste à puces
+                li Liste à puces
+                li Liste à puces
+            .flex-row__item: ol
+                li Liste à puces
+                li Liste à puces
+                li Liste à puces
+
+
+        p.color-medium-grey.font-bold.md-margin-top ASCENCEURS
+        hr.no-margin-top
+        .collapsable
+            header.collapsable__header Ascenceur
+            .collapsable__content
+                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
+                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
+                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
+                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
+
+
+
+
+        p.color-medium-grey.font-bold.md-margin-top TABLEAUX
+        hr.no-margin-top
+        table
+            tr: th(colspan="3") Tableau
+            tr
+                td -
+                td -
+                td -
+            tr
+                td -
+                td -
+                td -
+            tr
+                td -
+                td -
+                td -
+
+        p.color-medium-grey.font-bold.md-margin-top FORMULAIRES
+        hr.no-margin-top
+        form
+            .flex-row.flex-row--spacing-sm
+                fieldset.flex-row__item
+                    label Texte
+                    input(type="text")
+                fieldset.flex-row__item
+                    label Mot de passe
+                    input(type="password")
+
+            .flex-row.flex-row--spacing-sm
+                fieldset.flex-row__item
+                    ul.list.list--choices
+                        li.list__item: label.list__label
+                            input.list__bullet(type="checkbox" checked="checked")
+                            |Case à cocher
+                        li.list__item: label.list__label
+                            input.list__bullet(type="checkbox")
+                            |Case à cocher
+                        li.list__item: label.list__label.is-disabled
+                            input.list__bullet(type="checkbox")
+                            |Case à cocher
+                fieldset.flex-row__item
+                    ul.list.list--choices
+                        li.list__item: label.list__label
+                            input.list__bullet(type="radio" name="radio" checked="checked")
+                            |Bouton radio
+                        li.list__item: label.list__label
+                            input.list__bullet(type="radio" name="radio")
+                            |Bouton radio
+                        li.list__item: label.list__label.is-disabled
+                            input.list__bullet(type="radio" name="radio")
+                            |Bouton radio
+
+            .flex-row.flex-row--spacing-sm
+                fieldset.flex-row__item
+                    label Select
+                    select
+                        option Option 1
+                        option Option 2
+                        option Option 3
+                fieldset.flex-row__item
+                    label Multi-Select
+                    select(multiple)
+                        option Option 1
+                        option Option 2
+                        option Option 3
+
+            input(type="submit" value="Envoyer")

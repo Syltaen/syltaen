@@ -9,13 +9,21 @@ import $ from "jquery"
 
 export default class Shadowbox
 
-    constructor: ->
+    constructor: (@removeOnHide = true) ->
         @$html = $("html")
         @$body = $("body")
         @addNew()
-        @$sb.on "click", "[data-action='close']", (e) =>
-            if $(e.target).data("action") == "close" # no bubling
-                @hide()
+
+        # Close on click, with strict target checking
+        @$closeTarget = false
+        @$sb.on "mousedown", "[data-action='close']", (e) =>
+            if $(e.target).data("action") == "close"
+                @$closeTarget = $(e.target)
+        @$sb.on "mouseup", "[data-action='close']", (e) =>
+            if $(e.target).data("action") == "close"
+                if @$closeTarget && @$closeTarget.is($(e.target)) then @hide()
+            @$closeTarget = false
+
 
     addNew: ->
         @$sb      = $("<div class='shadowbox'></div>")
@@ -26,6 +34,8 @@ export default class Shadowbox
 
         return @$sb
 
+    remove: ->
+        @$sb.remove()
 
     # ==================================================
     # > CONTENTS
@@ -50,6 +60,12 @@ export default class Shadowbox
         @$content.html html
         return @
 
+    modal: (html) ->
+        if html
+            @$content.html "<div class='shadowbox__modal'>#{html}</div>"
+        else
+            @$content.html "<div class='shadowbox__modal is-loading'></div>"
+        return @
 
     # ==================================================
     # > ACTIONS
@@ -61,10 +77,13 @@ export default class Shadowbox
         return this
 
     hide: (speed = 350) ->
-        @$sb.fadeOut speed
+        @$sb.fadeOut speed, => if @removeOnHide then @remove()
         @$sb.removeClass "is-shown"
         @$html.removeClass "is-scroll-locked"
         return this
+
+    setScrollable: ->
+        @$sb.addClass "shadowbox--scrollable"
 
     # ==================================================
     # > CHECKERS

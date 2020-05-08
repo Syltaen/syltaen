@@ -33,18 +33,17 @@ html(lang=site.language)
                     header(role="navigation").site-header
 
                         nav.site-header__nav.container
-                            .row
-                                .gr-2
-                                    a.site-header__brand(href=site.url rel="home")= site.name
 
-                                .gr-10
-                                    ul.site-header__social.social.social--header
-                                        each soc in site.header.social
-                                            li.social__item
-                                                a.social__link(href=soc.link.url target=soc.link.target title=soc.link.title)
-                                                    != soc.icon
+                            a.site-header__brand(href=site.url rel="home")= site.name
 
-                                    != site.menus.main
+                            != site.menus.main
+
+                            ul.site-header__social.social
+                                each soc in site.header.social
+                                    li.social__item
+                                        a.social__link(href=soc.link.url target=soc.link.target title=soc.link.title)
+                                            != soc.icon
+
 
 
                 //- ==================================================
@@ -80,8 +79,15 @@ html(lang=site.language)
                 //- ==================================================
                 block footer
                     footer.site-footer(role="contentinfo")
-                        .container
+                        .site-footer__top: .container.flex-row.flex-row--responsive-xs
+                            .flex-row__item.site-footer__col!= site.footer.col_1
+                            .flex-row__item.site-footer__col!= site.footer.col_2
+                            .flex-row__item.site-footer__col!= site.footer.col_3
+
+                        .site-footer__bottom: .container.flex-row.flex-justify-space-between.flex-row--responsive-xs
                             != site.menus.footer
+
+                            p.site-footer__copyright!= site.footer.copyright
 
 
         //- ==================================================

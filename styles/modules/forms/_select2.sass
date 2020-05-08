@@ -157,16 +157,16 @@ $tag-remove-hover-color: color(error)
             white-space: nowrap
             line-height: $input-height
 
+        &--multiple &__rendered
+            line-height: $input-height - 4px
+            min-height: $input-height - 2px
+
         &--multiple &__choice
             background-color: $tag-background
             border: $tag-border
             border-radius: $tag-border-radius
             cursor: default
             float: left
-
-            height: $input-height
-            line-height: $input-height
-            margin: 3px
             padding: 0 5px
 
             &__remove
@@ -196,8 +196,7 @@ $tag-remove-hover-color: color(error)
             float: left
         &--inline &
             &__field
-                height: $input-height
-                height: calc($input-height - 2px)
+                height: $input-height - 3px
                 border: none
                 padding: 0
                 background: $input-background

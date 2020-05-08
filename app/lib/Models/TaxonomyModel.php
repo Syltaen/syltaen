@@ -11,6 +11,7 @@ abstract class TaxonomyModel
     const PUBLIK       = true;
     const ADMIN_COLS   = true;
     const HIERARCHICAL = true;
+    const HAS_PAGE     = false;
 
     protected $taxonomy;
     protected $taxonomyFields;
@@ -207,7 +208,7 @@ abstract class TaxonomyModel
      *        Each field should be in an option page ($taxonomyFieldsOptionPage).
      * @return self
      */
-    protected function populateTaxonomyFields()
+    public function populateTaxonomyFields()
     {
         if ($this->taxonomyFields && $this->taxonomyFieldsOptionPage && !empty($this->taxonomyFields)) {
             Data::store($this->taxonomy, $this->taxonomyFields, $this->taxonomyFieldsOptionPage);
@@ -220,9 +221,16 @@ abstract class TaxonomyModel
      *
      * @return self
      */
-    protected function populateTermFields(&$term)
+    public function populateTermFields(&$term)
     {
+        // Fields
         Data::store($term, $this->termsFields, "term_".$term->term_id);
+
+        // Public URL
+        if (static::HAS_PAGE) {
+            $term->url = get_term_link($term->slug, static::SLUG);
+        }
+
         return $this;
     }
 
@@ -261,7 +269,7 @@ abstract class TaxonomyModel
                 "name"           => static::NAME
             ],
             "public"             => static::PUBLIK,
-            "publicly_queryable" => false,
+            "publicly_queryable" => static::HAS_PAGE,
             "show_admin_column"  => static::ADMIN_COLS,
             "hierarchical"       => static::HIERARCHICAL,
             "description"        => static::DESC

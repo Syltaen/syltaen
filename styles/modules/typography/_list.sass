@@ -106,42 +106,12 @@ ul:not([class]),
     padding-left: 1.5em
     & > .list__item input.list__bullet,
     & > li input.list__bullet
-        +absolute(top .25em left -1.5em)
+        +absolute(top 0 left -1.5em)
 
-    // ========== EMBEDED ========== //
-    &--embeded
-        margin-left: -1em
-        padding-left: 2em
-        margin-top: -.25em
-        padding-top: .5em
-        overflow: hidden
-
-    &--embeded > .list__item,
-    &--embeded > li,
-    &--embeded > .list__item input.list__bullet,
-    &--embeded > li input.list__bullet
-        font-size: .9em
-
-    // Horizontal bars
-    &--embeded > .list__item::before,
-    &--embeded > li::before
-        content: ""
-        +size(10em, 2px)
-        background: color(medium-grey)
-        +absolute(top .75em right 100%)
-        left: auto
-        transform: translate(-1em)
-        z-index: -1
-
-    // Vertical bar
-    &--embeded > .list__item:last-child::after,
-    &--embeded > li:last-child::after
-        content: ""
-        +size(2px, 999em)
-        +absolute(bottom 100% left -2.25em)
-        transform: translateY(.75em)
-        background: color(medium-grey)
-
+    & > .list__item .list__label,
+    & > li .list__label
+        margin: 0
+        +font(regular)
 
 // =============================================================================
 // > COLLAPSABLE

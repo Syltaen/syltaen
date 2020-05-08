@@ -2,6 +2,11 @@
 //- > VIEW : INCLUDE - SECTIONS
 //- =============================================================================
 
+mixin colcontent(col)
+    if col.content
+        each c in col.content
+            include _contents
+
 //- ==================================================
 //- > COLLAPSABLE
 //- ==================================================
@@ -25,18 +30,14 @@ mixin sectionrow(row)
         //- Light markup when there is only one column
         if row.light
             each col in row.columns
-                if col.content
-                    each c in col.content
-                        include _contents
+                +colcontent(col)
 
         //- Display columns when there are more than one
         else
             .flex-row(class=row.classes)&attributes(row.attrs)
                 each col in row.columns
                     .flex-row__item(style=col.styles class=col.classes)
-                        if col.content
-                            each c in col.content
-                                include _contents
+                        +colcontent(col)
 
 
 //- ==================================================

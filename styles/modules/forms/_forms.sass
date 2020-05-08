@@ -96,6 +96,7 @@ textarea
 input[type="radio"],
 input[type="checkbox"]
     +size(1em)
+    min-width: 1em
     appearance: none
     position: relative
     margin: .2em .5em 0 0
@@ -144,18 +145,16 @@ input[type="radio"]
 input[type="submit"],
 input[type="button"],
 .form__submit
-    @extend %button
+    background: color(primary)
+    +font(white center uppercase)
+    width: auto
     margin-top: 1.85em // label lh + label mb
     clear: both
     float: right
-    background: color(primary)
+    border: 0
+    cursor: pointer
     &:hover
-        background: none
-        +font(primary)
-    +screen(xs)
-        max-width: 100%
-        white-space: pre-wrap
-        height: auto
+        background: color(secondary)
 
     .loading &,
     .is-loading &,

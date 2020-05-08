@@ -290,11 +290,11 @@
 	$statesCount : length($_gridle_states);
 	$i : 0;
 	@each $stateName, $state in $_gridle_states {
-	
+
 		$name : $stateName;
 
 		$gridle-settings-states : "#{$gridle-settings-states} \"#{$name}\":{";
-	
+
 		@each $varName, $var in $state {
 
 			$value : null;
@@ -327,7 +327,7 @@
 		} @else {
 			$gridle-settings-states : "#{$gridle-settings-states} },";
 		}
-	
+
 		// update i :
 		$i : $i + 1;
 
@@ -337,10 +337,10 @@
 	$gridle-settings-states : "#{$gridle-settings-states}}";
 	$gridle-settings : "{";
 	$gridle-settings : "#{$gridle-settings} \"version\" : \"#{$_gridle-version}\"";
-	
+
 	// states :
 	$gridle-settings : "#{$gridle-settings}, \"states\" : #{$gridle-settings-states}";
-	
+
 	// settings :
 	$gridle-settings : "#{$gridle-settings} }";
 	#gridle-settings {
@@ -377,7 +377,7 @@ $_gridle_generateOnlyOnce : true; // keep track of generate once classes
 	$states : all,
 	$package : all,
 	$has-parent : false
-) {	
+) {
 
 	// set that we are in generate phase (that can be used anywhere)
 	$_gridle_is_in_generate_phase : true !global;
@@ -423,7 +423,7 @@ $_gridle_generateOnlyOnce : true; // keep track of generate once classes
 		// | ------------------------
 		// | Windows 8 fix
 		// | ------------------------
-		
+
 		// Windows 8 fix for snap mode
 		@media screen and (max-width: 400px) {
 			@-ms-viewport { width: device-width; }
@@ -432,7 +432,7 @@ $_gridle_generateOnlyOnce : true; // keep track of generate once classes
 		// | ------------------------
 		// | JSON Settings
 		// | ------------------------
-	 
+
 		// generate json settings
 		@if $gridle-generate-json-settings
 		{
@@ -456,7 +456,7 @@ $_gridle_generateOnlyOnce : true; // keep track of generate once classes
 
 			// scope all the classes in a media query
 			@include gridle_state($state, false) {
-			
+
 				// generate all classes for columns
 				$i : 0;
 				@each $columnName, $column in gridle_get_columns($state) {
@@ -496,18 +496,18 @@ $_gridle_generateOnlyOnce : true; // keep track of generate once classes
 					@if _gridle_need_to_generate(suffix, $package) {
 						#{_gridle_classname(suffix, $stateName, $columnName)} {
 							@include gridle_suffix($columnsCount, $columnsContext);
-						}   
+						}
 					}
 					@if _gridle_need_to_generate(order, $package) {
 						#{_gridle_classname(order, $stateName, first)} {
 							@include gridle_order(-1);
-						} 
+						}
 						#{_gridle_classname(order, $stateName, $i)} {
 							@include gridle_order($i);
-						}  
+						}
 						#{_gridle_classname(order, $stateName, last)} {
 							@include gridle_order(9999);
-						} 
+						}
 					}
 					// up $i
 					$i : $i + 1;
@@ -515,7 +515,7 @@ $_gridle_generateOnlyOnce : true; // keep track of generate once classes
 
 				// media queries helpers classes
 				@include _gridle_generate_helper_classes($stateName, $package);
-	
+
 				// handle direction on body
 				body {
 					direction: gridle_get_state_var(direction);
@@ -549,8 +549,7 @@ $_gridle_generateOnlyOnce : true; // keep track of generate once classes
 				$gutter-left : gridle_get_state_var(gutter-left, $state);
 				$gutter-right : gridle_get_state_var(gutter-right, $state);
 				@include _gridle_state($stateName, false) {
-					[class*="#{str-slice(_gridle_classname(grid),2)}"] > [class*="#{str-slice(_gridle_classname(row),2)}"],
-					[class*="#{str-slice(_gridle_classname(grid),2)}"] > [class*="#{str-slice(_gridle_classname(col),2)}"] {
+					[class*="#{str-slice(_gridle_classname(grid),2)}"] > [class="#{str-slice(_gridle_classname(row),2)}"] {
 						margin-left: -#{$gutter-left};
 						margin-right: -#{$gutter-right};
 					}

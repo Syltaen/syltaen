@@ -56,11 +56,11 @@ class View
             "theme_location" => is_string($menu) ? $menu : false,
             "menu_class"     => $menu_classes,
             "container"      => "ul",
-            "echo"           => false
+            "echo"           => false,
         ], $custom_options));
 
         // Remove all IDs
-        $menu = preg_replace("/id=\"[^\"]+\"\s?/", "", $menu);
+        // $menu = preg_replace("/id=\"[^\"]+\"\s?/", "", $menu);
 
         // Replace classes
         $menu = preg_replace("/menu-item-/", "{$menu_classes}__item--", $menu);

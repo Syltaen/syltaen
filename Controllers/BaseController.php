@@ -92,6 +92,9 @@ abstract class BaseController extends Controller
     protected function footer()
     {
         Data::store($footer, [
+            "col_1" => "",
+            "col_2" => "",
+            "col_3" => "",
             "copyright", "@copyright" => function ($footer) {
                 return str_replace("%year%", date("Y"), $footer["copyright"]);
             }
@@ -222,7 +225,7 @@ abstract class BaseController extends Controller
                 "forms"        => $this->forms(),
 
                 "name"         => get_bloginfo("name"),
-                "url"          => get_bloginfo("url"),
+                "url"          => get_bloginfo("url") . "/",
                 "language"     => get_locale(),
                 "charset"      => get_bloginfo("charset"),
                 "description"  => get_bloginfo("description"),

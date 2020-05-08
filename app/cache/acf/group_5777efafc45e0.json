@@ -260,12 +260,13 @@
                                 "id": ""
                             },
                             "choices": {
+                                "none": "Non spécifié",
                                 "start": "Haut",
                                 "center": "Centré",
                                 "end": "Bas"
                             },
                             "default_value": [
-                                "top"
+                                "none"
                             ],
                             "allow_null": 0,
                             "multiple": 0,
@@ -407,6 +408,7 @@
                     "choices": {
                         "white": "Blanc",
                         "light-grey": "Gris clair",
+                        "medium-grey": "Gris moyen",
                         "dark-grey": "Gris foncé",
                         "primary": "Couleur principale",
                         "secondary": "Couleur secondaire",
@@ -436,6 +438,7 @@
                         "none": "Par défaut",
                         "white": "Blanc",
                         "light-grey": "Gris clair",
+                        "medium-grey": "Gris moyen",
                         "dark-grey": "Gris foncé",
                         "primary": "Couleur principale",
                         "secondary": "Couleur secondaire"
@@ -551,16 +554,16 @@
                     "placeholder": ""
                 },
                 {
-                    "key": "field_5b1e76a7068a7",
-                    "label": "Espacement en bas",
-                    "name": "padding_bottom",
+                    "key": "field_57be995981aa3",
+                    "label": "Espacement en haut",
+                    "name": "padding_top",
                     "type": "radio",
                     "instructions": "",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "50",
-                        "class": "acf-choice acf-choice--spacing acf-choice acf-choice--spacing--bottom",
+                        "class": "acf-choice acf-choice--spacing acf-choice acf-choice--spacing--top",
                         "id": ""
                     },
                     "choices": {
@@ -578,16 +581,16 @@
                     "save_other_choice": 0
                 },
                 {
-                    "key": "field_57be995981aa3",
-                    "label": "Espacement en haut",
-                    "name": "padding_top",
+                    "key": "field_5b1e76a7068a7",
+                    "label": "Espacement en bas",
+                    "name": "padding_bottom",
                     "type": "radio",
                     "instructions": "",
                     "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "50",
-                        "class": "acf-choice acf-choice--spacing acf-choice acf-choice--spacing--top",
+                        "class": "acf-choice acf-choice--spacing acf-choice acf-choice--spacing--bottom",
                         "id": ""
                     },
                     "choices": {
@@ -656,6 +659,7 @@
                         "section": "Couleur de la section",
                         "white": "Blanc",
                         "light-grey": "Gris clair",
+                        "medium-grey": "Gris moyen",
                         "dark-grey": "Gris foncé",
                         "primary": "Couleur principale",
                         "secondary": "Couleur secondaire"
@@ -719,6 +723,7 @@
                         "section": "Couleur de la section",
                         "white": "Blanc",
                         "light-grey": "Gris clair",
+                        "medium-grey": "Gris moyen",
                         "dark-grey": "Gris foncé",
                         "primary": "Couleur principale",
                         "secondary": "Couleur secondaire"

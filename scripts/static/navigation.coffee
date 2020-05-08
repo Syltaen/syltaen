@@ -81,7 +81,7 @@ class Menu
         @$menu  = $(".site-header__menu")
         @$indicator = $("<div class='site-header__menu__indicator'></div>")
         @$menu.append @$indicator
-        @selector = ".site-header__menu .current-menu-item, .site-header__menu > .current-menu-ancestor"
+        @selector = ".site-header__menu .current-site-header__menu__item, .site-header__menu > .current-site-header__menu-ancestor"
 
         # Set on new page load
         @setCurrent $(@selector)

@@ -7,34 +7,31 @@ extends _base
 //- ==================================================
 //- > INTRO
 //- ==================================================
-block intro_content
-    h1!= post.post_title
+block intro
 
 
 //- ==================================================
 //- > SECTIONS
 //- ==================================================
 block sections
-
     section.bg-white.md-padding-vertical
 
         block navTop
             nav.single__nav.single__nav--top.container
-                a.single__nav__archive.button(href=singlenav.archive.url)= singlenav.archive.text
-                a.single__nav__next(href=singlenav.next.url class=singlenav.next.url?"":"is-disabled")= singlenav.next.text
-                a.single__nav__prev(href=singlenav.previous.url class=singlenav.previous.url?"":"is-disabled")= singlenav.previous.text
-
+                a.single__nav__link.single__nav__link--archive(href=singlenav.archive.url)= singlenav.archive.text
+                a.single__nav__link.single__nav__link--next(href=singlenav.next.url class=singlenav.next.url?"":"is-disabled")= singlenav.next.text
+                a.single__nav__link.single__nav__link--prev(href=singlenav.previous.url class=singlenav.previous.url?"":"is-disabled")= singlenav.previous.text
 
         block content
             article.single__content.container
-                //- include ./../includes/_content.pug
+                time.single__date= post.date.short
+                h1.h1.no-margin-top.font-medium.color-primary.single__title= post.post_title
                 != post.post_content
-
 
         block navBottom
             nav.single__nav.single__nav--bottom.container
-                a.single__nav__archive.button(href=singlenav.archive.url)= singlenav.archive.text
-                a.single__nav__next(href=singlenav.next.url class=singlenav.next.url?"":"is-disabled")= singlenav.next.text
-                a.single__nav__prev(href=singlenav.previous.url class=singlenav.previous.url?"":"is-disabled")= singlenav.previous.text
+                a.single__nav__link.single__nav__link--archive(href=singlenav.archive.url)= singlenav.archive.text
+                a.single__nav__link.single__nav__link--next(href=singlenav.next.url class=singlenav.next.url?"":"is-disabled")= singlenav.next.text
+                a.single__nav__link.single__nav__link--prev(href=singlenav.previous.url class=singlenav.previous.url?"":"is-disabled")= singlenav.previous.text
 
     block more
