@@ -1,0 +1,9 @@
+extends templates/_base
+
+block sections
+
+    section.lg-padding-vertical.bg-white
+        .container
+            if content
+                each c in content
+                    include includes/_contents

@@ -76,22 +76,14 @@ class PageController extends BaseController
      */
     public function ninjaFormPreview()
     {
-        $this->addData([
-            "@sections"      => [[
-                "classes" => "lg-padding-vertical",
-                "attr"    => "",
-                "content" => [[
-                    "acf_fc_layout" => "columns",
-                    "columns"       => [[
-                        "txt" => "[ninja_form id=".$this->args[0]."]"
+        $this->data["content"] = [[
+            "acf_fc_layout" => "txt",
+            "txt" => "[ninja_form id=".$this->args[0]."]"
+        ]];
 
-                    ]]
-                ]]
-            ]],
-        ]);
-
-        $this->render();
+        $this->render("simple");
     }
+
 
     /**
      * Search results page
