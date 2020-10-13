@@ -89,24 +89,26 @@ class SectionsProcessor extends DataProcessor
     {
         if (empty($s["hide"])) return false;
 
+        $time = current_time("timestamp");
+
         // BETWEEN TWO DATES
         if ($s["hide_start"] && $s["hide_end"]) {
 
             // SHOW BETWEEN TWO DATES
             if ($s["hide_start"] > $s["hide_end"]) {
-                return time() < $s["hide_end"] || time() > $s["hide_start"];
+                return $time < $s["hide_end"] || $time > $s["hide_start"];
             // HIDE BETWEEN TWO DATES
             } else {
-                return time() < $s["hide_end"] && time() > $s["hide_start"];
+                return $time < $s["hide_end"] && $time > $s["hide_start"];
             }
 
         // BEFORE A DATE
         } elseif ($s["hide_end"]) {
-            return time() < $s["hide_end"];
+            return $time < $s["hide_end"];
 
         // AFTER A DATE
         } elseif ($s["hide_start"]) {
-            return time() > $s["hide_start"];
+            return $time > $s["hide_start"];
 
         // ALWAYS HIDE
         } else {

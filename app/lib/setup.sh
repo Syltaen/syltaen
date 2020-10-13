@@ -48,11 +48,11 @@ wp plugin install codepress-admin-columns --activate
 wp plugin install admin-menu-editor --activate
 wp plugin install all-in-one-wp-migration --activate
 wp plugin install user-role-editor --activate
-wp plugin install advanced-custom-fields-font-awesome
-wp plugin install duplicate-post
-wp plugin install wp-fastest-cache
-wp plugin install wordpress-seo
-wp plugin install google-analytics-dashboard-for-wp
+wp plugin install advanced-custom-fields-font-awesome --activate
+wp plugin install duplicate-post --activate
+wp plugin install wp-fastest-cache --activate
+wp plugin install wordpress-seo --activate
+wp plugin install ga-in --activate
 wp plugin install https://github.com/Hungry-Minds/hungryminds-cookies --activate
 
 

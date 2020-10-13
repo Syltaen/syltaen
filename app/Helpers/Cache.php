@@ -74,7 +74,7 @@ class Cache
         $this->format    = $key == "logs" ? "log" : $format;
         $this->keep      = $keep;
 
-        $this->now       = time();
+        $this->now       = current_time("timestamp");
         $this->directory = static::getDirectory($this->key);
         $this->files     = static::getAllFiles($this->directory, $this->format);
     }
