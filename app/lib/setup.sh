@@ -6,7 +6,7 @@ wp core download --locale=fr_FR
 
 
 # Create wp-config.php with given db info
-wp core config --dbuser=root --dbpass=root --prompt=dbprefix,dbname
+wp core config --dbuser=root --dbpass=root --dbhost=127.0.0.1 --prompt=dbprefix,dbname
 
 
 # Install WordPress, try and guess config based on current user
