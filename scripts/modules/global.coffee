@@ -30,9 +30,6 @@ export default in: ->
     # CONTAINERS DELAY
     $(".site-main .container").each (i, el) -> if i then $(el).addClass "delay-" + i
 
-    # ANIMATION CLASSES
-    $("p > img, .wp-caption > p").parent("p, .wp-caption").addClass("animation-image image-wrapper")
-
 
     # =============================================================================
     # > CONTENTS

@@ -2,6 +2,10 @@
 
 namespace Syltaen;
 
+require_once ABSPATH . "/wp-includes/PHPMailer/PHPMailer.php";
+require_once ABSPATH . "/wp-includes/PHPMailer/SMTP.php";
+require_once ABSPATH . "/wp-includes/PHPMailer/Exception.php";
+
 abstract class Mail
 {
     /**
