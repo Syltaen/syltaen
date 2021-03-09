@@ -191,13 +191,16 @@ abstract class Data
      * @param array|WP_Post|int $data
      * @return void
      */
-    private static function extractIds($data)
+    public static function extractIds($data)
     {
         if (is_array($data) && isset($data["ID"])) return [$data["ID"]];
         if (is_object($data) && isset($data->ID)) return [$data->ID];
+        if (is_array($data) && isset($data["id"])) return [$data["id"]];
+        if (is_object($data) && isset($data->id)) return [$data->id];
         if (is_int($data)) return [$data];
         if (is_string($data)) return [intval($data)];
         if ($data instanceof Model) return (array) $data->ID;
+
         if (is_array($data)) return array_map(function ($data) {
             return static::extractIds($data)[0];
         }, $data);
@@ -385,94 +388,21 @@ abstract class Data
         return $syltaen_global_data;
     }
 
+
     // ==================================================
-    // > DATABASE
+    // > ARRAYS
     // ==================================================
     /**
-     * Create a backup of a database and save it in a file
+     * Shortcut to keep only certain keys of an array
      *
-     * @param boolean $download If the file should be downloaded by the browser
-     * @param string $filename Custom filename
-     * @param string $path Custom path
-     * @return void
+     * @param array $array
+     * @param array $keys_to_keep
+     * @return array
      */
-    public static function backupDatabase($download = false, $filename = false, $path = false)
+    public static function keepKeys($array, $keys_to_keep)
     {
-        $filename = $filename ? $filename : "backup-" . date("Ymd-His") . ".sql";
-        $path = $path ? $path : ABSPATH . "backups/";
-
-        if (!is_dir($path)) mkdir($path);
-
-        exec(static::mysqlCommand(DB_NAME . " > {$path}{$filename}", "mysqldump"));
-
-        if ($download) {
-            header("Content-type: application/octet-stream");
-            header("Content-Disposition: attachment; filename=\"$filename\"");
-            passthru("cat {$path}{$filename}");
-        }
-    }
-
-    /**
-     * Clone the current database into another, mostly to use as a test environnement
-     * Note: the two database must have the same access information - Only the name must be different
-     * @param string $to_db Name of the database to clone to.
-     * @param string $from_db Name of the database to clone from.
-     * @return void
-     */
-    public static function cloneDatabase($from_db, $to_db)
-    {
-        exec(static::mysqlCommand("-e \"CREATE DATABASE IF NOT EXISTS {$to_db}\""));
-        exec(static::mysqlCommand($from_db, "mysqldump") . " | " . static::mysqlCommand($to_db));
-    }
-
-    /**
-     * Generate a runnable MySql command using that use the provided binary
-     *
-     * @param string $commad The command to executre
-     * @param string $bin The binary to use : mysql, mysqldump, ...
-     * @param string $bin_path You may need to change that depending on the system running your databases
-     * @return void
-     */
-    public static function mysqlCommand($command, $bin = "mysql", $bin_path = "/Applications/MAMP/Library/bin/")
-    {
-        return "{$bin_path}{$bin} -h ".DB_HOST." -u ".DB_USER." --password=".DB_PASSWORD." ".$command;
-    }
-
-
-    /**
-     * Change the configuration file "wp-config.php" to use a different database
-     * Mainly used during acceptance tests
-     * @param string $current The name of the current database
-     * @param string $new The name of the new database
-     * @return void
-     */
-    public static function switchDatabase($current, $new, $config_file = "wp-config.php")
-    {
-        $config_content = file_get_contents(ABSPATH . $config_file);
-        $config_content = str_replace(
-            [
-                "define( 'DB_NAME', '".$current."' );",
-                "define('DB_NAME', '".$current."');"
-            ],
-            "define('DB_NAME', '".$new."');",
-            $config_content
-        );
-        file_put_contents(ABSPATH . $config_file, $config_content);
-    }
-
-    /**
-     * Get the DB_NAME constant from a configuration file.
-     *
-     * @param string $config_file The name of the config file
-     * @return string
-     */
-    public static function getDatabaseName($config_file = "wp-config.php")
-    {
-        $config_file    = ABSPATH . $config_file;
-        $config_content = file_get_contents($config_file);
-        preg_match("/define\( ?\'DB_NAME\', \'([^)]+)\' ?\);/", $config_content, $matches);
-
-        if (isset($matches[1])) return $matches[1];
-        return false;
+        return array_filter($array, function ($key) use ($keys_to_keep) {
+            return in_array($key, $keys_to_keep);
+        }, ARRAY_FILTER_USE_KEY);
     }
 }

@@ -50,8 +50,13 @@ $fonts-stacks: (
 // ==================================================
 // Usage : breakpoint(md) / container(sm)
 $responsive: (
-    md: (
+    lg: (
         breakpoint: null,
+        container: 1200px,
+        spacingratio: 1
+    ),
+    md: (
+        breakpoint: 1240px,
         container: 960px,
         spacingratio: 1
     ),
@@ -74,19 +79,32 @@ $responsive: (
 // Usage : spacing(xs)
 $spacing: (
     no: 0px,
+    xxs: 7px,
     xs: 12px,
     sm: 24px,
-    ms: 30px,
+    ms: 40px,
     md: 60px,
-    lg: 120px,
+    ml: 90px,
+    lg: 140px,
     xl: 240px
 );
 
-
-// ==================================================
 // > EASINGS
 // ==================================================
 // Usage : easing(bounce)
 $easing: (
     bounce: cubic-bezier(0.680, -0.550, 0.265, 1.550)
-)
+);
+
+
+// ==================================================
+// > SECTION CONTENT ICONS
+// ==================================================
+// Usage : section_content_icon(txt)
+$section-content-icons: (
+    txt: text,
+    image: image,
+    insert: info-square,
+    archive: list,
+    collapsable: compress-arrows-alt,
+);

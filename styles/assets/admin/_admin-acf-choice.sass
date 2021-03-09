@@ -1,5 +1,5 @@
 // =============================================================================
-// > ADMIN : ACF CHOICE
+// > ADMIN
 // =============================================================================
 
 .acf-choice .acf-input
@@ -31,22 +31,13 @@
         &:checked
             opacity: 1 !important
             transform: scale(1)
+            border-color: color(primary) !important
+            &::after
+                color: color(primary) !important
 
-        // ==================================================
-        // > COLORS
-        // ==================================================
-        @each $color, $value in $colors
-            &[value="#{$color}"]
-                background: $value !important
-
-        &[value="section"]
-            background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%)
-            background-size: 20px 20px
-
-        // ==================================================
-        // > ICONS
-        // ==================================================
+        // ========== COMMON ICONS ========== //
         &[value="none"],
+        &[value="never"],
         &[value="image"]
             border-color: white !important
             &::after
@@ -54,26 +45,40 @@
                 +absolute(top 0 left 0)
                 +size(100%)
 
-        &[value="none"]::after
+        &[value="none"]::after,
+        &[value="never"]::after
             +fa(times)
-
         &[value="image"]::after
             +fa(image)
 
+// ==================================================
+// > COLORS
+// ==================================================
+.acf-choice--color .acf-input input
+    @each $color, $value in $colors
+        &[value="#{$color}"]
+            background: $value !important
 
-        // ==================================================
-        // > EDGES
-        // ==================================================
-        &[value="in-ascending"],
-        &[value="in-descending"],
-        &[value="out-ascending"],
-        &[value="out-descending"]
-            +size(50px, 30px)
-            border-radius: 0
-            border: 0
-            background: #ccc
-            position: absolute !important
-            opacity: .4
+    &[value="section"]
+        background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%)
+        background-size: 20px 20px
+
+
+
+// ==================================================
+// > EDGES
+// ==================================================
+.acf-choice--edge .acf-input input
+    &[value="in-ascending"],
+    &[value="in-descending"],
+    &[value="out-ascending"],
+    &[value="out-descending"]
+        +size(50px, 30px)
+        border-radius: 0
+        border: 0 !important
+        background: #ccc
+        position: absolute !important
+        opacity: .4
 
 .acf-choice--edge--top .acf-input input
     &::before
@@ -123,3 +128,70 @@
     &[value="out-ascending"]::after,
     &[value="out-descending"]::after
         border-top-width: 20px
+
+// ==================================================
+// > ICONS
+// ==================================================
+.acf-choice--icons .acf-input input
+    border: 0 !important
+    &::after
+        +font(40px 40px center #666)
+        +absolute(top 0 left 0)
+        +size(100%)
+
+    &[value="start"]::after
+        +far(arrow-to-top)
+    &[value="center"]::after
+        +fad(border-center-h)
+    &[value="end"]::after
+        +far(arrow-to-bottom)
+
+    &[value="md"]::after,
+    &[value="md-reverse"]::after
+        +fal(desktop)
+    &[value="sm"]::after,
+    &[value="sm-reverse"]::after
+        +fal(tablet)
+    &[value="xs"]::after,
+    &[value="xs-reverse"]::after
+        +fal(mobile)
+
+    &[value="md"],
+    &[value="md-reverse"],
+    &[value="sm"],
+    &[value="sm-reverse"],
+    &[value="xs"],
+    &[value="xs-reverse"]
+        &::before
+            +fa(arrow-down)
+            display: block !important
+            +size(2em)
+            background: #999
+            border-radius: 50%
+            +font(1 2 center white)
+            +absolute(bottom -2em right -1em)
+            z-index: 10
+            transition: all .35s ease
+        &:checked::before
+            background: color(primary)
+            bottom: -1em
+    &[value="md-reverse"]::before,
+    &[value="sm-reverse"]::before,
+    &[value="xs-reverse"]::before
+        content: fa-content(arrow-up)
+
+    &[value="fadein"]::after
+        +far(eye-slash)
+    &[value="fadein-left"]::after
+        +far(long-arrow-right)
+    &[value="fadein-right"]::after
+        +far(long-arrow-left)
+    &[value="fadein-top"]::after
+        +far(long-arrow-down)
+    &[value="fadein-bottom"]::after
+        +far(long-arrow-up)
+    &[value="fadein-sides"]::after
+        +far(compress-arrows-alt)
+
+    &[value="cover"]::after
+        +far(expand-arrows-alt)

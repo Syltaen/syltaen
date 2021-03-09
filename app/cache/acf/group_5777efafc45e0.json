@@ -1,6 +1,6 @@
 {
     "key": "group_5777efafc45e0",
-    "title": "Page - Sections",
+    "title": "Sections",
     "fields": [
         {
             "key": "field_5777f074a4edb",
@@ -178,26 +178,34 @@
                         },
                         {
                             "key": "field_5d400218252c5",
-                            "label": "Prendre toute la larguer",
-                            "name": "fullwidth",
-                            "type": "true_false",
+                            "label": "Largeur",
+                            "name": "width",
+                            "type": "radio",
                             "instructions": "",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
                                 "width": "50",
-                                "class": "",
+                                "class": "acf-choice acf-choice--spacing",
                                 "id": ""
                             },
-                            "message": "Prendre toute la larguer du site",
-                            "default_value": 0,
-                            "ui": 0,
-                            "ui_on_text": "",
-                            "ui_off_text": ""
+                            "choices": {
+                                "xs": "Smartphone",
+                                "sm": "Tablette",
+                                "md": "Laptop",
+                                "lg": "Desktop",
+                                "full": "Toute la largeur"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "default_value": "md",
+                            "layout": "horizontal",
+                            "return_format": "value",
+                            "save_other_choice": 0
                         },
                         {
                             "key": "field_5b221b2e894be",
-                            "label": "Proportions personnalisée",
+                            "label": "",
                             "name": "custom_proportions",
                             "type": "true_false",
                             "instructions": "",
@@ -210,7 +218,7 @@
                             },
                             "message": "Définir des proportions personnalisées pour chaque colonne",
                             "default_value": 0,
-                            "ui": 0,
+                            "ui": 1,
                             "ui_on_text": "",
                             "ui_off_text": ""
                         },
@@ -218,45 +226,44 @@
                             "key": "field_5b22177fdc038",
                             "label": "Espacement entre les colonnes",
                             "name": "spacing",
-                            "type": "select",
+                            "type": "radio",
                             "instructions": "",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "33",
-                                "class": "",
+                                "width": "50",
+                                "class": "acf-choice acf-choice--spacing",
                                 "id": ""
                             },
                             "choices": {
                                 "no": "Aucun",
+                                "xxs": "Très très petit",
                                 "xs": "Très petit",
                                 "sm": "Petit",
-                                "ms": "Moyen",
-                                "md": "Grand",
-                                "lg": "Très grand",
-                                "xl": "Très très grand"
+                                "ms": "Moyen petit",
+                                "md": "Moyen",
+                                "ml": "Moyen grand",
+                                "lg": "Grand",
+                                "xl": "Très grand"
                             },
-                            "default_value": [
-                                "sm"
-                            ],
                             "allow_null": 0,
-                            "multiple": 0,
-                            "ui": 0,
+                            "other_choice": 0,
+                            "default_value": "sm",
+                            "layout": "horizontal",
                             "return_format": "value",
-                            "ajax": 0,
-                            "placeholder": ""
+                            "save_other_choice": 0
                         },
                         {
                             "key": "field_5b2218acdc03a",
                             "label": "Alignement vertical",
                             "name": "valign",
-                            "type": "select",
+                            "type": "radio",
                             "instructions": "",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "33",
-                                "class": "",
+                                "width": "50",
+                                "class": "acf-choice acf-choice--icons",
                                 "id": ""
                             },
                             "choices": {
@@ -265,56 +272,113 @@
                                 "center": "Centré",
                                 "end": "Bas"
                             },
-                            "default_value": [
-                                "none"
-                            ],
                             "allow_null": 0,
-                            "multiple": 0,
-                            "ui": 0,
+                            "other_choice": 0,
+                            "default_value": "",
+                            "layout": "horizontal",
                             "return_format": "value",
-                            "ajax": 0,
-                            "placeholder": ""
+                            "save_other_choice": 0
                         },
                         {
-                            "key": "field_5b221fbf19e13",
-                            "label": "Rangée verticale à partir de",
-                            "name": "responsive",
-                            "type": "select",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "33",
-                                "class": "",
-                                "id": ""
-                            },
-                            "choices": {
-                                "never": "Jamais",
-                                "xs": "Mobile",
-                                "sm": "Tablette",
-                                "md": "Desktop"
-                            },
-                            "default_value": [
-                                "sm"
-                            ],
-                            "allow_null": 0,
-                            "multiple": 0,
-                            "ui": 0,
-                            "return_format": "value",
-                            "ajax": 0,
-                            "placeholder": ""
-                        },
-                        {
-                            "key": "field_5b221c9567a0b",
-                            "label": "Animation",
-                            "name": "animation",
-                            "type": "select",
+                            "key": "field_5fe206dbb0cdc",
+                            "label": "Espacement en haut",
+                            "name": "spacing_top",
+                            "type": "radio",
                             "instructions": "",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
                                 "width": "50",
-                                "class": "",
+                                "class": "acf-choice acf-choice--spacing",
+                                "id": ""
+                            },
+                            "choices": {
+                                "no": "Aucun",
+                                "xs": "Très petit",
+                                "sm": "Petit",
+                                "ms": "Moyen petit",
+                                "md": "Moyen",
+                                "ml": "Moyen grand",
+                                "lg": "Grand",
+                                "xl": "Très grand"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "default_value": "no",
+                            "layout": "horizontal",
+                            "return_format": "value",
+                            "save_other_choice": 0
+                        },
+                        {
+                            "key": "field_5fe206efb0cdd",
+                            "label": "Espacement en bas",
+                            "name": "spacing_bottom",
+                            "type": "radio",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "acf-choice acf-choice--spacing",
+                                "id": ""
+                            },
+                            "choices": {
+                                "no": "Aucun",
+                                "xs": "Très petit",
+                                "sm": "Petit",
+                                "ms": "Moyen petit",
+                                "md": "Moyen",
+                                "ml": "Moyen grand",
+                                "lg": "Grand",
+                                "xl": "Très grand"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "default_value": "no",
+                            "layout": "horizontal",
+                            "return_format": "value",
+                            "save_other_choice": 0
+                        },
+                        {
+                            "key": "field_5b221fbf19e13",
+                            "label": "Comportement responsive",
+                            "name": "responsive",
+                            "type": "radio",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "acf-choice acf-choice--icons",
+                                "id": ""
+                            },
+                            "choices": {
+                                "none": "Aucun",
+                                "xs": "En colonne sur smartphone",
+                                "sm": "En colonne sur tablette et en dessous",
+                                "md": "En colonne sur desktop et en dessous",
+                                "xs-reverse": "En colonne inversée sur smartphone",
+                                "sm-reverse": "En colonne inversée sur tablette et en dessous",
+                                "md-reverse": "En colonne inversée sur desktop et en dessous"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "default_value": "sm",
+                            "layout": "horizontal",
+                            "return_format": "value",
+                            "save_other_choice": 0
+                        },
+                        {
+                            "key": "field_5b221c9567a0b",
+                            "label": "Animation",
+                            "name": "animation",
+                            "type": "radio",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "acf-choice acf-choice--icons",
                                 "id": ""
                             },
                             "choices": {
@@ -326,19 +390,16 @@
                                 "fadein-bottom": "Fade in depuis le bas",
                                 "fadein-sides": "Fade in depuis tous les côtés"
                             },
-                            "default_value": [
-                                "none"
-                            ],
                             "allow_null": 0,
-                            "multiple": 0,
-                            "ui": 0,
-                            "ajax": 0,
+                            "other_choice": 0,
+                            "default_value": "none",
+                            "layout": "horizontal",
                             "return_format": "value",
-                            "placeholder": ""
+                            "save_other_choice": 0
                         },
                         {
                             "key": "field_5b221cdc67a0c",
-                            "label": "Délai pour chaque colonne",
+                            "label": "Délai",
                             "name": "delayed",
                             "type": "true_false",
                             "instructions": "",
@@ -351,7 +412,7 @@
                             },
                             "message": "Mettre un délai différent pour chaque colonne",
                             "default_value": 0,
-                            "ui": 0,
+                            "ui": 1,
                             "ui_on_text": "",
                             "ui_off_text": ""
                         },
@@ -394,7 +455,7 @@
                 },
                 {
                     "key": "field_5777f0dca4ede",
-                    "label": "Fond",
+                    "label": "Couleur de fond de la section",
                     "name": "bg",
                     "type": "radio",
                     "instructions": "Permet de définir une couleur de fond pour la section",
@@ -416,7 +477,7 @@
                     },
                     "allow_null": 0,
                     "other_choice": 0,
-                    "default_value": "white",
+                    "default_value": "light-grey",
                     "layout": "horizontal",
                     "return_format": "value",
                     "save_other_choice": 0
@@ -505,11 +566,9 @@
                     },
                     "choices": {
                         "default": "Default",
-                        "cover": "Couvrire"
+                        "cover": "Couvrir"
                     },
-                    "default_value": [
-                        "cover"
-                    ],
+                    "default_value": "cover",
                     "allow_null": 0,
                     "multiple": 0,
                     "ui": 0,
@@ -543,9 +602,7 @@
                         "top": "En haut",
                         "bottom": "En bas"
                     },
-                    "default_value": [
-                        "center"
-                    ],
+                    "default_value": "center",
                     "allow_null": 0,
                     "multiple": 0,
                     "ui": 0,
@@ -568,10 +625,14 @@
                     },
                     "choices": {
                         "no": "Aucun",
+                        "xxs": "Très très petit",
+                        "xs": "Très petit",
                         "sm": "Petit",
-                        "ms": "Moyen",
-                        "md": "Grand",
-                        "lg": "Très grand"
+                        "ms": "Moyen petit",
+                        "md": "Moyen",
+                        "ml": "Moyen grand",
+                        "lg": "Grand",
+                        "xl": "Très grand"
                     },
                     "allow_null": 0,
                     "other_choice": 0,
@@ -595,142 +656,18 @@
                     },
                     "choices": {
                         "no": "Aucun",
+                        "xxs": "Très très petit",
+                        "xs": "Très petit",
                         "sm": "Petit",
-                        "ms": "Moyen",
-                        "md": "Grand",
-                        "lg": "Très grand"
+                        "ms": "Moyen petit",
+                        "md": "Moyen",
+                        "ml": "Moyen grand",
+                        "lg": "Grand",
+                        "xl": "Très grand"
                     },
                     "allow_null": 0,
                     "other_choice": 0,
                     "default_value": "md",
-                    "layout": "horizontal",
-                    "return_format": "value",
-                    "save_other_choice": 0
-                },
-                {
-                    "key": "field_5a0ea20a36f3f",
-                    "label": "Bord supérieur",
-                    "name": "top_edge",
-                    "type": "radio",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "55",
-                        "class": "acf-choice acf-choice--edge acf-choice--edge--top",
-                        "id": ""
-                    },
-                    "choices": {
-                        "none": "Aucun",
-                        "in-ascending": "Intérieur montant",
-                        "in-descending": "Intérieur descendant",
-                        "out-ascending": "Extérieur montant",
-                        "out-descending": "Extérieur descendant"
-                    },
-                    "allow_null": 0,
-                    "other_choice": 0,
-                    "default_value": "none",
-                    "layout": "horizontal",
-                    "return_format": "value",
-                    "save_other_choice": 0
-                },
-                {
-                    "key": "field_5a0ea28136f41",
-                    "label": "Bord supérieur - couleur",
-                    "name": "top_edge_color",
-                    "type": "radio",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": [
-                        [
-                            {
-                                "field": "field_5a0ea20a36f3f",
-                                "operator": "!=",
-                                "value": "none"
-                            }
-                        ]
-                    ],
-                    "wrapper": {
-                        "width": "45",
-                        "class": "acf-choice acf-choice--color",
-                        "id": ""
-                    },
-                    "choices": {
-                        "section": "Couleur de la section",
-                        "white": "Blanc",
-                        "light-grey": "Gris clair",
-                        "medium-grey": "Gris moyen",
-                        "dark-grey": "Gris foncé",
-                        "primary": "Couleur principale",
-                        "secondary": "Couleur secondaire"
-                    },
-                    "allow_null": 0,
-                    "other_choice": 0,
-                    "default_value": "section",
-                    "layout": "horizontal",
-                    "return_format": "value",
-                    "save_other_choice": 0
-                },
-                {
-                    "key": "field_5a0ea27436f40",
-                    "label": "Bord inférieur",
-                    "name": "bottom_edge",
-                    "type": "radio",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "55",
-                        "class": "acf-choice acf-choice--edge acf-choice--edge--bottom",
-                        "id": ""
-                    },
-                    "choices": {
-                        "none": "Aucun",
-                        "in-ascending": "Intérieur montant",
-                        "in-descending": "Intérieur descendant",
-                        "out-ascending": "Extérieur montant",
-                        "out-descending": "Extérieur descendant"
-                    },
-                    "allow_null": 0,
-                    "other_choice": 0,
-                    "default_value": "none",
-                    "layout": "horizontal",
-                    "return_format": "value",
-                    "save_other_choice": 0
-                },
-                {
-                    "key": "field_5a0ea32536f43",
-                    "label": "Bord inférieur - couleur",
-                    "name": "bottom_edge_color",
-                    "type": "radio",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": [
-                        [
-                            {
-                                "field": "field_5a0ea27436f40",
-                                "operator": "!=",
-                                "value": "none"
-                            }
-                        ]
-                    ],
-                    "wrapper": {
-                        "width": "45",
-                        "class": "acf-choice acf-choice--color",
-                        "id": ""
-                    },
-                    "choices": {
-                        "section": "Couleur de la section",
-                        "white": "Blanc",
-                        "light-grey": "Gris clair",
-                        "medium-grey": "Gris moyen",
-                        "dark-grey": "Gris foncé",
-                        "primary": "Couleur principale",
-                        "secondary": "Couleur secondaire"
-                    },
-                    "allow_null": 0,
-                    "other_choice": 0,
-                    "default_value": "",
                     "layout": "horizontal",
                     "return_format": "value",
                     "save_other_choice": 0
@@ -766,7 +703,7 @@
                     },
                     "default_value": "",
                     "placeholder": "",
-                    "prepend": "",
+                    "prepend": "#",
                     "append": "",
                     "maxlength": ""
                 },
@@ -785,7 +722,7 @@
                     },
                     "message": "Cacher cette section",
                     "default_value": 0,
-                    "ui": 0,
+                    "ui": 1,
                     "ui_on_text": "",
                     "ui_off_text": ""
                 },
@@ -845,20 +782,36 @@
     "location": [
         [
             {
-                "param": "post_template",
-                "operator": "!=",
-                "value": "default"
-            },
-            {
-                "param": "post_template",
+                "param": "post_type",
                 "operator": "==",
-                "value": "default"
+                "value": "page"
+            }
+        ],
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "pa_brand"
+            }
+        ],
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "product_cat"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "shops"
             }
         ]
     ],
     "menu_order": 0,
     "position": "acf_after_title",
-    "style": "default",
+    "style": "seamless",
     "label_placement": "top",
     "instruction_placement": "label",
     "hide_on_screen": [
@@ -869,12 +822,11 @@
         "author",
         "format",
         "page_attributes",
-        "featured_image",
         "categories",
         "tags",
         "send-trackbacks"
     ],
-    "active": 1,
+    "active": true,
     "description": "",
-    "modified": 1573723534
+    "modified": 1614764300
 }

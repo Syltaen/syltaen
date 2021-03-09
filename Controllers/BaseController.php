@@ -92,12 +92,10 @@ abstract class BaseController extends Controller
     protected function footer()
     {
         Data::store($footer, [
-            "col_1" => "",
-            "col_2" => "",
-            "col_3" => "",
-            "copyright", "@copyright" => function ($footer) {
-                return str_replace("%year%", date("Y"), $footer["copyright"]);
-            }
+            "col_1"     => "",
+            "col_2"     => "",
+            "col_3"     => "",
+            "copyright" => "",
         ], "headerfooter");
 
         return $footer;

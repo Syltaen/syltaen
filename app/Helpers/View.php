@@ -21,10 +21,10 @@ class View
      */
     public static function render($filename, $context = false)
     {
-        return static::getRenderer()->renderFile(
+        return apply_filters("syltaen_render", static::getRenderer()->renderFile(
             static::path($filename),
             static::prepareContext($context)
-        );
+        ));
     }
 
 
@@ -35,10 +35,7 @@ class View
      */
     public static function display($filename, $context = false)
     {
-        return static::getRenderer()->displayFile(
-            static::path($filename),
-            static::prepareContext($context)
-        );
+        echo static::render($filename, $context);
     }
 
 
@@ -65,10 +62,10 @@ class View
         // Replace classes
         $menu = preg_replace("/menu-item-/", "{$menu_classes}__item--", $menu);
         $menu = preg_replace("/menu-item/", "{$menu_classes}__item", $menu);
-        $menu = preg_replace("/sub-menu/", "{$menu_classes}__sub ", $menu);
+        $menu = preg_replace("/sub-menu/", "{$menu_classes}__sub", $menu);
 
         // Add anchor classes
-        $menu = preg_replace("/<a/", "<a class=\"{$menu_classes}__link $link_classes\"", $menu);
+        $menu = preg_replace("/<a(?! class) /", "<a class=\"{$menu_classes}__link $link_classes\"", $menu);
 
         // Custom processing
         if ($custom_processing) $menu = $custom_processing($menu);
@@ -76,6 +73,7 @@ class View
         // wp_send_json($menu);
         return $menu;
     }
+
 
     // ==================================================
     // > PRIVATE
@@ -157,7 +155,8 @@ class View
         // Apply "content" filter to all the context, triggering shortcodes and the likes
         $context = Data::recursiveFilter($context, "content");
 
-        return $context;
+        // Apply global filters
+        return apply_filters("syltaen_render_context", $context);
     }
 
 
@@ -186,19 +185,19 @@ class View
         return [
 
             // Return an image url
-            "_img" => function ($image) {
+            "_img" => function ($image, $size = "full") {
 
                 // Image ID, from WordPress
                 if (is_int($image)) {
-                    return Data::filter($image, "img:url");
+                    return wp_get_attachment_image_url($image, $size);
                 }
 
                 // Else image in asset
                 return Files::url("build/img/" . $image);
             },
 
-            "_imgtag" => function ($id) {
-                return Data::filter($id, "img:tag");
+            "_imgtag" => function ($id, $size = "full") {
+                return wp_get_attachment_image($id, $size);
             },
 
             "_tel" => function ($tel) {

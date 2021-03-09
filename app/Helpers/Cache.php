@@ -74,7 +74,7 @@ class Cache
         $this->format    = $key == "logs" ? "log" : $format;
         $this->keep      = $keep;
 
-        $this->now       = current_time("timestamp");
+        $this->now       = Time::current();
         $this->directory = static::getDirectory($this->key);
         $this->files     = static::getAllFiles($this->directory, $this->format);
     }
@@ -209,7 +209,7 @@ class Cache
      * @param integer $keep
      * @return void
      */
-    private function storeNew($content)
+    public function storeNew($content)
     {
         // Get the file to write in
         $filename = $this->now . "." . $this->format;

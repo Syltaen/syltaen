@@ -7,7 +7,7 @@ class SectionsProcessor extends DataProcessor
     /**
      * Processing of each section
      */
-    public function process($section)
+    public function process($section, $nth = 0)
     {
         if ($this->shouldHide($section)) return false;
 
@@ -48,20 +48,7 @@ class SectionsProcessor extends DataProcessor
             $s["classes"][] = "color-" . $s["text_color"];
         }
 
-        // ========== EDGES ========== //
-        if ($s["top_edge"] != "none") {
-            $s["classes"][] = "has-edge-top--" . $s["top_edge"];
-            if ($s["top_edge_color"] != "section") {
-                $s["classes"][] = "has-edge-top--" . $s["top_edge_color"];
-            }
-        }
 
-        if ($s["bottom_edge"] != "none") {
-            $s["classes"][] = "has-edge-bottom--" . $s["bottom_edge"];
-            if ($s["bottom_edge_color"] != "section") {
-                $s["classes"][] = "has-edge-bottom--" . $s["bottom_edge_color"];
-            }
-        }
     }
 
     private function addAttributes(&$s)
@@ -89,7 +76,7 @@ class SectionsProcessor extends DataProcessor
     {
         if (empty($s["hide"])) return false;
 
-        $time = current_time("timestamp");
+        $time = Time::current();
 
         // BETWEEN TWO DATES
         if ($s["hide_start"] && $s["hide_end"]) {

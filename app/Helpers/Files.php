@@ -297,7 +297,7 @@ abstract class Files
      * @param integer $parent_post_id
      * @return array of files
      */
-    private static function generateAttachement($files, $parent_post_id = 0)
+    public static function generateAttachement($files, $parent_post_id = 0)
     {
         require_once(ABSPATH . "wp-admin/includes/image.php");
 
@@ -355,24 +355,18 @@ abstract class Files
      * Upload a list of files stored in a $_FILES format
      *
      * @param array $files
-     * @param string $folder A custom folder to store the files. Default : yyyy/mm
+     * @param string $directory A custom directory to store the files. Default : yyyy/mm
      * @return array of files
      */
-    public static function upload($files, $generateAttachement = false, $parent_post_id = 0, $folder = false)
+    public static function upload($files, $generateAttachement = false, $parent_post_id = 0, $directory = false)
     {
         if (empty($files)) return [];
 
         require_once(ABSPATH . "wp-admin/includes/file.php");
         $uploaded_files = [];
 
-        // If custom folder, add filter
-        if ($folder) add_filter("upload_dir", function ($dir) use ($folder) {
-            return array_merge($dir, [
-                "path"   => $dir["basedir"] . "/" . $folder,
-                "url"    => $dir["baseurl"] . "/" . $folder,
-                "subdir" => "/" . $folder,
-            ]);
-        });
+        // If custom directory, add filter
+        if ($directory) static::setUploadDirectory($directory);
 
         // Upload the files
         foreach (static::flattenFilesArray($files) as $file) {
@@ -394,13 +388,32 @@ abstract class Files
         return $uploaded_files;
     }
 
+
+    /**
+     * Set the upload directory to use
+     *
+     * @param string $directory
+     * @return void
+     */
+    public static function setUploadDirectory($directory)
+    {
+        add_filter("upload_dir", function ($dir) use ($directory) {
+            return array_merge($dir, [
+                "path"   => $dir["basedir"] . "/" . $directory,
+                "url"    => $dir["baseurl"] . "/" . $directory,
+                "subdir" => "/" . $directory,
+            ]);
+        });
+    }
+
+
     /**
      * Upload a media and create an attachement for it
      *
      * @param string $url
      * @return array The attachement information
      */
-    public static function uploadFromUrl($url, $folder = null, $generateAttachement = false, $parent_post_id = 0)
+    public static function uploadFromUrl($url, $generateAttachement = false, $parent_post_id = 0, $directory = null)
     {
         // Gives us access to the download_url(), wp_handle_sideload() and wp_generate_attachment_metadata()
         require_once(ABSPATH . "wp-admin/includes/file.php");
@@ -411,6 +424,9 @@ abstract class Files
 
         // Check for errors
         if (is_wp_error($temp_file)) return $temp_file;
+
+        // If custom directory, add filter
+        if ($directory) static::setUploadDirectory($directory);
 
         // Create a unique file name
         $filename  = wp_unique_filename(wp_upload_dir()["path"], sanitize_file_name(basename($url)));

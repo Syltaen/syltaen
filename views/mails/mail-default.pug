@@ -4,8 +4,8 @@
 doctype html
 html
     head
-        title= mail.Subject
-        meta(http-equiv="Content-Type" content="text/html; charset=".$mail->CharSet."")
+        title= subject
+        meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
         style.
             body {
                 font-family: sans-serif;
@@ -40,7 +40,7 @@ html
                     td(width="25" height="60"): img(src=imgpath+"spacer.gif" width="25" height="60" align="left" style="display: block; margin: 0;" alt="")
                     td(width="475")
                         h1(style="font-size: 18px; margin: 0; color: ".$secondary.";")
-                            = mail.FromName
+                            = fromName
                 tr(bgcolor=primary style="background-color: ".$primary.";")
                     td(width="10" height="3"): img(src=imgpath+"spacer.gif" width="10" height="3" align="left" style="display: block; margin: 0;" alt="")
                     td(width="500" colspan="2"): img(src=imgpath+"spacer.gif" width="500" height="3" align="left" style="display: block; margin: 0;" alt="")

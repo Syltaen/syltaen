@@ -5,7 +5,7 @@
 mixin colcontent(col)
     if col.content
         each c in col.content
-            include _contents
+            +content(c)
 
 //- ==================================================
 //- > COLLAPSABLE
@@ -43,14 +43,13 @@ mixin sectionrow(row)
 //- ==================================================
 //- > SECTIONS
 //- ==================================================
-each s in sections
+mixin sections(sections)
+    each s in sections
 
-    section(class=s.classes)&attributes(s.attr)
-
-        each row in s.rows
-
-            if row.fullwidth
-                +sectionrow(row)
-            else
-                .container
+        section(class=s.classes)&attributes(s.attr)
+            each row in s.rows
+                if row.width == "full"
                     +sectionrow(row)
+                else
+                    .container(class="container--".$row["width"]."")
+                        +sectionrow(row)

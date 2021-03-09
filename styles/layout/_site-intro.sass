@@ -1,8 +1,13 @@
 // =============================================================================
-// > LAYOUTS : SITE INTRO
+// > LAYOUT : SITE INTRO
 // =============================================================================
 
 .site-intro
-    padding: 2em 0
-    text-align: center
-    background: color(light-grey)
+    +size(100%, 530px)
+    background: center center / cover no-repeat
+
+    +screen(sm)
+        height: 300px
+
+    +screen(xs)
+        height: 250px

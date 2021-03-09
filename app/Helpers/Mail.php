@@ -2,10 +2,6 @@
 
 namespace Syltaen;
 
-require_once ABSPATH . "/wp-includes/PHPMailer/PHPMailer.php";
-require_once ABSPATH . "/wp-includes/PHPMailer/SMTP.php";
-require_once ABSPATH . "/wp-includes/PHPMailer/Exception.php";
-
 abstract class Mail
 {
     /**
@@ -17,109 +13,39 @@ abstract class Mail
      * @param array $mail_hook Callable function to add stuff to the mail
      * @return boolean True if no error during the sending
      */
-    public static function send($to, $subject, $body, $attachements = [], $mail_hook = false, $template = "mail-default")
+    public static function send($to, $subject, $body, $hook = false)
     {
-        $mail = new \PHPMailer\PHPMailer\PHPMailer();
+        // If there is a hook, add it
+        if ($hook) add_action("phpmailer_init", $hook);
 
-        // Force "from" with config values
-        $mail->From     = App::config("mail_from_addr");
-        $mail->FromName = App::config("mail_from_name");
+        // Send the mail
+        $result = wp_mail($to, $subject, $body);
 
-        // Parse "to"
-        foreach (static::parseTo($to) as $addr) $mail->AddAddress(trim($addr));
+        // Remove the hook
+        if ($hook) add_action("phpmailer_init", $hook);
 
-        // Add subject
-        $mail->Subject = $subject;
-
-        // Parse body into the template
-        $mail->CharSet = get_bloginfo("charset");
-        $body = static::parseBody($mail, $body, $template);
-        $mail->msgHTML($body);
-
-        // Attachements : TODO
-
-
-        // Setup SMTP if the config is provided
-        if (App::config("mail_smtp")["host"]) {
-            static::smtpSetup($mail);
-        } else {
-            $mail->IsMail();
-        }
-
-        // Dkim, unsubscribe, ...
-        static::antispamSetup($mail);
-
-        // Hook to update the mail before sending it
-        if (is_callable($mail_hook)) $mail_hook($mail);
-
-        // Log the mail and send it
-        if (App::config("mail_debug")) {
-            $mail->Subject = "[TEST] " . $mail->Subject;
-            static::log($mail);
-        } else {
-            static::log($mail);
-            return $mail->Send();
-        }
-    }
-
-
-    /**
-     * Render the mail in a preview box
-     *
-     * @param string $to
-     * @param string $subject
-     * @param string $body
-     * @return void
-     */
-    public static function preview($to, $subject, $body, $actions = [])
-    {
-        echo static::parseBody((object) [
-            "Subject"  => $subject,
-            "CharSet"  => get_bloginfo("charset"),
-            "From"     => App::config("mail_from_addr"),
-            "FromName" => App::config("mail_from_name"),
-        ], $body, "mail-preview", [
-            "to" => $to,
-            "actions" => $actions
-        ]);
-    }
-
-    // ==================================================
-    // > PARSERS
-    // ==================================================
-    /**
-     * Parse a string list of recievers into an array
-     *
-     * @param string|array $to
-     * @return array
-     */
-    private static function parseTo($to)
-    {
-        if (is_array($to)) return $to;
-
-        if (is_string($to)) {
-            $to = explode(",", $to);
-        }
-
-        return (array) $to;
+        return $result;
     }
 
 
     /**
      * Put the text body into a mail template
      *
+     * @param string $subject
      * @param string $body
+     * @param string $template to use
      * @return string
      */
-    private static function parseBody($mail, $body, $template, $additional_context = [])
+    public static function render($subject, $body, $template = "mail-default", $additional_context = [])
     {
-        return (new Controller)->view("mails/".$template, array_merge([
-            "mail"    => $mail,
-            "body"    => $body,
+        return View::render("mails/" . $template, array_merge([
+            "subject"   => $subject,
+            "body"      => $body,
 
             "imgpath"   => Files::url("build/img/mails/"),
             "primary"   => App::config("color_primary"),
             "secondary" => App::config("color_secondary"),
+            "fromName"  => App::config("mail_from_name"),
 
             "url"  => get_bloginfo("url")
         ], $additional_context));
@@ -129,25 +55,6 @@ abstract class Mail
     // ==================================================
     // > TOOLS
     // ==================================================
-    private static function log($mail)
-    {
-        if (class_exists("No3x\WPML\WPML_Plugin")) {
-            $to = [];
-            foreach ($mail->getToAddresses() as $reciever) {
-                $to[] = $reciever[0];
-            }
-
-            (new \No3x\WPML\WPML_Plugin(["raw", "html", "json"], []))->log_email([
-                "to"          => $to,
-                "subject"     => $mail->Subject,
-                "message"     => $mail->Body,
-                "headers"     => [],
-                "attachments" => []
-            ]);
-        }
-    }
-
-
     /**
      * Send a test mail with generic content
      *
@@ -164,31 +71,37 @@ abstract class Mail
     }
 
 
-    /**
-     * A hook triggered for each default WordPress mail
-     *
-     * @param array $args
-     * @return void
-     */
-    public static function hookRelay($args)
-    {
-        static::send(
-            $args["to"],
-            $args["subject"],
-            $args["message"],
-            $args["attachments"]
-        );
-
-        // Prevent the default sending
-        $args["to"] = "";
-        $args["message"] = "";
-        return $args;
-    }
-
-
     // ==================================================
     // > CONFIGS
     // ==================================================
+    /**
+     * Update the WordPress phpmailer config
+     *
+     * @param object $mail
+     * @return void
+     */
+    public static function init(&$mail)
+    {
+        // If not already an HTML email, render the content
+        if (!strpos($mail->Body, "<html")) {
+            $mail->msgHTML(static::render($mail->Subject, $mail->Body));
+        }
+
+        // Send via SMTP if is set in config
+        if (App::config("mail_smtp")["host"]) {
+            static::smtpSetup($mail);
+        }
+
+        // Dkim, unsubscribe, ...
+        static::antispamSetup($mail);
+
+        // If debug : prevent sending the mail
+        if (App::config("mail_debug")) {
+            $mail->clearAllRecipients();
+        }
+    }
+
+
     /**
      * Setup a SMTP connection
      *
@@ -209,7 +122,6 @@ abstract class Mail
         $mail->Username   = $mail->From;
         $mail->Password   = App::config("mail_smtp")["password"];
     }
-
 
 
     /**

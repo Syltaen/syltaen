@@ -13,7 +13,9 @@ class RowsProcessor extends DataProcessor
         $row["classes"] = [
             "flex-align-" . $row["valign"],
             "flex-row--responsive-" . $row["responsive"],
-            "flex-row--spacing-" . $row["spacing"]
+            "flex-row--spacing-" . $row["spacing"],
+            $row["spacing_top"] . "-margin-top",
+            $row["spacing_bottom"] . "-margin-bottom"
         ];
 
         // Attributes
@@ -25,7 +27,7 @@ class RowsProcessor extends DataProcessor
 
         // Columns
         $row["columns"] = $this->processColumns($row);
-        $row["light"]   = count($row["columns"]) <= 1 && $row["animation"] == "none";
+        $row["light"]   = count($row["columns"]) <= 1 && $row["animation"] == "none" && $row["spacing_top"] == "no" && $row["spacing_bottom"] == "no";
 
         return $row;
     }

@@ -13,9 +13,7 @@ class PageController extends BaseController
     public function page()
     {
         $this->addData([
-            "intro_content",
-            "(img:url) intro_bg",
-
+            "@intro_image" => get_the_post_thumbnail_url(),
             "@sections" => (new SectionsProcessor($this))->processEach(Data::get("sections")),
         ]);
 

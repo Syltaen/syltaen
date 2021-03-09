@@ -1,3 +1,4 @@
+include ../includes/_mixins
 doctype
 
 html(lang=site.language)
@@ -38,13 +39,7 @@ html(lang=site.language)
 
                             != site.menus.main
 
-                            ul.site-header__social.social
-                                each soc in site.header.social
-                                    li.social__item
-                                        a.social__link(href=soc.link.url target=soc.link.target title=soc.link.title)
-                                            != soc.icon
-
-
+                            +social(site.header.social, "header", "site-header__social")
 
                 //- ==================================================
                 //- > CONTENT
@@ -54,11 +49,8 @@ html(lang=site.language)
 
                         //- ========== INTRO ========== -//
                         block intro
-                            .site-intro
-                                .container
-                                    block intro_content
-                                        h1!= post.post_title
-
+                            if intro_image
+                                .site-intro(style="background-image: url(".$intro_image.")")
 
                         //- ========== BREADCRUMB ========== -//
                         block breadcrumb
@@ -71,7 +63,7 @@ html(lang=site.language)
 
                         //- ========== CONTENT ========== -//
                         block sections
-                            include ../includes/_sections
+                            +sections(sections)
 
 
                 //- ==================================================

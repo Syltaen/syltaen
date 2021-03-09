@@ -1,0 +1,17 @@
+//- =============================================================================
+//- > MIXIN : SOCIAL
+//- =============================================================================
+
+mixin social(social, modifier = "", block = "")
+    ul.social(class=$block class=$modifier?"social--".$modifier."":"")
+
+        each soc in social
+            li.social__item(class=block?block+"__item":"")
+
+                a.social__link(
+                    href=soc.link.url
+                    target=soc.link.target
+                    title=soc.link.title
+                    class=block?block+"__link":""
+                    onclick=$soc["link"]["target"]=="popup"?"window.open('".$soc["link"]["url"]."','popup','width=600,height=600'); return false;":""
+                )!= soc.icon

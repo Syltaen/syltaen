@@ -12,7 +12,7 @@ class ArchiveProcessor extends DataProcessor
      */
     public function news(&$c)
     {
-        $this->paginate($c, new News, $c["perpage"]);
+        $this->paginate($c, new News, 9);
     }
 
 

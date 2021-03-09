@@ -7,36 +7,6 @@ class ContentsProcessor extends DataProcessor
 
 
     /**
-     * Handle content for full-width images content type
-     *
-     * @param array $c
-     * @uses Skrollr.js
-     * @return void
-     */
-    private function full_width_image(&$c)
-    {
-        $c["attr"]    = [];
-        $c["classes"] = ["full-width-image", $c["parallax"]];
-
-        // ========== IMAGE ========== //
-        $c["attr"]["style"] = "background-image: url(".$c["image"]["url"].");";
-        $c["image"]    = wp_get_attachment_image($c["image"]["ID"], [1600, null]);
-
-        // ========== PARALLAX ========== //
-        switch ($c["parallax"]) {
-            case "parallax-to-top":
-                $c["attr"]["data-top-bottom"] = "background-position-y: 100%";
-                $c["attr"]["data-bottom-top"] = "background-position-y: 0%";
-                break;
-            case "parallax-to-bottom":
-                $c["attr"]["data-top-bottom"] = "background-position-y: 0%";
-                $c["attr"]["data-bottom-top"] = "background-position-y: 100%";
-                break;
-            default: break;
-        }
-    }
-
-    /**
      * Handle data for the archive content type.
      * Delegate to another processor : ArchiveProcessor
      *

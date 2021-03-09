@@ -1,46 +1,48 @@
 //- =============================================================================
 //- > VIEW : INCLUDE - CONTENTS
 //- =============================================================================
-case c.acf_fc_layout
+
+mixin content(c)
+
+    case c.acf_fc_layout
+
+        //- ==================================================
+        //- > TEXT
+        //- ==================================================
+        when "txt"
+            != c.txt
+
+        //- ==================================================
+        //- > IMAGE
+        //- ==================================================
+        when "image"
+            .image-block!= $_imgtag($c["image"])
 
 
-    //- ==================================================
-    //- > TEXT
-    //- ==================================================
-    when "txt"
-        != c.txt
+        //- ==================================================
+        //- > INSERT
+        //- ==================================================
+        when "insert"
+            article.insert(class="bg-".$c["bg"]." border-".$c["border"]." color-".$c["color"]."")
+                != c.content
+
+        //- ==================================================
+        //- > ELEVATOR
+        //- ==================================================
+        when "collapsable"
+            .collapsable
+                .collapsable__header!= c.title
+                .collapsable__content!= c.content
 
 
-    //- ==================================================
-    //- > TEXT + IMAGE
-    //- ==================================================
-    when "txtimg"
-        .txtimg(class="txtimg--".$c["style"]." txtimg--".$c["disposition"]." txtimg--".$c["size"])
-            .txtimg__visual(
-                style="background-image: url(".\Syltaen\Data::filter($c["img"], "img:url").");"
-                data-bottom-top="background-position-y: 100%"
-                data-top-bottom="background-position-y: 0%"
-            )
-            .container: .txtimg__content
-                != c.txt
+        //- ==================================================
+        //- > ARCHIVE
+        //- ==================================================
+        when "archive"
+            case c.type
 
-
-    //- ==================================================
-    //- > FULL WIDTH IMAGE
-    //- ==================================================
-    when "full_width_image"
-        .full-width-image(class=c.classes)&attributes(c.attr)
-            != c.image
-
-
-    //- ==================================================
-    //- > ARCHIVE
-    //- ==================================================
-    when "archive"
-        case c.type
-
-            //- News
-            when "news"
-                include archives/_archive-news
+                //- News
+                when "news"
+                    include archives/_archive-news
 
 

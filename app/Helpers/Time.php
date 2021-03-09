@@ -5,6 +5,17 @@ namespace Syltaen;
 class Time
 {
     /**
+     * Get the current time
+     *
+     * @return int|string
+     */
+    public static function current($format = "timestamp")
+    {
+        return current_time($format);
+    }
+
+
+    /**
      * Set a default timezone for the application
      *
      * @return void
