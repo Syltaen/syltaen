@@ -435,7 +435,7 @@ abstract class PostsModel extends Model
             $page = static::CUSTOMPATH ? static::CUSTOMPATH : static::TYPE;
             Route::add([[
                 $page . "/([0-9]*)/?$",
-                'index.php?pagename='.$page.'&page=$matches[1]'
+                'index.php?pagename='.$page.'&(pagination)=$matches[1]'
             ]]);
         }
 
@@ -565,7 +565,7 @@ abstract class PostsModel extends Model
      * @param string $status Status for the post
      * @return int The created post's ID
      */
-    public static function add($attrs = [], $fields = false)
+    public static function add($attrs = [], $fields = false, $taxonomies = false)
     {
         // Default attributes
         $attrs = array_merge([
@@ -581,6 +581,10 @@ abstract class PostsModel extends Model
         // Update the fields
         if ($fields) {
             static::updateFields($post_id, $fields);
+        }
+
+        if ($taxonomies) {
+            static::updateTaxonomies($post_id, $taxonomies);
         }
 
         return $post_id;

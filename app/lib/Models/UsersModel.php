@@ -10,24 +10,26 @@ abstract class UsersModel extends Model
     // =============================================================================
 
     /* Update parent method */
-    public function is($list, $add = false, $filter_key = "include")
+    public function is($list, $mode = "replace", $filter_key = "include")
     {
-        return parent::is($list, $add, $filter_key);
+        return parent::is($list, $mode, $filter_key);
     }
 
+    /* Update parent method */
+    public function isnt($list, $mode = "replace", $filter_key = "exclude")
+    {
+        return parent::isnt($list, $mode, $filter_key);
+    }
+
+    /* Update parent method */
     public function merge($model)
     {
         if (isset($model->filters["include"])) {
-            $this->is($model->filters["include"], true);
+            $this->is($model->filters["include"], "merge");
         }
         return $this;
     }
 
-    /* Update parent method */
-    public function isnt($list, $filter_key = "exclude")
-    {
-        return parent::isnt($list, $filter_key);
-    }
 
     /* Update parent method */
     public function limit($limit = false, $filter_key = "number")
@@ -36,11 +38,39 @@ abstract class UsersModel extends Model
     }
 
     /* Update parent method */
-    public function search($terms, $columns = [], $strict = false)
+    public function search($search, $include_meta = [])
     {
-        $this->filters["search"] = $strict ? $terms : "*$terms*";
+        $this->filters["search"] = "*$search*";
+        if (empty($include_meta)) return $this;
 
-        if (!empty($columns)) $this->filters["search_columns"] = $columns;
+        $this->filters["search_columns"] = $include_meta;
+
+        // Clear previous query modifiers tagged with search
+        $this->clearQueryModifiers("search");
+
+        // Update the SQL query to include metadata and taxonomies
+        return $this->updateQuery(function ($query) use ($search, $include_meta) {
+            global $wpdb;
+
+            // wp_send_json($query);
+
+            $query->query_fields = "DISTINCT " . $query->query_fields;
+
+            $query->query_from .= " LEFT JOIN {$wpdb->usermeta} searchmeta ON {$wpdb->users}.ID = searchmeta.user_id";
+            // Restirct metadata to specific keys to speed up the search
+            if (is_array($include_meta)) foreach ($include_meta as $key) {
+                $query->query_from .= " AND searchmeta.meta_key IN (".implode(",", array_map(function ($key) { return "'$key'"; }, $include_meta)).")";
+            }
+
+            // Extend search to metadata
+            $query->query_where = preg_replace(
+                "/user_login\s+LIKE\s*(\'[^\']+\')/",
+                "user_login LIKE $1 OR searchmeta.meta_value LIKE $1",
+                $query->query_where
+            );
+        }, "search");
+
+
 
         return $this;
     }
@@ -65,6 +95,19 @@ abstract class UsersModel extends Model
     public static function isLogged()
     {
         return is_user_logged_in();
+    }
+
+
+    /**
+     * Get the specified or logged-in user ID
+     *
+     * @param mixed $user
+     * @return int|boolean
+     */
+    public static function getCurrentUserID($user = false)
+    {
+        if ($user) return Data::extractIds($user)[0] ?? false;
+        return wp_get_current_user()->ID;
     }
 
 
@@ -106,8 +149,20 @@ abstract class UsersModel extends Model
         ]);
     }
 
-
-
+    // ==================================================
+    // > SQL QUERY MODIFIER
+    // ==================================================
+    /**
+     * Register a query modifiers to be applied only when this model WP_Query runs
+     *
+     * @param callable $function
+     * @param string $hook
+     * @return self
+     */
+    public function updateQuery($function, $group = "default", $hook = "pre_user_query")
+    {
+        return parent::updateQuery($function, $group, $hook);
+    }
 
     // =============================================================================
     // > GETTERS
@@ -158,8 +213,12 @@ abstract class UsersModel extends Model
     {
         if ($this->cachedQuery && $this->filters == $this->cachedFilters && !$force) return $this;
         $this->clearCache();
+
+        $this->applyQueryModifiers();
         $this->cachedQuery = new \WP_User_Query($this->filters);
         $this->cachedFilters = $this->filters;
+        $this->unapplyQueryModifiers();
+
         return $this;
     }
 
@@ -293,12 +352,9 @@ abstract class UsersModel extends Model
      * @param array $roles
      * @return int $user_id
      */
-    public static function add($login, $password, $email, $attrs = [], $fields = [], $roles = [])
+    public static function add($attrs = [], $fields = [], $roles = [])
     {
         $user_id = wp_insert_user(array_merge([
-            "user_login"           => $login,
-            "user_pass"            => $password,
-            "user_email"           => $email,
             "show_admin_bar_front" => "false"
         ], $attrs));
 
@@ -407,6 +463,7 @@ abstract class UsersModel extends Model
     /* Update parent method */
     public function delete($reassign = null)
     {
+        require_once(ABSPATH . "wp-admin/includes/user.php");
         foreach ($this->get() as $user) {
             wp_delete_user($user->ID, $reassign);
         }
@@ -463,10 +520,10 @@ abstract class UsersModel extends Model
      * @param array $custom_headers
      * @return void
      */
-    public function sendMail($subject, $body, $custom_headers = [])
+    public function sendMail($subject, $body, $attachments = [], $mail_hook = false)
     {
         foreach ($this->get() as $user) {
-            Mail::send($user->email, $subject, $body, $custom_headers);
+            Mail::send($user->email, $subject, $body, $attachments, $mail_hook);
         }
     }
 }

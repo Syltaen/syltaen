@@ -31,7 +31,7 @@ class Cache
      *
      * @var string
      */
-    private $format    = "json";
+    private $format    = "serialized";
 
     /**
      * Time To Live in minutes.
@@ -57,6 +57,7 @@ class Cache
      */
     private $now       = 0;
 
+
     // ==================================================
     // > PUBLIC
     // ==================================================
@@ -67,7 +68,7 @@ class Cache
      * @param string $key Folder in with the cache files are stored
      * @param string $format File format to use
      */
-    public function __construct($key = "logs", $ttl = 60, $format = "json", $keep = 10)
+    public function __construct($key = "logs", $ttl = 60, $keep = 10, $format = "serialized")
     {
         $this->key       = $key;
         $this->ttl       = round($ttl * 60);
@@ -78,7 +79,6 @@ class Cache
         $this->directory = static::getDirectory($this->key);
         $this->files     = static::getAllFiles($this->directory, $this->format);
     }
-
 
 
     /**
@@ -94,11 +94,12 @@ class Cache
         $last = $this->getDataFrom(0);
 
         if ($resultCallback && $this->isExpired()) {
-            return static::storeNew($resultCallback($last));
+            return static::store($resultCallback($last));
         } else {
             return $last;
         }
     }
+
 
     /**
      * Log a new line into a log text file
@@ -126,6 +127,7 @@ class Cache
         chmod($filename, 0777);
         fclose($file);
     }
+
 
     /**
      * Check if the last cache file is expired
@@ -164,6 +166,7 @@ class Cache
         return empty($files) ? 0 : intval($files[0]);
     }
 
+
     /**
      * Get the timestamp of the last cached file
      *
@@ -173,6 +176,50 @@ class Cache
     public static function getDirectory($key)
     {
         return Files::path("app/cache/{$key}");
+    }
+
+
+    // ==================================================
+    // > ENCODE / DECODE
+    // ==================================================
+    /**
+     * Encode the content so that it can be stored in a file, , using the specified format
+     *
+     * @param mixed $content
+     * @return string
+     */
+    public function encodeContent($content)
+    {
+        switch ($this->format) {
+            case "json":
+            case "json:array":
+                return json_encode($content);
+            case "txt":
+                return $content;
+            default:
+                return serialize($content);
+        }
+    }
+
+
+    /**
+     * Decode the content from a file, using the specified format
+     *
+     * @param string $content
+     * @return mixed
+     */
+    public function decodeContent($content)
+    {
+        switch ($this->format) {
+            case "json":
+                return json_decode($content);
+            case "json:array":
+                return json_decode($content, true);
+            case "txt":
+                return $content;
+            default:
+                return maybe_unserialize($content);
+        }
     }
 
 
@@ -202,6 +249,7 @@ class Cache
         return $files;
     }
 
+
     /**
      * Create a new cache file
      *
@@ -209,27 +257,15 @@ class Cache
      * @param integer $keep
      * @return void
      */
-    public function storeNew($content)
+    public function store($content)
     {
         // Get the file to write in
         $filename = $this->now . "." . $this->format;
         $filepath = $this->directory . "/" . $filename;
         $file     = fopen($filepath, "w");
 
-        // Encode the content
-        switch ($this->format) {
-            case "json":
-            case "json:array":
-                $txt = json_encode($content);
-                break;
-            case "txt":
-            default:
-                $txt = $content;
-            break;
-        }
-
         // Store the content in the file
-        fwrite($file, $txt);
+        fwrite($file, $this->encodeContent($content));
         chmod($filepath, 0777);
         fclose($file);
 
@@ -239,6 +275,7 @@ class Cache
 
         return $content;
     }
+
 
     /**
      * Remove files that are too old.
@@ -282,16 +319,8 @@ class Cache
 
         if (!file_exists($file)) return false;
 
-        $content = file_get_contents($file);
-
-        switch ($this->format) {
-            case "json":
-                return json_decode($content);
-            case "json:array":
-                return json_decode($content, true);
-            case "txt":
-            default:
-                return $content;
-        }
+        return $this->decodeContent(file_get_contents($file));
     }
+
+
 }

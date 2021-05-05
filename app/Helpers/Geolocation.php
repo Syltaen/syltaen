@@ -100,12 +100,12 @@ abstract class Geolocation
      */
     public static function geocode($search)
     {
-        return json_decode((new Request("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?" . implode("&", [
+        return (new Request("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?" . implode("&", [
             "f=json",
             "countryCode=BE",
             "langCode=FR",
             "SingleLine=$search"
-        ])))->get()->responseBody)->candidates;
+        ])))->get()->body->candidates;
     }
 
     /**
@@ -131,7 +131,7 @@ abstract class Geolocation
         $endpoint .= "?" . implode("&", $query);
 
         // Make the call
-        return json_decode((new Request($endpoint))->get()->responseBody)->suggestions;
+        return (new Request($endpoint))->get()->body->suggestions;
     }
 
 
@@ -143,9 +143,9 @@ abstract class Geolocation
      */
     public static function getSuggestionInfo($magicKey)
     {
-        $info = json_decode((new Request(
+        $info = (new Request(
             "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&maxLocations=1&outFields=*&SingleLine=Li%C3%A8ge,%20BEL&outSR=%7b%22wkid%22:102100,%22latestWkid%22:3857%7d&magicKey=$magicKey"
-        ))->get()->responseBody);
+        ))->get()->body;
 
         if (empty($info->candidates[0])) return false;
         return $info->candidates[0];
@@ -160,8 +160,8 @@ abstract class Geolocation
      */
     public static function reverseGeocoding($coord)
     {
-        return json_decode((new Request(
+        return (new Request(
             "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location=$coord[lng],$coord[lat]&f=json&langCode=FR"
-        ))->get()->responseBody);
+        ))->get()->body;
     }
 }

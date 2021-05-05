@@ -13,11 +13,11 @@ abstract class TaxonomyModel
     const HIERARCHICAL = true;
     const HAS_PAGE     = false;
 
-    protected $taxonomy;
-    protected $taxonomyFields;
-    protected $taxonomyFieldsOptionPage;
-    protected $terms;
-    protected $termsFields = [];
+    public $taxonomy;
+    public $taxonomyFields;
+    public $taxonomyFieldsOptionPage;
+    public $terms;
+    public $termsFields = [];
 
     /**
      * Should specify $taxonomyFields and $termsFields
@@ -84,6 +84,7 @@ abstract class TaxonomyModel
 
         return $this;
     }
+
 
     /**
      * Run fetchTerms and return the resulting terms
@@ -235,6 +236,20 @@ abstract class TaxonomyModel
     }
 
 
+    /**
+     * Add fields to populate each terms
+     *
+     * @param [type] $fields
+     * @return void
+     */
+    public function addTermFields($fields)
+    {
+        $this->termsFields = array_merge($this->termsFields, (array) $fields);
+        $this->clearCache();
+        return $this;
+    }
+
+
     // ==================================================
     // > CHECKERS
     // ==================================================
@@ -277,4 +292,54 @@ abstract class TaxonomyModel
 
         return static::class;
     }
+
+
+    /**
+     * Clear the cached terms
+     *
+     * @return self
+     */
+    public function clearCache()
+    {
+        $this->terms = null;
+        return $this;
+    }
+
+    // ==================================================
+    // > ACTIONS
+    // ==================================================
+    /**
+     * Add a new term to the taxonomy
+     *
+     * @return void
+     */
+    public static function addTerm($term, $args = [], $fields = [])
+    {
+        $term = wp_insert_term($term, static::SLUG, $args);
+
+        if ($term instanceof \WP_Error) return $term;
+
+        if (!empty($fields)) {
+            static::updateFields($term, $fields);
+        }
+
+        return $term;
+    }
+
+    /**
+     * Add a term fields
+     *
+     * @return void
+     */
+    public static function updateFields($term, $fields, $merge = false)
+    {
+        $term_id = is_int($term) ? $term : ((array) $term)["term_id"];
+
+        foreach ((array) $fields as $key=>$value) {
+            if (is_callable($value) && !is_string($value)) $value = $value($result);
+            Data::update($key, $value, "term_{$term_id}", $merge);
+        }
+    }
+
+
 }

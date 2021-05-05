@@ -11,117 +11,212 @@ class Request
      */
     public $url;
 
-    /**
-     * Define if a mail should be sent when the request fail
-     *
-     * @var boolean
-     */
-    private $alertError = false;
 
     /**
      * List of email addresses to send the alert mail to
      *
      * @var array of strings
      */
-    private $alertMails = [
-        "stanley.lambot@gmail.com",
-        "stanley.lambot@hungryminds.be"
-    ];
+    private $alertMails = [];
+
 
     /**
      * The request arguments
      *
      * @var array
      */
-    private $args = [
-        "timeout" => 120
-    ];
+    public $args = [];
+
 
     /**
      * The request response
      *
      * @var array
      */
-    public $response      = [];
+    public $response     = [];
+    public $responseCode = false;
+    public $responseBody = false;
 
-    public $responseCode   = false;
-    public $responseBody   = false;
 
     /**
      * Instanciate a new Request
      *
-     * @param boolean $url
-     * @param boolean $alertError
+     * @param string $url
      */
-    public function __construct($url = false, $alertError = false)
+    public function __construct($url)
     {
-        $this->url = $url ? $url : site_url();
-
-        $this->alertError = $alertError;
+        $this->url = $url;
     }
 
-    // ==================================================
-    // > ARGUMENTS & SHORTCUTS
-    // ==================================================
+
+    /**
+     * Send a remote POST request
+     *
+     * @see self::send
+     */
+    public function get($body = false, $headers = false)
+    {
+        return $this->send("GET", $body, $headers);
+    }
+
+
+    /**
+     * Send a remote POST request
+     *
+     * @see self::send
+     */
+    public function post($body = false, $headers = false)
+    {
+        return $this->send("POST", $body, $headers);
+    }
+
+
+    /**
+     * Send a remote PUST request
+     *
+     * @see self::send
+     */
+    public function put($body = false, $headers = false)
+    {
+        return $this->send("PUT", $body, $headers);
+    }
+
+
+    /**
+     * Send a remote PATCH request
+     *
+     * @see self::send
+     */
+    public function patch($body = false, $headers = false)
+    {
+        return $this->send("PATCH", $body, $headers);
+    }
+
+
+    /**
+     * Send a remote DELETE request
+     *
+     * @see self::send
+     */
+    public function delete($body = false, $headers = false)
+    {
+        return $this->send("DELETE", $body, $headers);
+    }
+
+
+    /**
+     * Send a remote request
+     *
+     * @see https://codex.wordpress.org/Function_Reference/wp_remote_request
+     * @param string method The HTTP method to use
+     * @param mixed $body The body of the request
+     * @param array $headers The headers of the request
+     * @return array the Response
+     */
+    public function send($method, $body = false, $headers = false)
+    {
+        // Set the method to use
+        $this->args["method"] = $method;
+
+        // Add body and headers, if provided
+        if ($body)    $this->setBody($body);
+        if ($headers) $this->addHeaders($headers);
+
+        // Send the request
+        $this->response = wp_remote_request($this->url, $this->args);
+
+        // If it failed, act on it
+        if (empty($this->response) || $this->hasFailed()) return $this->onFailure();
+
+        // Parse response parts
+        $this->response["body"] = Text::maybeJsonDecode(wp_remote_retrieve_body($this->response), true);
+        $this->response = (object) $this->response;
+        return $this->response;
+    }
+
+
+    // =============================================================================
+    // > HEADERS, BODY AND OTHER OPTIONS
+    // =============================================================================
+    /**
+     * Set the headers of the request
+     *
+     * @param array|string $headers
+     * @return self
+     */
+    public function setHeaders($headers)
+    {
+        return $this->setOption("headers", (array) $headers);
+    }
+
+
+    /**
+     * Add one or several headers line
+     *
+     * @param array|string $headers
+     * @return self
+     */
+    public function addHeaders($headers)
+    {
+        return $this->setOption("headers", array_merge($this->args["headers"] ?? [], (array) $headers));
+    }
+
+
+    /**
+     * Remove a specific header linke
+     *
+     * @param string] $header
+     * @return self
+     */
+    public function removeHeader($header)
+    {
+        return $this->setOption("headers", array_filter($this->args["headers"], function ($key, $value) use ($header) {
+            if ($key == $header || $value == $header) return false;
+            return true;
+        }, ARRAY_FILTER_USE_BOTH));
+    }
+
+
+    /**
+     * Set the body of the request
+     *
+     * @param [type] $body
+     * @return void
+     */
+    public function setBody($body)
+    {
+        return $this->setOption("body", $body);
+    }
+
+
     /**
      * Update the request arguments
      *
-     * @param array $args
+     * @param string $option_name
+     * @param string $option_value
      * @return self
      */
-    public function args($args = [])
+    public function setOption($option_name, $option_value)
     {
-        $this->args = array_merge($this->args, $args);
-        return $this;
-    }
-
-    /**
-     * Update the request headers
-     *
-     * @param array $headers
-     * @return self
-     */
-    public function headers($headers = [])
-    {
-        $this->args["headers"] = $headers;
-        return $this;
-    }
-
-    /**
-     * Update the request body
-     *
-     * @param mixed $body
-     * @return self
-     */
-    public function body($body)
-    {
-        $this->args["body"] = $body;
+        $this->args[$option_name] = $option_value;
         return $this;
     }
 
 
     // ==================================================
-    // > RESPONSE
+    // > FAILURE HANDLING
     // ==================================================
     /**
-     * Do things with the response
+     * Send an email to the given addresses if the request fails
      *
-     * @return mixed the response
+     * @param array|string $emails
+     * @return void
      */
-    public function processResponse()
+    public function onErrorAlert($emails)
     {
-        if (empty($this->response)) return false;
-
-        // Errors
-        if ($this->hasFailed()) $this->alert();
-
-
-        // Extract
-        $this->responseCode = wp_remote_retrieve_response_code($this->response);
-        $this->responseBody = wp_remote_retrieve_body($this->response);
-
-        return $this->response;
+        $this->alertMails = (array) $emails;
     }
+
 
     /**
      * Check if the request has failed
@@ -133,91 +228,29 @@ class Request
         return is_wp_error($this->response);
     }
 
-    // ==================================================
-    // > REMOTE REQUESTS
-    // ==================================================
-    /**
-     * Send a remote POST request
-     *
-     * @see https://codex.wordpress.org/Function_Reference/wp_remote_post
-     * @param mixed $body
-     * @param array $args
-     * @return array the Response
-     */
-    public function post($body = false, $headers = false)
-    {
-        if ($body) $this->body($body);
-        if ($headers) $this->headers($headers);
 
-        $this->args["method"] = "POST";
-
-        $this->response = wp_remote_post($this->url, $this->args);
-        $this->processResponse();
-
-        return $this;
-    }
-
-    /**
-     * Send a remote GET request
-     *
-     * @see https://codex.wordpress.org/Function_Reference/wp_remote_get
-     * @param mixed $body
-     * @param array $args
-     * @return array the Response
-     */
-    public function get($body = false, $headers = false)
-    {
-        if ($body) $this->body($body);
-        if ($headers) $this->headers($headers);
-
-        $this->args["method"] = "GET";
-
-        $this->response = wp_remote_get($this->url, $this->args);
-        $this->processResponse();
-
-        return $this;
-    }
-
-
-    // ==================================================
-    // > INFOS
-    // ==================================================
-    /**
-     * Get the first availabled transport name
-     *
-     * @return string
-     */
-    public function getTransport()
-    {
-        $http   = new WP_Http();
-        $transp = $http->_get_first_available_transport([], $this->url);
-    }
-
-    // ==================================================
-    // > ERRORS
-    // ==================================================
     /**
      * Log and send mail when an error occurs
      *
-     * @param array $response
      * @return void
      */
-    private function alert()
+    private function onFailure()
     {
-        if (!$this->alertError) return false;
+        // Log failure
+        $log = "Request failed : {$this->args[method]} to {$this->url}";
+        (new Cache)->log($log, "failed-requests");
 
-        // ========== Log the request ========== //
-        $log = "Request failed : {$this->args['method']} to {$this->url}";
-        // (new Cache)->log($log, "requests");
+        // Send mail, if requested
+        if (!empty($this->alertMails)) {
+            Mail::send($this->alertMails, get_bloginfo("name") . " : Request failed", implode("", [
+                $log,
+                "<h1>body</h1>",
+                !empty($this->args["body"]) ? "<pre>" . $this->args["body"] . "</pre>" : "<p>No body</p>",
+                "<h1>response</h1>",
+                "<pre>" . json_encode($this->response) . "</pre>"
+            ]));
+        }
 
-        // ========== Send a mail ========== //
-        $mail  = $log;
-        $mail .= "<h1>body</h1>";
-        $mail .= isset($this->args['body']) ? "<pre>" . $this->args["body"] . "</pre>" : "<p>No body</p>";
-        $mail .= "<h1>response</h1><pre>" . json_encode($this->response) . "</pre>";
-
-
-        Mail::send($this->alertMails, Mail::$fromName . " : Request failed", $mail);
-
+        return false;
     }
 }

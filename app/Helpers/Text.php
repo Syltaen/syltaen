@@ -4,14 +4,6 @@ namespace Syltaen;
 
 abstract class Text
 {
-    /**
-     * Wrap the first word of a stirng intro tags
-     *
-     * @param [type] $string
-     * @param string $start_tag
-     * @param string $end_tag
-     * @return void
-     */
     public static function wrapFirstWord($string, $start_tag = "<strong>", $end_tag = "</strong>")
     {
         return preg_replace('/(?<=\>)\b\w*\b|^\w*\b/', $start_tag.'$0'.$end_tag, $string);
@@ -29,6 +21,19 @@ abstract class Text
     {
         $string = "";
         for ($i = 0; $i < $length; $i++) $string .= $characters[rand(0, strlen($characters) - 1)];
+        return $string;
+    }
+
+
+    /**
+     * Decode a string if it's a valid JSON
+     *
+     * @return object|array|string
+     */
+    public static function maybeJsonDecode($string, $assoc_array = false)
+    {
+        $json = json_decode($string, $assoc_array);
+        if ($json !== null) return $json;
         return $string;
     }
 }

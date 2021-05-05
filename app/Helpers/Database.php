@@ -28,9 +28,11 @@ abstract class Database
             "FROM "        => "FROM ".static::db()->prefix,
             "JOIN "        => "JOIN ".static::db()->prefix,
             "INSERT INTO " => "INSERT INTO ".static::db()->prefix,
-            "KEY UPDATE" => "_KEY_UPDATE_",
+            "KEY UPDATE"   => "_KEY_UPDATE_",
+            "ON UPDATE"    => "_ON_UPDATE_",
             "UPDATE "      => "UPDATE ".static::db()->prefix,
             "_KEY_UPDATE_" => "KEY UPDATE",
+            "_ON_UPDATE_"  => "ON UPDATE",
         ];
 
         return str_replace(
@@ -143,6 +145,24 @@ abstract class Database
     {
         return static::db()->delete(static::db()->prefix . $table, $where, $where_format);
     }
+
+
+    // =============================================================================
+    // > DATA PARSING
+    // =============================================================================
+    /**
+     * Prepare an array to be used for IN clauses
+     *
+     * @param array $array
+     * @return string
+     */
+    public static function inArray($array)
+    {
+        return "(" . implode(",", array_map(function ($item) {
+            return "\"$item\"";
+        }, $array)) . ")";
+    }
+
 
 
     // =============================================================================

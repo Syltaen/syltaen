@@ -10,10 +10,11 @@ abstract class Model implements \Iterator
      *
      * @var array
      */
-    protected $filters       = [];
-    protected $cachedQuery   = false;
-    protected $cachedFilters = false;
-    protected $cachedResults = false;
+    public $filters        = [];
+    public $cachedQuery    = false;
+    public $cachedFilters  = false;
+    public $cachedResults  = false;
+    public $queryModifiers = [];
 
     /**
      * Internal key used for any iteration on the model
@@ -53,6 +54,7 @@ abstract class Model implements \Iterator
      * @var array
      */
     protected $loadedModules = [];
+
 
 
     // ==================================================
@@ -214,27 +216,42 @@ abstract class Model implements \Iterator
      * Restrict to only specific posts
      *
      * @param array|int $list
-     * @param bool $add Define if the IDs should be added or replace the old ones
+     * @param string $mode Define what to do if there is already a list of ID to filter. Either replace, merge or intersect
      * @return self
      */
-    public function is($list, $add = false, $filter_key = "post__in")
+    public function is($list, $mode = "replace", $filter_key = "post__in")
     {
-        $ids = Data::filter($list, "ids");
+        $ids          = Data::filter($list, "ids");
+        $previous_ids = $this->filters[$filter_key] ?? [];
 
-        if ($add) {
-            if (!$ids) return $this;
-            $this->filters[$filter_key] = empty($this->filters[$filter_key]) ? [] : $this->filters[$filter_key];
-            $this->filters[$filter_key] = array_merge($this->filters[$filter_key], $ids);
+        switch ($mode) {
+            case "merge":     $ids = array_merge($previous_ids, $ids);
+            case "intersect": $ids = array_intersect($previous_ids, $ids); break;
+            case "replace": default:  break;
+        }
+
+        if (!$ids) {
+            $this->filters[$filter_key] = [0];
         } else {
-            if (!$ids) {
-                $this->filters[$filter_key] = [0];
-            } else {
-                $this->filters[$filter_key] = $ids;
-            }
+            $this->filters[$filter_key] = $ids;
         }
 
         return $this;
     }
+
+
+    /**
+     * Exclude specific posts
+     *
+     * @param array|int $list
+     * @param string $mode Define what to do if there is already a list of ID to filter. Either replace, merge or intersect
+     * @return void
+     */
+    public function isnt($list, $mode = "replace", $filter_key = "post__not_in")
+    {
+        return $this->is($list, $mode, $filter_key);
+    }
+
 
     /**
      * Force no results
@@ -269,22 +286,11 @@ abstract class Model implements \Iterator
     public function merge($model)
     {
         if (isset($model->filters["post__in"])) {
-            $this->is($model->filters["post__in"], true);
+            $this->is($model->filters["post__in"], "merge");
         }
         return $this;
     }
 
-    /**
-     * Exclude specific posts
-     *
-     * @param array|int $list
-     * @return void
-     */
-    public function isnt($list)
-    {
-        $this->filters["post__not_in"] = Data::filter($list, "ids");
-        return $this;
-    }
 
     /**
      * Execute the isnt method, only if ids are specified
@@ -341,19 +347,86 @@ abstract class Model implements \Iterator
         return $this;
     }
 
+
     /**
      * Add search filter to the query.
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Search_Parameter
-     * @param string $terms
-     * @param array $columns
+     * @param string $search
+     * @param array|bool $include_meta Specify if the search should apply to the metadata,
+     *                   restrict to specific key by passing an array
      * @param bool $strict
      * @return self
      */
-    public function search($terms, $columns = [], $strict = false)
+    public function search($search, $include_meta = true)
     {
-        $this->filters["s"] = $terms;
+        $this->filters["s"] = $search;
 
-        return $this;
+        // Clear previous query modifiers tagged with search
+        $this->clearQueryModifiers("search");
+
+        // Update the SQL query to include metadata and taxonomies
+        return $this->updateQuery(function ($query) use ($search, $include_meta) {
+            global $wpdb;
+
+            $query["distinct"] = "DISTINCT";
+
+            if ($include_meta) {
+                // Add postmeta to the searchable data if not already in it
+                if (!strpos($query["join"], "{$wpdb->postmeta} ON")) {
+                    $query["join"] .= " LEFT JOIN {$wpdb->postmeta} searchmeta ON {$wpdb->posts}.ID = searchmeta.post_id";
+                    // Restirct metadata to specific keys to speed up the search
+                    if (is_array($include_meta)) foreach ($include_meta as $key) {
+                        $query["join"] .= " AND searchmeta.meta_key IN (".implode(",", array_map(function ($key) { return "'$key'"; }, $include_meta)).")";
+                    }
+                }
+                // Extend search to metadata
+                $query["where"] = preg_replace(
+                    "/\(\s*".$wpdb->posts.".post_title\s+LIKE\s*(\'[^\']+\')\s*\)/",
+                    "(".$wpdb->posts.".post_title LIKE $1) OR (searchmeta.meta_value LIKE $1)",
+                    $query["where"]
+                );
+            }
+
+
+            // No taxonmies, stop there
+            if (empty(static::TAXONOMIES)) return $query;
+
+            // Add term_relationships to the searchable data
+            $query["join"] .= " LEFT JOIN {$wpdb->term_relationships} searched_tax ON ({$wpdb->posts}.ID = searched_tax.object_id)";
+
+            // For each word in the search term, update the where clause
+            $query["where"] = array_reduce(explode(" ", $search), function ($where, $word) use ($wpdb) {
+                $all_terms = [];
+
+                // Get all terms of all taxonomies matching this word
+                foreach (static::TAXONOMIES as $tax) {
+                    $terms = get_terms([
+                        "taxonomy"   => $tax,
+                        "hide_empty" => true,
+                        "name__like" => $word,
+                        "fields"     => "ids"
+                    ]);
+                    $all_terms = array_merge($all_terms, $terms);
+                    foreach ($terms as $term) {
+                        $all_terms = array_merge($all_terms, get_term_children($term, $tax));
+                    }
+                }
+
+                // If no match, don't alter query
+                if (empty($all_terms)) return $where;
+
+                // Else, update where statement to include terms
+                return preg_replace(
+                    "/\(\s*".$wpdb->posts.".post_title\s+LIKE\s*(\'\{[a-z0-9]+\}".$word."\{[a-z0-9]+\}\')\s*\)/",
+                    "(".$wpdb->posts.".post_title LIKE $1) OR (searched_tax.term_taxonomy_id IN (".implode(",", $all_terms)."))",
+                    $where
+                );
+
+                return $where;
+            }, $query["where"]);
+
+            return $query;
+        }, "search");
     }
 
     /**
@@ -382,7 +455,7 @@ abstract class Model implements \Iterator
      * @param int $order ASC or DESC
      * @param string $meta_key When $orderby is "meta_value", specify the meta_key.
      * Must include a meta query beforehand specifying criteras for that key.
-     * @return void
+     * @return self
      */
     public function order($orderby = false, $order = "ASC", $meta_key = false)
     {
@@ -505,6 +578,75 @@ abstract class Model implements \Iterator
     }
 
 
+    // ==================================================
+    // > SQL QUERY MODIFIER
+    // ==================================================
+    /**
+     * Register a query modifiers to be applied only when this model WP_Query runs
+     *
+     * @param callable $function
+     * @param string $hook
+     * @return self
+     */
+    public function updateQuery($function, $group = "default", $hook = "posts_clauses_request")
+    {
+        $this->queryModifiers[$group][] = [
+            "hook"     => $hook,
+            "function" => $function
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Add a global filter to execute each filter when the query runs
+     *
+     * @return self
+     */
+    public function applyQueryModifiers()
+    {
+        foreach ($this->queryModifiers as $group) {
+            foreach ($group as $modifier) {
+                add_filter($modifier["hook"], $modifier["function"]);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Remove all global filter updating the SQL query
+     *
+     * @return void
+     */
+    public function unapplyQueryModifiers()
+    {
+        foreach ($this->queryModifiers as $group) {
+            foreach ($group as $modifier) {
+                remove_filter($modifier["hook"], $modifier["function"]);
+            }
+        }
+    }
+
+
+    /**
+     * Clear all modifiers saved in this model
+     *
+     * @param string|boolean $group
+     * @return self
+     */
+    public function clearQueryModifiers($group = false)
+    {
+        if ($group) {
+            $this->queryModifiers[$group] = [];
+        } else {
+            $this->queryModifiers = [];
+        }
+        return $this;
+    }
+
+
 
     // ==================================================
     // > GETTERS
@@ -580,8 +722,12 @@ abstract class Model implements \Iterator
     {
         if ($this->cachedQuery && $this->filters == $this->cachedFilters && !$force) return $this;
         $this->clearCache();
+
+        $this->applyQueryModifiers();
         $this->cachedQuery = new \WP_Query($this->filters);
         $this->cachedFilters = $this->filters;
+        $this->unapplyQueryModifiers();
+
         return $this;
     }
 
@@ -617,6 +763,22 @@ abstract class Model implements \Iterator
     {
         return $this->filters;
     }
+
+
+    /**
+     * Get the count sorted by post statuses
+     *
+     * @return array
+     */
+    public function getCountsByStatus()
+    {
+        return $this->reduce(function ($list, $post) {
+            if (empty($list[$post->post_status])) $list[$post->post_status] = 0;
+            $list[$post->post_status]++;
+            return $list;
+        }, ["all" => $this->count()]);
+    }
+
 
     /**
      * Return the number of posts matching the query
@@ -889,6 +1051,18 @@ abstract class Model implements \Iterator
         return $this;
     }
 
+
+    /**
+     * Get the current list of fields
+     *
+     * @return array
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+
     // ==================================================
     // > CACHE
     // ==================================================
@@ -965,7 +1139,7 @@ abstract class Model implements \Iterator
             if (is_callable($attr) && !is_string($attr)) $attr = $attr($result);
         }
 
-        $attrs["ID"] = $result->ID;
+        $attrs["ID"] =  Data::filter($result, "id");
         wp_update_post($attrs);
     }
 
@@ -987,6 +1161,66 @@ abstract class Model implements \Iterator
                 Data::update($key, $value, $fields_prefix.$result_id, $merge);
             }
         }
+    }
+
+
+    /**
+     * Update the postmeta directrly (does not create a duplicate metakey for ACF)
+     *
+     * @return void
+     */
+    public static function updateMeta($result, $meta)
+    {
+        if (empty($meta)) return;
+        $result_id = Data::filter($result, "id");
+        foreach ($meta as $key=>$value) {
+            if (is_callable($value) && !is_string($value)) $value = $value($result);
+            update_post_meta($result_id, $key, $value);
+        }
+    }
+
+
+    /**
+     * Update one meta field for several posts in one SQL query
+     *
+     * @param string $meta_key
+     * @param array $posts_values ID=>value
+     * @return void
+     */
+    public static function updateMetaMulti($meta_key, $posts_values)
+    {
+        if (empty($posts_values)) return false;
+
+        // Generate an index of post_id=>meta_id to use for INSERT
+        $meta_index = [];
+        $meta = Database::get_results("SELECT meta_id, post_id FROM postmeta WHERE meta_key = '$meta_key' AND post_id IN (".implode(",", array_keys($posts_values)).")");
+        foreach ((array) $meta as $m) $meta_index[$m->post_id] = $m->meta_id;
+
+        // Generate the SQL query to perform
+        $query  = "INSERT INTO postmeta (meta_id, post_id, meta_key, meta_value) VALUES ";
+        $query .= implode(",", array_map(function ($id, $value) use ($meta_key, $meta_index) {
+            return "(".($meta_index[$id] ?? "''").",$id,'$meta_key','$value')";
+        }, array_keys($posts_values), array_values($posts_values)));
+        $query .= " ON DUPLICATE KEY UPDATE meta_value=VALUES(meta_value)";
+        return Database::query($query);
+    }
+
+
+    /**
+     * Set one meta field & value for several posts in one SQL query
+     *
+     * @param string $meta_key
+     * @param array $posts_values ID=>value
+     * @return void
+     */
+    public static function setMetaMulti($meta_key, $meta_value, $post_ids = false)
+    {
+        return Database::query(
+           "UPDATE postmeta
+            SET meta_value = '$meta_value'
+            WHERE meta_key = '$meta_key'
+           " . (empty($post_ids) ? "" : " AND post_id IN (".implode(",", $post_ids).")")
+        );
     }
 
 
