@@ -1,0 +1,117 @@
+// =============================================================================
+// > SPACING
+// =============================================================================
+
+@each $bp, $bp_data in $responsive
+    +screen($bp)
+
+        // Ratio for each breakpoint
+        $ratio: map_get($bp_data, "spacingratio")
+        @each $sp, $value in $spacing
+            $value: $value * $ratio
+
+            // ==================================================
+            // > PADDINGS
+            // > Ex: .lg-padding-vertical
+            // ==================================================
+            @if (breakpoint($bp) == null or $ratio != 1) and (breakpoint($bp) == null or $value != 0)
+                .#{$sp}-padding
+                    padding: $value !important
+
+                .#{$sp}-padding-top
+                    padding-top: $value !important
+
+                .#{$sp}-padding-bottom
+                    padding-bottom: $value !important
+
+                .#{$sp}-padding-left
+                    padding-left: $value !important
+
+                .#{$sp}-padding-right
+                    padding-right: $value !important
+
+                .#{$sp}-padding-vertical
+                    padding-top: $value !important
+                    padding-bottom: $value !important
+
+                .#{$sp}-padding-horizontal
+                    padding-left: $value !important
+                    padding-right: $value !important
+
+            // Force spacing by breakpoint
+            @if breakpoint($bp)
+                .#{screen_prefix($bp)}#{$sp}-padding
+                    padding: $value !important
+
+                .#{screen_prefix($bp)}#{$sp}-padding-top
+                    padding-top: $value !important
+
+                .#{screen_prefix($bp)}#{$sp}-padding-bottom
+                    padding-bottom: $value !important
+
+                .#{screen_prefix($bp)}#{$sp}-padding-left
+                    padding-left: $value !important
+
+                .#{screen_prefix($bp)}#{$sp}-padding-right
+                    padding-right: $value !important
+
+                .#{screen_prefix($bp)}#{$sp}-padding-vertical
+                    padding-top: $value !important
+                    padding-bottom: $value !important
+
+                .#{screen_prefix($bp)}#{$sp}-padding-horizontal
+                    padding-left: $value !important
+                    padding-right: $value !important
+
+            // ==================================================
+            // > MARGINS
+            // > Ex: .lg-padding-vertical
+            // ==================================================
+            @if (breakpoint($bp) == null or $ratio != 1) and (breakpoint($bp) == null or $value != 0)
+                .#{$sp}-margin
+                    margin: $value !important
+
+                .#{$sp}-margin-top
+                    margin-top: $value !important
+
+                .#{$sp}-margin-bottom
+                    margin-bottom: $value !important
+
+                .#{$sp}-margin-left
+                    margin-left: $value !important
+
+                .#{$sp}-margin-right
+                    margin-right: $value !important
+
+                .#{$sp}-margin-vertical
+                    margin-top: $value !important
+                    margin-bottom: $value !important
+
+                .#{$sp}-margin-horizontal
+                    margin-left: $value !important
+                    margin-right: $value !important
+
+            // Force spacing by breakpoint
+            @if breakpoint($bp)
+                .#{screen_prefix($bp)}#{$sp}-margin
+                    margin: $value !important
+
+                .#{screen_prefix($bp)}#{$sp}-margin-top
+                    margin-top: $value !important
+
+                .#{screen_prefix($bp)}#{$sp}-margin-bottom
+                    margin-bottom: $value !important
+
+                .#{screen_prefix($bp)}#{$sp}-margin-left
+                    margin-left: $value !important
+
+                .#{screen_prefix($bp)}#{$sp}-margin-right
+                    margin-right: $value !important
+
+                .#{screen_prefix($bp)}#{$sp}-margin-vertical
+                    margin-top: $value !important
+                    margin-bottom: $value !important
+
+                .#{screen_prefix($bp)}#{$sp}-margin-horizontal
+                    margin-left: $value !important
+                    margin-right: $value !important

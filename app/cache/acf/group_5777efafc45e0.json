@@ -198,7 +198,7 @@
                             },
                             "allow_null": 0,
                             "other_choice": 0,
-                            "default_value": "md",
+                            "default_value": "lg",
                             "layout": "horizontal",
                             "return_format": "value",
                             "save_other_choice": 0
@@ -477,7 +477,7 @@
                     },
                     "allow_null": 0,
                     "other_choice": 0,
-                    "default_value": "light-grey",
+                    "default_value": "white",
                     "layout": "horizontal",
                     "return_format": "value",
                     "save_other_choice": 0
@@ -598,11 +598,17 @@
                         "id": ""
                     },
                     "choices": {
-                        "center": "Centrée",
-                        "top": "En haut",
-                        "bottom": "En bas"
+                        "left-top": "En haut à gauche",
+                        "center-top": "En haut centré",
+                        "right-top": "En haut à droite",
+                        "left-center": "Centré à gauche",
+                        "center-center": "Centré centré",
+                        "right-center": "Centré à droite",
+                        "left-bottom": "En bas à gauche",
+                        "center-bottom": "En bas centré",
+                        "right-bottom": "En bas à droite"
                     },
-                    "default_value": "center",
+                    "default_value": "center-center",
                     "allow_null": 0,
                     "multiple": 0,
                     "ui": 0,
@@ -786,27 +792,6 @@
                 "operator": "==",
                 "value": "page"
             }
-        ],
-        [
-            {
-                "param": "taxonomy",
-                "operator": "==",
-                "value": "pa_brand"
-            }
-        ],
-        [
-            {
-                "param": "taxonomy",
-                "operator": "==",
-                "value": "product_cat"
-            }
-        ],
-        [
-            {
-                "param": "post_type",
-                "operator": "==",
-                "value": "shops"
-            }
         ]
     ],
     "menu_order": 0,
@@ -828,5 +813,5 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1614764300
+    "modified": 1628760753
 }

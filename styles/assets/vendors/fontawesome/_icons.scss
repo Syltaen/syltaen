@@ -1,8 +1,0 @@
-/* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
-readers do not read off random characters that represent icons */
-
-@each $icon, $content in $fa-icons {
-    .#{$fa-css-prefix}-#{$icon}:before {
-        content: fa-content($icon);
-    }
-}

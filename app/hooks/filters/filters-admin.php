@@ -23,3 +23,8 @@ add_action("add_meta_boxes", function () {
     remove_meta_box("nf_admin_metaboxes_appendaform", $screen->id, "side");
 });
 remove_all_filters("media_buttons_context");
+
+/**
+ * Prevent WP form downscaling images
+ */
+// add_filter("big_image_size_threshold", "__return_false");

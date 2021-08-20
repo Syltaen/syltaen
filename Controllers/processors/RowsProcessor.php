@@ -12,11 +12,13 @@ class RowsProcessor extends DataProcessor
         // Classes
         $row["classes"] = [
             "flex-align-" . $row["valign"],
-            "flex-row--responsive-" . $row["responsive"],
             "flex-row--spacing-" . $row["spacing"],
             $row["spacing_top"] . "-margin-top",
             $row["spacing_bottom"] . "-margin-bottom"
         ];
+        if ($row["responsive"] != "none") {
+            $row["classes"] = substr($row["responsive"], 0, 2) . ":flex-column" . substr($row["responsive"], 2);
+        }
 
         // Attributes
         $row["attrs"] = [];

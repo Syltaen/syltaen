@@ -2,8 +2,6 @@
 // > BASE
 // =============================================================================
 
-@import "assets/vendors/gridle/reset"
-
 // ==================================================
 // > ALL ELEMENTS
 // ==================================================
@@ -23,7 +21,6 @@
 html, body
     overflow-x: hidden
 
-
 html
     font-size: 16px
     background: color(white)
@@ -33,3 +30,24 @@ body
     min-height: 100vh
     position: relative
     background: #F5F5F5
+
+
+// ==================================================
+// > CONTAINER
+// ==================================================
+.container
+    position: relative
+    z-index: 1
+    width: calc(100% - 20px)
+    max-width: container(lg)
+    margin: 0 auto
+
+    // Create a container modifier for each breakpoint
+    @each $slug, $bp in $responsive
+        &--#{$slug}
+            max-width: container($slug)
+
+        // Set the container max size for each breakpoint
+        @if breakpoint($slug)
+            +screen($slug)
+                max-width: container($slug)

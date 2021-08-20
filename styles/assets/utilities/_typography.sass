@@ -1,0 +1,47 @@
+// =============================================================================
+// > TYPOGRAPHY
+// =============================================================================
+
+// ==================================================
+// > GLOBAL MODIFIER
+// ==================================================
+
+@each $color, $value in $colors
+    @each $bp, $bp_data in $responsive
+        +screen($bp)
+
+            // ========== COLORS ========== //
+            // Ex: .color-primary
+            @each $color, $value in $colors
+                .#{screen_prefix($bp)}color-#{$color}
+                    &, *
+                        color: $value !important
+
+                .#{screen_prefix($bp)}color-hover-#{$color}:hover
+                    &, *
+                        color: $value !important
+
+            // ========== FONT FAMILIES ========== //
+            //: Ex:  .font-light
+            @each $slug, $stack in $fonts-stacks
+                .#{screen_prefix($bp)}font-#{$slug}
+                    font-family: $stack !important
+
+            // ========== ALIGNMENTS ========== //
+            .#{screen_prefix($bp)}text-align-center
+                text-align: center
+
+            .#{screen_prefix($bp)}text-align-left
+                text-align: left
+
+            .#{screen_prefix($bp)}text-align-right
+                text-align: right
+
+
+// ==================================================
+// > INLINE
+// ==================================================
+strong,
+b
+    font-weight: normal
+    +font(bold)
