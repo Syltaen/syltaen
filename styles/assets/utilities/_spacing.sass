@@ -40,26 +40,26 @@
 
             // Force spacing by breakpoint
             @if breakpoint($bp)
-                .#{screen_prefix($bp)}#{$sp}-padding
+                .#{$sp}-padding#{screen_suffix($bp)}
                     padding: $value !important
 
-                .#{screen_prefix($bp)}#{$sp}-padding-top
+                .#{$sp}-padding-top#{screen_suffix($bp)}
                     padding-top: $value !important
 
-                .#{screen_prefix($bp)}#{$sp}-padding-bottom
+                .#{$sp}-padding-bottom#{screen_suffix($bp)}
                     padding-bottom: $value !important
 
-                .#{screen_prefix($bp)}#{$sp}-padding-left
+                .#{$sp}-padding-left#{screen_suffix($bp)}
                     padding-left: $value !important
 
-                .#{screen_prefix($bp)}#{$sp}-padding-right
+                .#{$sp}-padding-right#{screen_suffix($bp)}
                     padding-right: $value !important
 
-                .#{screen_prefix($bp)}#{$sp}-padding-vertical
+                .#{$sp}-padding-vertical#{screen_suffix($bp)}
                     padding-top: $value !important
                     padding-bottom: $value !important
 
-                .#{screen_prefix($bp)}#{$sp}-padding-horizontal
+                .#{$sp}-padding-horizontal#{screen_suffix($bp)}
                     padding-left: $value !important
                     padding-right: $value !important
 
@@ -93,25 +93,25 @@
 
             // Force spacing by breakpoint
             @if breakpoint($bp)
-                .#{screen_prefix($bp)}#{$sp}-margin
+                .#{$sp}-margin#{screen_suffix($bp)}
                     margin: $value !important
 
-                .#{screen_prefix($bp)}#{$sp}-margin-top
+                .#{$sp}-margin-top#{screen_suffix($bp)}
                     margin-top: $value !important
 
-                .#{screen_prefix($bp)}#{$sp}-margin-bottom
+                .#{$sp}-margin-bottom#{screen_suffix($bp)}
                     margin-bottom: $value !important
 
-                .#{screen_prefix($bp)}#{$sp}-margin-left
+                .#{$sp}-margin-left#{screen_suffix($bp)}
                     margin-left: $value !important
 
-                .#{screen_prefix($bp)}#{$sp}-margin-right
+                .#{$sp}-margin-right#{screen_suffix($bp)}
                     margin-right: $value !important
 
-                .#{screen_prefix($bp)}#{$sp}-margin-vertical
+                .#{$sp}-margin-vertical#{screen_suffix($bp)}
                     margin-top: $value !important
                     margin-bottom: $value !important
 
-                .#{screen_prefix($bp)}#{$sp}-margin-horizontal
+                .#{$sp}-margin-horizontal#{screen_suffix($bp)}
                     margin-left: $value !important
                     margin-right: $value !important

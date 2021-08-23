@@ -6,16 +6,16 @@
 // ==================================================
 // > GENERATED BACKGOUNDS COLOR CLASSES. Ex: .bg-primary
 // ==================================================
-@each $color, $value in $colors
-    @each $bp, $bp_data in $responsive
-        +screen($bp)
-            .#{screen_prefix($bp)}bg-#{$color}
+@each $bp, $bp_data in $responsive
+    +screen($bp)
+        @each $color, $value in $colors
+            .bg-#{$color}#{screen_suffix($bp)}
                 background-color: $value
 
-            .#{screen_prefix($bp)}bg-#{$color}-hover:hover
+            .bg-#{$color}-hover#{screen_suffix($bp)}:hover
                 background-color: $value
 
-            .#{screen_prefix($bp)}border-#{$color}
+            .border-#{$color}#{screen_suffix($bp)}
                 border: 1px solid $value
 
 // ==================================================

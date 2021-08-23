@@ -38,12 +38,12 @@ class ApiController extends Controller
      * @param string The admin password, used as a skeleton key
      * @return void
      */
-    private function login($user_id = false, $password = false)
+    private function login($user_id = false)
     {
-        if (!$user_id || !$password) wp_die("Please provide a user ID and a password");
+        if (!$user_id) wp_die("Please provide a user ID");
 
-        $admin = get_user_by("id", 1);
-        if (!wp_check_password($password, $admin->data->user_pass, $admin->ID)) wp_die("Wrong password");
+        $user = (new Users)->logged();
+        if (!$user || !$user->can("administrator")) wp_die("Please log-in as an admin before.");
 
         (new Users)->is($user_id)->login("wp-admin");
     }

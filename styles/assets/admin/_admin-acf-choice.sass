@@ -146,22 +146,22 @@
     &[value="end"]::after
         +far(arrow-to-bottom)
 
-    &[value="md"]::after,
-    &[value="md-reverse"]::after
+    &[value="column-md"]::after,
+    &[value="column-reverse-md"]::after
         +fal(desktop)
-    &[value="sm"]::after,
-    &[value="sm-reverse"]::after
+    &[value="column-sm"]::after,
+    &[value="column-reverse-sm"]::after
         +fal(tablet)
-    &[value="xs"]::after,
-    &[value="xs-reverse"]::after
+    &[value="column-xs"]::after,
+    &[value="column-reverse-xs"]::after
         +fal(mobile)
 
-    &[value="md"],
-    &[value="md-reverse"],
-    &[value="sm"],
-    &[value="sm-reverse"],
-    &[value="xs"],
-    &[value="xs-reverse"]
+    &[value="column-md"],
+    &[value="column-reverse-md"],
+    &[value="column-sm"],
+    &[value="column-reverse-sm"],
+    &[value="column-xs"],
+    &[value="column-reverse-xs"]
         &::before
             +fa(arrow-down)
             display: block !important
@@ -175,9 +175,9 @@
         &:checked::before
             background: color(primary)
             bottom: -1em
-    &[value="md-reverse"]::before,
-    &[value="sm-reverse"]::before,
-    &[value="xs-reverse"]::before
+    &[value="column-reverse-md"]::before,
+    &[value="column-reverse-sm"]::before,
+    &[value="column-reverse-xs"]::before
         content: fa-content(arrow-up)
 
     &[value="fadein"]::after

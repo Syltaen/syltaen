@@ -34,9 +34,9 @@ mixin sectionrow(row)
 
         //- Display columns when there are more than one
         else
-            .flex-row(class=row.classes)&attributes(row.attrs)
+            .row(class=row.classes)&attributes(row.attrs)
                 each col in row.columns
-                    .flex-row__item(style=col.styles class=col.classes)
+                    .gr(style=col.styles class=col.classes)
                         +colcontent(col)
 
 

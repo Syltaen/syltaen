@@ -3,6 +3,9 @@
 // =============================================================================
 
 @function screen_prefix($bp)
+    @return ""
+
+@function screen_suffix($bp)
     @if breakpoint($bp) == null
         @return ""
-    @return "#{$bp}\\:"
+    @return "-#{$bp}"

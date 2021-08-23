@@ -1,0 +1,110 @@
+// ==================================================
+// > FLEX GRID
+// ==================================================
+
+// ==================================================
+// > CONTAINER
+// ==================================================
+.container
+    position: relative
+    z-index: 1
+    width: calc(100% - 20px)
+    max-width: container(lg)
+    margin: 0 auto
+
+    // Create a container modifier for each breakpoint
+    @each $slug, $bp in $responsive
+        &--#{$slug}
+            max-width: container($slug)
+
+        // Set the container max size for each breakpoint
+        @if breakpoint($slug)
+            +screen($slug)
+                max-width: container($slug)
+
+// ==================================================
+// > ROW / COLUMNS
+// > Exemple : "row column-reverse-sm"
+// ==================================================
+@each $bp, $bp_data in $responsive
+    +screen($bp)
+        .row#{screen_suffix($bp)}
+            +flex(row nowrap)
+        .row-wrap#{screen_suffix($bp)}
+            +flex(row wrap)
+        .row-reverse#{screen_suffix($bp)}
+            +flex(row-reverse nowrap)
+        .row-reverse-wrap#{screen_suffix($bp)}
+            +flex(row-reverse wrap)
+
+        .column#{screen_suffix($bp)}
+            +flex(column nowrap)
+        .column-wrap#{screen_suffix($bp)}
+            +flex(column wrap)
+        .column-reverse#{screen_suffix($bp)}
+            +flex(column-reverse nowrap)
+        .column-reverse-wrap#{screen_suffix($bp)}
+            +flex(column-reverse wrap)
+
+// ==================================================
+// > GRID ITEM
+// > Exemple : .gr-4-sm
+// ==================================================
+@each $bp, $bp_data in $responsive
+    +screen($bp)
+        .gr#{screen_suffix($bp)}
+            flex: 1
+        @for $i from 1 through 12
+            .gr-#{$i}#{screen_suffix($bp)}
+                flex: $i
+
+
+// ==================================================
+// > GUTTERS
+// > Exemple : .row.sm-gutters.xs-gutters-sm
+// ==================================================
+[class^="row"]
+    margin-left: -1 * spacing(xs)
+    margin-right: -1 * spacing(xs)
+    & > [class^="gr"]
+        padding-left: spacing(xs)
+        padding-right: spacing(xs)
+
+@each $bp, $bp_data in $responsive
+    +screen($bp)
+        $ratio: map_get($bp_data, "spacingratio")
+        @each $sp, $value in $spacing
+            .#{$sp}-gutters#{screen_suffix($bp)}
+                margin-left: -1 * $value * $ratio
+                margin-right: -1 * $value * $ratio
+
+            .#{$sp}-gutters#{screen_suffix($bp)} > [class^="gr"]
+                padding-left: $value * $ratio
+                padding-right: $value * $ratio
+
+// // ==================================================
+// // > PREFIX / SUFFIX
+// // ==================================================
+// @for $i from 1 through 12
+//     .prefix-#{$i}
+//         margin-left: #{(100% / 12) * $i}
+//     .suffix-#{$i}
+//         margin-right: #{(100% / 12) * $i}
+
+// ==================================================
+// > ALIGNMENTS
+// > Exemple : .flex-justify-center
+// ==================================================
+// Justify content
+@each $jc in start end center space-between space-around
+    .flex-justify-#{$jc}
+        @if $jc == start or $jc == end
+            $jc: flex-#{$jc}
+        justify-content: $jc
+
+// Align items
+@each $ai in start end center baseline stretch
+    .flex-align-#{$ai}
+        @if $ai == start or $ai == end
+            $ai: flex-#{$ai}
+        align-items: $ai

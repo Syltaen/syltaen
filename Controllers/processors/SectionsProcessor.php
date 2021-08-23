@@ -47,8 +47,6 @@ class SectionsProcessor extends DataProcessor
         if ($s["text_color"] != "none") {
             $s["classes"][] = "color-" . $s["text_color"];
         }
-
-
     }
 
     private function addAttributes(&$s)

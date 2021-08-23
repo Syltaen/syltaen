@@ -71,12 +71,12 @@ html(lang=site.language)
                 //- ==================================================
                 block footer
                     footer.site-footer(role="contentinfo")
-                        .site-footer__top: .container.flex-row.flex-row--responsive-xs
-                            .flex-row__item.site-footer__col!= site.footer.col_1
-                            .flex-row__item.site-footer__col!= site.footer.col_2
-                            .flex-row__item.site-footer__col!= site.footer.col_3
+                        .site-footer__top: .container.row
+                            .gr.site-footer__col!= site.footer.col_1
+                            .gr.site-footer__col!= site.footer.col_2
+                            .gr.site-footer__col!= site.footer.col_3
 
-                        .site-footer__bottom: .container.flex-row.flex-justify-space-between.flex-row--responsive-xs
+                        .site-footer__bottom: .container.row.flex-justify-space-between.column-xs
                             != site.menus.footer
 
                             p.site-footer__copyright!= site.footer.copyright

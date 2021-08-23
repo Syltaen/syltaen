@@ -248,7 +248,7 @@
                             },
                             "allow_null": 0,
                             "other_choice": 0,
-                            "default_value": "sm",
+                            "default_value": "xs",
                             "layout": "horizontal",
                             "return_format": "value",
                             "save_other_choice": 0
@@ -294,6 +294,7 @@
                             },
                             "choices": {
                                 "no": "Aucun",
+                                "xxs": "Très très petit",
                                 "xs": "Très petit",
                                 "sm": "Petit",
                                 "ms": "Moyen petit",
@@ -324,6 +325,7 @@
                             },
                             "choices": {
                                 "no": "Aucun",
+                                "xxs": "Très très petit",
                                 "xs": "Très petit",
                                 "sm": "Petit",
                                 "ms": "Moyen petit",
@@ -354,16 +356,16 @@
                             },
                             "choices": {
                                 "none": "Aucun",
-                                "xs": "En colonne sur smartphone",
-                                "sm": "En colonne sur tablette et en dessous",
-                                "md": "En colonne sur desktop et en dessous",
-                                "xs-reverse": "En colonne inversée sur smartphone",
-                                "sm-reverse": "En colonne inversée sur tablette et en dessous",
-                                "md-reverse": "En colonne inversée sur desktop et en dessous"
+                                "column-xs": "En colonne sur smartphone",
+                                "column-sm": "En colonne sur tablette et en dessous",
+                                "column-md": "En colonne sur desktop et en dessous",
+                                "column-reverse-xs": "En colonne inversée sur smartphone",
+                                "column-reverse-sm": "En colonne inversée sur tablette et en dessous",
+                                "column-reverse-md": "En colonne inversée sur desktop et en dessous"
                             },
                             "allow_null": 0,
                             "other_choice": 0,
-                            "default_value": "sm",
+                            "default_value": "column-sm",
                             "layout": "horizontal",
                             "return_format": "value",
                             "save_other_choice": 0
@@ -477,7 +479,7 @@
                     },
                     "allow_null": 0,
                     "other_choice": 0,
-                    "default_value": "white",
+                    "default_value": "light-grey",
                     "layout": "horizontal",
                     "return_format": "value",
                     "save_other_choice": 0
@@ -598,17 +600,11 @@
                         "id": ""
                     },
                     "choices": {
-                        "left-top": "En haut à gauche",
-                        "center-top": "En haut centré",
-                        "right-top": "En haut à droite",
-                        "left-center": "Centré à gauche",
-                        "center-center": "Centré centré",
-                        "right-center": "Centré à droite",
-                        "left-bottom": "En bas à gauche",
-                        "center-bottom": "En bas centré",
-                        "right-bottom": "En bas à droite"
+                        "center": "Centrée",
+                        "top": "En haut",
+                        "bottom": "En bas"
                     },
-                    "default_value": "center-center",
+                    "default_value": "center",
                     "allow_null": 0,
                     "multiple": 0,
                     "ui": 0,
@@ -792,6 +788,27 @@
                 "operator": "==",
                 "value": "page"
             }
+        ],
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "all"
+            }
+        ],
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "all"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "post"
+            }
         ]
     ],
     "menu_order": 0,
@@ -813,5 +830,5 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1628760753
+    "modified": 1629711210
 }

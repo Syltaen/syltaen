@@ -135,6 +135,8 @@ abstract class BaseController extends Controller
      */
     protected function forms()
     {
+        if (!function_exists("Ninja_Forms")) return [];
+
         return array_map(function ($formModel) {
             return [
                 "id" => $formModel->get_id(),

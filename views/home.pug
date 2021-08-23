@@ -34,16 +34,16 @@ block sections
         p Lorem ipsum dolor sit amet consectetur <strong>adipisicing elit</strong>. Aspernatur ad, id corrupti numquam <span class="color-primary">ipsam voluptatibus architecto</span> enim accusamus impedit veniam soluta, natus distinctio iusto magni commodi, <span class="font-light">inventore amet voluptas</span> officia!
 
 
-        p.bg-light-grey.sm-padding.sm-margin-vertical Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat dolores neque animi tempora magnam, ad saepe, praesentium dignissimos dolor nam quam et temporibus! Libero nulla provident eos exercitationem aut minima.
+        p.bg-light-grey.sm-padding.sm-margin-vertical.bg-white-md.lg-padding-md.text-align-center-md Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat dolores neque animi tempora magnam, ad saepe, praesentium dignissimos dolor nam quam et temporibus! Libero nulla provident eos exercitationem aut minima.
 
 
         p.color-medium-grey.font-bold.md-margin-top BOUTONS, LIENS & TOOLTIPS
         hr.no-margin-top
-        .flex-row
-            p.flex-row__item: a Un lien normal
-            p.flex-row__item Une bulle d'info <span class="tooltip tooltip--info"><span class="tooltip__message">Un message</span></>
-        .flex-row
-            .flex-row__item
+        .row
+            p.gr: a Un lien normal
+            p.gr Une bulle d'info <span class="tooltip tooltip--info"><span class="tooltip__message">Un message</span></>
+        .row
+            .gr
                 span.tooltip(style="display: inline-block;")
                     a.button Bouton normal
                     span.tooltip__message Ceci est un message de tooltip
@@ -51,14 +51,14 @@ block sections
                 p: a.button.button--reversed Bouton inversé
                 p: a.button.button--reversed.button--secondary Bouton inversé secondaire
 
-            .flex-row__item
+            .gr
                 span.tooltip.tooltip--onright.tooltip--secondary(style="display: inline-block;")
                     a.button Bouton primaire
                     span.tooltip__message Ceci est un message de tooltip
                 p: a.button.button--secondary Bouton secondaire
                 p: a.button.button--text Bouton text
 
-            .flex-row__item
+            .gr
                 p: a.button.button--small Bouton small
                 p: a.button.button--medium Bouton medium
                 p: a.button.button--big Bouton big
@@ -66,20 +66,20 @@ block sections
 
         p.color-medium-grey.font-bold.md-margin-top LISTES
         hr.no-margin-top
-        .flex-row
-            .flex-row__item: ul
+        .row
+            .gr: ul
                 li Liste à puces
                 li Liste à puces
                 li Liste à puces
-            .flex-row__item: ul.list.list--arrows
+            .gr: ul.list.list--arrows
                 li Liste à puces
                 li Liste à puces
                 li Liste à puces
-            .flex-row__item: ul.list.list--angles
+            .gr: ul.list.list--angles
                 li Liste à puces
                 li Liste à puces
                 li Liste à puces
-            .flex-row__item: ol
+            .gr: ol
                 li Liste à puces
                 li Liste à puces
                 li Liste à puces
@@ -118,16 +118,16 @@ block sections
         p.color-medium-grey.font-bold.md-margin-top FORMULAIRES
         hr.no-margin-top
         form
-            .flex-row.flex-row--spacing-sm
-                fieldset.flex-row__item
+            .row.row--spacing-sm
+                fieldset.gr
                     label Texte
                     input(type="text")
-                fieldset.flex-row__item
+                fieldset.gr
                     label Mot de passe
                     input(type="password")
 
-            .flex-row.flex-row--spacing-sm
-                fieldset.flex-row__item
+            .row.row--spacing-sm
+                fieldset.gr
                     ul.list.list--choices
                         li.list__item: label.list__label
                             input.list__bullet(type="checkbox" checked="checked")
@@ -138,7 +138,7 @@ block sections
                         li.list__item: label.list__label.is-disabled
                             input.list__bullet(type="checkbox")
                             |Case à cocher
-                fieldset.flex-row__item
+                fieldset.gr
                     ul.list.list--choices
                         li.list__item: label.list__label
                             input.list__bullet(type="radio" name="radio" checked="checked")
@@ -150,14 +150,14 @@ block sections
                             input.list__bullet(type="radio" name="radio")
                             |Bouton radio
 
-            .flex-row.flex-row--spacing-sm
-                fieldset.flex-row__item
+            .row.row--spacing-sm
+                fieldset.gr
                     label Select
                     select
                         option Option 1
                         option Option 2
                         option Option 3
-                fieldset.flex-row__item
+                fieldset.gr
                     label Multi-Select
                     select(multiple)
                         option Option 1

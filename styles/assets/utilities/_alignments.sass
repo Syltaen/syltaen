@@ -1,0 +1,17 @@
+// =============================================================================
+// > UTILITIES - ALIGNMENTS
+// =============================================================================
+
+@each $bp, $bp_data in $responsive
+    +screen($bp)
+        .aligncenter#{screen_suffix($bp)}
+            margin: 0 auto
+            display: block
+
+        .alignright#{screen_suffix($bp)}
+            float: right
+            margin-right: 10px
+
+        .alignleft#{screen_suffix($bp)}
+            float: left
+            margin-left: 10px

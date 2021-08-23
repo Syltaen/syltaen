@@ -241,25 +241,31 @@ add_filter("tiny_mce_before_init", function ($init_array) {
                 [
                     "title"    => "Bord blanc",
                     "selector" => "img",
-                    "classes"  => "white-border",
+                    "classes"  => "img img--white-border",
+                    "wrapper"  => false
+                ],
+                [
+                    "title"    => "Bord décentré",
+                    "selector" => "img",
+                    "classes"  => "img img--offset-border",
                     "wrapper"  => false
                 ],
                 [
                     "title"    => "Rond",
                     "selector" => "img",
-                    "classes"  => "round",
+                    "classes"  => "img img--round",
                     "wrapper"  => false
                 ],
                 [
                     "title"    => "Taille - Toute la largueur",
                     "selector" => "img",
-                    "classes"  => "full-width",
+                    "classes"  => "img img--fullwidth",
                     "wrapper"  => false
                 ],
                 [
                     "title"    => "Taille - Toute la hauteur",
                     "selector" => "img",
-                    "classes"  => "full-height",
+                    "classes"  => "img img--fullheight",
                     "wrapper"  => false
                 ]
             ]
