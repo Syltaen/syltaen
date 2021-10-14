@@ -80,6 +80,28 @@ abstract class Files
     }
 
 
+    /**
+     * Delete a file or a folder recursively
+     *
+     * @param string $file
+     * @return bool Success
+     */
+    public static function delete($file)
+    {
+        // File does not exists
+        if (empty($file) || !file_exists($file)) return false;
+
+        // Is a file, remove it
+        if (is_file($file)) return unlink($file);
+
+        // Is a dir : delete recursively all subfiles
+        foreach (array_diff(scandir($file), [".", ".."]) as $subfile) {
+            static::delete($file . "/" . $subfile);
+        }
+        return rmdir($file);
+    }
+
+
     // ==================================================
     // > ENQUEUING
     // ==================================================

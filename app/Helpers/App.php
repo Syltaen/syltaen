@@ -22,6 +22,46 @@ abstract class App
     }
 
 
+    // =============================================================================
+    // > LANGUAGES
+    // =============================================================================
+    /**
+     * Get the list of langs
+     *
+     * @return array
+     */
+    public static function langs()
+    {
+        if (function_exists("pll_languages_list")) return pll_languages_list();
+        return [static::defaultLang()];
+    }
+
+    /**
+     * Get the current lang
+     *
+     * @return string
+     */
+    public static function lang()
+    {
+        if (function_exists("pll_current_language")) return pll_current_language();
+        return static::defaultLang();
+    }
+
+
+   /**
+     * Get the default lang
+     *
+     * @return string
+     */
+    public static function defaultLang()
+    {
+        if (function_exists("pll_default_language")) return pll_default_language();
+        return "fr";
+    }
+
+    // =============================================================================
+    // > TOOLS
+    // =============================================================================
     /**
      * Generate a share URL for the given social network
      *
@@ -73,6 +113,11 @@ abstract class App
     }
 
 
+
+    // =============================================================================
+    // > CRON
+    // =============================================================================
+
     /**
      * Plan an event to occure once
      *
@@ -80,8 +125,21 @@ abstract class App
      */
     public static function planEvent($hook, $time = "+ 5 minutes")
     {
-        if (!wp_next_scheduled("product_discounts_cache")) {
-            wp_schedule_single_event(strtotime($time), "product_discounts_cache");
+        if (!wp_next_scheduled($hook)) {
+            wp_schedule_single_event(strtotime($time), $hook);
+        }
+    }
+
+    /**
+     * Add a cron task if it does not already exists
+     */
+    public static function addCron($hook, $recurrence, $start = false)
+    {
+        $start = $start ?: Time::current();
+        $start = is_int($start) ? $start : Time::fromString($start);
+
+        if (!wp_next_scheduled($hook)) {
+            wp_schedule_event($start, $recurrence, $hook);
         }
     }
 }
