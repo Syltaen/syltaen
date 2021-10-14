@@ -24,17 +24,35 @@
 .bg-image
     background: center center no-repeat
 
-    &--cover
-        background-size: cover
+@each $bp, $bp_data in $responsive
+    +screen($bp)
+        .bg-image
+            &--cover#{screen_suffix($bp)}
+                background-size: cover
+            &--left#{screen_suffix($bp)}
+                background-position-x: left
+            &--right#{screen_suffix($bp)}
+                background-position-x: right
+            &--top#{screen_suffix($bp)}
+                background-position-y: top
+            &--bottom#{screen_suffix($bp)}
+                background-position-y: bottom
 
-    &--left
-        background-position-x: left
-
-    &--right
-        background-position-x: right
-
-    &--top
-        background-position-y: top
-
-    &--bottom
-        background-position-y: bottom
+            &--left-top#{screen_suffix($bp)}
+                background-position: left top
+            &--center-top#{screen_suffix($bp)}
+                background-position: center top
+            &--right-top#{screen_suffix($bp)}
+                background-position: right top
+            &--left-center#{screen_suffix($bp)}
+                background-position: left center
+            &--center-center#{screen_suffix($bp)}
+                background-position: center center
+            &--right-center#{screen_suffix($bp)}
+                background-position: right center
+            &--left-bottom#{screen_suffix($bp)}
+                background-position: left bottom
+            &--center-bottom#{screen_suffix($bp)}
+                background-position: center bottom
+            &--right-bottom#{screen_suffix($bp)}
+                background-position: right bottom
