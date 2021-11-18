@@ -142,6 +142,10 @@
         +fad(border-center-h)
     &[value="end"]::after
         +far(arrow-to-bottom)
+    &[value="left"]::after
+        +far(arrow-to-left)
+    &[value="right"]::after
+        +far(arrow-to-right)
 
     &[value="column-md"]::after,
     &[value="column-reverse-md"]::after
@@ -192,3 +196,9 @@
 
     &[value="cover"]::after
         +far(expand-arrows-alt)
+    &[value="contain"]::after
+        +fad(compress-arrows-alt)
+    &[value="fullwidth"]::after
+        +fad(arrows-h)
+    &[value="fullheight"]::after
+        +fad(arrows-v)

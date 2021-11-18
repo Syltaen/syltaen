@@ -74,6 +74,85 @@
                             "max_height": "",
                             "max_size": "",
                             "mime_types": ""
+                        },
+                        {
+                            "key": "field_6196735489f1c",
+                            "label": "Alignement horizontal",
+                            "name": "halign",
+                            "type": "radio",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "33",
+                                "class": "acf-choice acf-choice--icons",
+                                "id": ""
+                            },
+                            "choices": {
+                                "none": "Non spécifié",
+                                "left": "Gauche",
+                                "center": "Centré",
+                                "right": "Droite"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "default_value": "none",
+                            "layout": "horizontal",
+                            "return_format": "value",
+                            "save_other_choice": 0
+                        },
+                        {
+                            "key": "field_6196737789f1d",
+                            "label": "Alignement vertical",
+                            "name": "valign",
+                            "type": "radio",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "33",
+                                "class": "acf-choice acf-choice--icons",
+                                "id": ""
+                            },
+                            "choices": {
+                                "none": "Non spécifié",
+                                "start": "Haut",
+                                "center": "Centré",
+                                "end": "Bas"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "default_value": "",
+                            "layout": "vertical",
+                            "return_format": "value",
+                            "save_other_choice": 0
+                        },
+                        {
+                            "key": "field_6196737e89f1e",
+                            "label": "Taille",
+                            "name": "size",
+                            "type": "radio",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "33",
+                                "class": "acf-choice acf-choice--icons",
+                                "id": ""
+                            },
+                            "choices": {
+                                "none": "Par défaut",
+                                "fullwidth": "Toute la largeur",
+                                "fullheight": "Toute la hauteur",
+                                "contain": "Contenu dans l'espace disponible",
+                                "cover": "Couvre tout l'espace disponible"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "default_value": "",
+                            "layout": "vertical",
+                            "return_format": "value",
+                            "save_other_choice": 0
                         }
                     ],
                     "min": "",
@@ -313,5 +392,6 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1615285225
+    "show_in_rest": 0,
+    "modified": 1637251122
 }

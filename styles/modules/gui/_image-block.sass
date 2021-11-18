@@ -5,3 +5,40 @@
 .image-block
     position: relative
     padding: spacing(xxs) 0
+    +size(100%)
+    +flex(row)
+
+    // ==================================================
+    // > HALIGN
+    // ==================================================
+    &--justify-left
+        justify-content: start
+    &--justify-center
+        justify-content: center
+    &--justify-right
+        justify-content: end
+
+    // ==================================================
+    // > VALIGN
+    // ==================================================
+    &--align-start
+        align-items: start
+    &--align-center
+        align-items: center
+    &--align-end
+        align-items: end
+
+    // ==================================================
+    // > SIZES
+    // ==================================================
+    &--size-fullwidth img
+        width: 100%
+    &--size-fullheight img
+        +size(auto, 100%)
+        max-width: none
+    &--size-contain img
+        +size(100%)
+        object-fit: contain
+    &--size-cover img
+        +size(100%)
+        object-fit: cover

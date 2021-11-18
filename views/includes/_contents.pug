@@ -17,14 +17,15 @@ mixin content(c)
         //- > IMAGE
         //- ==================================================
         when "image"
-            .image-block!= $_imgtag($c["image"])
+            .image-block(class="image-block--justify-{$c['halign']} image-block--align-{$c['valign']} image-block--size-{$c['size']}")
+                != $_imgtag($c["image"])
 
 
         //- ==================================================
         //- > INSERT
         //- ==================================================
         when "insert"
-            article.insert(class="bg-".$c["bg"]." border-".$c["border"]." color-".$c["color"]."")
+            article.insert(class="bg-{$c['bg']} border-{$c['border']} color-{$c['color']}")
                 != $c["content"]
 
 
