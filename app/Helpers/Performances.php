@@ -20,7 +20,7 @@ class Performances
             "block_external_HTTP"       => true,
             "defer_CSS"                 => false,
             "defer_JS"                  => false,
-            "disable_comments"          => false,
+            "disable_comments"          => true,
             "disable_block_styling"     => true,
             "disable_embed"             => true,
             "disable_emoji"             => true,
