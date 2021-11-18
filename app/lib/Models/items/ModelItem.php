@@ -19,18 +19,24 @@ abstract class ModelItem
     /**
      * Expose each default value of the wp_object
      *
-     * @param object $wp_object
+     * @param object $wp_object_or_id A full WP Object or just an ID.
+     * If an ID is passed, functions will be very limited.
      * @param Model $model
      */
-    public function __construct($wp_object, $model) {
-        foreach ($wp_object as $key=>$value) {
+    public function __construct($wp_object_or_id, $model = false)
+    {
+        if (is_int($wp_object_or_id)) {
+            $this->setID($wp_object_or_id);
+        }
+
+        if (is_object($wp_object_or_id)) foreach ($wp_object_or_id as $key=>$value) {
             $this->{$key} = $value;
         }
 
         $this->model = $model;
 
         // The model specify that all fields should be pre-fetched by default
-        if ($this->model->forceFetchFields) {
+        if ($this->model && $this->model->forceFetchFields) {
             $this->fetchAllFields();
         }
     }
@@ -94,19 +100,30 @@ abstract class ModelItem
     }
 
     /**
+     * ID setter for all model resuts
+     *
+     * @return int
+     */
+    public function setID($id)
+    {
+        $this->ID = $id;
+    }
+
+    /**
      * Pre-fetch all the fields specified in the model
      *
      * @return void
      */
     public  function fetchAllFields()
     {
+        if (!$this->model) return false;
+
         foreach ($this->model->fieldsIndex as $field=>$key) {
             // Force the value fetching, erasing potential existing fields
             $data = $this->getField($field);
             $this->{$data["key"]} = $data["value"];
         }
     }
-
 
     /**
      * Update a single post
@@ -138,31 +155,17 @@ abstract class ModelItem
         return $this;
     }
 
-
     /**
-     * Update a result base attributes
-     *
-     * @param array $attrs
-     * @param bool $merge Only update empty attrs
-     * @return void
-     */
-    public function updateAttrs($attrs, $merge = false)
-    {
-        $attrs = static::parseAttrs($attrs, $merge);
-        if (empty($attrs)) return false;
-        static::setAttrs($this->getID(), $attrs);
-    }
-
-
-    /**
-     * Parse a list of attributes
+     * Parse attributes to be saved
      *
      * @param array $attrs
      * @param bool $merge
      * @return array
      */
-    public function parseAttrs($attrs, $merge)
+    public function parseAttributes($attrs, $merge)
     {
+        if (empty($attrs)) return false;
+
         if ($merge) foreach ($attrs as $attr=>$value) {
             if (isset($this->$attr) && !empty($this->$attr)) {
                 unset($attrs[$attr]);
@@ -190,22 +193,8 @@ abstract class ModelItem
 
         foreach ($fields as $key=>$value) {
             if (is_callable($value) && !is_string($value)) $value = $value($this);
-            static::setField($this->getID(), $key, $value, $merge);
+            Data::update($key, $value, static::FIELD_PREFIX.$this->getID(), $merge);
         }
-    }
-
-    /**
-     * Set an ACF field value for an item
-     *
-     * @param int $id
-     * @param string $key
-     * @param mixed $value
-     * @param bool $merge
-     * @return void
-     */
-    public static function setField($id, $key, $value, $merge)
-    {
-        Data::update($key, $value, static::FIELD_PREFIX.$id, $merge);
     }
 
     /**
@@ -220,35 +209,8 @@ abstract class ModelItem
 
         foreach ($meta as $key=>$value) {
             if (is_callable($value) && !is_string($value)) $value = $value($this);
-            static::setMeta($this->getID(), $key, $value);
+            $this->setMeta($key, $value);
         }
-    }
-
-
-    /**
-     * Update the terms of the given object
-     *
-     * @param object $result
-     * @param array $terms key : taxonomy, value : term(s)
-     * @param boolean $merge Add terms and do not remove any
-     * @return void
-     */
-    public function updateTaxonomies($tax, $merge = false)
-    {
-        static::setTaxonomies($this->getID(), $tax, $merge);
-    }
-
-
-    /**
-     * Set the language of a term
-     *
-     * @param int $term_id
-     * @param string $lang
-     * @return bool
-     */
-    public function updateLang($lang)
-    {
-        static::setLang($this->getID(), $lang);
     }
 
 
@@ -265,7 +227,6 @@ abstract class ModelItem
         $this->fetchAllFields();
         wp_send_json($this);
     }
-
 
     /**
      * Dump the result of a model with all its fields loaded

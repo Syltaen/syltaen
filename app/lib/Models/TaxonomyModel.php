@@ -521,19 +521,17 @@ class TaxonomyModel extends Model
 
             // Update fields
             if ($fields) {
-                foreach ($fields as $key=>$value) {
-                    ModelItemTaxonomy::setField($term_id, $key, $value);
-                }
+                (new ModelItemTaxonomy($term_id))->updateFields($fields);
             }
 
             // Set language
             if ($is_translated) {
-                ModelItemTaxonomy::setLang($term_id, $lang);
+                (new ModelItemTaxonomy($term_id))->updateLang($lang);
             }
 
             // Set order
             if ($order != null) {
-                ModelItemTaxonomy::setOrder($term_id, $order);
+                (new ModelItemTaxonomy($term_id))->updateOrder($order);
             }
         }
 

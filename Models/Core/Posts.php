@@ -10,15 +10,6 @@ class Posts extends PostsModel
 
     const HAS_THUMBNAIL = true;
 
-    protected $thumbnailsFormats = [
-        "tag" => [
-            "archive" => "medium"
-        ],
-        "url" => [
-            "archive" => "medium"
-        ]
-    ];
-
     protected $dateFormats = [
         "short"   => "d/m/Y"
     ];

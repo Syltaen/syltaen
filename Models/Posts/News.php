@@ -16,17 +16,6 @@ class News extends PostsModel
         NewsTaxonomy::SLUG
     ];
 
-    public $thumbnailsFormats = [
-        "tag" => [
-            "single"  => [900, null],
-            "archive" => [500, null]
-        ],
-        "url" => [
-            "slide"   => [1600, null],
-            "archive" => [500, null]
-        ]
-    ];
-
     public $dateFormats = [
         "short"   => "d/m/Y"
     ];

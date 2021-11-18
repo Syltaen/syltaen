@@ -20,17 +20,6 @@ class ClassName extends PostsModel
     //     "old_postsmodeltemplate"  => ["PostsModelTemplate dépassé", "PostsModelTemplate dépassés"]
     // ];
 
-    // protected $thumbnailsFormats = [
-    //     "tag" => [
-    //         "single"  => [900, null],
-    //         "archive" => [500, null]
-    //     ],
-    //     "url" => [
-    //         "slide"   => [1600, null],
-    //         "archive" => [500, null]
-    //     ]
-    // ];
-
     // protected $dateFormats = [
     //     "short"   => "d/m/Y"
     // ];

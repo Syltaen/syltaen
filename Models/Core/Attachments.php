@@ -4,16 +4,11 @@ namespace Syltaen;
 
 class Attachments extends PostsModel
 {
-    const TYPE     = "attachment";
-    const LABEL    = "Attachements";
+    const TYPE       = "attachment";
+    const LABEL      = "Attachements";
+    const ITEM_CLASS = "ModelItemAttachment";
 
     const HAS_THUMBNAIL = true;
-
-    protected $thumbnailsFormats = [
-        "url" => [
-            "small" => "thumbnail"
-        ]
-    ];
 
     public function __construct()
     {

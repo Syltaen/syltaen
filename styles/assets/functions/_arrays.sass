@@ -39,11 +39,18 @@
 
 
 // ========== COLORS ========== //
-@function color($slug)
+@function color($slug, $opacity: 1)
+    $color: false
+
     @if map-has-key($colors, $slug)
-        @return list_get($colors, $slug)
+        $color: list_get($colors, $slug)
     @else
-        @return $slug
+        $color: $slug
+
+    @if $opacity == 1
+        @return $color
+    @else
+        @return rgba($color, $opacity)
 
 
 // ========== FONTS ========== //

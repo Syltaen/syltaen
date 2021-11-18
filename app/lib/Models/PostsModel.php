@@ -69,19 +69,6 @@ abstract class PostsModel extends Model
 
 
     /**
-     * List of thumbnails formats to store in each post.
-     * Specify a key and a format (string or array of sizes).
-     * Specify those in one or both of the arrays (url or tag) depending on what you want to be retrieved
-     * see https://developer.wordpress.org/reference/functions/the_post_thumbnail/
-     * @var array
-     */
-    protected $thumbnailsFormats = [
-        "url" => [],
-        "tag" => []
-    ];
-
-
-    /**
      * List of terms format to be stored in each post.
      * See exemple bellow for the different return formats.
      * see https://codex.wordpress.org/Function_Reference/wp_get_post_terms
@@ -130,29 +117,15 @@ abstract class PostsModel extends Model
             },
 
             /**
-             * All the thumb formats for this post, defined by $thumbnailsFormats
+             * Instance of an ModelItemAttachment allowing to get the image url/tag easily
              */
             "@thumb" => function ($post) {
                 if (!static::HAS_THUMBNAIL) return false;
 
-                $thumb = [
-                    "url" => [],
-                    "tag" => []
-                ];
+                $thumb_id = $post->getMeta("_thumbnail_id");
+                if (empty($thumb_id)) return false;
 
-                if (!empty($this->thumbnailsFormats["url"])) {
-                    foreach ($this->thumbnailsFormats["url"] as $name=>$format) {
-                        $thumb["url"][$name] = get_the_post_thumbnail_url($post->ID, $format);
-                    }
-                }
-
-                if (!empty($this->thumbnailsFormats["tag"])) {
-                    foreach ($this->thumbnailsFormats["tag"] as $name=>$format) {
-                        $thumb["tag"][$name] = get_the_post_thumbnail($post->ID, $format);
-                    }
-                }
-
-                return $thumb;
+                return new ModelItemAttachment((int) $thumb_id);
             },
 
 
@@ -459,20 +432,6 @@ abstract class PostsModel extends Model
     // > DATA HANDLING FOR EACH POST
     // ==================================================
     /**
-     * Add new thumbnail formats to the list
-     *
-     * @param string $type
-     * @param string $name
-     * @param string|array $value
-     * @return self
-     */
-    public function addThumbnailFormats($type, $formats)
-    {
-        $this->thumbnailsFormats[$type] = array_merge($this->thumbnailsFormats[$type], $formats);
-        return $this;
-    }
-
-    /**
      * Add new date formats to the list
      *
      * @param string $name
@@ -695,7 +654,7 @@ abstract class PostsModel extends Model
      * @param array $attrs The post attributes
      * @param array $fields Custom ACF fields with their values
      * @param string $status Status for the post
-     * @return self A new model instance containing the new item
+     * @return self A new model item instance containing the new item
      */
     public static function add($attrs = [], $fields = [], $tax = [])
     {
