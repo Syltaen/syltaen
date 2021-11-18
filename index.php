@@ -6,6 +6,7 @@ namespace Syltaen;
 // > SINGLES
 // ==================================================
 Route::is("single", "SingleController::render");
+Route::is("attachment", "SingleController::render");
 
 // ==================================================
 // > SEARCH

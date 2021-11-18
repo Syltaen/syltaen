@@ -12,11 +12,11 @@ import $ from "jquery";
 # > JQUERY METHOD
 # ==================================================
 $.fn.collapsable = ($trigger = false, $content = false) ->
+    $trigger = $trigger || $(this).find("[data-collapsable-trigger], .collapsable__header")
+    $content = $content || $(this).find("[data-collapsable-content], .collapsable__content")
+    isLinked = $(this).data("link") != false
 
-    $trigger = $(this).find("[data-collapsable-trigger], .collapsable__header")
-    $content = $(this).find("[data-collapsable-content], .collapsable__content")
-
-    $(this).each -> new Collapsable $(this), $trigger, $content
+    $(this).each -> new Collapsable $(this), $trigger, $content, isLinked
     return $(this)
 
 
@@ -25,23 +25,34 @@ $.fn.collapsable = ($trigger = false, $content = false) ->
 # ==================================================
 class Collapsable
 
-    constructor: (@$el, @$trigger, @$content) ->
-
+    constructor: (@$el, @$trigger, @$content, @isLinked = false) ->
         unless @$el.hasClass "is-open" then @close 0
-        @bindClick()
 
+        # Open/close events
+        @$el.on "close", => @close()
+        @$trigger.click => @toggle()
+
+    ###
+    # Close the collapsable
+    ###
     close: (speed = 300) ->
         @$content.slideUp speed
         @$el.removeClass "is-open"
         @opened = false
 
+    ###
+    # Open the collapsable
+    ###
     open: (speed = 300) ->
         @$content.slideDown speed
         @$el.addClass "is-open"
         @opened = true
 
+        if @isLinked then $("[data-link]").not(@$el).trigger("close")
+
+
+    ###
+    # Toggle open/close
+    ###
     toggle: ->
         if @opened then @close() else @open()
-
-    bindClick: ->
-        @$trigger.click => @toggle()

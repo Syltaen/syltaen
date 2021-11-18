@@ -10,6 +10,4 @@ class ClassName extends BaseController
         parent::__construct();
 
     }
-
-
 }

@@ -92,10 +92,8 @@ abstract class BaseController extends Controller
     protected function footer()
     {
         Data::store($footer, [
-            "col_1"     => "",
-            "col_2"     => "",
-            "col_3"     => "",
-            "copyright" => "",
+            "footer_cols" => [],
+            "copyright"   => "",
         ], "headerfooter");
 
         return $footer;
@@ -183,7 +181,7 @@ abstract class BaseController extends Controller
         $error = $error ? $error : "Veuillez vous connecter pour accéder à cette page.<br>Une problème ? <a href=".site_url("contact").">Contactez un administrateur.</a>";
 
         if (!Users::isLogged()) {
-            (new Controller)->error($error, $page . "?ref=" . $post->ID . "&" . $_SERVER["QUERY_STRING"]);
+            $this->error($error, $page . "?redirect_to=" . Route::getFullUrl());
         }
     }
 
@@ -201,7 +199,7 @@ abstract class BaseController extends Controller
         $error = $error ? $error : "Vous n'avez pas le droit d'accéder à cette page.<br>Une problème ? <a href=".site_url("contact").">Contactez un administrateur.</a>";
 
         if (!$this->user->can($roles, "any")) {
-            (new Controller)->error($error, $page . "?ref=" . $post->ID . "&" . $_SERVER["QUERY_STRING"]);
+            $this->error($error, $page . "?redirect_to=" . Route::getFullUrl());
         }
     }
 
@@ -262,6 +260,7 @@ abstract class BaseController extends Controller
         );
     }
 
+
     /**
      * Set the current page/post to a model result.
      * Usefull to create aliases and/or displaying a page/post that is not found by default
@@ -275,7 +274,12 @@ abstract class BaseController extends Controller
         global $wp_query;
         global $post;
 
-        $wp_query   = $model->limit(1)->getSingularQuery();
+        $wp_query               = $model->limit(1)->getQuery();
+        $wp_query->is_singular  = true;
+        $wp_query->is_single    = true;
+        $wp_query->is_home      = false;
+        $wp_query->max_num_page = 0;
+
         $post       = $model->getOne();
         $this->post = $post;
 
@@ -287,5 +291,4 @@ abstract class BaseController extends Controller
             Route::respond($responce, $args, true);
         }
     }
-
 }

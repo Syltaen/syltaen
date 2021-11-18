@@ -1,0 +1,31 @@
+//- =============================================================================
+//- > VIEW MIXIN - LOGIN FORM
+//- =============================================================================
+
+mixin loginform(redirect_to)
+
+    form.loginform(action=site_url("wp-login.php") method="post")
+
+        fieldset.loginform__username
+            label(for="user_login")!= __("Adresse e-mail", "syltaen")
+            input(type="text" name="log" id="user_login")
+
+        fieldset.loginform__password
+            label(for="user_pass")
+                != __("Mot de passe", "syltaen")
+                a.loginform__password__reset(tabindex="-1" href=wp_lostpassword_url())
+                    != __("Mot de passe oublié ?", "syltaen")
+
+            input(type="password" name="pwd" id="user_pass")
+
+        fieldset.loginform__submit
+
+            label.loginform__remember.choice-label
+                input.loginform__remember__check(type="checkbox" value="forever")
+                != __("Se souvenir de moi")
+
+            button.button.form__submit(name="wp-submit")!= __("Se connecter", "syltaen")
+
+        if $redirect_to
+            input(type="hidden" name="redirect_to" value=$redirect_to)
+

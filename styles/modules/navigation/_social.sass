@@ -3,17 +3,19 @@
 // =============================================================================
 
 .social
-
-    margin: 0 .5em
-    +flex(row nowrap)
+    +flex(row nowrap, flex-end)
 
     &__item
-        padding: 0 .5em
+        margin: 0 3px
 
     &__link
         display: block
-        +font(22px primary)
+        +size(2.25em)
+        +font(20px 2.25 primary center)
+        border: 1px solid #EBEBEB
+        border-radius: 50%
+        background: white
         transition: all .35s ease
         &:hover
-            +font(secondary)
-
+            +font(white)
+            background: color(primary)

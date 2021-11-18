@@ -4,24 +4,21 @@
 
 .site-footer
     clear: both
+    +font(14px white)
 
     // =============================================================================
     // > TOP
     // =============================================================================
     &__top
-        background: color(light-grey)
-        padding: 1em 0
+        background: color(secondary)
+        padding: spacing(ms) 0
 
     // =============================================================================
     // > BOTTOM
     // =============================================================================
     &__bottom
-        padding: 5px 0
-        background: white
-        +font(12px #7B7E7F)
-        +screen(xs)
-            padding: 10px 0
-            +font(14px 30px)
+        padding: .65em 0
+        background: color(primary)
 
     &__menu
         +flex(row nowrap)
@@ -30,12 +27,12 @@
             flex-direction: column
         &__item
             padding: 0 10px
-
         &__link
-            +font(#7B7E7F)
+            +font(white)
             &:hover
-                +font(primary)
-
+                +font(secondary)
+        &__sub
+            display: none
 
     &__copyright
         margin: 0

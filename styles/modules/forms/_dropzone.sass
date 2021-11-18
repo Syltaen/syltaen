@@ -5,32 +5,29 @@
 .uploadfield
 
     &__zone
-        padding: 20px
-        border: 2px dashed color(medium-grey)
-        background: color(light-grey)
+        padding: 1em
+        border: 1px dashed color(medium-grey)
+        border-radius: 5px
         +flex(row wrap)
         clip: pointer
 
     &__message
-        +font(18px 20px bold center)
-        padding: 21px
+        +font(16px 1.4  center)
+        padding: 1em
         width: 100%
         pointer-events: none
         clip: pointer
-        opacity: 0.25
+        opacity: .25
         transition: all .25s ease
         &::before
-            +fa(paperclip)
-            font-size: 1.35em
+            +fal(paperclip)
+            +font(1.15 primary)
             margin-right: .3em
         .dz-started &
             display: none
 
     &__zone:hover &__message
         opacity: 0.5
-
-
-
 
     // ==================================================
     // > PREVIEWS

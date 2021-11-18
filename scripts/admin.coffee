@@ -8,19 +8,39 @@ class ACFSection
     constructor: (@$section) ->
         @$section.attr "data-processed", true
 
-        @$bgPicker    = @$section.find(".acf-page-sections__bg input").change => @updateHandle()
-        @$colorPicker = @$section.find(".acf-page-sections__color input").change => @updateHandle()
-        @$imagePicker = jQuery(@$colorPicker.closest(".acf-page-sections__color").next().find("input[type='hidden']")[0]).change => @updateHandle()
+        @bg       = "white"
+        @customBg = "#fff"
+        @text     = "text"
+        @image    = false
+
+        @$bgPicker       = @$section.find(".acf-page-sections__bg input").change                 => @updateHandle()
+        @$customBgPicker = @$section.find(".acf-page-sections__custombg input").change           => @updateHandle()
+        @$textPicker     = @$section.find(".acf-page-sections__color input").change              => @updateHandle()
+        @$imagePicker    = jQuery(@$section.find(".acf-field[data-name='bg_img']")).find("input").change => @updateHandle()
 
         @$handle = @$section.children(".acf-row-handle.order")
 
         @updateHandle()
 
+    ###
+    # Update the section hanlde to preview colors
+    ###
     updateHandle: ->
-        @$handle.attr("class", "acf-page-sections__handle acf-row-handle order ui-sortable-handle bg-" + @$bgPicker.filter(":checked").val() + " color-" + @$colorPicker.filter(":checked").val())
+        @bg       = @$bgPicker.filter(":checked").val()
+        @customBg = @$customBgPicker.val()
+        @text     = @$textPicker.filter(":checked").val()
+        @image    = @$imagePicker.next(".image-wrap").find("img").attr("src")
 
-        if (($img =  @$imagePicker.next(".image-wrap").find("img")) && (@$bgPicker.filter(":checked").val() == "image"))
-            @$handle.css("background-image", "url(" + $img.attr("src") + ")")
+        # Update bg and text color of the handle
+        @$handle.attr("class", "acf-page-sections__handle acf-row-handle order ui-sortable-handle bg-#{@bg} color-#{@text}")
+        if @bg == "custom"
+            @$handle.css("background-color", @customBg)
+        else
+            @$handle.css("background-color", false)
+
+        # Add bg image if any
+        if @image
+            @$handle.css("background-image", "url(" + @image + ")")
         else
             @$handle.css("background-image", "")
 

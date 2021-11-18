@@ -81,26 +81,17 @@ abstract class Files
 
 
     /**
-     * Delete a file or a folder recursively
+     * Add a webp extension if the client browser support it
      *
-     * @param string $file
-     * @return bool Success
+     * @return void
      */
-    public static function delete($file)
+    public static function toWEBP($string)
     {
-        // File does not exists
-        if (empty($file) || !file_exists($file)) return false;
-
-        // Is a file, remove it
-        if (is_file($file)) return unlink($file);
-
-        // Is a dir : delete recursively all subfiles
-        foreach (array_diff(scandir($file), [".", ".."]) as $subfile) {
-            static::delete($file . "/" . $subfile);
+        if (strpos($_SERVER["HTTP_ACCEPT"], "image/webp") !== false) {
+            return preg_replace("/\.(png|jpg|jpeg)/", ".$1.webp", $string);
         }
-        return rmdir($file);
+        return $string;
     }
-
 
     // ==================================================
     // > ENQUEUING
@@ -206,10 +197,12 @@ abstract class Files
         // Find the file in one of the classes folders
         if ($found = self::findIn("{$classname}.php", [
             "app/lib",
+            "app/lib/Models/items",
             "app/Helpers",
             "Controllers",
             "Controllers/processors",
             "Models",
+            "Models/API",
             "app/Forms"
         ])) {
             require_once $found;

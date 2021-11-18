@@ -160,9 +160,8 @@ abstract class Database
     {
         return "(" . implode(",", array_map(function ($item) {
             return "\"$item\"";
-        }, $array)) . ")";
+        }, (array) $array)) . ")";
     }
-
 
 
     // =============================================================================

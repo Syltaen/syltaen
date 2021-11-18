@@ -109,7 +109,7 @@ class Cache
      * @param int $linesToKeep Limit of lines to keep in the file
      * @return void
      */
-    public function log($newLine, $filename = "logs", $linesToKeep = 500)
+    public function log($newLine, $filename = "logs", $linesToKeep = 50000)
     {
         $last = $this->getDataFrom($filename);
 
@@ -243,7 +243,7 @@ class Cache
 
         // Or create the cache directory if there is none
         } else {
-            mkdir($directory);
+            mkdir($directory, 0777, true);
         }
 
         return $files;
@@ -321,6 +321,4 @@ class Cache
 
         return $this->decodeContent(file_get_contents($file));
     }
-
-
 }

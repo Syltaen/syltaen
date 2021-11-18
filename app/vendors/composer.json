@@ -3,8 +3,6 @@
         "pug-php/pug": "^3.1",
         "php-console/php-console": "^3.1",
         "filp/whoops": "^2.1",
-        "phpmailer/phpmailer": "^6.0",
-        "mk-j/php_xlsxwriter": "^0.37.0",
-        "jawira/case-converter": "^3.3"
+        "mk-j/php_xlsxwriter": "^0.37.0"
     }
 }

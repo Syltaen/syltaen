@@ -4,14 +4,16 @@ namespace Syltaen;
 
 class Users extends UsersModel
 {
-
+    /**
+     * Add custom fields for the webiste users
+     */
     public function __construct()
     {
         parent::__construct();
 
-        $this->fields = [
-            // "key"
-        ];
+        $this->addFields([
+
+        ]);
     }
 
 
@@ -39,5 +41,4 @@ class Users extends UsersModel
     {
         return $prefix . sha1(microtime(true) . mt_rand(10000, 90000)) . $suffix;
     }
-
 }

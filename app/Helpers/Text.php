@@ -36,4 +36,28 @@ abstract class Text
         if ($json !== null) return $json;
         return $string;
     }
+
+    /**
+     * Remove all line breaks from the text
+     *
+     * @return string
+     */
+    public static function removeLineBreaks($text)
+    {
+        $text = str_replace("\n", "", $text);
+        $text = str_replace("\r", "", $text);
+        return $text;
+    }
+
+    /**
+     * Escape all line breaks from the text
+     *
+     * @return string
+     */
+    public static function escapeLineBreaks($text)
+    {
+        $text = str_replace("\n", '\n', $text);
+        $text = str_replace("\r", '\r', $text);
+        return $text;
+    }
 }

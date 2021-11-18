@@ -20,10 +20,11 @@
 %unstyled-list
     list-style: none
     &, li
-        margin: 0
-        padding: 0
+        margin: 0 !important
+        padding: 0 !important
         &::before
-            content: none
+            content: none !important
+
 .unstyled-list
     @extend %unstyled-list
 

@@ -28,19 +28,29 @@ class SectionsProcessor extends DataProcessor
      */
     private function addClasses(&$s)
     {
-        $s["classes"] = ["site-section"];
+        $s["classes"] = array_merge(explode(" ", $s["classes"]), ["site-section"]);
 
         // ========== PADDING ========== //
         if ($s["padding_top"] != "no") $s["classes"][] = $s["padding_top"] . "-padding-top";
         if ($s["padding_bottom"] != "no") $s["classes"][] = $s["padding_bottom"] . "-padding-bottom";
 
-        // ========== BACKGROUND ========== //
+        // ========== BACKGROUND COLOR ========== //
         $s["classes"][] = "bg-" . $s["bg"];
 
-        if ($s["bg"] == "image") {
-            $s["attr"]["style"] = "background-image: url(" . $s["bg_img"] . ");";
-            $s["classes"][]     = "bg-image--" . $s["bg_img_size"];
-            $s["classes"][]     = "bg-image--" . $s["bg_img_pos"];
+        // ========== BACKGROUND IMAGE ========== //
+        if ($s["bg_img"]) {
+            $image = [
+                "attr"    => ["style" => "background-image: url(" . $s["bg_img"] . ");"],
+                "classes" => ["bg-image", "bg-image--" . $s["bg_img_size"], "bg-image--" . $s["bg_img_pos"]]
+            ];
+
+            if ($s["bg_img_half"]) {
+                $s["halfimage"] = $image;
+                $s["classes"][] = "bg-halfimage__wrap";
+            } else {
+                $s["attr"]    = array_merge($s["attr"], $image["attr"]);
+                $s["classes"] = array_merge($s["classes"], $image["classes"]);
+            }
         }
 
         // ========== TEXT ========== //
@@ -60,6 +70,11 @@ class SectionsProcessor extends DataProcessor
         if ($s["bg"] == "image" && $s["bg_img_pos"] == "parallax") {
             $s["attr"]["data-top-bottom"] = "background-position-y: 100%";
             $s["attr"]["data-bottom-top"] = "background-position-y: 0%";
+        }
+
+        // ========== CUSTOM COLOR ========== //
+        if ($s["bg"] == "custom") {
+            $s["attr"]["style"] = "background-color: ".$s["bg_custom"].";";
         }
     }
 

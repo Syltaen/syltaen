@@ -21,10 +21,10 @@ return [
     // ==================================================
 
     // The primary color used in mail templates, excel exports, ...
-    "color_primary"   => "#a1f2ca",
+    "color_primary"   => "#111",
 
     // The secondary color
-    "color_secondary" => "#282828",
+    "color_secondary" => "#555",
 
 
 
@@ -33,7 +33,7 @@ return [
     // ==================================================
 
     // Set to true to prevent mail from being sent
-    "mail_debug"     => false,
+    "mail_debug"     => false || (defined("LOCAL_ENV") && LOCAL_ENV),
 
     // The address all mails are sent from
     "mail_from_addr" => "info@hungryminds.be",

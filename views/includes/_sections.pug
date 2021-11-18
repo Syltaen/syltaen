@@ -1,55 +1,60 @@
 //- =============================================================================
-//- > VIEW : INCLUDE - SECTIONS
+//- > VIEW MIXIN - SECTIONS
 //- =============================================================================
 
 mixin colcontent(col)
-    if col.content
-        each c in col.content
-            +content(c)
+    if $col["content"]
+        each $c in $col["content"]
+            +content($c)
 
 //- ==================================================
 //- > COLLAPSABLE
 //- ==================================================
 mixin collapsable(row)
-    if row.collapsable
+    if $row["collapsable"]
         .collapsable
-            .collapsable__header.trigger!= row.collapsable
+            .collapsable__header.trigger!= $row["collapsable"]
             .collapsable__content
                 block
     else
         block
-
 
 //- ==================================================
 //- > ROW
 //- ==================================================
 mixin sectionrow(row)
 
-    +collapsable(row)
+    +collapsable($row)
 
         //- Light markup when there is only one column
-        if row.light
-            each col in row.columns
-                +colcontent(col)
+        if $row["light"]
+            each col in $row["columns"]
+                +colcontent($col)
 
         //- Display columns when there are more than one
         else
-            .row(class=row.classes)&attributes(row.attrs)
-                each col in row.columns
-                    .gr(style=col.styles class=col.classes)
-                        +colcontent(col)
+            .row(class=$row["classes"])&attributes($row["attrs"])
+                each $col in $row["columns"]
+                    .gr(style=$col["styles"] class=$col["classes"])
+                        +colcontent($col)
 
 
 //- ==================================================
 //- > SECTIONS
 //- ==================================================
 mixin sections(sections)
-    each s in sections
+    if !empty($sections)
+        each $s in $sections
 
-        section(class=s.classes)&attributes(s.attr)
-            each row in s.rows
-                if row.width == "full"
-                    +sectionrow(row)
-                else
-                    .container(class="container--".$row["width"]."")
-                        +sectionrow(row)
+            section(class=$s["classes"])&attributes($s["attr"])
+
+                if !empty($s["halfimage"])
+                    .bg-halfimage(class="bg-halfimage--".$s["bg_img_half_position"]." bg-".$s["bg"]."")
+                        .bg-halfimage__cache: .bg-halfimage__image(class=$s["halfimage"]["classes"] data-top-bottom="background-position-y: 0%;" data-bottom-top="background-position-y: 100%;")&attributes($s["halfimage"]["attr"])
+
+                each $row in $s["rows"]
+                    if $row["width"] == "full"
+                        +sectionrow($row)
+                    else
+                        .container(class="container--".$row["width"]."")
+                            +sectionrow($row)

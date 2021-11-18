@@ -461,7 +461,7 @@
                     "name": "bg",
                     "type": "radio",
                     "instructions": "Permet de définir une couleur de fond pour la section",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "50",
@@ -475,7 +475,7 @@
                         "dark-grey": "Gris foncé",
                         "primary": "Couleur principale",
                         "secondary": "Couleur secondaire",
-                        "image": "Image"
+                        "custom": "Couleur personnalisée"
                     },
                     "allow_null": 0,
                     "other_choice": 0,
@@ -490,7 +490,7 @@
                     "name": "text_color",
                     "type": "radio",
                     "instructions": "Force la couleur du texte à l'intérieur de la section.",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "50",
@@ -514,23 +514,40 @@
                     "save_other_choice": 0
                 },
                 {
-                    "key": "field_5777f159a4edf",
-                    "label": "Image de fond",
-                    "name": "bg_img",
-                    "type": "image",
-                    "instructions": "",
-                    "required": 1,
+                    "key": "field_6195557212b5c",
+                    "label": "Couleur de fond de la section personnalisée",
+                    "name": "bg_custom",
+                    "type": "color_picker",
+                    "instructions": "Force la couleur du texte à l'intérieur de la section.",
+                    "required": 0,
                     "conditional_logic": [
                         [
                             {
                                 "field": "field_5777f0dca4ede",
                                 "operator": "==",
-                                "value": "image"
+                                "value": "custom"
                             }
                         ]
                     ],
                     "wrapper": {
                         "width": "",
+                        "class": "acf-page-sections__custombg",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "enable_opacity": 0,
+                    "return_format": "string"
+                },
+                {
+                    "key": "field_6195563d12b5d",
+                    "label": "Image de fond",
+                    "name": "bg_img",
+                    "type": "image",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "51",
                         "class": "",
                         "id": ""
                     },
@@ -546,18 +563,79 @@
                     "mime_types": ""
                 },
                 {
+                    "key": "field_6195567312b5e",
+                    "label": "Image de fond - Moitié seulement",
+                    "name": "bg_img_half",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_6195563d12b5d",
+                                "operator": "!=empty"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "20",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "",
+                    "ui_off_text": ""
+                },
+                {
+                    "key": "field_619556ae12b5f",
+                    "label": "Image de fond - Position de la moitié",
+                    "name": "bg_img_half_position",
+                    "type": "radio",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_6195563d12b5d",
+                                "operator": "!=empty"
+                            },
+                            {
+                                "field": "field_6195567312b5e",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "29",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "left": "Gauche",
+                        "right": "Droite"
+                    },
+                    "allow_null": 0,
+                    "other_choice": 0,
+                    "default_value": "",
+                    "layout": "vertical",
+                    "return_format": "value",
+                    "save_other_choice": 0
+                },
+                {
                     "key": "field_582d6ef846b5d",
                     "label": "Image de fond - Taille",
                     "name": "bg_img_size",
                     "type": "select",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": [
                         [
                             {
-                                "field": "field_5777f0dca4ede",
-                                "operator": "==",
-                                "value": "image"
+                                "field": "field_6195563d12b5d",
+                                "operator": "!=empty"
                             }
                         ]
                     ],
@@ -567,8 +645,9 @@
                         "id": ""
                     },
                     "choices": {
-                        "default": "Default",
-                        "cover": "Couvrir"
+                        "cover": "Couvrir tout l'espace",
+                        "contain": "Afficher l'image entière",
+                        "default": "Taille par défaut"
                     },
                     "default_value": "cover",
                     "allow_null": 0,
@@ -584,13 +663,12 @@
                     "name": "bg_img_pos",
                     "type": "select",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": [
                         [
                             {
-                                "field": "field_5777f0dca4ede",
-                                "operator": "==",
-                                "value": "image"
+                                "field": "field_6195563d12b5d",
+                                "operator": "!=empty"
                             }
                         ]
                     ],
@@ -610,7 +688,7 @@
                         "center-bottom": "En bas centré",
                         "right-bottom": "En bas à droite"
                     },
-                    "default_value": "center",
+                    "default_value": "center-center",
                     "allow_null": 0,
                     "multiple": 0,
                     "ui": 0,
@@ -624,7 +702,7 @@
                     "name": "padding_top",
                     "type": "radio",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "50",
@@ -655,7 +733,7 @@
                     "name": "padding_bottom",
                     "type": "radio",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "50",
@@ -712,6 +790,25 @@
                     "default_value": "",
                     "placeholder": "",
                     "prepend": "#",
+                    "append": "",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_61955da2ddcf1",
+                    "label": "Classes CSS supplémentaires",
+                    "name": "classes",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
                     "append": "",
                     "maxlength": ""
                 },
@@ -815,5 +912,6 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1629900008
+    "show_in_rest": 0,
+    "modified": 1637178823
 }

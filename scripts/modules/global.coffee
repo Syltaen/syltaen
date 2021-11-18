@@ -1,4 +1,5 @@
 import $ from "jquery"
+import "slick-carousel"
 
 import parallax from "./../tools/parallax.coffee"
 import UploadField from "./../tools/UploadField.coffee"
@@ -18,7 +19,6 @@ export default in: ->
     # =============================================================================
     # > ANIMATIONS
     # =============================================================================
-
     # INCREMENTOR
     $(".incrementor").each (i, el) -> $(el).incrementor()
 
@@ -70,9 +70,10 @@ export default in: ->
     $("input[type='password']").not(".ninja-forms-field, .passwordbox__field").each -> new PasswordBox $(@)
 
     # DOUBLE-SUBMIT PREVENTION
-    $("form").submit (e) ->
+    $(".site-main form").submit (e) ->
         if ($(@).hasClass("is-sending")) then e.preventDefault()
         $(@).addClass "is-sending"
+
     $("form").change ->
         $(@).removeClass "is-sending"
 

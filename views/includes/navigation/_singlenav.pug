@@ -1,0 +1,21 @@
+//- =============================================================================
+//- > VIEW MIXIN - SINGLE POST NAVIGATION
+//- =============================================================================
+
+mixin singlenav(singlenav)
+
+    nav.singlenav&attributes($attributes)
+
+        a.singlenav__link.singlenav__link--archive(
+            href=$singlenav["archive"]["url"]
+        )!= $singlenav["archive"]["text"]
+
+        a.singlenav__link.singlenav__link--next(
+            href=$singlenav["next"]["url"]
+            class=$singlenav["next"]["url"]?"":"is-disabled"
+        )!= $singlenav["next"]["text"]
+
+        a.singlenav__link.singlenav__link--prev(
+            href=$singlenav["previous"]["url"]
+            class=$singlenav["previous"]["url"]?"":"is-disabled"
+        )!= $singlenav["previous"]["text"]

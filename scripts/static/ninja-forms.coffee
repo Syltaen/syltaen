@@ -6,7 +6,7 @@
 import $ from "jquery"
 import SelectField from "./../tools/SelectField.coffee"
 import UploadField from "./../tools/UploadField.coffee"
-# import RangeField from "./../tools/RangeField.coffee"
+import RangeField from "./../tools/RangeField.coffee"
 import FormSteps from "./../tools/FormSteps.coffee"
 import PasswordBox from "./../tools/PasswordBox.coffee"
 
@@ -24,7 +24,7 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
         @listenTo nfRadio.channel("listcountry"),          "render:view",           @listselectRender
         @listenTo nfRadio.channel("liststate"),            "render:view",           @listselectRender
         @listenTo nfRadio.channel("fieldroles"),           "render:view",           @listselectRender
-        # @listenTo nfRadio.channel("fieldrange"),           "render:view",           @rangeRender
+        @listenTo nfRadio.channel("fieldrange"),           "render:view",           @rangeRender
 
         @listenTo nfRadio.channel("fieldfileupload"),      "render:view",           @dropzoneRender
         @listenTo nfRadio.channel("fieldpassword"),        "render:view",           @passwordRender

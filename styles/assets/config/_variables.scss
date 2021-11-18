@@ -8,23 +8,23 @@
 // Usage : color(primary)
 $colors: (
     // Project
-    primary:    #a1f2ca,
-    secondary:  #282828,
+    primary:    #111,
+    secondary:  #555,
 
     // Texts
     text:       #111,
 
     // General
-    success:    ​#66cc66,
+    success:    #53AA27,
     error:      #e05252,
 
     // Greys
-    light-grey: #f8f7f7,
-    medium-grey:#b3b3b3,
+    light-grey: #EFEFEF,
+    medium-grey:#DADADA,
     dark-grey:  #282828,
-    white:    #fff,
-    black:    #111
-
+    white:      #fff,
+    black:      #111,
+    // transparent: rgba(white, .75)
 );
 
 

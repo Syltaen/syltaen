@@ -10,11 +10,8 @@ ul:not([class]),
 ol:not([class]),
 .list
     margin: 1em 0
-    padding-left: 1.2em
-
-    // EMBEDED
     & &
-        margin-top: .5em
+        margin: .35em 0
 
 ul:not([class]) > li,
 ol:not([class]) > li,
@@ -23,13 +20,8 @@ ol:not([class]) > li,
     position: relative
     margin-bottom: .4em
     &::before
-        +font(primary)
-        font-size: .9em
-        line-height: 1.8em
-        +absolute(left -1.2em top 0)
-
-    &[data-collapsable]
-        padding-right: 1.5em
+        +font(text)
+        +absolute(left 0 top 0)
 
 // =============================================================================
 // > BULLETS
@@ -37,8 +29,27 @@ ol:not([class]) > li,
 
 // ========== COLORS ========== //
 @each $slug, $value in $colors
-    .list--bullets-#{$slug} > li::before
+    .list--bullets-#{$slug} > li::before,
+    .list__item--bullet-#{$slug}::before
         color: $value !important
+
+// ========== DEFAULT / UL ========== //
+ul:not([class]),
+.list--circle
+    &,
+    & &
+        & > .list__item,
+        & > li
+            padding-left: .8em
+            &::before
+                +fa(circle)
+                font-size: .5em
+                top: .75em
+    & &
+        & > .list__item::before,
+        & > li::before
+            +far(circle)
+
 
 // ========== NUMBERS / OL ========== //
 ol:not([class]),
@@ -47,114 +58,53 @@ ol:not([class]),
 
 ol:not([class]),
 .list--numbers
-    & > .list__item::before, & > li::before
-        content: counter(item)"."
-        counter-increment: item
-        +font(bold)
-
-// ========== DEFAULT / UL ========== //
-ul:not([class]),
-.list--circle
-    &,
-    & &
-        & > .list__item::before,
-        & > li::before
-            +fa(circle)
-            font-size: .5em
-            line-height: 2.8em
-            left: -1.75em
-    & &
-        & > .list__item::before,
-        & > li::before
-            +far(circle)
-
+    & > .list__item,
+    & > li
+        padding-left: 1.2em
+        &::before
+            content: counter(item)"."
+            counter-increment: item
+            +font(bold right)
+            left: auto
+            right: 100%
+            transform: translate(1em)
 
 // ========== CARRETS ========== //
-.list--carrets
-    & > .list__item::before,
-    & > li::before
+.list--carrets > .list__item,
+.list--carrets > li,
+.list__item--carret
+    padding-left: .8em
+    &::before
         +fa(caret-right)
 
 // ========== ANGLES ========== //
-.list--angles
-    & > .list__item::before,
-    & > li::before
+.list--angles > .list__item,
+.list--angles > li,
+.list__item--angle
+    padding-left: 1.2em
+    &::before
         +fa(angle-right)
 
-
 // ========== ARROWS ========== //
-.list--arrows
+.list--arrows > .list__item,
+.list--arrows > li,
+.list__item--arrow
     padding-left: 1.35em
-    & > .list__item::before,
-    & > li::before
+    &::before
         +fa(arrow-right)
-        left: -1.35em
 
 // ========== CHECKS ========== //
-.list--checks
+.list--checks > .list__item,
+.list--checks > li,
+.list__item--check
     padding-left: 1.35em
-    & > .list__item::before,
-    & > li::before
-        +fa(check-circle)
-        font-size: 1em
-        line-height: unset
-        +font(secondary)
-        left: -1.35em
-
-// ========== CHOICES (radio/checkbox) ========== //
-.list--choices
-    padding-left: 1.5em
-    & > .list__item input.list__bullet,
-    & > li input.list__bullet
-        +absolute(top 0 left -1.5em)
-
-    & > .list__item .list__label,
-    & > li .list__label
-        margin: 0
-        +font(regular)
-
-// =============================================================================
-// > COLLAPSABLE
-// =============================================================================
-.list__item__collapse
-    +absolute(top 0 right 0)
-    +size(1.5em)
-    cursor: pointer
-    border-radius: 50%
-    transition: all .35s ease
     &::before
-        content: ""
-        +size(100em, 100%)
-        +absolute(top 0 right 0)
-    &::after
-        +fa(angle-down)
-        vertical-align: middle
-        +font(center medium-grey)
-        transition: transform .35s ease
-        transform: translateY(5%)
-        @extend %cover
+        +fa(check)
 
-    &:hover
-        background: color(primary)
-        &::after
-            +font(white)
-
-    .is-open > &::after
-        transform: rotate(-180deg) translateY(5%)
-
-
-
-
-// =============================================================================
-// > DISPOSITIONS
-// =============================================================================
-.list--vertical-centered
-    +flex(column nowrap, center, center)
-
-.list--horizontal
-    +flex(row nowrap)
-    margin-left: -10px
-    margin-right: -10px
-    & > li
-        padding-left: 10px
-        padding-right: 10px
+// ========== TIMES ========== //
+.list--times > .list__item,
+.list--times > li,
+.list__item--time
+    padding-left: 1.35em
+    &::before
+        +fa(times)

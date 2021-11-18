@@ -1,7 +1,7 @@
 //- =============================================================================
 //- > VIEW : SEARCH
 //- =============================================================================
-extends templates/_base
+extends _base
 
 //- ==================================================
 //- > INTRO
@@ -14,28 +14,21 @@ block intro
 //- > SECTIONS
 //- ==================================================
 block sections
+    section.md-padding-vertical.bg-white: .container
 
-    section.md-padding-vertical.bg-white
+        if $results
+            each $post_type in $results
+                h3.search-page__type
+                    strong.search-page__type__label!= $post_type["label"]
+                    span.search-page__type__count!= $post_type["count"]
+                ul.search-page__results
+                    each $result in $post_type["posts"]
+                        li.search-page__results__item
+                            a.search-page__results__card(href=$result->url)
+                                p.search-page__results__card__title= $result->post_title
+                                p.search-page__results__card__url= $result->url
+                                p.search-page__results__card__excerpt!= get_the_excerpt($result)
 
-        .container
-            h2.search-page__title!= title
-
-
-        .container: .row
-
-            each post_type in results
-
-                if post_type.count
-                    .gr-6.gr-12-xs
-                        h3.search-page__type  <strong>#{post_type.count}</strong> #{post_type.label}
-
-                        ul
-                            each result in post_type.posts
-                                li
-                                    a(href=result.url)= result.post_title
-
-
-    section.md-padding-vertical.bg-light-grey: .container
-        h2!= __("Modifier votre recherche", "syltaen")
-        form(action=site.url)
-            input.bg-white(name="s" value!=search)
+        else
+            p.search-page__noresult
+                != __("Aucun résultat", "syltaen")

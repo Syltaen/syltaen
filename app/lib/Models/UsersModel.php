@@ -4,74 +4,32 @@ namespace Syltaen;
 
 abstract class UsersModel extends Model
 {
+    /**
+     * The slug that define what this model is used for
+     */
+    const TYPE = "users";
+
+    /**
+     * Query arguments used by the model's methods
+     */
+    const QUERY_CLASS  = "WP_User_Query";
+    const OBJECT_CLASS = "WP_User";
+    const OBJECT_KEY   = "results";
+    const ITEM_CLASS   = "ModelItemUser";
+    const QUERY_IS     = "include";
+    const QUERY_ISNT   = "exclude";
+    const QUERY_LIMIT  = "number";
 
     // =============================================================================
     // > QUERY MODIFIERS
     // =============================================================================
 
-    /* Update parent method */
-    public function is($list, $mode = "replace", $filter_key = "include")
-    {
-        return parent::is($list, $mode, $filter_key);
-    }
 
     /* Update parent method */
-    public function isnt($list, $mode = "replace", $filter_key = "exclude")
+    public function search($terms, $columns = [], $strict = false)
     {
-        return parent::isnt($list, $mode, $filter_key);
-    }
-
-    /* Update parent method */
-    public function merge($model)
-    {
-        if (isset($model->filters["include"])) {
-            $this->is($model->filters["include"], "merge");
-        }
-        return $this;
-    }
-
-
-    /* Update parent method */
-    public function limit($limit = false, $filter_key = "number")
-    {
-        return parent::limit($limit, $filter_key);
-    }
-
-    /* Update parent method */
-    public function search($search, $include_meta = [])
-    {
-        $this->filters["search"] = "*$search*";
-        if (empty($include_meta)) return $this;
-
-        $this->filters["search_columns"] = $include_meta;
-
-        // Clear previous query modifiers tagged with search
-        $this->clearQueryModifiers("search");
-
-        // Update the SQL query to include metadata and taxonomies
-        return $this->updateQuery(function ($query) use ($search, $include_meta) {
-            global $wpdb;
-
-            // wp_send_json($query);
-
-            $query->query_fields = "DISTINCT " . $query->query_fields;
-
-            $query->query_from .= " LEFT JOIN {$wpdb->usermeta} searchmeta ON {$wpdb->users}.ID = searchmeta.user_id";
-            // Restirct metadata to specific keys to speed up the search
-            if (is_array($include_meta)) foreach ($include_meta as $key) {
-                $query->query_from .= " AND searchmeta.meta_key IN (".implode(",", array_map(function ($key) { return "'$key'"; }, $include_meta)).")";
-            }
-
-            // Extend search to metadata
-            $query->query_where = preg_replace(
-                "/user_login\s+LIKE\s*(\'[^\']+\')/",
-                "user_login LIKE $1 OR searchmeta.meta_value LIKE $1",
-                $query->query_where
-            );
-        }, "search");
-
-
-
+        $this->filters["search"] = $strict ? $terms : "*$terms*";
+        if (!empty($columns)) $this->filters["search_columns"] = $columns;
         return $this;
     }
 
@@ -99,15 +57,15 @@ abstract class UsersModel extends Model
 
 
     /**
-     * Get the specified or logged-in user ID
+     * Get the target ID, fallback to the current logged-in user
      *
      * @param mixed $user
      * @return int|boolean
      */
-    public static function getCurrentUserID($user = false)
+    public static function getTargetID($target = false)
     {
         if ($user) return Data::extractIds($user)[0] ?? false;
-        return wp_get_current_user()->ID;
+        return get_current_user_id();
     }
 
 
@@ -149,116 +107,33 @@ abstract class UsersModel extends Model
         ]);
     }
 
-    // ==================================================
-    // > SQL QUERY MODIFIER
-    // ==================================================
-    /**
-     * Register a query modifiers to be applied only when this model WP_Query runs
-     *
-     * @param callable $function
-     * @param string $hook
-     * @return self
-     */
-    public function updateQuery($function, $group = "default", $hook = "pre_user_query")
-    {
-        return parent::updateQuery($function, $group, $hook);
-    }
 
     // =============================================================================
     // > GETTERS
     // =============================================================================
-    /**
-     * Update parent method to have a cleaner data structure for each result
-     *
-     * @param WP_User_Query $query
-     * @return void
-     */
-    protected static function getResultsFromQuery($query)
-    {
-        // empty
-        if (empty($query->results)) return [];
-        // string|int -> IDs
-        if (is_string($query->results[0]) || is_int($query->results[0])) return $query->results;
-        // already transformed
-        if (get_class($query->results[0]) !== "WP_User") return $query->results;
-
-        $wp_users = $query->results;
-        $results  = [];
-
-        $query->results = [];
-        foreach ($wp_users as $wp_user) {
-            $result = (object) [
-                "ID"    => $wp_user->ID,
-                "caps"  => $wp_user->allcaps
-            ];
-            foreach ($wp_user->data as $key=>$value) {
-                $key          = str_replace("user_", "", $key);
-                $result->$key = $value;
-            }
-
-            $result->first_name = $wp_user->first_name;
-            $result->last_name  = $wp_user->last_name;
-
-            $results[] = $result;
-        }
-
-        $query->results = $results;
-
-        return $query->results;
-    }
-
-
-    /* Update parent method */
-    public function run($force = false)
-    {
-        if ($this->cachedQuery && $this->filters == $this->cachedFilters && !$force) return $this;
-        $this->clearCache();
-
-        $this->applyQueryModifiers();
-        $this->cachedQuery = new \WP_User_Query($this->filters);
-        $this->cachedFilters = $this->filters;
-        $this->unapplyQueryModifiers();
-
-        return $this;
-    }
-
-
     /* Update parent method */
     public function count($paginated = true)
     {
-        $total = $this->getQuery()->total_users;
-
-        if (!$paginated || !isset($this->filters["number"])) return $total;
-
-        // Not on last page : return the limit
-        $page = isset($this->filters["paged"]) ? $this->filters["paged"] : 1;
-
-        if ($page < $this->getPagesCount()) return $this->filters["number"];
-
-        // On last page : return the rest
-        return $total - ($page - 1 ) * $this->filters["number"];
+        if ($paginated)
+            return count($this->getQuery()->results);
+        else
+            return $this->getQuery()->total_users;
     }
 
     /* Update parent method */
     public function getPagesCount()
     {
-        $total = $this->getQuery()->total_users;
+        // No limit, everything in one page
+        if (!isset($this->filters[static::QUERY_LIMIT])) return 1;
 
-        if (!isset($this->filters["number"])) return $total;
-
-        return ceil($total / $this->filters["number"]);
+        // Else, divide total by limit
+        return ceil($this->getQuery()->total_users / $this->filters[static::QUERY_LIMIT]);
     }
 
 
     // =============================================================================
     // > DATA HANDLING FOR EACH POST
     // =============================================================================
-    /* Update parent method */
-    protected function populateFields(&$user, $fields_prefix = "user_")
-    {
-        parent::populateFields($user, $fields_prefix);
-    }
-
 
     // =============================================================================
     // > ROLES AND PERMISSIONS
@@ -305,7 +180,6 @@ abstract class UsersModel extends Model
         return true;
     }
 
-
     /**
      * Remove unused roles
      *
@@ -320,7 +194,6 @@ abstract class UsersModel extends Model
             }
         }
     }
-
 
     /**
      * Register custom capablilities
@@ -337,9 +210,6 @@ abstract class UsersModel extends Model
         }
     }
 
-
-
-
     // =============================================================================
     // > ACTIONS
     // =============================================================================
@@ -350,124 +220,32 @@ abstract class UsersModel extends Model
      * @param string $password
      * @param string $email
      * @param array $roles
-     * @return int $user_id
+     * @return self A new model instance containing the new item
      */
-    public static function add($attrs = [], $fields = [], $roles = [])
+    public static function add($login, $password, $email, $attrs = [], $fields = [], $roles = [])
     {
         $user_id = wp_insert_user(array_merge([
+            "user_login"           => $login,
+            "user_pass"            => $password,
+            "user_email"           => $email,
             "show_admin_bar_front" => "false"
         ], $attrs));
 
         if ($user_id instanceof \WP_Error) return $user_id;
 
-        if ($fields && !empty($fields)) {
-            static::updateFields($user_id, $fields);
-        }
-
-        if ($roles && !empty($roles)) {
-            static::updateRoles($user_id, $roles);
-        }
-
-        return $user_id;
+        return (new static)->is($user_id)->update(false, $fields, $roles);
     }
 
-
     /**
-     * Update all posts matching the query
+     * Alias for the updateTaxonomy method
      *
-     * @param array $attrs
-     * @param array $filds
-     * @param array $merge Only update data that is not already set
+     * @param array $roles Roles to set
+     * @param bool $merge Wether to merge or set the values
      * @return self
      */
-    public function update($attrs = [], $fields = [], $roles = [], $merge = false)
+    public function updateRoles($roles, $merge = false)
     {
-        foreach ($this->get() as $result) {
-
-            // Default attributes
-            if ($attrs && !empty($attrs)) {
-                static::updateAttrs($result, $attrs, $merge);
-            }
-
-            // Custom fields
-            if ($fields && !empty($fields)) {
-                static::updateFields($result, $fields, $merge);
-            }
-
-            // Roles
-            if ($roles && !empty($roles)) {
-                static::updateRoles($result, $roles, $merge);
-            }
-        }
-
-        // Force get refresh
-        $this->clearCache();
-
-        return $this;
-    }
-
-
-    /**
-     * Update parent method
-     *
-     * @see https://codex.wordpress.org/Function_Reference/wp_update_user
-     * @return void
-     */
-    public static function updateAttrs($result, $attrs, $merge = false)
-    {
-        if ($merge) {
-            foreach ($attrs as $attr=>$value) {
-                if (isset($result->$attr) && !empty($result->$attr)) {
-                    unset($attrs[$attr]);
-                }
-            }
-        }
-
-        foreach ($attrs as &$attr) {
-            if (is_callable($attr) && !is_string($attr)) $attr = $attr($result);
-        }
-
-        $attrs["ID"] = $result->ID;
-        wp_update_user($attrs);
-    }
-
-
-    /* Update parent method */
-    public static function updateFields($user, $fields, $merge = false, $fields_prefix = "user_")
-    {
-        parent::updateFields($user, $fields, $merge, $fields_prefix);
-    }
-
-
-    /**
-     * Update a user's roles
-     *
-     * @param mixed $user The user
-     * @param array $roles A list of roles slugs
-     * @return void
-     */
-    public static function updateRoles($user, $roles, $merge = false)
-    {
-        $user = get_user_by("id", Data::filter($user, "id"));
-        if ($user) {
-            if (!$merge) {
-                $user->set_role("");
-            }
-            foreach ((array) $roles as $role) {
-                $user->add_role($role);
-            }
-        }
-    }
-
-
-    /* Update parent method */
-    public function delete($reassign = null)
-    {
-        require_once(ABSPATH . "wp-admin/includes/user.php");
-        foreach ($this->get() as $user) {
-            wp_delete_user($user->ID, $reassign);
-        }
-        $this->clearCache();
+        return $this->updateTaxonomies($roles, $merge);
     }
 
 

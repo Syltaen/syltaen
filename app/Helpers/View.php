@@ -4,8 +4,7 @@ namespace Syltaen;
 
 class View
 {
-
-    const CACHE = true;
+    const CACHE = false;
 
     // ==================================================
     // > PUBLIC
@@ -36,6 +35,17 @@ class View
     public static function display($filename, $context = false)
     {
         echo static::render($filename, $context);
+    }
+
+
+    /**
+     * Light render of a pug string
+     *
+     * @return string
+     */
+    public static function parsePug($pug, $context = [])
+    {
+        return static::getRenderer()->render($pug, static::prepareContext($context));
     }
 
 
@@ -96,14 +106,16 @@ class View
         if (is_null(static::$renderer)) {
             static::$renderer = new \Pug\Pug([
                 "extension"          => ".pug",
-                // "expressionLanguage" => "php",
+                "expressionLanguage" => "php",
 
                 // Caching
                 "cache"         => static::CACHE ? Files::path("app/cache/pug-php/") : false,
                 "upToDateCheck" => WP_DEBUG, // Alaws serve cached versions in production
 
                 // Options
-                "strict" => true,
+                "strict"  => true,
+                "basedir" => Files::path("/"),
+                "debug"   => WP_DEBUG
             ]);
 
             static::setOptions();

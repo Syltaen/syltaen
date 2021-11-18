@@ -2,7 +2,7 @@
 
 namespace Syltaen;
 
-class SingleController extends BaseController
+class SingleController extends PageController
 {
 
     public $view = "single";
@@ -14,12 +14,13 @@ class SingleController extends BaseController
     public function __construct($args = [])
     {
         parent::__construct($args);
+        if (!method_exists($this, $this->post->post_type)) return;
 
         // Use the post type as a method
         $this->{$this->post->post_type}();
 
         // Populate & add the post to the context
-        $this->model->populateResultData($this->post);
+        $this->post = new ModelItem($this->post, $this->model);
         $this->data["post"] = $this->post;
     }
 
@@ -35,10 +36,21 @@ class SingleController extends BaseController
     private function news()
     {
         $this->model = new News;
-        $this->view  = "single-news";
-        $this->addSingleNav("Retour à la liste des news", "/");
+        $this->addSingleNav("Retour à la liste des news");
     }
 
+    /**
+     * Data and view handling for News
+     *
+     * @return void
+     */
+    private function attachment()
+    {
+        $this->simplePage(
+            "<h2>{$this->post->post_title}</h2>".
+            wp_get_attachment_image($this->post->ID, "full")
+        );
+    }
 
     // ==================================================
     // > PARTS
@@ -50,12 +62,12 @@ class SingleController extends BaseController
      * @param string $archive_path The slug to the archive, default to post TYPE/REWRITE
      * @return void
      */
-    private function addSingleNav($archive_link_text = false, $archive_path = false)
+    private function addSingleNav($archive_link_text = false)
     {
         $this->addData([
             "@singlenav"  => [
                 "archive"  => [
-                    "url"  => site_url($archive_path ? $archive_path : ($this->model::CUSTOMPATH ? $this->model::CUSTOMPATH : $this->model::TYPE)),
+                    "url"  => $this->model::getArchiveURL(),
                     "text" => $archive_link_text ?: __("Retour", "syltaen")
                 ],
                 "previous" => [
@@ -69,5 +81,4 @@ class SingleController extends BaseController
             ]
         ]);
     }
-
 }

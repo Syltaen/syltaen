@@ -18,17 +18,23 @@
             .border-#{$color}#{screen_suffix($bp)}
                 border: 1px solid $value
 
+        .no-background#{screen_suffix($bp)}
+            background: none !important
+
 // ==================================================
 // > BACKGROUND IMAGE
 // ==================================================
 .bg-image
-    background: center center no-repeat
+    background-position: center center
+    background-repeat: no-repeat
 
 @each $bp, $bp_data in $responsive
     +screen($bp)
         .bg-image
             &--cover#{screen_suffix($bp)}
                 background-size: cover
+            &--contain#{screen_suffix($bp)}
+                background-size: contain
             &--left#{screen_suffix($bp)}
                 background-position-x: left
             &--right#{screen_suffix($bp)}
@@ -56,3 +62,87 @@
                 background-position: center bottom
             &--right-bottom#{screen_suffix($bp)}
                 background-position: right bottom
+
+// ==================================================
+// > BG IMG FILTER
+// ==================================================
+// .bg-image::after
+//     content: ""
+//     opacity: .6
+//     @extend %cover
+
+// @each $color, $value in $colors
+//     .bg-image--filter-#{$color}::after
+//         background-color: $value
+
+// ==================================================
+// > HALF IMAGE
+// ==================================================
+.bg-halfimage
+    +size(50%, 100%)
+    +absolute(top 0 left 50%)
+    transform: skewX(-21deg)
+    transform-origin: 0% 100%
+
+    &__cache
+        overflow: hidden
+        @extend %cover
+
+    &__image
+        @extend %cover
+        transform: skewX(21deg)
+        transform-origin: 0% 100%
+
+    &__icon
+        +absolute(top 50% left 0)
+        img
+            transform: translate(-50%, -50%) skewX(21deg)
+
+    &--left,
+    &--left &__image
+        left: 0
+        transform-origin: 100% 0%
+    &--left &__icon
+        left: auto
+        right: 0
+        img
+            transform: translate(50%, -50%) skewX(21deg)
+
+    +screen(sm)
+        +size(100%, 350px)
+        +absolute(top -350px left 0)
+        transform: none
+        &__cache
+            transform: skewY(-5deg)
+            transform-origin: 0% 0%
+        &__image
+            transform: skewY(5deg)
+        &__wrap
+            margin-top: 350px
+        &__icon
+            +pos(bottom 0 left 50%)
+            top: auto
+            transform: none !important
+            img
+                transform: translate(-50%) !important
+
+        &--left,
+        &--left &__image
+            transform-origin: 0% 100%
+
+        &--left &
+            &__cache
+                transform-origin: 100% 0%
+                transform: skewY(5deg)
+            &__image
+                transform: skewY(-5deg)
+                transform-origin: 100% 0%
+
+            &__icon
+                left: 50%
+
+    +screen(xs)
+        height: 250px
+        top: -250px
+        &__wrap
+            margin-top: 250px

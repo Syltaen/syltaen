@@ -1,16 +1,17 @@
 //- =============================================================================
-//- > VIEW : INCLUDE - CONTENTS
+//- > VIEW MIXIN - CONTENTS
 //- =============================================================================
 
 mixin content(c)
 
-    case c.acf_fc_layout
+    case $c["acf_fc_layout"]
 
         //- ==================================================
         //- > TEXT
         //- ==================================================
         when "txt"
-            != c.txt
+            != $c["txt"]
+
 
         //- ==================================================
         //- > IMAGE
@@ -24,7 +25,7 @@ mixin content(c)
         //- ==================================================
         when "insert"
             article.insert(class="bg-".$c["bg"]." border-".$c["border"]." color-".$c["color"]."")
-                != c.content
+                != $c["content"]
 
 
         //- ==================================================
@@ -32,18 +33,16 @@ mixin content(c)
         //- ==================================================
         when "collapsable"
             .collapsable
-                .collapsable__header!= c.title
-                .collapsable__content!= c.content
+                .collapsable__header!= $c["title"]
+                .collapsable__content!= $c["content"]
 
 
         //- ==================================================
         //- > ARCHIVE
         //- ==================================================
         when "archive"
-            case c.type
+            case $c["type"]
 
                 //- News
                 when "news"
-                    include archives/_archive-news
-
-
+                    +archive-news($c["posts"], $c["walker"])

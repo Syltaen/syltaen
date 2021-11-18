@@ -56,4 +56,25 @@ abstract class Hooks
     {
         do_action($name);
     }
+
+    /**
+     * Find a hook callback by its function name and remove it
+     *
+     * @return void
+     */
+    public static function findAndRemove($hook, $function_name, $trigger = "init")
+    {
+        add_action($trigger, function () use ($hook, $function_name) {
+            global $wp_filter;
+
+            foreach ($wp_filter[$hook]->callbacks as $priority=>$callbacks) {
+
+                foreach (array_keys($callbacks) as $callback) {
+                    if (strpos($callback, $function_name)) {
+                        remove_filter($hook, $callback, $priority);
+                    }
+                }
+            }
+        });
+    }
 }

@@ -12,9 +12,15 @@ class ArchiveProcessor extends DataProcessor
      */
     public function news(&$c)
     {
-        $this->paginate($c, new News, 9);
-    }
+        $model = new News;
 
+        // Filter example : ?type=example-category-123
+        $this->addFilter($c, "type", "Type de news", (new NewsTaxonomy)->getAsOptions(), function ($value) use ($model) {
+            $model->tax(NewsTaxonomy::SLUG, $value);
+        });
+
+        $this->paginate($c, $model, 4);
+    }
 
 
     // =============================================================================
@@ -31,8 +37,42 @@ class ArchiveProcessor extends DataProcessor
     private function paginate(&$c, $model, $perpage = 6)
     {
         $pagination   = (new Pagination($model, $perpage));
-        $c["walker"]  = $pagination->walker();
+        $c["walker"]  = $pagination->walker(null, "pagination--simple")->data;
         $c["posts"]   = $pagination->posts();
+    }
+
+    /**
+     * Register a new list filter
+     *
+     * @param array $c The local render context
+     * @param string @name The input/data name
+     * @param string @label THe label of the filter
+     * @param array $options The different available options in an associative array of $value=>$label
+     * @param callable $callback The callback used to filter items of the model
+     * @param mixed $default_value The default value
+     * @return void
+     */
+    public function addFilter(&$c, $name, $label, $options, $filter_callback, $default_value = false)
+    {
+        if (empty($options)) return false;
+
+        // Act on this page without pagination
+        $c["filters_action"] = $c["filters_action"] ?? Pagination::getBaseURL();
+
+        $value = $_GET[$name] ?? $default_value;
+
+        // Register filter in the list
+        $c["filters"] = $c["filters"] ?? [];
+        $c["filters"][$name] = [
+            "name"    => $label,
+            "value"   => $value,
+            "options" => $options
+        ];
+
+        // Apply the callback if filter has value
+        if ($value && is_callable($filter_callback)) {
+            return $filter_callback($value);
+        }
     }
 
 

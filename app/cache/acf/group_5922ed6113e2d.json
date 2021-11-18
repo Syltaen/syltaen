@@ -1,23 +1,6 @@
 {
     "key": "group_5922ed6113e2d",
     "title": "Header & Footer",
-    "location": [
-        [
-            {
-                "param": "options_page",
-                "operator": "==",
-                "value": "headerfooter"
-            }
-        ]
-    ],
-    "menu_order": 0,
-    "position": "normal",
-    "style": "default",
-    "label_placement": "top",
-    "instruction_placement": "label",
-    "hide_on_screen": "",
-    "active": 1,
-    "description": "",
     "fields": [
         {
             "key": "field_5922f7db792ad",
@@ -774,7 +757,8 @@
                         "fa-youtube": "&#xf167; youtube",
                         "fa-youtube-play": "&#xf16a; youtube-play",
                         "fa-youtube-square": "&#xf166; youtube-square"
-                    }
+                    },
+                    "default_label": ""
                 },
                 {
                     "key": "field_5a0e9e48e01f5",
@@ -810,61 +794,44 @@
             "endpoint": 0
         },
         {
-            "key": "field_5b14f0a227f69",
-            "label": "Colonne 1",
-            "name": "col_1",
-            "type": "wysiwyg",
+            "key": "field_61954cb7e5044",
+            "label": "Colonnes",
+            "name": "footer_cols",
+            "type": "repeater",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "33",
-                "class": "",
+                "width": "",
+                "class": "acf-light-repeater acf-horizontal-repeater acf-sections-row__columns",
                 "id": ""
             },
-            "default_value": "",
-            "tabs": "all",
-            "toolbar": "full",
-            "media_upload": 1,
-            "delay": 0
-        },
-        {
-            "key": "field_5b14f0b027f6a",
-            "label": "Colonne 2",
-            "name": "col_2",
-            "type": "wysiwyg",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "33",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "tabs": "all",
-            "toolbar": "full",
-            "media_upload": 1,
-            "delay": 0
-        },
-        {
-            "key": "field_5b14f10027f6b",
-            "label": "Colonne 3",
-            "name": "col_3",
-            "type": "wysiwyg",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "33",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "tabs": "all",
-            "toolbar": "full",
-            "media_upload": 1,
-            "delay": 0
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "block",
+            "button_label": "",
+            "sub_fields": [
+                {
+                    "key": "field_61954cc9e5045",
+                    "label": "",
+                    "name": "txt",
+                    "type": "wysiwyg",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "tabs": "all",
+                    "toolbar": "full",
+                    "media_upload": 1,
+                    "delay": 0
+                }
+            ]
         },
         {
             "key": "field_5b14f1221bed5",
@@ -879,12 +846,30 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "",
+            "default_value": "© [year] Hungry Minds",
             "placeholder": "",
             "prepend": "",
             "append": "",
             "maxlength": ""
         }
     ],
-    "modified": 1529491111
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "headerfooter"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1637174563
 }

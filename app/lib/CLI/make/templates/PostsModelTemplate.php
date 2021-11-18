@@ -36,17 +36,17 @@ class ClassName extends PostsModel
     // ];
 
     // protected $termsFormats = [
-    //     "PostsModelTemplateTaxonomy" => [
-    //         "names@list"    => ", ",
-    //         "slugs@classes" => " "
-    //     ]
+    // "(names) ProductsCategories@categories_names",
+    // "(ids) ProductsCategories@categories_ids",
+    // "ProductsCategories"
     // ];
 
+    /**
+     * Add fields for ClassName
+     */
     public function __construct() {
         parent::__construct();
 
-        $this->fields = [
-
-        ];
+        $this->addFields();
     }
 }

@@ -1,16 +1,14 @@
 //- =============================================================================
-//- > VIEW : INCLUDE - NEWS ARCHIVE
+//- > VIEW MIXIN - NEWS ARCHIVE
 //- =============================================================================
-.archive.archive--news
 
-    .archive__walker.archive__walker--top!= c.walker
+mixin archive-news(posts, walker=false)
 
-    ul.archive__list
+    .archive.archive--news
 
-        each news in c.posts
+        ul.archive__list
+            each $news in $c["posts"]
+                li.archive__item
+                    +card-news($news)
 
-            li.archive__item
-                include ../cards/_card-news
-
-
-    .archive__walker.archive__walker--bottom!= c.walker
+        +pagination($walker).archive__walker.archive__walker--bottom

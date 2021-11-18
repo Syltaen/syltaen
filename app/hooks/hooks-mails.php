@@ -20,3 +20,4 @@ add_action("phpmailer_init", "\Syltaen\Mail::init");
 // ==================================================
 add_filter("send_password_change_email", "__return_false");
 add_filter("send_email_change_email", "__return_false");
+if (!function_exists("wp_password_change_notification")) { function wp_password_change_notification() {} }

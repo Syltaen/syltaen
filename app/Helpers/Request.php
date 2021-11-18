@@ -72,7 +72,7 @@ class Request
 
 
     /**
-     * Send a remote PUST request
+     * Send a remote PUT request
      *
      * @see self::send
      */
@@ -115,6 +115,9 @@ class Request
      */
     public function send($method, $body = false, $headers = false)
     {
+        // Prevent external request blocking by Performances helper
+        remove_all_filters("pre_http_request");
+
         // Set the method to use
         $this->args["method"] = $method;
 
@@ -237,7 +240,7 @@ class Request
     private function onFailure()
     {
         // Log failure
-        $log = "Request failed : {$this->args[method]} to {$this->url}";
+        $log = "Request failed : {$this->args['method']} to {$this->url}";
         (new Cache)->log($log, "failed-requests");
 
         // Send mail, if requested

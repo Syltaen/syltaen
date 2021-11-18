@@ -291,7 +291,7 @@ abstract class Route
     public static function getFullUrl($query_args = [], $merge = true)
     {
         global $wp;
-        if ($merge) $query_args = array_merge($query_args, $_GET);
+        if ($merge) $query_args = array_merge($_GET, $query_args);
         return home_url(add_query_arg($query_args, $wp->request));
     }
 }

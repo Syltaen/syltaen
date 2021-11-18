@@ -87,12 +87,20 @@ abstract class PostsModel extends Model
      * see https://codex.wordpress.org/Function_Reference/wp_get_post_terms
      * @var array
      */
-    protected $termsFormats = [
-        // "ProductsTaxonomy",
-        // "ProductsTaxonomy@types" => [
-        //     "names@list" => ", ",
-        //     "ids"
-        // ]
+    public $termsFormats = [
+        // "(names) ProductsCategories@categories_names",
+        // "(ids) ProductsCategories@categories_ids",
+        // "ProductsCategories"
+    ];
+
+
+    /**
+     * List of date formats to be stored in each post.
+     * see https://codex.wordpress.org/Formatting_Date_and_Time
+     * @var array
+     */
+    protected $dateFormats = [
+        // "formatname" => "format"
     ];
 
 
@@ -104,6 +112,98 @@ abstract class PostsModel extends Model
     protected $joinedModels = [];
 
 
+    /**
+     * Add fields shared by all post types
+     */
+    public function __construct() {
+        parent::__construct();
+
+        // By default, only fetch published posts
+        $this->status("publish");
+
+        $this->addFields([
+            /**
+             * The URL of the post
+             */
+            "@url" => function ($post) {
+                return static::HAS_PAGE ? get_the_permalink($post->ID) : false;
+            },
+
+            /**
+             * All the thumb formats for this post, defined by $thumbnailsFormats
+             */
+            "@thumb" => function ($post) {
+                if (!static::HAS_THUMBNAIL) return false;
+
+                $thumb = [
+                    "url" => [],
+                    "tag" => []
+                ];
+
+                if (!empty($this->thumbnailsFormats["url"])) {
+                    foreach ($this->thumbnailsFormats["url"] as $name=>$format) {
+                        $thumb["url"][$name] = get_the_post_thumbnail_url($post->ID, $format);
+                    }
+                }
+
+                if (!empty($this->thumbnailsFormats["tag"])) {
+                    foreach ($this->thumbnailsFormats["tag"] as $name=>$format) {
+                        $thumb["tag"][$name] = get_the_post_thumbnail($post->ID, $format);
+                    }
+                }
+
+                return $thumb;
+            },
+
+
+            /**
+             * The post date in various format, defined by $dateFormats
+             */
+            "@date" => function ($post) {
+                $date = [];
+                foreach ($this->dateFormats as $name=>$format) {
+                    if ($format) $date[$name] = get_the_date($format, $post->ID);
+                }
+                return $date;
+            },
+
+            /**
+             * All the terms for this post, defined by $termsFormats
+             */
+            "@terms" => function ($post) {
+                $list = [];
+
+                // No term format defined, return empty list
+                if (empty($this->termsFormats)) return $list;
+
+                // For each format, get the terms and join them
+                foreach (Data::normalizeFieldsKeys($this->termsFormats) as $key=>$join) {
+                    // Parse key with default parts
+                    $key = Data::parseDataKey($key);
+
+                    $class = "Syltaen\\" . $key["meta"];
+                    $store = $key["store"] == $key["meta"] ? $class::SLUG : $key["store"];
+
+                    // Retrieve terms
+                    $terms = (new $class)->for($post->ID)->fields($key["filter"] ?: "all")->get();
+
+                    // No join : add to the list as is
+                    if (empty($join)) {
+                        $list[$store] = $terms;
+                        continue;
+                    }
+                    // Has join
+                    if (is_callable($join)) {
+                        $list[$store] = $join($terms);
+                    } else {
+                        $list[$store] = join($join, $terms);
+                    }
+                }
+
+                return $list;
+            }
+        ]);
+    }
 
     // ==================================================
     // > QUERY MODIFIERS
@@ -160,6 +260,7 @@ abstract class PostsModel extends Model
             "operator"         => $operator,
             "include_children" => $children
         ];
+
         return $this;
     }
 
@@ -189,33 +290,6 @@ abstract class PostsModel extends Model
 
 
     /**
-     * Filter by lang
-     *
-     * @param string Lang slug
-     * @return self
-     */
-    public function lang($lang)
-    {
-        $this->filters["lang"] = $lang;
-        return $this;
-    }
-
-
-    /**
-     * Update the status filter.
-     * See https://codex.wordpress.org/Class_Reference/WP_Query#Status_Parameters
-     * @param array|string $status : ["publish", "pending", "draft", "future", "private", "trash", "any"]
-     * @return self
-     */
-    public function status($status = false)
-    {
-        if ($status) {
-            $this->filters["post_status"] = $status;
-        }
-        return $this;
-    }
-
-    /**
      * Add a post type to the query
      *
      * @param Syltaen\ $post_model
@@ -231,170 +305,198 @@ abstract class PostsModel extends Model
     }
 
 
+
+    /**
+     * Query update for the serach : add taxonomies
+     *
+     * @return void
+     */
+    private static function addTaxonomiesToSearchQuery($query, $search)
+    {
+        global $wpdb;
+        $found_terms = false;
+
+        // For each word in the search term, update the where clause
+        $query["where"] = array_reduce(explode(" ", $search), function ($where, $word) use ($wpdb, &$found_terms) {
+            $all_terms = [];
+
+            // Get all terms of all taxonomies matching this word
+            foreach (static::TAXONOMIES as $tax) {
+                $terms = get_terms([
+                    "taxonomy"   => $tax,
+                    "hide_empty" => true,
+                    "name__like" => $word,
+                    "fields"     => "ids"
+                ]);
+                $all_terms = array_merge($all_terms, $terms);
+                foreach ($terms as $term) {
+                    $all_terms = array_merge($all_terms, get_term_children($term, $tax));
+                }
+            }
+
+            // If no match, don't alter query
+            if (empty($all_terms)) return $where;
+            $found_terms = true;
+
+            // Else, update where statement to include terms
+            return preg_replace(
+                "/\(\s*".$wpdb->posts.".post_title\s+LIKE\s*(\'\{[a-z0-9]+\}".$word."\{[a-z0-9]+\}\')\s*\)/",
+                "(".$wpdb->posts.".post_title LIKE $1) OR (searched_tax.term_taxonomy_id IN (".implode(",", $all_terms)."))",
+                $where
+            );
+
+            return $where;
+        }, $query["where"]);
+
+        // Add term_relationships to the searchable data
+        if ($found_terms) {
+            $query["join"] .= " LEFT JOIN {$wpdb->term_relationships} searched_tax ON ({$wpdb->posts}.ID = searched_tax.object_id)";
+        }
+
+        return $query;
+    }
+
+    /**
+     * Query update for the serach : add meta
+     *
+     * @return void
+     */
+    private static function addMetaToSearchQuery($query, $search, $meta_keys = true, $identifiers = [])
+    {
+        global $wpdb;
+
+        $identifiers = array_merge([
+            "meta_column"   => $wpdb->postmeta,
+            "meta_alias"    => "searchmeta",
+            "object_column" => $wpdb->posts,
+        ], $identifiers);
+
+        // Add postmeta to the searchable data if not already in it
+        $query["join"] .= " LEFT JOIN {$identifiers['meta_column']} {$identifiers['meta_alias']} ON {$identifiers['object_column']}.ID = {$identifiers['meta_alias']}.post_id";
+
+        // Restirct metadata to specific keys to speed up the search
+        if (is_array($meta_keys)) foreach ($meta_keys as $key) {
+            $query["join"] .= " AND {$identifiers['meta_alias']}.meta_key IN (".implode(",", array_map(function ($key) { return "'$key'"; }, $meta_keys)).")";
+        }
+
+        // Extend search to metadata
+        $query["where"] = preg_replace(
+            "/\(\s*{$wpdb->posts}.post_title\s+LIKE\s*(\'[^\']+\')\s*\)/",
+            "({$wpdb->posts}.post_title LIKE $1) OR ({$identifiers['meta_alias']}.meta_value LIKE $1)",
+            $query["where"]
+        );
+
+        return $query;
+    }
+
+    /**
+     * Query update for the serach : add children meta (ex: product_variation)
+     *
+     * @return void
+     */
+    private static function addChildrenMetaToSearchQuery($query, $search, $meta_keys = true)
+    {
+        global $wpdb;
+
+        // Join all children
+        $query["join"] .= " LEFT JOIN {$wpdb->posts} child ON child.post_parent = {$wpdb->posts}.ID";
+
+        // Add meta of the children
+        if ($meta_keys) {
+            $query = static::addMetaToSearchQuery($query, $search, $meta_keys, [
+                "meta_alias"    => "searchmeta_child",
+                "object_column" => "child",
+            ]);
+        }
+
+        return $query;
+    }
+
+
+    /**
+     * Add search filter to the query.
+     * See https://codex.wordpress.org/Class_Reference/WP_Query#Search_Parameter
+     * @param string $search
+     * @param array|bool $include_meta Specify if the search should apply to the metadata,
+     *                   restrict to specific key by passing an array
+     * @param bool $strict
+     * @return self
+     */
+    public function search($search, $include_meta = true, $include_children = false)
+    {
+        $this->filters["s"] = $search;
+
+        // Clear previous query modifiers tagged with search
+        $this->clearQueryModifiers("search");
+
+        // Update the SQL query to include metadata and taxonomies
+        return $this->updateQuery(function ($query) use ($search, $include_meta, $include_children) {
+            global $wpdb;
+
+            $query["distinct"] = "DISTINCT";
+
+            // Add meta data if requested
+            if ($include_meta) {
+                $query = static::addMetaToSearchQuery($query, $search, $include_meta);
+
+                // Also add the children's meta
+                if ($include_children) {
+                    $query = static::addChildrenMetaToSearchQuery($query, $search, $include_meta);
+                }
+            }
+
+            // Add taxonomies, if there are any linked to this model
+            if (!empty(static::TAXONOMIES)) {
+                $query = static::addTaxonomiesToSearchQuery($query, $search);
+            }
+
+            return $query;
+        }, "search");
+    }
+
+
     // ==================================================
     // > DATA HANDLING FOR EACH POST
     // ==================================================
-    /* Update parent method */
-    public function populateResultData(&$post)
-    {
-        // if the post is not from this model, use the post's model
-        if ($post->post_type !== static::TYPE) return $this->joinedModels[$post->post_type]->populateResultData($post);
-
-        /* ADD THUMBNAIL FORMATS IF ANY */
-        if ((!empty($this->thumbnailsFormats["url"]) || !empty($this->thumbnailsFormats["tag"])) && $this->hasAttr("thumb")) {
-            $this->populateThumbnailFormats($post);
-        }
-
-        /* ADD TAXONOMIY TERMS IF ANY */
-        if (!empty($this->termsFormats) && $this->hasAttr("terms")) {
-            $this->populateTerms($post);
-        }
-
-        /* ADD POST URL IF PUBLIC */
-        if ((static::HAS_PAGE) && $this->hasAttr("url")) {
-            $this->populatePublicUrl($post);
-        }
-
-        /* COMMON */
-        parent::populateResultData($post);
-    }
-
     /**
-     * Add all thumbnail formats specified in the model to a post object
-     *
-     * @param WP_Post $post
-     * @return void
-     */
-    protected function populateThumbnailFormats(&$post)
-    {
-        if (!static::HAS_THUMBNAIL) return false;
-
-        $post->thumb = [
-            "url" => [],
-            "tag" => []
-        ];
-
-        if (!empty($this->thumbnailsFormats["url"])) {
-            foreach ($this->thumbnailsFormats["url"] as $name=>$format) {
-                $post->thumb["url"][$name] = get_the_post_thumbnail_url($post->ID, $format);
-            }
-        }
-
-        if (!empty($this->thumbnailsFormats["tag"])) {
-            foreach ($this->thumbnailsFormats["tag"] as $name=>$format) {
-                $post->thumb["tag"][$name] = get_the_post_thumbnail($post->ID, $format);
-            }
-        }
-    }
-
-    /**
-     * Add or update a thumbnail format dynamicallly
+     * Add new thumbnail formats to the list
      *
      * @param string $type
      * @param string $name
      * @param string|array $value
      * @return self
      */
-    public function addThumbnailFormat($type, $name, $value)
+    public function addThumbnailFormats($type, $formats)
     {
-        $this->thumbnailsFormats[$type][$name] = $value;
+        $this->thumbnailsFormats[$type] = array_merge($this->thumbnailsFormats[$type], $formats);
         return $this;
     }
 
-
-
     /**
-     * Add or update a date format dynamically
+     * Add new date formats to the list
      *
      * @param string $name
      * @param string $format
      * @return self
      */
-    public function addDateFormat($name, $format)
+    public function addDateFormats($formats)
     {
-        $this->dateFormats[$name] = $format;
+        $this->dateFormats = array_merge($this->dateFormats, $formats);
         return $this;
     }
 
     /**
-     * Add taxonomy terms data to the post
+     * Add new term formats to the list
      *
-     * @param WP_Post $post
-     * @return void
+     * @param string $name
+     * @param string $format
+     * @return self
      */
-    protected function populateTerms(&$post)
+    public function addTermsFormats($formats)
     {
-        $post->terms = [];
-        foreach ($this->termsFormats as $class=>$formats) {
-
-            // Default format : all
-            if (is_int($class)) {
-                $class   = $formats;
-                $formats = "all";
-            }
-
-            $class = "Syltaen\\" . $class;
-
-            // Alias for the taxonomy
-            if (preg_match('/(.*)@(.*)/', $class, $keys)) {
-                $class = $keys[1];
-                $alias = $keys[2];
-            } else {
-                $alias  = $class::SLUG;
-            }
-
-            // Only one format
-            $direct = false;
-            if (is_string($formats)) {
-                $formats = (array) $formats;
-                $direct  = true;
-            }
-
-            foreach ($formats as $format=>$join) {
-
-                // No join
-                if (is_int($format)) {
-                    $format = $join;
-                    $join   = false;
-                }
-
-                // Alias for the format
-                if (preg_match('/(.*)@(.*)/', $format, $keys)) {
-                    $format       = $keys[1];
-                    $format_alias = $keys[2];
-                } else {
-                    $format_alias = $format;
-                }
-
-                $terms = (new $class)->getPostTerms($post->ID, $format);
-
-                if ($direct) {
-                    $post->terms[$alias] = $terms;
-                } else {
-                    $post->terms[$alias][$format_alias] = $terms;
-                    if ($join) {
-                        if (is_callable($join)) {
-                            $post->terms[$alias][$format_alias] = $join($post->terms[$alias][$format_alias]);
-                        } else {
-                            $post->terms[$alias][$format_alias] = join($join, $post->terms[$alias][$format_alias]);
-                        }
-                    }
-                }
-            }
-        }
+        $this->termsFormats = array_merge($this->termsFormats, $formats);
+        return $this;
     }
-
-    /**
-     * Add the post public url to a post object
-     *
-     * @param WP_Post $post
-     * @return void
-     */
-    protected function populatePublicUrl(&$post)
-    {
-        $post->url = get_the_permalink($post->ID);
-    }
-
 
     // ==================================================
     // > POST TYPE REGISTRATION
@@ -431,14 +533,6 @@ abstract class PostsModel extends Model
             "has_archive"        => false
         ]);
 
-        if (static::HAS_PAGINATION) {
-            $page = static::CUSTOMPATH ? static::CUSTOMPATH : static::TYPE;
-            Route::add([[
-                $page . "/([0-9]*)/?$",
-                'index.php?pagename='.$page.'&(pagination)=$matches[1]'
-            ]]);
-        }
-
         foreach ((array) static::TAXONOMIES as $slug) {
             register_taxonomy_for_object_type(
                 $slug,
@@ -455,7 +549,7 @@ abstract class PostsModel extends Model
      * @param array $status_list List of custom posts status
      * @return void
      */
-    public static function addStatusTypes($status_list)
+    public static function addStatusTypes($status_list, $options = [])
     {
         if (empty($status_list)) return false;
 
@@ -463,7 +557,7 @@ abstract class PostsModel extends Model
 
         // ========== register each status ========== //
         foreach ($status_list as $status=>$labels) {
-            register_post_status($status, [
+            register_post_status($status, array_merge([
                 "label" => $labels[0],
                 "public" => true,
                 "exclude_from_search" => true,
@@ -474,7 +568,7 @@ abstract class PostsModel extends Model
                     "$labels[1] <span class='count'>(%s)</span>",
                     "syltaen"
                 )
-            ]);
+            ], $options));
         }
         // ========== Add in quick edit ========== //
         add_action("admin_footer-edit.php", function () use ($status_list, $post_type) {
@@ -488,7 +582,6 @@ abstract class PostsModel extends Model
                 );
             }
         });
-
 
         // ========== Add in post edit ========== //
         add_action("admin_footer-post.php", function () use($status_list, $post_type) {
@@ -528,7 +621,7 @@ abstract class PostsModel extends Model
      *
      * @return int
      */
-    public static function totalCount($perm = "")
+    public static function getTotalCount($perm = "")
     {
         return wp_count_posts(static::TYPE, $perm);
     }
@@ -536,11 +629,11 @@ abstract class PostsModel extends Model
     /**
      * Get final slug used by the model
      *
-     * @return void
+     * @return string
      */
     public static function getCustomSlug()
     {
-        return static::CUSTOMPATH ? static::CUSTOMPATH : static::TYPE;
+        return static::CUSTOMPATH ?: static::TYPE;
     }
 
     /**
@@ -548,9 +641,49 @@ abstract class PostsModel extends Model
      *
      * @return string
      */
-    public static function getArchiveURL()
+    public static function getArchiveURL($path = "")
     {
-        return get_post_type_archive_link(static::TYPE);
+        return site_url(static::getCustomSlug() . "/" . $path);
+    }
+
+
+    /**
+     * Get the meta values of all the posts
+     *
+     * @return void
+     */
+    public static function getAllMeta($key, $ids = false, $groupby_value = true)
+    {
+        $rows = Database::get_results(
+           "SELECT p.ID ID, m.meta_value value FROM posts p
+            JOIN postmeta m ON m.post_id = p.ID AND m.meta_key = '$key'
+            WHERE p.post_type = '".static::TYPE."'" . ($ids ? ("AND p.ID IN " . Database::inArray($ids)) : "")
+        );
+
+        if (!$groupby_value) return Data::mapKey($rows, "ID", "value");
+
+        return Data::groupByKey($rows, "value", "ID");
+    }
+
+
+    /**
+     * Get the full list
+     *
+     * @return void
+     */
+    public static function addTranslationsIDs($ids)
+    {
+        if (empty($ids)) return [];
+
+        $ids = Database::get_col(
+           "SELECT object_id FROM term_relationships WHERE term_taxonomy_id IN (
+                SELECT tr.term_taxonomy_id FROM term_relationships tr
+                JOIN term_taxonomy tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+                WHERE tt.taxonomy = 'post_translations' AND tr.object_id IN (".implode(",", $ids).")
+           )
+        ");
+
+        return array_map("intval", $ids);
     }
 
     // ==================================================
@@ -559,35 +692,24 @@ abstract class PostsModel extends Model
     /**
      * Create a new post
      * see https://developer.wordpress.org/reference/functions/wp_insert_post/
-     * @param string $title The post title
-     * @param string $content The post content
+     * @param array $attrs The post attributes
      * @param array $fields Custom ACF fields with their values
      * @param string $status Status for the post
-     * @return int The created post's ID
+     * @return self A new model instance containing the new item
      */
-    public static function add($attrs = [], $fields = false, $taxonomies = false)
+    public static function add($attrs = [], $fields = [], $tax = [])
     {
-        // Default attributes
-        $attrs = array_merge([
+        // Create the post
+        $post_id = wp_insert_post(array_merge([
             "post_type"      => static::TYPE,
             "post_title"     => "",
             "post_content"   => "",
             "post_status"    => "publish"
-        ], $attrs);
+        ], $attrs));
 
-        // Create the post
-        $post_id = wp_insert_post($attrs);
+        if ($post_id instanceof \WP_Error) return $post_id;
 
-        // Update the fields
-        if ($fields) {
-            static::updateFields($post_id, $fields);
-        }
-
-        if ($taxonomies) {
-            static::updateTaxonomies($post_id, $taxonomies);
-        }
-
-        return $post_id;
+        return (new static)->is($post_id)->update(false, $fields, $tax);
     }
 
     /**

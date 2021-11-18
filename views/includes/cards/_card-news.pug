@@ -1,14 +1,19 @@
 //- =============================================================================
-//- > VIEW : INCLUDE - CARD NEWS
+//- > VIEW MIXIN - CARD NEWS
 //- =============================================================================
 
-article.card-news
+mixin card-news(news)
 
-    a(href=news.url style="background-image: url(".$news->thumb["url"]["archive"].")").card-news__visual
-        != news.thumb.tag.archive
+    .card-news.button__parent
 
-    .card-news__content
-        time= news.date.short
-        h2.card-news__title= news.post_title
-        p.card-news__excerpt= news.post_excerpt
-        a.button(href=news.url)!= __("Lire plus", "syltaen")
+        .card-news__visual(href=$news->url style="background-image: url(".$news->thumb["url"]["archive"].")")
+            != $news->thumb["tag"]["archive"]
+
+        .card-news__content
+            p.text-small
+                i.fa.fa-folder.xs-margin-right
+                != $news->terms["list"]
+            time= $news->date["short"]
+            h2.h2.card-news__title= $news->post_title
+            p.card-news__excerpt= $news->post_excerpt
+            a.button(href=$news->url)!= __("Lire plus", "syltaen")

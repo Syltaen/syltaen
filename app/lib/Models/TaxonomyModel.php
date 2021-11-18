@@ -2,157 +2,210 @@
 
 namespace Syltaen;
 
-abstract class TaxonomyModel
+class TaxonomyModel extends Model
 {
-
     const SLUG         = "taxonomy";
     const NAME         = "Name of the taxonomy";
-    const DESC         = "A description for the taxonomy";
+    const DESC         = "";
     const PUBLIK       = true;
     const ADMIN_COLS   = true;
     const HIERARCHICAL = true;
     const HAS_PAGE     = false;
 
-    public $taxonomy;
-    public $taxonomyFields;
-    public $taxonomyFieldsOptionPage;
-    public $terms;
-    public $termsFields = [];
+    /**
+     * Query arguments used by the model's methods
+     */
+    const QUERY_CLASS  = "WP_Term_Query";
+    const OBJECT_CLASS = "WP_Term";
+    const OBJECT_KEY   = "terms";
+    const ITEM_CLASS   = "ModelItemTaxonomy";
+    const QUERY_IS     = "include";
+    const QUERY_ISNT   = "exclude";
+    const QUERY_LIMIT  = "number";
+    const QUERY_PAGE   = "offset";
+    const TYPE         = "taxonomy";
+
 
     /**
      * Should specify $taxonomyFields and $termsFields
      */
     public function __construct()
     {
-        $this->termsFields = array_merge($this->termsFields, [
-            "@description" => function ($term) {
-                return term_description($term->term_id, static::SLUG);
+        parent::__construct();
+
+        $this->addFields([
+
+            /**
+             * The URL of each term.
+             * May be altered with the "term_link" filter in routes.php
+             */
+            "@url" => function ($term) {
+                return static::HAS_PAGE ? get_term_link($term) : false;
             },
+
+            /**
+             * The global description of each terms
+             */
+            "@description" => function ($term) {
+                return term_description($term->term_id, static::getSlug());
+            }
         ]);
     }
 
     // ==================================================
-    // > GETTERS
+    // > QUERY MODIFIERS
     // ==================================================
-    /**
-     * Get the taxonomy object
-     * see https://developer.wordpress.org/reference/functions/get_taxonomy/
-     * @return WP_Taxonomy
-     */
-    public function get()
+    /* Update parent method */
+    public function clearFilters($filter_keys = false, $default_filters = null)
     {
-        $this->taxonomy = $this->taxonomy ?: get_taxonomy(static::SLUG);
-        return $this->populateTaxonomyFields()->taxonomy;
+        return parent::clearFilters($filter_keys, [
+            "taxonomy"   => static::getSlug(),
+            "fields"     => "all",
+            "hide_empty" => false
+        ]);
+    }
+
+    /**
+     * Filter by parent (only one allowed)
+     *
+     * @param int $id The parent ID
+     * @return self
+     */
+    public function parent($id)
+    {
+        $this->filters["parent"] = $id;
+        return $this;
+    }
+
+    /**
+     * Fetch the parent of the given term (only on allowed)
+     *
+     * @param int $id The parent ID
+     * @return self
+     */
+    public function childOf($id)
+    {
+        $this->filters["child_of"] = $id;
+        return $this;
+    }
+
+    /**
+     * Get terms for specific objects
+     *
+     * @param int $post_id The post ID
+     */
+    public function for($ids)
+    {
+        $this->filters["object_ids"] = (array) $ids;
+        return $this;
+    }
+
+    /**
+     * Offset the results to a certain page.
+     * See https://codex.wordpress.org/Class_Reference/WP_User_Query#Pagination_Parameters
+     * @param int $page
+     * @return self
+     */
+    public function page($page = false)
+    {
+        if ($page) {
+            $this->filters[static::QUERY_PAGE] = ($page - 1) * ($this->filters[static::QUERY_LIMIT] ?? 0);
+        }
+        return $this;
+    }
+
+    /**
+     * Only show terms that have at least one post
+     *
+     * @return void
+     */
+    public function withPosts()
+    {
+        $this->filters["hide_empty"] = true;
+        return $this;
     }
 
 
-    /**
-     * Get all taxonomy terms
-     *
-     * @param string $fields Fields to return : all, ids, id=>parent, names, count, id=>name, id=>slug
-     * @param boolean $hide_empty Prevent the return of unused terms
-     * @param int $limit Number of terms to return
-     * @param string $orderby name, slug, term_group, term_id, id, description, count, ...
-     * @param string $order ASC or DESC
-     * @param array $custom_args Additional query arguments
-     * @return array List of terms
-     * see https://developer.wordpress.org/reference/functions/get_terms/
-     */
-    public function fetchTerms($fields = "all", $hide_empty = false, $limit = 0, $orderby = "slug", $order = "ASC", $custom_args = [])
+
+    /* Update parent method */
+    public function search($search, $ignore = null, $ignore_2 = null)
     {
-        $args = array_merge([
-            "taxonomy"   => static::SLUG,
-            "fields"     => $fields,
-            "hide_empty" => $hide_empty,
-            "number"     => $limit,
-            "order"      => $order,
-            "orderby"    => $orderby,
-        ], $custom_args);
-
-        $this->terms = get_terms($args);
-
-        if ($fields == "all") {
-            foreach($this->terms as $term) {
-                $this->populateTermFields($term);
-            }
-            $terms = $this->terms;
-            $this->terms = [];
-            foreach ($terms as $term) {
-                $this->terms[$term->slug] = $term;
-            }
-        }
-
+        $this->filters["search"] = $search;
         return $this;
     }
 
 
     /**
-     * Run fetchTerms and return the resulting terms
+     * Set the fields to be returned
+     *
+     * @param string $fields Term fields to query for. Accepts:
+     *
+     * 'all' Returns an array of complete term objects (`WP_Term[]`).
+     * 'all_with_object_id' Returns an array of term objects with the 'object_id' param (`WP_Term[]`). Works only when the `$object_ids` parameter is populated.
+     * 'ids' Returns an array of term IDs (`int[]`).
+     * 'tt_ids' Returns an array of term taxonomy IDs (`int[]`).
+     * 'names' Returns an array of term names (`string[]`).
+     * 'slugs' Returns an array of term slugs (`string[]`).
+     * 'count' Returns the number of matching terms (`int`).
+     * 'id=>parent' Returns an associative array of parent term IDs, keyed by term ID (`int[]`).
+     * 'id=>name' Returns an associative array of term names, keyed by term ID (`string[]`).
+     * 'id=>slug' Returns an associative array of term slugs, keyed by term ID (`string[]`).
+     * @return array
+     */
+    public function fields($fields)
+    {
+        $this->filters["fields"] = $fields;
+        return $this;
+    }
+
+    // ==================================================
+    // > GETTERS - TERMS
+    // ==================================================
+    /**
+     * Only return the matching items' IDs
      *
      * @return array
      */
-    public function getTerms($fields = "all", $hide_empty = false, $limit = 0, $orderby = "slug", $order = "ASC", $custom_args = [])
+    public function getSlugs()
     {
-        return $this->fetchTerms($fields, $hide_empty, $limit, $orderby, $order, $custom_args)->terms;
-    }
-
-
-    /**
-     * Get all posts corresponding to each terms.
-     * Extend the $terms parameter to store each corresponding posts.
-     * @param \Sytaen\Model\Posts $model the post model.
-     * @param boolean $hide_empty Prevent the return of unused terms
-     * @return array List of terms each storing a list of posts
-     */
-    public function fetchPosts($model, $hide_empty = true, $children = true)
-    {
-        if (!$this->terms) $this->fetchTerms("all", $hide_empty);
-
-        foreach ($this->terms as $term) {
-            $term->posts = $model->tax(static::SLUG, $term->slug, "AND", true, "IN", $children)->get();
-        }
-
-        return $this;
+        return $this->fields("slugs")->get();
     }
 
     /**
-     * Run fetchPosts and return the result
-     */
-    public function getPosts($model, $hide_empty = true, $children = true)
-    {
-        return $this->fetchPosts($model, $hide_empty, $children)->terms;
-    }
-
-
-    /**
-     * Get terms for a specific post
+     * Shortcut for get with hide_empty set to false
      *
-     * @param int $post_id The post ID
-     * @param string $fields The fields to retrieve
-     * @param string $orderby Order key
-     * @param string $order Order
-     * @return array of terms
+     * @param int $limit Number of posts to return
+     * @param int $page Page offset to use
+     * @return array of WP_Post
      */
-    public function getPostTerms($post_id, $fields = "all", $orderby = "slug", $order = "ASC")
+    public function getAll($limit = false, $page = false)
     {
-        $this->terms = wp_get_post_terms($post_id, static::SLUG, [
-            "fields"     => $fields,
-            "order"      => $order,
-            "orderby"    => $orderby
-        ]);
+        return $this->showEmpty()->get();
+    }
 
-        if (is_wp_error($this->terms)) {
-            $this->terms = [];
-            return $this->terms;
-        }
+    /**
+     * Return all terms as an associative array of slug=>name
+     *
+     * @return array
+     */
+    public function getAsOptions()
+    {
+        return $this->reduce(function ($options, $term) {
+            $options[$term->slug] = $term->name;
+            return $options;
+        }, []);
+    }
 
-        if ($fields == "all") {
-            foreach($this->terms as $term) {
-                $this->populateTermFields($term);
-            }
-        }
+    /* Update parent method */
+    public function count($paginated = true)
+    {
+        return count($this->getQuery()->terms); // No clean way to get total number of result
+    }
 
-        return $this->terms;
+    /* Update parent method */
+    public function getPagesCount()
+    {
+        return 1;
     }
 
     /**
@@ -160,93 +213,205 @@ abstract class TaxonomyModel
      *
      * @return void
      */
-    public function getTermsHierarchy()
+    public function getHierarchy()
     {
-        if (!$this->terms) $this->fetchTerms("all", $hide_empty);
+        if (!empty($this->hierarchy)) return $this->hierarchy;
+
         $hierarchy = [];
-        $terms     = $this->terms;
+        $parents   = [];
+        $terms     = $this->get();
 
-        while (!empty($terms)) {
-            foreach ($terms as $slug=>$term) {
+        // Index by term_id
+        $terms = Data::mapKey($terms, "term_id");
 
-                // First level : add the term to the list
-                if (!$term->parent) {
-                    $term->children = [];
-                    $hierarchy[] = $term;
-                }
+        // Parents index
+        foreach ($terms as $term) {
+            $parents[$term->parent] = $parents[$term->parent] ?? [];
+            $parents[$term->parent][] = $term->term_id;
+        }
 
-                // Children : add to its parent
-                else {
-
-                    $found = false;
-                    foreach ($hierarchy as $parent) {
-                        if ($parent->term_id == $term->parent) {
-                            $parent->children[] = $term;
-                            $found = true;
-                            break;
-                        }
-                    }
-
-                    // Parent not listed, skip and try again
-                    if (!$found) continue;
-                }
-
-                unset($terms[$slug]);
-            }
+        // Build hierarchy recusively
+        foreach ($parents[0] as $term_id) {
+            $term = $terms[$term_id];
+            static::hierarchyAddTermChildren($term, $parents, $terms);
+            $hierarchy[$term_id] = $term;
         }
 
         return $hierarchy;
     }
 
-
-
-    // ==================================================
-    // > DATA HANDLING FOR THE TAXONOMY AND ITS TERMS
-    // ==================================================
     /**
-     * Add all Custom Fields's values specified in the model's constructor to $this->taxonomy
-     * Note : ACF does not support custom fields for taxonomy, only form terms.
-     *        Each field should be in an option page ($taxonomyFieldsOptionPage).
-     * @return self
-     */
-    public function populateTaxonomyFields()
-    {
-        if ($this->taxonomyFields && $this->taxonomyFieldsOptionPage && !empty($this->taxonomyFields)) {
-            Data::store($this->taxonomy, $this->taxonomyFields, $this->taxonomyFieldsOptionPage);
-        }
-        return $this;
-    }
-
-    /**
-     * Add all Custom Fields's values specified in the model's constructor to each $this->terms
+     * Recursive function to add term children in a hierarchy
      *
-     * @return self
-     */
-    public function populateTermFields(&$term)
-    {
-        // Fields
-        Data::store($term, $this->termsFields, "term_".$term->term_id);
-
-        // Public URL
-        if (static::HAS_PAGE) {
-            $term->url = get_term_link($term->slug, static::SLUG);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * Add fields to populate each terms
-     *
-     * @param [type] $fields
+     * @param WP_Term $term
+     * @param array $parents
+     * @param array $terms
      * @return void
      */
-    public function addTermFields($fields)
+    private static function hierarchyAddTermChildren(&$term, $parents, $terms)
     {
-        $this->termsFields = array_merge($this->termsFields, (array) $fields);
-        $this->clearCache();
-        return $this;
+        $term->children = [];
+
+        // No children for this term
+        if (empty($parents[$term->term_id])) return;
+
+        // Add children, with their own children
+        foreach ($parents[$term->term_id] as $child_id) {
+            $child = $terms[$child_id];
+            static::hierarchyAddTermChildren($child, $parents, $terms);
+            $term->children[$child->term_id] = $child;
+        }
+    }
+
+    /**
+     * Add the parent terms ids to a list of terms ids
+     *
+     * @param array $terms_ids
+     * @return array
+     */
+    public static function addParentTerms($terms_ids)
+    {
+        global $wpdb;
+
+        // No term ids to fetch parents for
+        if (empty($terms_ids)) return [];
+
+        // Get direct parents
+        $parents = array_filter(array_map("intval", array_column($wpdb->get_results(
+           "SELECT parent FROM $wpdb->term_taxonomy
+            WHERE term_id IN (".implode(",", $terms_ids).") AND taxonomy='".static::getSlug()."'"
+        ), "parent")));
+
+        // Get parents of parents
+        $parents = static::addParentTerms($parents);
+
+        return array_values(array_unique(array_merge($parents, $terms_ids)));
+    }
+
+    /**
+     * Add the children terms ids to a list of terms ids
+     *
+     * @param array $term_ids
+     * @return array
+     */
+    public static function addChildrenTerms($term_ids)
+    {
+        return array_reduce($term_ids, function ($list, $term_id) {
+            return array_unique(array_merge($list, [$term_id], get_term_children($term_id, static::getSlug())));
+        }, []);
+    }
+
+    /**
+     * Add all the translations possible for the matching terms
+     *
+     * @return void
+     */
+    public static function addAllTermsTranslations($terms)
+    {
+        if (empty($terms)) return [];
+        $terms     = (array) $terms;
+        $use_slugs = is_string($terms[0]);
+
+        // Transform slugs into ids
+        if ($use_slugs) {
+            $terms_id = Database::get_col(
+               "SELECT t.term_id FROM terms t
+                JOIN term_taxonomy tt ON tt.term_id = t.term_id
+                WHERE tt.taxonomy = '".static::SLUG."' AND t.slug IN " . Database::inArray($terms)
+            );
+        } else {
+            $terms_id = $terms;
+        }
+
+        // Select all translations
+        $relations = Database::get_col(
+           "SELECT description FROM term_taxonomy
+            WHERE taxonomy = 'term_translations' AND (" . implode(" OR ", array_map(function ($term_id) {
+                return "description LIKE '%:{$term_id};%'";
+            }, $terms_id)) .")
+        ");
+
+        $translations = empty($relations) ? [] : array_values(array_unique(array_reduce($relations, function ($terms, $relation) {
+            return array_merge($terms, array_values(unserialize($relation)));
+        }, [])));
+
+        // Transform back into terms slugs
+        if ($use_slugs && !empty($translations)) {
+            $translations = Database::get_col("SELECT slug FROM terms WHERE term_id IN " . Database::inArray($translations));
+        }
+
+        return array_values(array_unique(array_merge($translations, $terms)));
+    }
+
+
+    // ==================================================
+    // > POST FIELDS
+    // ==================================================
+    /**
+     * Get all posts corresponding to each terms.
+
+     * @param \Sytaen\Model\Posts $model the post model.
+     * @param bool $include_children Specify if the terms children should be included too
+     * @return self
+     */
+    public function addPosts($model, $include_children = true)
+    {
+        return $this->addFields([
+            "@posts" => function ($term) use ($model, $include_children) {
+                return $model->tax(static::getSlug(), $term->slug, "AND", true, "IN", $include_children)->get();
+            }
+        ]);
+    }
+
+    /**
+     * Use a specific post model to recalculate term counts
+     *
+     * @param PostsModel $model
+     * @return self
+     */
+    public function withCountsFor($model)
+    {
+        global $wpdb;
+
+        // Clone the model and clean it
+        $model = (clone $model)->limit(-1)->page(0)->order("date")->clearQueryModifiers("order");
+
+        // Remove tax query on this taxonomy, if any
+        if (!empty($model->filters["tax_query"])) {
+            $model->filters["tax_query"] = array_values(array_filter($model->filters["tax_query"], function ($query) {
+                return empty($query["taxonomy"]) || $query["taxonomy"] != static::getSlug();
+            }));
+        }
+
+        // Keep only the IDs
+        $ids = implode(",", $model->getIDs());
+
+        // No ID : set all count to 0 and skip fetching
+        if (empty($ids)) {
+            return $this->addFields([
+                "@count" => 0
+            ])->fetchFields();
+        }
+
+        // Get counts
+        $results = $wpdb->get_results(
+           "SELECT count(*) as count, tt.term_id as term_id
+           FROM {$wpdb->term_relationships} as tr
+           JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = '".static::getSlug()."'
+           WHERE tr.object_id IN ({$ids}) GROUP BY tr.term_taxonomy_id
+        ");
+
+        // Build index
+        $index = [];
+        foreach ($results as $result) $index[$result->term_id] = $result->count;
+
+        // Register count modifier based on index
+        return $this->addFields([
+            "@count" => function ($term) use ($index) {
+                if (empty($index[$term->term_id])) return 0;
+                return (int) $index[$term->term_id];
+            }
+        ])->fetchFields();
     }
 
 
@@ -259,13 +424,28 @@ abstract class TaxonomyModel
      * @param array $terms The terms to look for
      * @return boolean
      */
-    public function termsExist($terms)
+    public static function termsExist($terms)
     {
         $terms = (array) $terms;
         foreach ($terms as $term) {
-            if (!term_exists($term, static::SLUG)) return false;
+            if (!term_exists($term, static::getSlug())) return false;
         }
         return true;
+    }
+
+
+    // ==================================================
+    // > CACHE
+    // ==================================================
+    /**
+     * Clear all cached data, forcing new data fetching
+     *
+     * @return void
+     */
+    public function clearCache()
+    {
+        $this->hierarchy = false;
+        return parent::clearCache();
     }
 
     // ==================================================
@@ -279,7 +459,7 @@ abstract class TaxonomyModel
      */
     public static function register()
     {
-        register_taxonomy(static::SLUG, null, array(
+        register_taxonomy(static::getSlug(), null, array(
             "labels" => [
                 "name"           => static::NAME
             ],
@@ -293,17 +473,16 @@ abstract class TaxonomyModel
         return static::class;
     }
 
-
     /**
-     * Clear the cached terms
+     * Get this taxonomy SLUG
      *
-     * @return self
+     * @return void
      */
-    public function clearCache()
+    public static function getSlug()
     {
-        $this->terms = null;
-        return $this;
+        return static::SLUG;
     }
+
 
     // ==================================================
     // > ACTIONS
@@ -311,34 +490,59 @@ abstract class TaxonomyModel
     /**
      * Add a new term to the taxonomy
      *
-     * @return void
+     * @param string|array $name A single string, or an assoc list of translations
+     * @param array $attrs See args here https://developer.wordpress.org/reference/functions/wp_insert_term/
+     * @param array $fields Meta data
+     * @return int|array of term IDs
      */
-    public static function addTerm($term, $args = [], $fields = [])
+    public static function add($name, $attrs = [], $fields = [], $order = null)
     {
-        $term = wp_insert_term($term, static::SLUG, $args);
+        $is_translated = is_array($name);
+        $translations  = (array) $name;
 
-        if ($term instanceof \WP_Error) return $term;
+        foreach ($translations as $lang=>$item) {
 
-        if (!empty($fields)) {
-            static::updateFields($term, $fields);
+            // Create term
+            $term = wp_insert_term($item, static::getSlug(), array_map(function ($value) use ($lang, $item) {
+                if (is_callable($value) && !is_string($value)) return $value($lang, $item);
+                return $value;
+            }, $attrs));
+
+            // Term already exists with this name (most probably)
+            if (is_wp_error($term) || empty($term["term_id"])) {
+                $translations[$lang] = 0;
+                continue;
+            }
+
+            // Replace name with term_id for the return value
+            $term_id             = $term["term_id"];
+            $translations[$lang] = $term_id;
+
+
+            // Update fields
+            if ($fields) {
+                foreach ($fields as $key=>$value) {
+                    ModelItemTaxonomy::setField($term_id, $key, $value);
+                }
+            }
+
+            // Set language
+            if ($is_translated) {
+                ModelItemTaxonomy::setLang($term_id, $lang);
+            }
+
+            // Set order
+            if ($order != null) {
+                ModelItemTaxonomy::setOrder($term_id, $order);
+            }
         }
 
-        return $term;
-    }
-
-    /**
-     * Add a term fields
-     *
-     * @return void
-     */
-    public static function updateFields($term, $fields, $merge = false)
-    {
-        $term_id = is_int($term) ? $term : ((array) $term)["term_id"];
-
-        foreach ((array) $fields as $key=>$value) {
-            if (is_callable($value) && !is_string($value)) $value = $value($result);
-            Data::update($key, $value, "term_{$term_id}", $merge);
+        // Set link between languages
+        if ($is_translated) {
+            pll_save_term_translations($translations);
         }
+
+        return $translations;
     }
 
 

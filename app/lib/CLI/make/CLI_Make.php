@@ -16,7 +16,7 @@ class CLI_Make
     {
         static::make(
             "PostsModelTemplate",
-            (new Convert($name))->toPascal(),
+            $name,
             "Models/Posts",
             [
                 "postsmodeltemplate" => strtolower($name)
@@ -40,7 +40,7 @@ class CLI_Make
     {
         static::make(
             "TaxonomyModelTemplate",
-            (new Convert($name))->toPascal() . "Taxonomy",
+            $name . "Taxonomy",
             "Models/Taxonomies",
             [
                 "taxonomy" => strtolower($name)
@@ -58,10 +58,10 @@ class CLI_Make
     {
         static::make(
             "ControllerTemplate",
-            (new Convert($name . "Controller"))->toPascal(),
+            $name,
             "Controllers",
             [
-                "templateview" => (new Convert($name))->toKebab()
+                "templateview" => strtolower($name)
             ]
         );
     }
@@ -77,7 +77,7 @@ class CLI_Make
     {
         static::make(
             "ProcessorTemplate",
-            (new Convert($name . "Processor"))->toPascal(),
+            $name,
             "Controllers/Processors"
         );
     }
@@ -93,7 +93,7 @@ class CLI_Make
     {
         static::make(
             "HelperTemplate",
-            (new Convert($name))->toPascal(),
+            $name,
             "app/Helpers"
         );
     }

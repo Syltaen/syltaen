@@ -41,6 +41,7 @@ abstract class Mail
         return View::render("mails/" . $template, array_merge([
             "subject"   => $subject,
             "body"      => $body,
+            "from"      => App::config("mail_from_name"),
 
             "imgpath"   => Files::url("build/img/mails/"),
             "primary"   => App::config("color_primary"),

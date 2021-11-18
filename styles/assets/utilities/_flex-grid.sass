@@ -57,7 +57,11 @@
         @for $i from 1 through 12
             .gr-#{$i}#{screen_suffix($bp)}
                 flex: $i
-
+        .gr-auto
+            flex: unset
+            flex-grow: 1
+        .gr-none
+            flex: unset
 
 // ==================================================
 // > GUTTERS

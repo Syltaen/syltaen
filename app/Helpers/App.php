@@ -47,7 +47,6 @@ abstract class App
         return static::defaultLang();
     }
 
-
    /**
      * Get the default lang
      *
@@ -56,7 +55,20 @@ abstract class App
     public static function defaultLang()
     {
         if (function_exists("pll_default_language")) return pll_default_language();
-        return "fr";
+        return "fr_be";
+    }
+
+    /**
+     * Get the language of a post
+     *
+     * @param int $post_id
+     * @param $field (optional) either ‘name’ or ‘locale’ or ‘slug’, defaults to ‘slug’
+     * @return string
+     */
+    public static function langOf($post_id, $field = "slug")
+    {
+        if (function_exists("pll_get_post_language")) return pll_get_post_language($post_id, $field);
+        return false;
     }
 
     // =============================================================================

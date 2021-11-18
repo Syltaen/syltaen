@@ -128,62 +128,113 @@ abstract class Data
      *
      * @param array $array
      * @param array $keys
-     * @param int|string $post_id
+     * @param int|string $meta_target
      * @return array $data
      */
-    public static function store(&$array, $keys, $post_id = null)
+    public static function store(&$array, $fields, $post_id = null)
     {
-        if (empty($keys)) return false;
-
+        if (empty($fields)) return false;
         if (!isset($array)) $array = [];
 
-        foreach ($keys as $key=>$value) {
-            // no default value
-            if (is_int($key)) {
-                $key = $value;
-                $value = false;
+        // Normalize keys that don't have a default value
+        $fields = static::normalizeFieldsKeys($fields);
 
-                // Anonym function
-                if (is_callable($key)) {
-                    $key($array);
-                    continue;
-                }
-            }
-
-            // check if the value's type is suggested
-            $filter = false;
-            if (preg_match('/\((.*)\)\s(.*)/', $key, $keys)) {
-                $filter = $keys[1];
-                $key  = $keys[2];
-            }
-
-            // check key aliases
-            $field_key = $store_key = $key;
-            if (preg_match('/(.*)@(.*)/', $key, $keys)) {
-                $field_key = $keys[1];
-                $store_key = $keys[2];
-            }
-
-            // get value and filter it as/if suggested
-            $value = $field_key ? self::get($field_key, $post_id, $value, $filter) : $value;
-
-            // Execute callable functions
-            if (is_callable($value) && !is_string($value)) {
-                $value = $value($array);
-            }
+        foreach ($fields as $key=>$value) {
+            $data = static::getAdvanced($key, $value, $post_id, $array);
 
             // store value in the array or object provided
             if (is_array($array)) {
-                $array[$store_key] = $value;
+                $array[$data["key"]] = $data["value"];
             }
 
             if (is_object($array)) {
-                $array->$store_key = $value;
+                $array->{$data["key"]} = $data["value"];
             }
         }
 
         return $array;
     }
+
+    /**
+     * Take a field key and parse its value
+     *
+     * @return array
+     */
+    public static function getAdvanced($key, $value, $post_id = null, $callback_context = false)
+    {
+        // Get the key parts (store, meta, filter)
+        $key_parts = Data::parseDataKey($key);
+
+        // get value and filter it as/if suggested
+        $value = $key_parts["meta"] ? self::get($key_parts["meta"], $post_id, $value, $key_parts["filter"]) : $value;
+
+        // Execute callable functions
+        if (is_callable($value) && !is_string($value)) {
+            $value = $value($callback_context);
+        }
+
+        return [
+            "key"   => $key_parts["store"],
+            "value" => $value
+        ];
+    }
+
+    /**
+     * Normalize the keys of a list of fields
+     *
+     * @return array
+     */
+    public static function normalizeFieldsKeys($fields)
+    {
+        return Data::mapAssoc(function ($key, $value) {
+            if (is_int($key)) return [$value, null];
+            return [$key, $value];
+        }, $fields);
+    }
+
+
+    /**
+     * Create an index for the given fields, as property=>field key
+     *
+     * @return array
+     */
+    public static function generateFieldsIndex($fields)
+    {
+        return Data::mapAssoc(function ($key, $value) {
+            $parts = static::parseDataKey($key);
+            return [$parts["store"], $key];
+        }, $fields);
+    }
+
+    /**
+     * Get the different parts of a data key : store, meta, filter
+     *
+     * @param string
+     * @return array
+     */
+    public static function parseDataKey($key)
+    {
+        // Check for a filter in ()
+        $filter = false;
+        if (preg_match('/\((.*)\)\s(.*)/', $key, $keys)) {
+            $filter = $keys[1];
+            $key    = $keys[2];
+        }
+
+        // Check for aliases (different storage and meta key)
+        $meta = $store = $key;
+        if (preg_match('/(.*)@(.*)/', $key, $keys)) {
+            $meta  = $keys[1];
+            $store = $keys[2];
+        }
+
+        return [
+            "filter" => $filter,
+            "meta"   => $meta,
+            "store"  => $store
+        ];
+    }
+
 
     /**
      * Get a list of IDs from a value
@@ -404,5 +455,74 @@ abstract class Data
         return array_filter($array, function ($key) use ($keys_to_keep) {
             return in_array($key, $keys_to_keep);
         }, ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
+     * Reindex an array using a specific column of each each item, or a callback
+     *
+     * @param array $array
+     * @param string|callable $index Column or callback for the key
+     * @param string|callable $value Column or callback for the value
+     * @return array
+     */
+    public static function mapKey($array, $index, $value = false)
+    {
+        return array_reduce($array, function ($list, $item) use ($index, $value) {
+            $list[is_string($index) ? ((array) $item)[$index] : $index($item)] = empty($value) ? $item : (
+                is_string($value) ? ((array) $item)[$value] : $value($item)
+            );
+            return $list;
+        }, []);
+    }
+
+
+    /**
+     * Map an associative array, allow to change its key and value
+     *
+     * @param callable $callback Should return [$key, $value] array
+     * @param array $assoc The array to process
+     * @return array
+     */
+    public static function mapAssoc($callback, $assoc)
+    {
+        return array_column(array_map($callback, array_keys($assoc), $assoc), 1, 0);
+    }
+
+
+    /**
+     * Make array of arrays based on a specific key
+     *
+     * @param array $array
+     * @param string $key
+     * @return array
+     */
+    public static function groupByKey($array, $key, $value_key = false)
+    {
+        return array_reduce($array, function ($groups, $item) use ($key, $value_key) {
+            $item = (array) $item;
+            $groups[$item[$key]] = $groups[$item[$key]] ?? [];
+            $groups[$item[$key]][] = $value_key ? $item[$value_key] : $item;
+            return $groups;
+        }, []);
+    }
+
+    /**
+     * Insert a new key/value pair at the specified postiion, or just after a speicif key, add at the end if not found
+     *
+     * @param array $assoc_array
+     * @param int|string $after_key
+     * @param int|string $key
+     * @param mixed $value
+     * @return void
+     */
+    public static function arrayInsert(&$assoc_array, $after_key, $key, $value)
+    {
+        $index = is_int($after_key) ? $after_key : (($index = array_search($after_key, array_keys($assoc_array))) !== false ? $index + 1 : count($assoc_array));
+
+        $assoc_array = array_merge(
+            array_slice($assoc_array, 0, $index, true),
+            [$key => $value],
+            array_slice($assoc_array, $index, null, true)
+        );
     }
 }

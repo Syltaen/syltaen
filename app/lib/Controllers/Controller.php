@@ -81,6 +81,7 @@ class Controller
             $filename ?: $this->view,
             $data ?: $this->data
         );
+        exit;
     }
 
 

@@ -36,8 +36,8 @@ export default class RangeField
     # Add custom themes
     ###
     addThemes: ->
-        @themes = @$input.data("theme").split(" ")
-        unless @themes.length then return false
+        @themes = @$input.data("theme") && @$input.data("theme").split(" ")
+        unless @themes && @themes.length then return false
         for theme in @themes then @$el.addClass "rangefield--#{theme}"
 
 

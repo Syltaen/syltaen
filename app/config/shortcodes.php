@@ -18,7 +18,10 @@ add_shortcode("menu", function ($atts, $content = null) {
     return View::menu($id);
 });
 
-
+// YEAR
+add_shortcode("year", function () {
+    return Time::current("Y");
+});
 
 // =============================================================================
 // > FORMS
@@ -26,29 +29,13 @@ add_shortcode("menu", function ($atts, $content = null) {
 
 // LOGIN
 add_shortcode("login_form" , function ($atts, $content = null) {
-    if ($ref = Route::query("ref")) {
-        $landing = get_the_permalink($ref) . "?" . $_SERVER["QUERY_STRING"];
-    } else {
-        $landing = isset($atts["landing"]) ? $atts["landing"] : "";
-        $landing = get_page_by_path($landing);
-        $landing = $landing ? get_the_permalink($landing) : site_url();
-    }
 
-    $form = wp_login_form([
-        "echo"           => false,
-        "label_username" => __("Adresse e-mail", "syltaen"),
-        "label_password" => __("Mot de passe #reset#", "syltaen"),
-        "redirect"       => $landing,
-        "remember"       => isset($atts["remember"]) ? $atts["remember"] : true
+    return View::parsePug(
+        "include " . "/views/includes/forms/_loginform.pug\n".
+        '+loginform($redirect_to)'
+    , [
+        "redirect_to" => Route::query("redirect_to") ?: ($atts["redirect_to"] ?? false)
     ]);
-
-    // $form = str_replace(
-    //     "#reset#",
-    //     "<a tabindex='-1' class='user_resetpass' href='".site_url("oubli-mot-de-passe")."'>".__("Mot de passe oublié ?", "syltaen")."</a>",
-    //     $form
-    // );
-
-    return $form;
 });
 
 // NINJA FORMS

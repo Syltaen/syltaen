@@ -1,7 +1,7 @@
 //- =============================================================================
 //- > VIEW : 404
 //- =============================================================================
-extends templates/_base
+extends _base
 
 //- ==================================================
 //- > INTRO
@@ -19,6 +19,5 @@ block sections
 
         p!= __("Désolé, cette page n'existe pas ou plus.", "syltaen")
 
-        p: a.button(href=site.url)
-            i.fa.fa-arrow-left
+        p: a.button(href=$site["url"])
             != __("Retour à l'accueil", "syltaen")

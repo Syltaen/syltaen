@@ -1,25 +1,24 @@
-include ../includes/_mixins
+include includes/_mixins
 doctype
 
-html(lang=site.language)
+html(lang=$site["language"])
 
     //- =============================================================================
     //- > HEAD
     //- =============================================================================
     head
-        meta(charset=site.charset)
-        meta(name="description" content=site.description)
+        meta(charset=$site["charset"])
+        meta(name="description" content=$site["description"])
         meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
         meta(http-equiv="X-UA-Compatible" content="IE=edge")
         meta(name="viewport" content="width=device-width, initial-scale=1.0")
-        link(rel="pingback" href=site.pingback_url)
         = wp_head()
         block head
 
     //- =============================================================================
     //- > BODY
     //- =============================================================================
-    body(class=site.body_class)
+    body(class=$site["body_class"])
 
         //- ==================================================
         //- > SITE
@@ -31,15 +30,20 @@ html(lang=site.language)
                 //- > HEADER
                 //- ==================================================
                 block header
-                    header(role="navigation").site-header
+                    header(role="navigation").site-header: .container
 
-                        nav.site-header__nav.container
+                        .row.flex-justify-space-between.flex-align-center.no-gutters
+                            a.site-header__brand(href=$site["url"] rel="home")= $site["name"]
 
-                            a.site-header__brand(href=site.url rel="home")= site.name
+                            .row.flex-justify-space-between.flex-justify-align-center.no-gutters
+                                form.site-header__search.ms-margin-right(action=$site["url"])
+                                    input.site-header__search__field(name="s" value=\Syltaen\Route::query("s") placeholder=__("Recherche", "syltaen"))
+                                    button.site-header__search__submit!= __("Rechercher", "syltaen")
 
-                            != site.menus.main
+                                +social($site["header"]["social"], "header", "site-header__social")
 
-                            +social(site.header.social, "header", "site-header__social")
+                        nav.site-header__nav.row.flex-justify-space-between.flex-align-center.no-gutters
+                            != $site["menus"]["main"]
 
                 //- ==================================================
                 //- > CONTENT
@@ -49,21 +53,18 @@ html(lang=site.language)
 
                         //- ========== INTRO ========== -//
                         block intro
-                            if intro_image
-                                .site-intro(style="background-image: url(".$intro_image.")")
+                            if !empty($intro_image) || !empty($intro_content)
+                                section.site-intro(style=$intro_image?"background-image: url(".$intro_image.")":"")
+                                    != $intro_content
 
                         //- ========== BREADCRUMB ========== -//
                         block breadcrumb
-                            //- .container.breadcrumb-container!= site.breadcrumb
-
-
-                        //- ========== ASIDE ========== -//
-                        block aside
-                            //- .site-aside
+                            if !empty($site["breadcrumb"])
+                                .container.breadcrumb-container!= $site["breadcrumb"]
 
                         //- ========== CONTENT ========== -//
                         block sections
-                            +sections(sections)
+                            +sections($sections)
 
 
                 //- ==================================================
@@ -71,15 +72,13 @@ html(lang=site.language)
                 //- ==================================================
                 block footer
                     footer.site-footer(role="contentinfo")
-                        .site-footer__top: .container.row
-                            .gr.site-footer__col!= site.footer.col_1
-                            .gr.site-footer__col!= site.footer.col_2
-                            .gr.site-footer__col!= site.footer.col_3
+                        .site-footer__top: .container: .row.sm-gutters
+                            each $col in $site["footer"]["footer_cols"]
+                                .gr.gr-auto!= $col["txt"]
 
-                        .site-footer__bottom: .container.row.flex-justify-space-between.column-xs
-                            != site.menus.footer
-
-                            p.site-footer__copyright!= site.footer.copyright
+                        .site-footer__bottom: .container.row.flex-justify-space-between.flex-align-center.column-xs
+                            != $site["menus"]["footer"]
+                            p.site-footer__copyright!= $site["footer"]["copyright"]
 
 
         //- ==================================================
@@ -90,23 +89,22 @@ html(lang=site.language)
             span
             span
 
-
         .site-mobilenav
-            nav.site-mobilenav__nav!= site.menus.mobile
-
+            nav.site-mobilenav__nav!= $site["menus"]["mobile"]
 
         //- ==================================================
         //- > ERROR & SUCCESS MESSAGES
         //- ==================================================
         block messages
-            if error_message
+            if !empty($error_message)
                 p.site-message.site-message--error.color-white
                     span.site-message__close
-                    != error_message
-            if success_message
+                    != $error_message
+
+            if !empty($success_message)
                 p.site-message.site-message--success.color-white
                     span.site-message__close
-                    != success_message
+                    != $success_message
 
 
         //- ==================================================
@@ -114,7 +112,8 @@ html(lang=site.language)
         //- ==================================================
         #scroll-top
 
-        each form in site.forms
-            .nf-form-loaded(data-id=form.id)
-                != form.html
+        each $form in $site["forms"]
+            .nf-form-loaded(data-id=$form["id"])
+                != $form["html"]
+
         = wp_footer()

@@ -3,7 +3,7 @@
 // =============================================================================
 
 // DROPDOWN
-$dropdown-background: color(light-grey)
+$dropdown-background: white
 $dropdown-border: $input-border
 $results-height: 350px
 $option-padding-vertical: 5px
@@ -36,6 +36,7 @@ $tag-remove-hover-color: color(error)
 // =============================================================================
 .select2
     +font($input-color)
+    height: $input-height
 
     // ==================================================
     // > CONTAINER
@@ -95,6 +96,8 @@ $tag-remove-hover-color: color(error)
             cursor: pointer
         &[aria-selected="true"]
             +font(bold)
+        &[aria-disabled="true"]
+            opacity: 0.25
 
     &-search--dropdown
         display: block
@@ -130,15 +133,22 @@ $tag-remove-hover-color: color(error)
     // ==================================================
     // > SELECTION
     // ==================================================
+    @at-root select
+        appearance: none
+    @at-root select,
     &-selection
         position: relative
         display: block
-        height: $input-height
+        height: $input-height !important
+        width: 100%
         user-select: none
         border: $input-border
         border-radius: $input-border-radius
         background: $input-background
         color: $input-color
+        +font(14px bold)
+
+    &-selection
         &--single
             cursor: pointer
 
@@ -146,6 +156,7 @@ $tag-remove-hover-color: color(error)
             cursor: text
             height: auto
 
+        @at-root select,
         &__rendered
             display: block
             padding: 0 $input-padding
@@ -222,3 +233,4 @@ $tag-remove-hover-color: color(error)
         font-weight: bold
         margin-right: 20px
         position: relative
+        z-index: 20

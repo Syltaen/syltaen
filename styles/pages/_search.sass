@@ -4,23 +4,32 @@
 
 .search-page
 
-    &__title
-        +font(text)
-        margin-bottom: 60px
-        &__words
-            +font(primary)
-        small
-            +font(light)
-
     &__type
-        margin: 0
-        +font(20px left secondary uppercase)
+        +font(30px 1.2 primary uppercase)
+        margin: .5em 0
+        &__count::before
+            content: " - "
 
-    // ==================================================
-    // > RESULTS
-    // ==================================================
     &__results
-        padding: 60px 0
-
-    &--no-results &__results
-        display: none
+        +flex(row wrap)
+        margin: 0 -10px 40px
+        &__item
+            padding: 10px
+            width: 33%
+        &__card
+            background: white
+            border: 1px solid color(light-grey)
+            padding: 1em
+            display: block
+            transition: all .35s ease
+            height: 100%
+            &__title
+                +font(24px 1.2 text title-bold)
+                margin: 0
+            &__url
+                +font(12px primary)
+                margin: 0
+            &__excerpt
+                +font(14px dark-grey)
+            &:hover
+                border-color: color(primary)

@@ -13,10 +13,10 @@ class PageController extends BaseController
     public function page()
     {
         $this->addData([
-            "@intro_image" => get_the_post_thumbnail_url(),
-            "@sections" => (new SectionsProcessor($this))->processEach(Data::get("sections")),
+            "@intro_image"   => get_the_post_thumbnail_url(),
+            "@intro_content" => "<h1>{$this->post->post_title}</h1>",
+            "@sections"      => (new SectionsProcessor($this))->processEach(Data::get("sections")),
         ]);
-
 
         $this->render();
     }
@@ -41,6 +41,22 @@ class PageController extends BaseController
     // ==================================================
     // > SPECIAL PAGES
     // ==================================================
+    /**
+     * Display a really simple page with a custom text
+     *
+     * @param [type] $content
+     * @return void
+     */
+    public function simplePage($content)
+    {
+        $this->data["content"] = [[
+            "acf_fc_layout" => "txt",
+            "txt" => $content
+        ]];
+
+        $this->render("simple");
+    }
+
 
     /**
      * Error 404 page display
@@ -51,15 +67,8 @@ class PageController extends BaseController
     {
         global $pagename;
 
-        $this->addData([
-            "@lookfor" => $pagename
-        ]);
-
         // Make sure the error404 is set on the body
         $this->addBodyClass("error404");
-
-        // Remove the breadcrumb
-        // $this->data["site"]["breadcrumb"] = "";
 
         // Make sure the correcet header is set
         status_header("404");
@@ -74,12 +83,7 @@ class PageController extends BaseController
      */
     public function ninjaFormPreview()
     {
-        $this->data["content"] = [[
-            "acf_fc_layout" => "txt",
-            "txt" => "[ninja_form id=".$this->args[0]."]"
-        ]];
-
-        $this->render("simple");
+        $this->simplePage("[ninja_form id=".$this->args[0]."]");
     }
 
 
@@ -94,25 +98,28 @@ class PageController extends BaseController
         $search = $search ?: $this->args["search"];
 
         $models_to_search = [
-            new Pages
+            new Pages,
+            new News
         ];
 
         $this->data["results"] = [];
         $total_results_count   = 0;
 
         foreach ($models_to_search as $model) {
+            $posts = $model->search($search)->get();
+            $count = $model->count();
+            if (!$count) continue;
+
             $this->data["results"][$model::TYPE] = [
-                "posts" => $model->search($search)->get(),
-                "count" => $model->count(),
+                "posts" => $posts,
+                "count" => sprintf(_n("1 résultat", "%s résultats", $count, "syltaen"), $count),
                 "label" => $model::LABEL
             ];
-            $total_results_count += $model->count();
+            $total_results_count += $count;
         }
 
-        $total_results_count = $total_results_count > 1 ? $total_results_count." résultats" : ($total_results_count < 1 ? "Pas de résultat" : "Un seul résultat");
-
         $this->addData([
-            "@title"       => __("Recherche pour : ", "syltaen")." <span class='search-page__title__words'>$search</span><br><small>$total_results_count</small>",
+            "@title"       => __("Recherche pour : ", "syltaen")." <strong'>$search</strong>",
             "@search"      => $search
         ]);
 

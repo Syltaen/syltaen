@@ -1,0 +1,43 @@
+// =============================================================================
+// > MODULES - NAVIGATION: PAGINATION
+// =============================================================================
+
+.pagination
+    padding: spacing(ms) 0
+    +flex(column-reverse, center, center)
+
+    // ==================================================
+    // > POSITION
+    // ==================================================
+    &__position
+        +font(14px medium-grey)
+        margin: 1em
+
+    // ==================================================
+    // > WALKER
+    // ==================================================
+    &__walker
+        +flex(row nowrap)
+        &__item
+            padding: 0 4px
+
+        &__link
+            border: 1px solid #E3E3E3
+            +font(12px 3 primary bold center)
+            +size(3em)
+            display: block
+            border-radius: 50%
+            transition: all .35s ease
+            i
+                pointer-events: none
+
+            &--current
+                border-color: color(primary)
+                background: color(primary)
+                +font(white)
+                pointer-events: none
+
+            &--direction
+
+            &:hover
+                border-color: color(primary)

@@ -9,6 +9,7 @@
 ###
 
 import $ from "jquery"
+import AttributeWatcher from "./AttributeWatcher.coffee"
 
 # ==================================================
 # > JQUERY METHOD
@@ -21,51 +22,14 @@ $.fn.showif = (stringCondition, action = "show") -> new Condition($(this), strin
 # ==================================================
 class Condition
     constructor: (@$el, @stringCondition, @action) ->
-        @watchList = @getWatchList(@stringCondition)
+        @watch = new AttributeWatcher @stringCondition
 
-        if @watchList
-            for name, $field of @watchList then $field.change => @check()
-            @check()
-
-
-    getWatchList: (stringCondition) ->
-        watchList = false
-        stringCondition.match(/\{[^\}]+\}/g).map (item) ->
-            name = item.replace /[\{\}]/g, ""
-            field = $("[name='#{name}']")
-            if field.length
-                watchList = if watchList then watchList else {}
-                watchList[name] = field
-        return watchList
-
-    getParsedCondition: () ->
-        string = @stringCondition
-
-        for name, $field of @watchList
-            name = name.replace "[", "\\["
-            name = name.replace "]", "\\]"
-            string = string.replace new RegExp("{" + name + "}", "g"), @getFieldStringValue($field)
-
-        return string
-
-    check: ->
-        if eval(@getParsedCondition())
-            if @class then @$el.addClass(@class) else @doAction()
-        else
-            if @class then @$el.removeClass(@class) else @undoAction()
-
-
-    getFieldStringValue: ($field) ->
-        switch $field.attr "type"
-            when "radio"
-                value = $field.filter(":checked").val()
-            when "checkbox"
-                value = []
-                $field.filter(":checked").each -> value.push $(@).val()
+        @watch.onChange (conditionResult) =>
+            if conditionResult
+                if @class then @$el.addClass(@class) else @doAction()
             else
-                value = $field.val()
+                if @class then @$el.removeClass(@class) else @undoAction()
 
-        return JSON.stringify value
 
     doAction: ->
         switch @action

@@ -1,0 +1,44 @@
+//- =============================================================================
+//- > VIEW MIXIN - PAGINATION WALKER
+//- =============================================================================
+
+mixin pagination(pagination, extraClasses = "")
+
+    if $pagination
+        .pagination(class=$pagination["classes"])&attributes($attributes)
+
+            //- ==================================================
+            //- > POSITION
+            //- ==================================================
+            p.pagination__position!= $pagination["position_label"]
+
+
+            //- ==================================================
+            //- > PAGES
+            //- ==================================================
+            ul.pagination__walker
+                if $pagination["walker"]
+
+                    unless $pagination["walker"]["previous"]["disabled"]
+                        li.pagination__walker__item
+                            a.pagination__walker__link.pagination__walker__link--direction(href=$pagination["walker"]["previous"]["url"] title=$pagination["walker"]["previous"]["title"] data-page=$pagination["walker"]["previous"]["number"])
+                                i.far.fa-angle-left
+
+                    each page in $pagination["walker"]["pages"]
+                        li.pagination__walker__item
+                            if $page["current"]
+                                span.pagination__walker__link.pagination__walker__link--current= $page["text"]
+                            else
+                                a.pagination__walker__link(href=$page["url"] data-page=$page["number"])= $page["text"]
+
+                    unless $pagination["walker"]["next"]["disabled"]
+                        li.pagination__walker__item
+                            a.pagination__walker__link.pagination__walker__link--direction(href=$pagination["walker"]["next"]["url"] title=$pagination["walker"]["next"]["title"] data-page=$pagination["walker"]["next"]["number"])
+                                i.far.fa-angle-right
+
+            //- ==================================================
+            //- > EXTRA
+            //- ==================================================
+            if $block
+                .pagination__extra
+                    block

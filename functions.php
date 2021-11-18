@@ -26,7 +26,5 @@ if (WP_DEBUG || isset($_GET["debug"])) {
 // ==================================================
 Files::import([
     "app/config",
-    "app/hooks/actions",
-    "app/hooks/filters",
-    "app/hooks/ajax",
+    "app/hooks"
 ]);

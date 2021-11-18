@@ -28,7 +28,7 @@ add_action("admin_menu", function () {
     // remove_menu_page("edit.php?post_type=page");
 
     // ========== Comments ========== //
-    remove_menu_page("edit-comments.php");
+    // remove_menu_page("edit-comments.php");
 
     // ========== Appearance ========== //
     // remove_menu_page("themes.php");

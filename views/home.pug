@@ -1,7 +1,7 @@
 //- =============================================================================
 //- > VIEW : HOME
 //- =============================================================================
-extends templates/_base
+extends _base
 
 
 //- ==================================================
@@ -9,7 +9,7 @@ extends templates/_base
 //- ==================================================
 block intro
     section.site-intro.home__intro: .container
-        h1!= site.name
+        h1!= $site["name"]
 
 //- ==================================================
 //- > SECTIONS
@@ -68,10 +68,16 @@ block sections
         hr.no-margin-top
         .row
             .gr: ul
+                li
+                    |Liste à puces
+                    ul
+                        li Liste à puces
+                        li Liste à puces
+                        li Liste à puces
+                li Liste à puces
+            .gr: ol
                 li Liste à puces
                 li Liste à puces
-                li Liste à puces
-            .gr: ul.list.list--arrows
                 li Liste à puces
                 li Liste à puces
                 li Liste à puces
@@ -79,23 +85,52 @@ block sections
                 li Liste à puces
                 li Liste à puces
                 li Liste à puces
-            .gr: ol
+                li Liste à puces
+                li Liste à puces
+            .gr: ul.list.list--arrows
                 li Liste à puces
                 li Liste à puces
                 li Liste à puces
+                li Liste à puces
+                li Liste à puces
+            .gr: ul.list.list--carrets
+                li Liste à puces
+                li Liste à puces
+                li Liste à puces
+                li Liste à puces
+                li Liste à puces
+            .gr: ul.list
+                li.list__item--angle Liste à puces
+                li.list__item--arrow Liste à puces
+                li.list__item--carret Liste à puces
+                li.list__item--check.list__item--bullet-success Liste à puces
+                li.list__item--time.list__item--bullet-error Liste à puces
+
 
 
         p.color-medium-grey.font-bold.md-margin-top ASCENCEURS
         hr.no-margin-top
-        .collapsable
-            header.collapsable__header Ascenceur
+        .collapsable(data-link)
+            header.collapsable__header Ascenceur 1
             .collapsable__content
                 p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
                 p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
                 p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
                 p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
-
-
+        .collapsable(data-link)
+            header.collapsable__header Ascenceur 2
+            .collapsable__content
+                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
+                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
+                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
+                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
+        .collapsable(data-link)
+            header.collapsable__header Ascenceur 3
+            .collapsable__content
+                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
+                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
+                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
+                p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
 
 
         p.color-medium-grey.font-bold.md-margin-top TABLEAUX
@@ -128,27 +163,64 @@ block sections
 
             .row.row--spacing-sm
                 fieldset.gr
-                    ul.list.list--choices
-                        li.list__item: label.list__label
+                    label Vertical
+                    ul.column
+                        li: label.choice-label
                             input.list__bullet(type="checkbox" checked="checked")
                             |Case à cocher
-                        li.list__item: label.list__label
+                        li: label.choice-label
                             input.list__bullet(type="checkbox")
                             |Case à cocher
-                        li.list__item: label.list__label.is-disabled
+                        li: label.choice-label.is-disabled
+                            input.list__bullet(type="checkbox")
+                            |Case à cocher
+                fieldset.gr.gr-2
+                    label Horizontal
+                    ul.row.flex-justify-start
+                        li.gr-none: label.choice-label
+                            input.list__bullet(type="checkbox" checked="checked")
+                            |Case à cocher
+                        li.gr-none: label.choice-label
+                            input.list__bullet(type="checkbox")
+                            |Case à cocher
+                        li.gr-none: label.choice-label.is-disabled
                             input.list__bullet(type="checkbox")
                             |Case à cocher
                 fieldset.gr
-                    ul.list.list--choices
-                        li.list__item: label.list__label
+                    label Radio
+                    ul.column
+                        li: label.choice-label
                             input.list__bullet(type="radio" name="radio" checked="checked")
                             |Bouton radio
-                        li.list__item: label.list__label
+                        li: label.choice-label
                             input.list__bullet(type="radio" name="radio")
                             |Bouton radio
-                        li.list__item: label.list__label.is-disabled
+                        li: label.choice-label.is-disabled
                             input.list__bullet(type="radio" name="radio")
                             |Bouton radio
+
+            .row.row--spacing-sm
+                .gr
+                    p: label.text-xx-small.choice-label
+                        input(type="checkbox" checked)
+                        | Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero illum eveniet magnam unde reiciendis sint amet laudantium a, consectetur quos delectus nostrum magni similique fugit et expedita aut. Veniam, vitae!
+                    p: label.text-x-small.choice-label
+                        input(type="checkbox" checked)
+                        | Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero illum eveniet magnam unde reiciendis sint amet laudantium a, consectetur quos delectus nostrum magni similique fugit et expedita aut. Veniam, vitae!
+                    p: label.text-small.choice-label
+                        input(type="checkbox" checked)
+                        | Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero illum eveniet magnam unde reiciendis sint amet laudantium a, consectetur quos delectus nostrum magni similique fugit et expedita aut. Veniam, vitae!
+                    p: label.choice-label
+                        input(type="checkbox" checked)
+                        | Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero illum eveniet magnam unde reiciendis sint amet laudantium a, consectetur quos delectus nostrum magni similique fugit et expedita aut. Veniam, vitae!
+                .gr
+                    p: label.text-x-large.choice-label
+                        input(type="checkbox" checked)
+                        | Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero illum eveniet magnam unde reiciendis.
+                    p: label.text-xx-large.choice-label
+                        input(type="checkbox" checked)
+                        | Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero illum eveniet magnam.
+
 
             .row.row--spacing-sm
                 fieldset.gr
@@ -164,4 +236,4 @@ block sections
                         option Option 2
                         option Option 3
 
-            input(type="submit" value="Envoyer")
+            button.button.form_submit(type="submit") Envoyer
