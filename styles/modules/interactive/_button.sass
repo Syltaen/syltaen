@@ -65,13 +65,13 @@ $button_base_color: color(primary)
 
     // ========== COLORS ========== //
     @each $color, $value in $colors
-        &--#{$color}
+        &---#{"" + $color}
             border-color: $value
             &::before
                 background: $value
             &:hover
                 color: $value
-        &--#{$color}.button--reversed
+        &---#{"" + $color}.button--reversed
             color: $value
             &:hover
                 color: white

@@ -1,0 +1,120 @@
+// =============================================================================
+// > WOOCOMMERCE STYLES IN ADMIN
+// =============================================================================
+
+// ==================================================
+// > ORDER STATUS LABEL COLORS
+// ==================================================
+.order-status.status-bpost,
+.order-status.status-truck
+    background: #B5E4E9
+    color: #5A777A
+
+.order-status.status-pickup-uccle,
+.order-status.status-pickup-boom
+    background: #D9CEE9
+    color: #8067a6
+
+.order-status.status-need-estimate
+    background: #FFF2CC
+    color: #BF8F00
+
+
+
+// ==================================================
+// > ORDER ACTIONS
+// ==================================================
+.wc_actions.column-wc_actions p
+    +flex(row-reverse nowrap, flex-end)
+
+
+// ==================================================
+// > ORDER STATUS ACTION BUTTONS
+// ==================================================
+.post-type-shop_order .wp-list-table .column-wc_actions a.button
+    width: 100% !important
+    text-indent: 0 !important
+    text-align: left
+    +flex(row-reverse, flex-end, center)
+    &::before
+        +fa(arrow-right)
+        +size(2em, 100%)
+        +absolute(top 0 right 0)
+        +font(white center)
+    &::after
+        position: static !important
+        min-width: 2em
+        max-width: 2em
+        line-height: 2
+    &.on-hold
+        border-color: #f8dda7
+        color: #94660c
+        &::before
+            background: #f8dda7
+        &::after
+            color: #f8dda7
+            +fa(money-check)
+    &.completed
+        border-color: #c8d7e1
+        color: #2e4453
+        &::before
+            background: #c8d7e1
+        &::after
+            color: #c8d7e1
+            +fa(check-circle)
+    &.processing
+        border-color: #c6e1c6
+        color: #5b841b
+        &::before
+            background: #c6e1c6
+        &::after
+            color: #c6e1c6
+    &.truck,
+    &.bpost
+        border-color: #B5E4E9
+        color: #5A777A
+        &::before
+            background: #B5E4E9
+    &.truck
+        opacity: 0.75
+        pointer-events: none
+        &::after
+            color: #B5E4E9
+            +fa(truck)
+
+    &.pickup-uccle,
+    &.pickup-boom
+        border-color: #8067a6
+        &::before
+            background: #8067a6
+        &::after
+            +fa(store)
+            color: #D9CEE9
+
+
+// ==================================================
+// > PDF INVOICE ACTION BUTTONS
+// ==================================================
+.post-type-shop_order .wp-list-table .column-wc_actions a.button.wpo_wcpdf
+    width: auto !important
+    position: relative
+    overflow: visible
+
+    &::before
+        content: none
+
+    &.exists
+        border-color: color(success)
+
+    &::after
+        position: absolute !important
+        +pos(top -.5em right -.5em)
+        left: auto
+        background: color(success)
+        +size(1.5em)
+        display: block
+        +font(10px 1.5 center white)
+        padding: 0
+        border-radius: 50%
+        min-width: 0
+        margin: 0

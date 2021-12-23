@@ -12,11 +12,11 @@
         // ========== COLORS ========== //
         // Ex: .color-primary
         @each $color, $value in $colors
-            .color-#{$color}#{screen_suffix($bp)}
+            .color-#{"" + $color}#{screen_suffix($bp)}
                 &, *
                     color: $value !important
 
-            .color-hover-#{$color}#{screen_suffix($bp)}:hover
+            .color-hover-#{"" + $color}#{screen_suffix($bp)}:hover
                 &, *
                     color: $value !important
 
@@ -58,3 +58,39 @@ strong,
 b
     font-weight: normal
     +font(bold)
+
+mark
+    background: #ECECEC
+    padding: .15em .5em
+    display: inline-block
+    +font(bold)
+    border-radius: 3px
+
+
+// ========== SIZES ========== //
+// .font-size-enormous
+//     +font(42px 1.2)
+//     +screen(sm)
+//         +font(32px)
+//     +screen(xs)
+//         +font(28px)
+
+// .font-size-huge
+//     +font(32px 1.2)
+//     +screen(sm)
+//         +font(28px)
+//     +screen(xs)
+//         +font(24px)
+
+// .font-size-big
+//     +font(24px 1.2)
+//     +screen(sm)
+//         +font(22px)
+//     +screen(xs)
+//         +font(20px)
+
+
+// .font-size-medium
+//     +font(18px)
+//     +screen(xs)
+//         +font(16px)

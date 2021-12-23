@@ -13,7 +13,7 @@
             margin: 50px 0
 
     & > .acf-table > tbody > .acf-row
-        position: relative
+        // position: relative
         & > td
             border-bottom: 20px solid color(light-grey)
         & > .acf-row-handle
@@ -32,7 +32,7 @@
                 border-top: 1px solid #eee
             & > .acf-tab-wrap.-left > .acf-hl.acf-tab-group
                 width: 50px
-                left: -50px
+                left: 0
                 & > li
                     a
                         display: block
@@ -63,10 +63,10 @@
     background-repeat: no-repeat !important
 
 @each $color, $value in $colors
-    .color-#{$color}
+    .color-#{"" + $color}
         &, *
             color: $value !important
 
 @each $color, $value in $colors
-    .bg-#{$color}
+    .bg-#{"" + $color}
         background-color: $value !important

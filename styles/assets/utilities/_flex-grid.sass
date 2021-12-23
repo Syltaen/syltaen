@@ -9,7 +9,7 @@
     position: relative
     z-index: 1
     width: calc(100% - 20px)
-    max-width: container(lg)
+    max-width: container(md)
     margin: 0 auto
 
     // Create a container modifier for each breakpoint
@@ -54,6 +54,7 @@
     +screen($bp)
         .gr#{screen_suffix($bp)}
             flex: 1
+            max-width: 100%
         @for $i from 1 through 12
             .gr-#{$i}#{screen_suffix($bp)}
                 flex: $i
@@ -112,3 +113,32 @@
         @if $ai == start or $ai == end
             $ai: flex-#{$ai}
         align-items: $ai
+
+.flex
+    &-pos-left-top
+        justify-content: flex-start
+        align-items: flex-start
+    &-pos-center-top
+        justify-content: center
+        align-items: flex-start
+    &-pos-right-top
+        justify-content: flex-end
+        align-items: flex-start
+    &-pos-left-center
+        justify-content: flex-start
+        align-items: center
+    &-pos-center-center
+        justify-content: center
+        align-items: center
+    &-pos-right-center
+        justify-content: flex-end
+        align-items: center
+    &-pos-left-bottom
+        justify-content: flex-start
+        align-items: flex-end
+    &-pos-center-bottom
+        justify-content: center
+        align-items: flex-end
+    &-pos-right-bottom
+        justify-content: flex-end
+        align-items: flex-end

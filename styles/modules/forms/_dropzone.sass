@@ -5,29 +5,32 @@
 .uploadfield
 
     &__zone
-        padding: 1em
-        border: 1px dashed color(medium-grey)
-        border-radius: 5px
+        padding: 20px
+        border: 2px dashed color(medium-grey)
+        background: color(light-grey)
         +flex(row wrap)
         clip: pointer
 
     &__message
-        +font(16px 1.4  center)
-        padding: 1em
+        +font(18px 20px bold center)
+        padding: 21px
         width: 100%
         pointer-events: none
         clip: pointer
-        opacity: .25
+        opacity: 0.25
         transition: all .25s ease
         &::before
-            +fal(paperclip)
-            +font(1.15 primary)
+            +fa(paperclip)
+            font-size: 1.35em
             margin-right: .3em
         .dz-started &
             display: none
 
     &__zone:hover &__message
         opacity: 0.5
+
+
+
 
     // ==================================================
     // > PREVIEWS
@@ -124,7 +127,7 @@
             fill: color(success)
         .dz-error-mark path
             fill: color(error)
-        &.dz-success .dz-success-mark,
+        &.dz-success .dz-success-mark
             animation: dropzoneMarkAppear 3s ease
         .dz-error-mark
             display: none // hidden by default

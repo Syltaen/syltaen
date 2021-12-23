@@ -2,11 +2,13 @@
 // > MODULE : INTERACTIVE - SLICK
 // =============================================================================
 
-@import "assets/vendors/slick/slick"
-// @import "assets/vendors/slick/slick-theme"
+@import "../../assets/vendors/slick/slick"
 
 .slick-slider
-    margin: 1em 0 4em
+    margin-bottom: 65px
+    max-width: 100%
+    +screen(xs)
+        margin-bottom: 80px
 
     .slick-list,
     .slick-track
@@ -71,9 +73,7 @@
             display: none !important
 
         +screen(xs)
-            // +size(32px)
-            // margin-top: -17px
-
+            bottom: -1.75em
 
     // ==================================================
     // > DOTS

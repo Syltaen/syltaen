@@ -19,7 +19,6 @@
     @each $a in $args
 
         @if type-of($a) == "number"
-            // Font size
             @if not $hasFontSize
                 @if unitless($a)
                     font-size: $a * 1em
@@ -27,8 +26,6 @@
                     font-size: $a
                     font-size: calculateRem($a)
                 $hasFontSize: true
-
-            // Line height
             @else
                 line-height: $a
 
@@ -36,7 +33,7 @@
         // Font color
         @if map-has-key($colors, $a)
             color: color($a)
-        @elseif type-of($a) == "color"
+        @else if type-of($a) == "color"
             color: $a
 
         // Font family
@@ -83,7 +80,6 @@
     width: $width
     height: $height
 
-
 // ==================================================
 // > FLEX
 // ==================================================
@@ -92,7 +88,6 @@
     flex-flow: $flow
     justify-content: $jc
     align-items: $ai
-
 
 
 // ==================================================
@@ -109,7 +104,6 @@
         @content
     &::-webkit-input-placeholder
         @content
-
 
 // ==================================================
 // > TRUNCATE

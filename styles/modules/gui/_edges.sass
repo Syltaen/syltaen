@@ -10,7 +10,7 @@ $edge-height: 42px
     // ==================================================
     // > TOP
     // ==================================================
-    &-top,
+    &-top
 
         &--in-ascending,
         &--in-descending,
@@ -28,14 +28,14 @@ $edge-height: 42px
             top: 0
             border-top: $edge-height solid color(primary)
             +screen(xs)
-                border-top-width: $edge-height / 2
+                border-top-width: math.div($edge-height, 2)
 
         &--out-ascending::before,
         &--out-descending::before
             bottom: 100%
             border-bottom: $edge-height solid color(primary)
             +screen(xs)
-                border-bottom-width: $edge-height / 2
+                border-bottom-width: math.div($edge-height, 2)
 
         &--in-ascending::before,
         &--out-descending::before
@@ -65,14 +65,14 @@ $edge-height: 42px
             bottom: 0
             border-bottom: $edge-height solid color(primary)
             +screen(xs)
-                border-bottom-width: $edge-height / 2
+                border-bottom-width: math.div($edge-height, 2)
 
         &--out-ascending::after,
         &--out-descending::after
             top: 100%
             border-top: $edge-height solid color(primary)
             +screen(xs)
-                border-top-width: $edge-height / 2
+                border-top-width: math.div($edge-height, 2)
 
         &--in-ascending::after,
         &--out-descending::after
@@ -135,30 +135,30 @@ $edge-height: 42px
     &--small
         &.has-edge-top--in-ascending::before
         &.has-edge-top--in-descending::before
-            border-top-width: $edge-height / 2
+            border-top-width: math.div($edge-height, 2)
         &.has-edge-top--out-ascending::before,
         &.has-edge-top--out-descending::before
-            border-bottom-width: $edge-height / 2
+            border-bottom-width: math.div($edge-height, 2)
     &--large
         &.has-edge-top--in-ascending::before
         &.has-edge-top--in-descending::before
-            border-top-width: $edge-height * 2
+            border-top-width: math.div($edge-height, 2)
         &.has-edge-top--out-ascending::before,
         &.has-edge-top--out-descending::before
-            border-bottom-width: $edge-height * 2
+            border-bottom-width: math.div($edge-height, 2)
 
 .has-edge-bottom
     &--small
         &.has-edge-bottom--in-ascending::before
         &.has-edge-bottom--in-descending::before
-            border-bottom-width: $edge-height / 2
+            border-bottom-width: math.div($edge-height, 2)
         &.has-edge-top--out-ascending::before,
         &.has-edge-top--out-descending::before
-            border-top-width: $edge-height / 2
+            border-top-width: math.div($edge-height, 2)
     &--large
         &.has-edge-bottom--in-ascending::before
         &.has-edge-bottom--in-descending::before
-            border-bottom-width: $edge-height * 2
+            border-bottom-width: math.div($edge-height, 2)
         &.has-edge-top--out-ascending::before,
         &.has-edge-top--out-descending::before
-            border-top-width: $edge-height * 2
+            border-top-width: math.div($edge-height, 2)

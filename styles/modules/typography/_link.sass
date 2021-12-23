@@ -26,10 +26,10 @@ a,
             transition: all .35s ease
 
         @each $color, $value in $colors
-            .color-#{$color} &,
-            &.color-#{$color},
+            .color-#{"" + $color} &,
+            &.color-#{"" + $color},
                 &::after
                     background: $value
 
-            &.link--#{$color}::after
+            &.link--#{"" + $color}::after
                 background: $value !important

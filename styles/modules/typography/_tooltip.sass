@@ -144,18 +144,18 @@
     // > COLORS
     // =============================================================================
     @each $color, $value in $colors
-        &--#{$color} &
+        &--#{"" + $color} &
             &__message
                 background: $value
                 &::after
                     border-bottom-color: $value
-        &--#{$color}.tooltip--onleft &__message::after
+        &--#{"" + $color}.tooltip--onleft &__message::after
             border-left-color: $value
             border-bottom-color: transparent
-        &--#{$color}.tooltip--onright &__message::after
+        &--#{"" + $color}.tooltip--onright &__message::after
             border-right-color: $value
             border-bottom-color: transparent
-        &--#{$color}.tooltip--ontop &__message::after
+        &--#{"" + $color}.tooltip--ontop &__message::after
             border-top-color: $value
 
 
@@ -165,5 +165,5 @@
     &--solid &__message
         border-style: solid
     @each $color, $value in $colors
-        &--#{$color}.tooltip--solid &__message
+        &--#{"" + $color}.tooltip--solid &__message
             background: $value

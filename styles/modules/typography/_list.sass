@@ -29,8 +29,8 @@ ol:not([class]) > li,
 
 // ========== COLORS ========== //
 @each $slug, $value in $colors
-    .list--bullets-#{$slug} > li::before,
-    .list__item--bullet-#{$slug}::before
+    .list--bullets-#{"" + $slug} > li::before,
+    .list__item--bullet-#{"" + $slug}::before
         color: $value !important
 
 // ========== DEFAULT / UL ========== //
