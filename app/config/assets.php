@@ -13,8 +13,8 @@ Files::addScript("bundle.js");
 
 add_action("wp", function () {
     Data::registerJSVars([
-        "var ajaxurl" => admin_url("admin-ajax.php"),
-        "var post_id" => get_the_ID(),
+        "var ajaxurl"          => admin_url("admin-ajax.php"),
+        "var post_id"          => get_the_ID(),
         "window.location.site" => site_url("/"),
     ]);
 });
@@ -42,7 +42,7 @@ add_action("nf_display_enqueue_scripts", function () {
 });
 
 // Gallery
-add_filter( 'use_default_gallery_style', '__return_false' );
+add_filter('use_default_gallery_style', '__return_false');
 
 // =============================================================================
 // > BACK
@@ -53,12 +53,11 @@ add_filter( 'use_default_gallery_style', '__return_false' );
 // ==================================================
 Files::addScript("admin.js", [], "admin_enqueue_scripts");
 
-
 // ==================================================
 // > CSS
 // ==================================================
 Files::addStyle("admin.css", [], "admin_enqueue_scripts");
 
 add_action("login_head", function () {
-    echo '<link rel="stylesheet" type="text/css" href="' . Files::url("build/css/admin.css") .'" />';
+    echo '<link rel="stylesheet" type="text/css" href="' . Files::url("build/css/admin.css") . '" />';
 });

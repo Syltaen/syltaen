@@ -16,15 +16,15 @@ abstract class DataProcessor
      *
      * @param boolean $controller
      */
-    public function __construct(&$controller = false) {
+    public function __construct(&$controller = false)
+    {
         $this->controller = $controller;
     }
-
 
     /**
      * Process a set of data and return the result
      *
-     * @param mixed $data
+     * @param  mixed   $data
      * @return mixed
      */
     public function process($raw)
@@ -33,20 +33,21 @@ abstract class DataProcessor
         return false;
     }
 
-
     /**
      * Process each item of an array and return the result array
      *
-     * @param mixed $item
+     * @param  mixed   $item
      * @return mixed
      */
     public function processEach($raw)
     {
         $proccessed = [];
 
-        if (empty($raw)) return [];
+        if (empty($raw)) {
+            return [];
+        }
 
-        foreach ($raw as $rawItem) {
+        foreach ($raw as $i => $rawItem) {
             $item = $this->process($rawItem);
 
             // Only include the result if it is valid

@@ -7,7 +7,7 @@ class ArchiveProcessor extends DataProcessor
     /**
      * Archives for News
      *
-     * @param array $c Local context
+     * @param  array  $c Local context
      * @return void
      */
     public function news(&$c)
@@ -22,39 +22,40 @@ class ArchiveProcessor extends DataProcessor
         $this->paginate($c, $model, 4);
     }
 
-
     // =============================================================================
     // > TOOLS
     // =============================================================================
     /**
      * Create a pagination from a model
      *
-     * @param array $c Local context
-     * @param \Syltaen\Model $model
-     * @param int $perpage
+     * @param  array          $c          Local context
+     * @param  \Syltaen\Model $model
+     * @param  int            $perpage
      * @return void
      */
     private function paginate(&$c, $model, $perpage = 6)
     {
-        $pagination   = (new Pagination($model, $perpage));
-        $c["walker"]  = $pagination->walker(null, "pagination--simple")->data;
-        $c["posts"]   = $pagination->posts();
+        $pagination  = (new Pagination($model, $perpage));
+        $c["walker"] = $pagination->walker(null, "pagination--simple")->data;
+        $c["posts"]  = $pagination->posts();
     }
 
     /**
      * Register a new list filter
      *
-     * @param array $c The local render context
-     * @param string @name The input/data name
-     * @param string @label THe label of the filter
-     * @param array $options The different available options in an associative array of $value=>$label
-     * @param callable $callback The callback used to filter items of the model
-     * @param mixed $default_value The default value
+     * @param  array    $c             The local render context
+     * @param  string   @name          The input/data name
+     * @param  string   @label         THe label of the filter
+     * @param  array    $options       The different available options in an associative array of $value=>$label
+     * @param  callable $callback      The callback used to filter items of the model
+     * @param  mixed    $default_value The default value
      * @return void
      */
     public function addFilter(&$c, $name, $label, $options, $filter_callback, $default_value = false)
     {
-        if (empty($options)) return false;
+        if (empty($options)) {
+            return false;
+        }
 
         // Act on this page without pagination
         $c["filters_action"] = $c["filters_action"] ?? Pagination::getBaseURL();
@@ -62,11 +63,11 @@ class ArchiveProcessor extends DataProcessor
         $value = $_GET[$name] ?? $default_value;
 
         // Register filter in the list
-        $c["filters"] = $c["filters"] ?? [];
+        $c["filters"]        = $c["filters"] ?? [];
         $c["filters"][$name] = [
             "name"    => $label,
             "value"   => $value,
-            "options" => $options
+            "options" => $options,
         ];
 
         // Apply the callback if filter has value
@@ -75,27 +76,24 @@ class ArchiveProcessor extends DataProcessor
         }
     }
 
-
     // =============================================================================
     // > METHOD ROUTING
     // =============================================================================
     /**
      * Process a single archive
      *
-     * @param array $content
+     * @param  array  $content
      * @return void
      */
     public function process($archive)
     {
         // Run the correct mehtod by looking at the archive content type
         switch ($archive["type"]) {
-
             // Add custom layout-method routes here
             // Ex:
             // case "type-of-archive":
             //     static::nameOfTheMethod($archive);
             //     break;
-
 
             // By default : use the type as a method name
             default:
@@ -109,5 +107,4 @@ class ArchiveProcessor extends DataProcessor
 
         return $archive;
     }
-
 }

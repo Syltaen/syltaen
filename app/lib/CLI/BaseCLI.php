@@ -1,26 +1,31 @@
 <?php
 
 namespace Syltaen;
+
 use \WP_CLI as WP_CLI;
 
 class BaseCLI
 {
-
     // =============================================================================
     // > FILE CREATION
     // =============================================================================
     /**
      * Create a new class
      *
-     * @param array $args
      * First argument = Class type : Model, Controller
      * Second argument = Name of the class
+     * @param  array  $args
      * @return void
      */
     public function make($args)
     {
-        if (empty($args[0])) WP_CLI::error("Please provide a class type");
-        if (empty($args[1])) WP_CLI::error("Please provide a class name");
+        if (empty($args[0])) {
+            WP_CLI::error("Please provide a class type");
+        }
+
+        if (empty($args[1])) {
+            WP_CLI::error("Please provide a class name");
+        }
 
         require Files::path("app/lib/CLI/make/CLI_Make.php");
 
@@ -30,8 +35,6 @@ class BaseCLI
 
         CLI_Make::{$args[0]}($args[1]);
     }
-
-
 
     // =============================================================================
     // > SETUP
@@ -59,7 +62,6 @@ class BaseCLI
         static::sethomepage();
     }
 
-
     /**
      * Open all config files in the editor
      *
@@ -74,16 +76,17 @@ class BaseCLI
         }
     }
 
-
     /**
      * Set the debug state
      * Usage : wp syltaen debug true
-     * @param array $args
+     * @param  array  $args
      * @return void
      */
     public function debug($args)
     {
-        if (empty($args)) WP_CLI::error("debug : You must provide a value.");
+        if (empty($args)) {
+            WP_CLI::error("debug : You must provide a value.");
+        }
 
         // Get wp-config.php file content
         $config_content = file_get_contents(ABSPATH . "wp-config.php");
@@ -96,17 +99,16 @@ class BaseCLI
                 preg_replace($search, "\ndefine(\"WP_DEBUG\", $args[0]);", $config_content)
             );
 
-        // Does not exist : add it
+            // Does not exist : add it
         } else {
             file_put_contents(
                 ABSPATH . "wp-config.php",
-                 preg_replace("/table_prefix[^;]+;/", "$0\n\ndefine(\"WP_DEBUG\", $args[0]);", $config_content)
+                preg_replace("/table_prefix[^;]+;/", "$0\n\ndefine(\"WP_DEBUG\", $args[0]);", $config_content)
             );
         }
 
         WP_CLI::success("Debug state has been set to $args[0]");
     }
-
 
     /**
      * Set the permalinks config and refresh them
@@ -135,7 +137,9 @@ class BaseCLI
         $page = (new Pages)->limit(1);
 
         // Force page ID
-        if ($args) $page->is($args[0]);
+        if ($args) {
+            $page->is($args[0]);
+        }
 
         $page->update(["post_title" => "Page d'accueil", "post_name" => "accueil", "post_content" => ""]);
         update_option("show_on_front", "page");

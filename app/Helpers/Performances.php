@@ -14,33 +14,34 @@ class Performances
      *
      * @param array $optimize The optimalizations to conduct
      */
-    public function __construct ($optimizations = [])
+    public function __construct($optimizations = [])
     {
         $defaults = [
-            "block_external_HTTP"       => true,
-            "defer_CSS"                 => false,
-            "defer_JS"                  => false,
-            "disable_comments"          => true,
-            "disable_block_styling"     => true,
-            "disable_embed"             => true,
-            "disable_emoji"             => true,
-            "disable_feeds"             => true,
-            "disable_heartbeat"         => false,
-            "disable_jquery"            => false, // /!\ Necessary for WooCommerce and Ninja Forms
-            "disable_jquery_migrate"    => true,
-            "disable_rest_api"          => true,
-            "disable_RSD"               => true,
-            "disable_shortlinks"        => true,
-            "disable_theme_editor"      => true,
-            "disable_version_numbers"   => false,
-            "disable_WLW_manifest"      => true,
-            "disable_WP_version"        => true,
-            "disable_XMLRPC"            => true,
-            "jquery_to_footer"          => true,
-            "limit_comments_JS"         => true,
-            "limit_revisions"           => true,
-            "remove_comments_style"     => true,
-            "slow_heartbeat"            => true
+            "block_external_HTTP"     => false,
+            "defer_CSS"               => false,
+            "defer_JS"                => false,
+            "disable_comments"        => true,
+            "disable_block_styling"   => true,
+            "disable_embed"           => true,
+            "disable_emoji"           => true,
+            "disable_feeds"           => true,
+            "disable_heartbeat"       => false,
+            "disable_jquery"          => false, // /!\ Necessary for WooCommerce
+            "disable_jquery_migrate"  => true,
+            "disable_rest_api"        => true,
+            "disable_RSD"             => true,
+            "disable_shortlinks"      => true,
+            "disable_theme_editor"    => true,
+            "disable_version_numbers" => false,
+            "disable_WLW_manifest"    => true,
+            "disable_WP_version"      => true,
+            "disable_XMLRPC"          => true,
+            "jquery_to_footer"        => true,
+            "limit_comments_JS"       => true,
+            "limit_revisions"         => true,
+            "remove_comments_style"   => true,
+            "slow_heartbeat"          => true,
+            "template_to_index"       => true,
         ];
 
         $this->optimize = wp_parse_args($optimizations, $defaults);
@@ -65,7 +66,7 @@ class Performances
     private function block_external_HTTP()
     {
         if (!is_admin()) {
-            add_filter("pre_http_request", function() {
+            add_filter("pre_http_request", function () {
                 return new \WP_Error("http_request_failed", __("Request blocked."));
             }, 100);
         }
@@ -80,19 +81,22 @@ class Performances
         $object = $this;
 
         // Dequeue our CSS and save our styles. Please note - this function removes conditional styles for older browsers
-        add_action("wp_enqueue_scripts", function() use($object) {
-
+        add_action("wp_enqueue_scripts", function () use ($object) {
             // Bail out if we are uzing the customizer preview
-            if (is_customize_preview()) return;
+            if (is_customize_preview()) {
+                return;
+            }
 
             global $wp_styles;
 
             // Save the queued styles
             foreach ($wp_styles->queue as $style) {
-                $object->styles[]   = $wp_styles->registered[$style];
-                $dependencies       = $wp_styles->registered[$style]->deps;
+                $object->styles[] = $wp_styles->registered[$style];
+                $dependencies     = $wp_styles->registered[$style]->deps;
 
-                if (!$dependencies) continue;
+                if (!$dependencies) {
+                    continue;
+                }
 
                 // Add dependencies, but only if they are not included yet
                 foreach ($dependencies as $dependency) {
@@ -111,17 +115,23 @@ class Performances
         }, 9999);
 
         // Load our CSS using loadCSS
-        add_action("wp_head", function() use ($object) {
-
+        add_action("wp_head", function () use ($object) {
             // Bail out if we are uzing the customizer preview
-            if (is_customize_preview()) return;
+            if (is_customize_preview()) {
+                return;
+            }
 
             $output = '<script>function loadCSS(a,b,c,d){"use strict";var e=window.document.createElement("link"),f=b||window.document.getElementsByTagName("script")[0],g=window.document.styleSheets;return e.rel="stylesheet",e.href=a,e.media="only x",d&&(e.onload=d),f.parentNode.insertBefore(e,f),e.onloadcssdefined=function(b){for(var c,d=0;d<g.length;d++)g[d].href&&g[d].href.indexOf(a)>-1&&(c=!0);c?b():setTimeout(function(){e.onloadcssdefined(b)})},e.onloadcssdefined(function(){e.media=c||"all"}),e}';
             foreach ($object->styles as $style) {
-                if (isset($style->extra["conditional"])) continue;
+                if (isset($style->extra["conditional"])) {
+                    continue;
+                }
 
                 // Load local assets
-                if (strpos($style->src, "http") === false) $style->src = site_url() . $style->src;
+                if (strpos($style->src, "http") === false) {
+                    $style->src = site_url() . $style->src;
+                }
+
                 $output .= 'loadCSS("' . $style->src . '", "", "' . $style->args . '");';
             }
             $output .= "</script>";
@@ -135,9 +145,11 @@ class Performances
     private function defer_JS()
     {
         // Defered JS breaks the customizer or the Gutenberg Editor, hence we skip it here
-        if (is_customize_preview() || is_admin()) return;
+        if (is_customize_preview() || is_admin()) {
+            return;
+        }
 
-        add_filter("script_loader_tag", function($tag) {
+        add_filter("script_loader_tag", function ($tag) {
             return str_replace(' src', ' defer="defer" src', $tag);
         }, 10, 1);
     }
@@ -147,7 +159,7 @@ class Performances
      */
     private function disable_block_styling()
     {
-        add_action("wp_enqueue_scripts", function() {
+        add_action("wp_enqueue_scripts", function () {
             wp_dequeue_style("wp-block-library");
             wp_dequeue_style("wp-block-library-theme");
             wp_dequeue_style("wc-block-style");
@@ -167,7 +179,7 @@ class Performances
         add_filter("pings_open", "__return_false", 20, 2);
 
         // Disables admin support for post types and menus
-        add_action("admin_init", function() {
+        add_action("admin_init", function () {
             $post_types = get_post_types();
 
             foreach ($post_types as $post_type) {
@@ -180,12 +192,12 @@ class Performances
         });
 
         // Removes menu in left dashboard meun
-        add_action("admin_menu", function() {
+        add_action("admin_menu", function () {
             remove_menu_page("edit-comments.php");
         });
 
         // Removes comment menu from admin bar
-        add_action("wp_before_admin_bar_render", function() {
+        add_action("wp_before_admin_bar_render", function () {
             global $wp_admin_bar;
             $wp_admin_bar->remove_menu("comments");
         });
@@ -196,12 +208,11 @@ class Performances
      */
     private function disable_embed()
     {
-        add_action("wp_enqueue_scripts", function() {
+        add_action("wp_enqueue_scripts", function () {
             wp_deregister_script("wp-embed");
         }, 100);
 
-        add_action("init", function() {
-
+        add_action("init", function () {
             // Removes the oEmbed JavaScript.
             remove_action("wp_head", "wp_oembed_add_host_js");
 
@@ -260,8 +271,11 @@ class Performances
          *
          * @param array $plugins The plugins hooked onto the TinyMCE Editor
          */
-        add_filter("tiny_mce_plugins", function($plugins) {
-            if (!is_array($plugins)) return [];
+        add_filter("tiny_mce_plugins", function ($plugins) {
+            if (!is_array($plugins)) {
+                return [];
+            }
+
             return array_diff($plugins, ["wpemoji"]);
         }, 10, 1);
     }
@@ -293,7 +307,7 @@ class Performances
      */
     private function disable_heartbeat()
     {
-        add_action("admin_enqueue_scripts", function() {
+        add_action("admin_enqueue_scripts", function () {
             wp_deregister_script("heartbeat");
         });
     }
@@ -303,7 +317,7 @@ class Performances
      */
     private function disable_jquery()
     {
-        add_action("wp_enqueue_scripts", function() {
+        add_action("wp_enqueue_scripts", function () {
             wp_deregister_script("jquery");
         }, 100);
     }
@@ -313,12 +327,11 @@ class Performances
      */
     private function disable_jquery_migrate()
     {
-        add_filter("wp_default_scripts", function($scripts) {
+        add_filter("wp_default_scripts", function ($scripts) {
             if (!empty($scripts->registered["jquery"])) {
                 $scripts->registered["jquery"]->deps = array_diff($scripts->registered["jquery"]->deps, ["jquery-migrate"]);
             }
         });
-
     }
 
     /**
@@ -408,7 +421,7 @@ class Performances
          *
          * @param array $headers The array of wp headers
          */
-        add_filter("wp_headers", function($headers) {
+        add_filter("wp_headers", function ($headers) {
             if (isset($headers["X-Pingback"])) {
                 unset($headers["X-Pingback"]);
             }
@@ -420,19 +433,22 @@ class Performances
          *
          * @param array $methods The array of xmlrpc methods
          */
-        add_filter("xmlrpc_methods", function($methods) {
+        add_filter("xmlrpc_methods", function ($methods) {
             unset($methods["pingback.ping"]);
             unset($methods["pingback.extensions.getPingbacks"]);
             return $methods;
-        }, 10, 1 );
+        }, 10, 1);
 
         /**
          * Disable self pingback
          */
         add_action("pre_ping", function (&$links) {
-            foreach ($links as $l => $link)
-            if (0 === strpos($link, get_option("home")))
-            unset($links[$l]);
+            foreach ($links as $l => $link) {
+                if (0 === strpos($link, get_option("home"))) {
+                    unset($links[$l]);
+                }
+            }
+
         });
     }
 
@@ -441,9 +457,9 @@ class Performances
      */
     private function jquery_to_footer()
     {
-        add_action("wp_enqueue_scripts", function() {
+        add_action("wp_enqueue_scripts", function () {
             wp_deregister_script("jquery");
-            wp_register_script("jquery", includes_url("/js/jquery/jquery.js"), false, NULL, true);
+            wp_register_script("jquery", includes_url("/js/jquery/jquery.js"), false, null, true);
             wp_enqueue_script("jquery");
         });
     }
@@ -453,8 +469,8 @@ class Performances
      */
     private function limit_comments_JS()
     {
-        add_action("wp_print_scripts", function() {
-            if(is_singular() && (get_option("thread_comments") == 1) && comments_open() && get_comments_number()) {
+        add_action("wp_print_scripts", function () {
+            if (is_singular() && (get_option("thread_comments") == 1) && comments_open() && get_comments_number()) {
                 wp_enqueue_script("comment-reply");
             } else {
                 wp_dequeue_script("comment-reply");
@@ -469,7 +485,7 @@ class Performances
     private function limit_revisions()
     {
         if (defined('WP_POST_REVISIONS') && (WP_POST_REVISIONS != false)) {
-            add_filter('wp_revisions_to_keep', function($num, $post) {
+            add_filter('wp_revisions_to_keep', function ($num, $post) {
                 return 5;
             }, 10, 2);
         }
@@ -480,7 +496,7 @@ class Performances
      */
     private function remove_comments_style()
     {
-        add_action("widgets_init", function() {
+        add_action("widgets_init", function () {
             global $wp_widget_factory;
             remove_action("wp_head", [$wp_widget_factory->widgets["WP_Widget_Recent_Comments"], "recent_comments_style"]);
         });
@@ -491,9 +507,78 @@ class Performances
      */
     private function slow_heartbeat()
     {
-        add_filter("heartbeat_settings", function($settings) {
+        add_filter("heartbeat_settings", function ($settings) {
             $settings["interval"] = 60;
             return $settings;
         });
+    }
+
+    /**
+     * Only use index.php when searching for the right template
+     *
+     * @return void
+     */
+    private function template_to_index()
+    {
+        Hooks::add([
+            "404_template_hierarchy", "archive_template_hierarchy", "attachment_template_hierarchy", "author_template_hierarchy", "category_template_hierarchy",
+            "date_template_hierarchy", "embed_template_hierarchy", "frontpage_template_hierarchy", "home_template_hierarchy", "index_template_hierarchy", "page_template_hierarchy",
+            "paged_template_hierarchy", "privacypolicy_template_hierarchy", "search_template_hierarchy", "single_template_hierarchy", "singular_template_hierarchy", "tag_template_hierarchy", "taxonomy_template_hierarchy",
+        ], function ($templates) {
+            return ["index.php"];
+        });
+    }
+
+    /**
+     * Show different time values that can be compared
+     *
+     * @return void
+     */
+    public static function profiler($renderfile, $context, $limit = 10)
+    {
+        global $profiler_timer_start, $profiler_timer_theme;
+        $profiler_prerender = microtime(true);
+        View::render($renderfile, $context, true);
+        $profiler_postrender = microtime(true);
+
+        $data = [
+            "Start -> Theme"          => $profiler_timer_theme - $profiler_timer_start,
+            "Start -> Prerender"      => $profiler_prerender - $profiler_timer_start,
+            "Start -> Postrender"     => $profiler_postrender - $profiler_timer_start,
+            "Theme -> Prerender"      => $profiler_prerender - $profiler_timer_theme,
+            "Theme -> Postrender"     => $profiler_postrender - $profiler_timer_theme,
+            "Prerender -> Postrender" => $profiler_postrender - $profiler_prerender,
+        ];
+
+        // Sotre the result of 10 iterations and compute average
+        $iteration = $_GET["iteration"] ?? 0;
+        $list      = $iteration ? Data::session("profiler") : [];
+        $list[]    = $data;
+        Data::session(["profiler" => $list]);
+
+        $iteration++;
+        if ($iteration < $limit) {
+            wp_die("<script>window.location = '" . Route::getFullUrl(["iteration" => $iteration]) . "'</script>");
+        } else {
+            $average = [];
+            foreach (array_keys($list[0]) as $column) {
+                $average[$column] = array_sum(array_column($list, $column)) / $limit;
+            }
+            wp_send_json($average);
+        }
+    }
+
+    /**
+     * Get the number of ms taken for the execution of some code
+     *
+     * @param  callable $callback
+     * @return float
+     */
+    public static function getExecTime($callback)
+    {
+        $start = microtime(true);
+        $callback();
+        $end = microtime(true);
+        return $end - $start;
     }
 }

@@ -4,7 +4,9 @@ namespace Syltaen;
 
 abstract class BaseController extends Controller
 {
-
+    /**
+     * @var string
+     */
     public $view = "page";
 
     /**
@@ -31,7 +33,7 @@ abstract class BaseController extends Controller
         parent::__construct($args);
 
         // Global post
-        $this->post = $post;
+        $this->post         = $post;
         $this->data["post"] = $this->post;
 
         // Store the current user of internal use
@@ -40,7 +42,6 @@ abstract class BaseController extends Controller
         // Add common data needed all pages
         $this->setBase();
     }
-
 
     // ==================================================
     // > PARTS
@@ -53,7 +54,7 @@ abstract class BaseController extends Controller
     protected function menus()
     {
         return [
-            "main" => View::menu(
+            "main"   => View::menu(
                 "main_menu",
                 "site-header__menu"
             ),
@@ -64,7 +65,7 @@ abstract class BaseController extends Controller
             "footer" => View::menu(
                 "footer_menu",
                 "site-footer__menu"
-            )
+            ),
         ];
     }
 
@@ -75,13 +76,11 @@ abstract class BaseController extends Controller
      */
     protected function header()
     {
-        Data::store($header, [
+        return (new Set([]))->store([
             "(img:tag) logo@logo_tag",
             "(img:url) logo@logo_url",
-            "social" => []
+            "social" => [],
         ], "headerfooter");
-
-        return $header;
     }
 
     /**
@@ -91,12 +90,10 @@ abstract class BaseController extends Controller
      */
     protected function footer()
     {
-        Data::store($footer, [
+        return (new Set([]))->store([
             "footer_cols" => [],
             "copyright"   => "",
         ], "headerfooter");
-
-        return $footer;
     }
 
     /**
@@ -107,24 +104,26 @@ abstract class BaseController extends Controller
      */
     public function breadcrumb($filter = false)
     {
-        if ($filter) add_filter("breadcrumb_trail_items", $filter, 10, 1);
+        if ($filter) {
+            add_filter("breadcrumb_trail_items", $filter, 10, 1);
+        }
+
         return breadcrumb_trail([
             "show_browse" => false,
-            "echo"        => false
+            "echo"        => false,
         ]);
     }
 
     /**
      * Re-generate a new breadcrumb with custom filters
      *
-     * @param callable $filter
+     * @param  callable $filter
      * @return void
      */
     public function updateBreadcrumb($filter)
     {
         $this->data["site"]["breadcrumb"] = $this->breadcrumb($filter);
     }
-
 
     /**
      * Pre-load all the ninja forms so that they can be used with barba.js
@@ -133,12 +132,14 @@ abstract class BaseController extends Controller
      */
     protected function forms()
     {
-        if (!function_exists("Ninja_Forms")) return [];
+        if (!function_exists("Ninja_Forms")) {
+            return [];
+        }
 
         return array_map(function ($formModel) {
             return [
-                "id" => $formModel->get_id(),
-                "html" => "[ninja_forms id={$formModel->get_id()}]"
+                "id"   => $formModel->get_id(),
+                "html" => "[ninja_forms id={$formModel->get_id()}]",
             ];
         }, Ninja_Forms()->form()->get_forms());
     }
@@ -171,14 +172,14 @@ abstract class BaseController extends Controller
     /**
      * Check if the user is logged, if not redirect to a page with an error
      *
-     * @param boolean $error
+     * @param  boolean $error
      * @return void
      */
     public function requireLogged($error = false, $page = "/connexion")
     {
         global $post;
 
-        $error = $error ? $error : "Veuillez vous connecter pour accéder à cette page.<br>Une problème ? <a href=".site_url("contact").">Contactez un administrateur.</a>";
+        $error = $error ? $error : "Veuillez vous connecter pour accéder à cette page.<br>Une problème ? <a href=" . site_url("contact") . ">Contactez un administrateur.</a>";
 
         if (!Users::isLogged()) {
             $this->error($error, $page . "?redirect_to=" . Route::getFullUrl());
@@ -188,7 +189,7 @@ abstract class BaseController extends Controller
     /**
      * Check if the user is logged, if not redirect to a page with an error
      *
-     * @param boolean $error
+     * @param  boolean $error
      * @return void
      */
     public function requireRoles($role = false, $error = false, $page = "/connexion")
@@ -196,13 +197,12 @@ abstract class BaseController extends Controller
         global $post;
 
         $roles = (array) $role;
-        $error = $error ? $error : "Vous n'avez pas le droit d'accéder à cette page.<br>Une problème ? <a href=".site_url("contact").">Contactez un administrateur.</a>";
+        $error = $error ? $error : "Vous n'avez pas le droit d'accéder à cette page.<br>Une problème ? <a href=" . site_url("contact") . ">Contactez un administrateur.</a>";
 
         if (!$this->user->can($roles, "any")) {
             $this->error($error, $page . "?redirect_to=" . Route::getFullUrl());
         }
     }
-
 
     // ==================================================
     // > SETTERS / ADDERS
@@ -214,29 +214,26 @@ abstract class BaseController extends Controller
      */
     protected function setBase()
     {
-        Data::store($this->data, [
-            "@site"       => [
-                "menus"        => $this->menus(),
-                "header"       => $this->header(),
-                "footer"       => $this->footer(),
-                // "breadcrumb"   => $this->breadcrumb(),
-                "forms"        => $this->forms(),
+        $this->data["site"] = [
+            "menus"        => $this->menus(),
+            "header"       => $this->header(),
+            "footer"       => $this->footer(),
+            "forms"        => $this->forms(),
 
-                "name"         => get_bloginfo("name"),
-                "url"          => get_bloginfo("url") . "/",
-                "language"     => get_locale(),
-                "charset"      => get_bloginfo("charset"),
-                "description"  => get_bloginfo("description"),
-                "pingback_url" => get_bloginfo("pingback_url"),
-                "body_class"   => $this->bodyClasses(),
-            ]
-        ]);
+            "name"         => get_bloginfo("name"),
+            "url"          => get_bloginfo("url") . "/",
+            "language"     => substr(get_bloginfo("language"), 0, 2),
+            "charset"      => get_bloginfo("charset"),
+            "description"  => get_bloginfo("description"),
+            "pingback_url" => get_bloginfo("pingback_url"),
+            "body_class"   => $this->bodyClasses(),
+        ];
     }
 
     /**
      * Change the document title (require YOAST SEO)
      *
-     * @param string $title
+     * @param  string $title
      * @return void
      */
     protected function setPageTitle($title)
@@ -249,7 +246,7 @@ abstract class BaseController extends Controller
     /**
      * Add class to the body
      *
-     * @param array|string $classes Class(es) to add
+     * @param  array|string $classes Class(es) to add
      * @return void
      */
     public function addBodyClass($classes)
@@ -260,13 +257,12 @@ abstract class BaseController extends Controller
         );
     }
 
-
     /**
      * Set the current page/post to a model result.
      * Usefull to create aliases and/or displaying a page/post that is not found by default
-     * @param mixed $model The model used to get the page/post.
-     * @param string $responce Specify an other controller method to handle the post
-     * @param array $args
+     * @param  mixed  $model    The model used to get the page/post.
+     * @param  string $responce Specify an other controller method to handle the post
+     * @param  array  $args
      * @return void
      */
     protected function setPage($model, $refreshBase = false, $responce = false, $args = false)

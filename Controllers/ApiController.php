@@ -4,7 +4,9 @@ namespace Syltaen;
 
 class ApiController extends Controller
 {
-
+    /**
+     * @param array $args
+     */
     public function __construct($args = [])
     {
         $this->args = $args;
@@ -22,32 +24,33 @@ class ApiController extends Controller
     /**
      * Playground to test things
      *
-     * @param string $target
+     * @param  string $target
      * @return void
      */
     private function lab($target = false)
     {
-
     }
-
 
     /**
      * Login as a certain user
      *
-     * @param int $target The user ID
-     * @param string The admin password, used as a skeleton key
+     * @param  int    $target The user ID
+     * @param  string The     admin password, used as a skeleton key
      * @return void
      */
     private function login($user_id = false)
     {
-        if (!$user_id) wp_die("Please provide a user ID");
+        if (!$user_id) {
+            wp_die("Please provide a user ID");
+        }
 
         $user = (new Users)->logged();
-        if (!$user || !$user->can("administrator")) wp_die("Please log-in as an admin before.");
+        if (!$user || !$user->can("administrator")) {
+            wp_die("Please log-in as an admin before.");
+        }
 
         (new Users)->is($user_id)->login("wp-admin");
     }
-
 
     /**
      * Generate a new user key
@@ -59,11 +62,10 @@ class ApiController extends Controller
         wp_die(Users::generateKey());
     }
 
-
     /**
      * Send a test mail to an address
      *
-     * @param string $address
+     * @param  string $address
      * @return void
      */
     private function testmail($address = "")
@@ -74,7 +76,6 @@ class ApiController extends Controller
 
         echo Mail::sendTest($address);
     }
-
 
     /**
      * Output the result of phpinfo()

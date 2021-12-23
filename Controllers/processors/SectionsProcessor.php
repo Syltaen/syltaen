@@ -9,7 +9,9 @@ class SectionsProcessor extends DataProcessor
      */
     public function process($section, $nth = 0)
     {
-        if ($this->shouldHide($section)) return false;
+        if ($this->shouldHide($section)) {
+            return false;
+        }
 
         $this->addAttributes($section);
         $this->addClasses($section);
@@ -19,49 +21,55 @@ class SectionsProcessor extends DataProcessor
         return $section;
     }
 
-
     /**
      * Process a section's parameters
      *
-     * @param array $s The section data
+     * @param  array  $s The section data
      * @return void
      */
     private function addClasses(&$s)
     {
-        $s["classes"] = array_merge(explode(" ", $s["classes"]), ["site-section"]);
+        $s["classes"] = ["site-section"];
 
         // ========== PADDING ========== //
-        if ($s["padding_top"] != "no") $s["classes"][] = $s["padding_top"] . "-padding-top";
-        if ($s["padding_bottom"] != "no") $s["classes"][] = $s["padding_bottom"] . "-padding-bottom";
+        if ($s["padding_top"] != "no") {
+            $s["classes"][] = $s["padding_top"] . "-padding-top";
+        }
 
-        // ========== BACKGROUND COLOR ========== //
+        if ($s["padding_bottom"] != "no") {
+            $s["classes"][] = $s["padding_bottom"] . "-padding-bottom";
+        }
+
+        if ($s["padding_left"] != "no") {
+            $s["classes"][] = $s["padding_left"] . "-padding-left";
+        }
+
+        if ($s["padding_right"] != "no") {
+            $s["classes"][] = $s["padding_right"] . "-padding-right";
+        }
+
+        // ========== BACKGROUND ========== //
         $s["classes"][] = "bg-" . $s["bg"];
 
-        // ========== BACKGROUND IMAGE ========== //
-        if ($s["bg_img"]) {
-            $image = [
-                "attr"    => ["style" => "background-image: url(" . $s["bg_img"] . ");"],
-                "classes" => ["bg-image", "bg-image--" . $s["bg_img_size"], "bg-image--" . $s["bg_img_pos"]]
-            ];
-
-            if ($s["bg_img_half"]) {
-                $s["halfimage"] = $image;
-                $s["classes"][] = "bg-halfimage__wrap";
-            } else {
-                $s["attr"]    = array_merge($s["attr"], $image["attr"]);
-                $s["classes"] = array_merge($s["classes"], $image["classes"]);
-            }
+        if ($s["bg"] == "image") {
+            $s["attr"]["style"] = "background-image: url(" . $s["bg_img"] . ");";
+            $s["classes"][]     = "bg-image--" . $s["bg_img_size"];
+            $s["classes"][]     = "bg-image--" . $s["bg_img_pos"];
         }
 
         // ========== TEXT ========== //
         if ($s["text_color"] != "none") {
             $s["classes"][] = "color-" . $s["text_color"];
         }
+
     }
 
+    /**
+     * @param $s
+     */
     private function addAttributes(&$s)
     {
-        $s["attr"]    = empty($s["attr"]) ? [] : $s["attr"];
+        $s["attr"] = empty($s["attr"]) ? [] : $s["attr"];
 
         // ========== ID ========== //
         $s["attr"]["id"] = $s["anchor"] ? sanitize_title($s["anchor"]) : null;
@@ -74,46 +82,45 @@ class SectionsProcessor extends DataProcessor
 
         // ========== CUSTOM COLOR ========== //
         if ($s["bg"] == "custom") {
-            $s["attr"]["style"] = "background-color: ".$s["bg_custom"].";";
+            $s["attr"]["style"] = "background-color: " . $s["bg_custom"] . ";";
         }
     }
-
 
     /**
      * Check if the section should be hidden
      *
-     * @param array $s The section's data
+     * @param  array   $s The section's data
      * @return boolean : true if the section should be hidden
      */
     private function shouldHide($s)
     {
-        if (empty($s["hide"])) return false;
+        if (empty($s["hide"])) {
+            return false;
+        }
 
-        $time = Time::current();
+        $time = current_time("timestamp");
 
         // BETWEEN TWO DATES
         if ($s["hide_start"] && $s["hide_end"]) {
-
             // SHOW BETWEEN TWO DATES
             if ($s["hide_start"] > $s["hide_end"]) {
                 return $time < $s["hide_end"] || $time > $s["hide_start"];
-            // HIDE BETWEEN TWO DATES
+                // HIDE BETWEEN TWO DATES
             } else {
                 return $time < $s["hide_end"] && $time > $s["hide_start"];
             }
 
-        // BEFORE A DATE
+            // BEFORE A DATE
         } elseif ($s["hide_end"]) {
             return $time < $s["hide_end"];
 
-        // AFTER A DATE
+            // AFTER A DATE
         } elseif ($s["hide_start"]) {
             return $time > $s["hide_start"];
 
-        // ALWAYS HIDE
+            // ALWAYS HIDE
         } else {
             return true;
         }
     }
-
 }

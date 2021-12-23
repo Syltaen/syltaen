@@ -1,28 +1,12 @@
-
 // =============================================================================
 // > CONFIG
-// =============================================================================
-$fa-font-path:                "../../styles/assets/vendors/fontawesome/webfonts" !default;
-$fa-font-size-base:           16px !default;
-$fa-css-prefix:               fa !default;
-$fa-version:                  "5.6.3" !default;
-$fa-border-color:             #eee !default;
-$fa-inverse:                  #fff !default;
-$fa-li-width:                 2em !default;
-$fa-fw-width:                 (20em / 16);
-
-
-// =============================================================================
-// > IMPORTS
 // =============================================================================
 @import "fa-icons"
 @import "fa-sources"
 
-
 // =============================================================================
 // > VARIANTS
 // =============================================================================
-
 
 // ========== SOLID ========== //
 =fa($icon_var: false)
@@ -30,11 +14,9 @@ $fa-fw-width:                 (20em / 16);
     font-weight: 900
     @if $icon_var
         content: fa-content($icon_var)
-
 .fa,
 .fas
     +fa()
-
 
 // ========== REGULAR ========== //
 =far($icon_var: false)
@@ -42,10 +24,8 @@ $fa-fw-width:                 (20em / 16);
     font-weight: 400
     @if $icon_var
         content: fa-content($icon_var)
-
 .far
     +far()
-
 
 // ========== LIGHT ========== //
 =fal($icon_var: false)
@@ -53,26 +33,21 @@ $fa-fw-width:                 (20em / 16);
     font-weight: 300
     @if $icon_var
         content: fa-content($icon_var)
-
 .fal
     +fal()
-
 
 // ========== BRANDS ========== //
 =fab($icon_var: false)
     font-family: "Font Awesome Brands"
     @if $icon_var
         content: fa-content($icon_var)
-
 .fab
     +fab()
-
 
 // ========== DUOTONE ========== //
 =fad($icon_var: false)
     font-family: "Font Awesome Duotone"
     @if $icon_var
         content: fa-content($icon_var)
-
 .fad
     +fad()

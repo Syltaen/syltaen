@@ -4,14 +4,19 @@ namespace Syltaen;
 
 class MergeTagsUser extends \NF_Abstracts_MergeTags
 {
-
+    /**
+     * @var string
+     */
     protected $id = "website_user";
 
+    /**
+     * @var array
+     */
     protected $tags = [
-        "id"               => "ID",
-        "firstname"        => "Prénom",
-        "lastname"         => "Nom",
-        "roles"            => "Rôles",
+        "id"        => "ID",
+        "firstname" => "Prénom",
+        "lastname"  => "Nom",
+        "roles"     => "Rôles",
     ];
 
     public function __construct()
@@ -21,12 +26,12 @@ class MergeTagsUser extends \NF_Abstracts_MergeTags
         $this->title = __("Utilisateur site", "syltaen");
 
         $this->merge_tags = [];
-        foreach ($this->tags as $tag=>$label) {
+        foreach ($this->tags as $tag => $label) {
             $this->merge_tags[$tag] = [
                 "id"       => $tag,
                 "callback" => $tag,
                 "tag"      => "{{$this->id}:$tag}",
-                "label"    => $label
+                "label"    => $label,
             ];
         }
 
@@ -34,10 +39,16 @@ class MergeTagsUser extends \NF_Abstracts_MergeTags
         add_action("admin_init", [$this, "admin_init"]);
     }
 
-    public function init() {
+    /**
+     * @return mixed
+     */
+    public function init()
+    {
         $this->user = Data::globals("user");
 
-        if (!$this->user) return "";
+        if (!$this->user) {
+            return "";
+        }
 
         // $this->user->fields([
         // ], true);
@@ -51,35 +62,63 @@ class MergeTagsUser extends \NF_Abstracts_MergeTags
         return $this;
     }
 
-    public function admin_init() { /* This section intentionally left blank. */ }
+    public function admin_init()
+    { /* This section intentionally left blank. */}
 
     // ==================================================
     // > CALLBACKS
     // ==================================================
+    /**
+     * @return mixed
+     */
     public function id()
     {
-        if (!$this->userData) return "";
+        if (!$this->userData) {
+            return "";
+        }
+
         return $this->userData->ID;
     }
 
+    /**
+     * @return mixed
+     */
     public function firstname()
     {
-        if (!$this->userData) return "";
+        if (!$this->userData) {
+            return "";
+        }
+
         return $this->userData->first_name;
     }
 
+    /**
+     * @return mixed
+     */
     public function lastname()
     {
-        if (!$this->userData) return "";
+        if (!$this->userData) {
+            return "";
+        }
+
         return $this->userData->last_name;
     }
 
+    /**
+     * @return mixed
+     */
     public function roles()
     {
-        if (!$this->userData) return "";
+        if (!$this->userData) {
+            return "";
+        }
+
         $caps_list = "";
-        foreach ($this->userData->caps as $cap=>$has) {
-            if ($has) $caps_list .= $cap."; ";
+        foreach ($this->userData->caps as $cap => $has) {
+            if ($has) {
+                $caps_list .= $cap . "; ";
+            }
+
         }
         return $caps_list;
     }

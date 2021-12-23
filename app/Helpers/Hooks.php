@@ -7,9 +7,9 @@ abstract class Hooks
     /**
      * Register a new ajax hook
      *
-     * @param string $name The hook name
-     * @param callable $callback The function to run
-     * @param boolean $private
+     * @param  string   $name       The hook name
+     * @param  callable $callback   The function to run
+     * @param  boolean  $private
      * @return void
      */
     public static function ajax($name, $callback = false, $private = false)
@@ -20,23 +20,22 @@ abstract class Hooks
         }
 
         // Else : Register hook
-        add_action("wp_ajax_".$name, $callback);
+        add_action("wp_ajax_" . $name, $callback);
         if (!$private) {
-            add_action("wp_ajax_nopriv_".$name, $callback);
+            add_action("wp_ajax_nopriv_" . $name, $callback);
         }
     }
-
 
     /**
      * Register a hook
      *
-     * @param string|array $hooks
-     * @param callable $callback
+     * @param  string|array $hooks
+     * @param  callable     $callback
      * @return void
      */
     public static function add($hooks, $callback, $priority = 10, $accepted_args = 1)
     {
-        foreach ((array) $hooks as $index=>$hook) {
+        foreach ((array) $hooks as $index => $hook) {
             add_filter(
                 $hook,
                 $callback,
@@ -49,11 +48,10 @@ abstract class Hooks
     /**
      * Call an action hook by its name
      *
-     * @param string $name
+     * @param  string $name
      * @return void
      */
-    public static function do($name)
-    {
+    function do($name) {
         do_action($name);
     }
 
@@ -66,9 +64,11 @@ abstract class Hooks
     {
         add_action($trigger, function () use ($hook, $function_name) {
             global $wp_filter;
+            if (empty($wp_filter[$hook])) {
+                return false;
+            }
 
-            foreach ($wp_filter[$hook]->callbacks as $priority=>$callbacks) {
-
+            foreach ($wp_filter[$hook]->callbacks as $priority => $callbacks) {
                 foreach (array_keys($callbacks) as $callback) {
                     if (strpos($callback, $function_name)) {
                         remove_filter($hook, $callback, $priority);
@@ -76,5 +76,16 @@ abstract class Hooks
                 }
             }
         });
+    }
+
+    /**
+     * List all callback for a specific hook
+     *
+     * @return void
+     */
+    public static function list($hook)
+    {
+        global $wp_filter;
+        return $wp_filter[$hook];
     }
 }

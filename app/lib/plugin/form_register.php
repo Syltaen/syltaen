@@ -20,7 +20,7 @@ class FormRegisterer
      */
     public function __construct()
     {
-        $this->dir = get_stylesheet_directory()."/app/Forms/";
+        $this->dir = get_stylesheet_directory() . "/app/Forms/";
 
         add_filter("ninja_forms_register_actions", [$this, "registerActions"]);
         add_filter("ninja_forms_register_fields", [$this, "registerFields"]);
@@ -29,8 +29,6 @@ class FormRegisterer
 
         add_filter("ninja_forms_field_load_settings", [$this, "addCommonSettings"], 10, 3);
     }
-
-
 
     /**
      * Register all custom actions stored in App/Services/Forms/Actions
@@ -75,7 +73,7 @@ class FormRegisterer
     /**
      * Create an instance of each class stored in a specific folder
      *
-     * @param string $folder
+     * @param  string  $folder
      * @return array
      */
     private function getClassesIn($folder)
@@ -83,7 +81,6 @@ class FormRegisterer
         $classes = [];
 
         foreach (scandir($this->dir . $folder) as $file) {
-
             $extension_pos = strpos($file, ".php");
             if ($extension_pos) {
                 include $this->dir . "$folder/" . $file;
@@ -97,17 +94,16 @@ class FormRegisterer
         return $classes;
     }
 
-
     // ==================================================
     // > FIELDS SETTINGS
     // ==================================================
     /**
      * Add custom settings used for all fields
      *
-     * @param array $settings The base settings
-     * @param string $type The field type
-     * @param string $parent_type The parent field type
-     * @return array of settings
+     * @param  array  $settings    The base settings
+     * @param  string $type        The field type
+     * @param  string $parent_type The parent field type
+     * @return array  of settings
      */
     public function addCommonSettings($settings, $type, $parent_type)
     {
@@ -119,38 +115,38 @@ class FormRegisterer
             "value" => 0,
             "width" => "full",
             "group" => "display",
-            "help"  => "Spécifie si le champ doit s'afficher seulement en fonction d'autres champs."
+            "help"  => "Spécifie si le champ doit s'afficher seulement en fonction d'autres champs.",
         ];
 
         $settings["conditional_display"] = [
-            "name"  => "conditional_display",
-            "label" => __("Valeurs requises", "syltaen").'<a href="#" class="nf-add-new">'.__("Add New")."</a>",
-            "type"  => "option-repeater",
-            "deps"  => [
+            "name"           => "conditional_display",
+            "label"          => __("Valeurs requises", "syltaen") . '<a href="#" class="nf-add-new">' . __("Add New") . "</a>",
+            "type"           => "option-repeater",
+            "deps"           => [
                 "has_conditional_display" => 1,
             ],
             "columns"        => [
-                "label" => [
+                "label"    => [
                     "header"  => "Clef du champ",
                     "default" => null,
                 ],
-                "value" => [
+                "value"    => [
                     "header"  => "Valeur requise",
-                    "default" => null
+                    "default" => null,
                 ],
-                "calc" => [
-                    "header"  => "==, !=, ...",
-                    "default" => "=="
+                "calc"     => [
+                    "header"  => "IS, ISNT, IN, NOT IN",
+                    "default" => "IS",
                 ],
                 "selected" => [
                     "header"  => "Inclusif",
-                    "default" => 0
-                ]
+                    "default" => 0,
+                ],
             ],
             "width"          => "full",
             "group"          => "display",
             "help"           => "Renseigner un ID de champ et la valeur que le champ doit avoir. Cocher la case inclusif pour que toutes les valeurs cochées soient requises.",
-            "use_merge_tags" => true
+            "use_merge_tags" => true,
         ];
 
         return $settings;

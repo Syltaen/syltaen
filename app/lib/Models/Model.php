@@ -10,27 +10,45 @@ abstract class Model implements \Iterator
     const TYPE = "";
 
     /**
-     * Query arguments used by the model's methods
+     * Query constants used by the model's methods
      */
     const QUERY_CLASS  = "WP_Query";
     const OBJECT_CLASS = "WP_Post";
+    const ITEM_CLASS   = "\Syltaen\Post";
     const OBJECT_KEY   = "posts";
-    const ITEM_CLASS   = "ModelItemPost";
     const QUERY_IS     = "post__in";
     const QUERY_ISNT   = "post__not_in";
     const QUERY_LIMIT  = "posts_per_page";
     const QUERY_STATUS = "post_status";
     const QUERY_PAGE   = "paged";
+    const QUERY_HOOK   = "posts_clauses_request";
+    const META_TABLE   = "postmeta";
+    const META_ID      = "meta_id";
+    const META_OBJECT  = "post_id";
+    const META_KEY     = "meta_key";
+    const META_VALUE   = "meta_value";
 
     /**
      * Store the query and its arguments to be modified by the model
      *
      * @var array
      */
-    public $filters        = [];
-    public $cachedQuery    = false;
-    public $cachedFilters  = false;
-    public $cachedResults  = false;
+    public $filters = [];
+    /**
+     * @var mixed
+     */
+    public $cachedQuery = false;
+    /**
+     * @var mixed
+     */
+    public $cachedFilters = false;
+    /**
+     * @var mixed
+     */
+    public $cachedResults = false;
+    /**
+     * @var array
+     */
     public $queryModifiers = [];
 
     /**
@@ -45,10 +63,15 @@ abstract class Model implements \Iterator
      *
      * @var array
      */
-    public $fields = [];
-    public $fieldsIndex = [];
+    public $fields = null;
+    /**
+     * @var array
+     */
+    public $fieldsIndex = null;
+    /**
+     * @var array
+     */
     public $forceFetchFields = false;
-
 
     /**
      * List of global data that can be used everywhere in the model
@@ -56,9 +79,14 @@ abstract class Model implements \Iterator
      * @var array
      */
     public $globals = [];
+    /**
+     * @var array
+     */
     public $globalsIndex = [];
+    /**
+     * @var mixed
+     */
     public $globalsOptionPage;
-
 
     // ==================================================
     // > MAGIC METHODS
@@ -70,14 +98,18 @@ abstract class Model implements \Iterator
     public function __construct()
     {
         $this->iteration_key = 0;
+        $this->fields        = new Set();
+        $this->fieldsIndex   = new Set();
+        $this->globals       = new Set();
+        $this->cachedResults = new Set();
         $this->clearFilters();
     }
 
     /**
      * Lazy load properties, running the query and the populaters
      * only when trying to access a property.
-     * @param string $property
-     * @return mixed The property value
+     * @param  string $property
+     * @return mixed  The property value
      */
     public function __get($property)
     {
@@ -93,39 +125,74 @@ abstract class Model implements \Iterator
         }
 
         // There are no result for the query
-        if ($this->count() <= 0) return null;
+        if ($this->count() <= 0) {
+            return null;
+        }
 
         // Get the results
         $items = $this->get();
 
+        // Not a list of object (probaby IDs)
+        if (!is_object($items[0])) {
+            return null;
+        }
+
         // The property is not present in the first result and not defined in the fields index
         if (!isset($items[0]->{$property}) && !isset($this->fieldsIndex[$property])) {
-            trigger_error("\"$property\" was not found in \"".static::class."\"");
+            trigger_error("\"$property\" was not found in \"" . static::class . "\"");
             return null;
         }
 
         // Only one post queried and found : return the value of the match
-        if ($this->count() == 1 && (empty($this->filters[static::QUERY_LIMIT]) || $this->filters[static::QUERY_LIMIT] != -1)) return $items[0]->$property;
+        if ($items->count() == 1 && (empty($this->filters[static::QUERY_LIMIT]) || $this->filters[static::QUERY_LIMIT] != -1)) {
+            return $items[0]->$property;
+        }
 
-        // Several posts : return the value of all matches
-        return array_reduce($items, function ($list, $item) use ($property) {
-
+        // Several posts : return a set of all the property of all matches
+        return $items->reduce(function ($set, $item) use ($property) {
             // Property is a model : merge into one model targeting all (models must be filtering by id)
             if ($item->$property instanceof Model) {
                 // Start with first item
-                if (!($list instanceof Model)) $list = $item->$property;
-                // Merge everything
-                $list->merge($item->$property);
+                if (!($set instanceof Model)) {
+                    $set = $item->$property;
+                }
 
-            // Not a model, just add the value to the list
+                // Merge everything
+                $set->merge($item->$property);
+
+                // Not a model, just add the value to the list
             } else {
-                $list[$item->ID] = $item->$property;
+                $set[$item->ID] = $item->$property;
             }
 
-            return $list;
-        }, []);
+            return $set;
+        });
     }
 
+    /**
+     * Defer unkown methods to all items, if they implement that method.
+     *
+     * @param  string $method
+     * @param  array  $arguments
+     * @return array  The result of each call in an associative array
+     */
+    public function __call($method, $args)
+    {
+        if (method_exists(static::ITEM_CLASS, $method)) {
+            return call_user_func_array([$this->callEach(), $method], $args);
+        }
+
+        throw new \Exception("\"$method\" method is not implemented by \\" . static::class . " nor " . static::ITEM_CLASS . ".");
+    }
+
+    // public function __call($name, $arguments)
+    // {
+    //     wp_send_json(["call", $name]);
+    // }
+    // public static function __callStatic($name, $arguments)
+    // {
+    //     wp_send_json(["callStatic", $name]);
+    // }
 
     // ==================================================
     // > ITERATOR INTERFACE
@@ -181,7 +248,6 @@ abstract class Model implements \Iterator
         return isset($this->cachedResults[$this->iteration_key]);
     }
 
-
     /**
      * Call a function on each items
      *
@@ -189,20 +255,18 @@ abstract class Model implements \Iterator
      */
     public function map($callable)
     {
-        return array_map($callable, $this->get());
+        return $this->get()->map($callable);
     }
-
 
     /**
      * Reduce the total to a single value
      *
      * @return mixed The carried result
      */
-    public function reduce($callable, $carry)
+    public function reduce($callable, $carry = [])
     {
-        return array_reduce($this->get(), $callable, $carry);
+        return $this->get()->reduce($callable, $carry);
     }
-
 
     /**
      * Retrieve a list of items based on a callback
@@ -211,10 +275,18 @@ abstract class Model implements \Iterator
      */
     public function filter($callable)
     {
-        return array_filter($this->get(), $callable);
+        return $this->get()->filter($callable);
     }
 
-
+    /**
+     * Return a CallableCollection of all the results
+     *
+     * @return CallableCollection
+     */
+    public function callEach()
+    {
+        return $this->get()->callEach();
+    }
 
     // ==================================================
     // > QUERY MODIFIERS
@@ -222,28 +294,27 @@ abstract class Model implements \Iterator
     /**
      * Restrict to only specific posts
      *
-     * @param array|int $list
-     * @param string $mode Define what to do if there is already a list of ID to filter. Either replace, merge or intersect
+     * @param  array|int $list
+     * @param  string    $mode   Define what to do if there is already a list of ID to filter. Either replace, merge or intersect
      * @return self
      */
     public function is($list, $mode = "replace")
     {
-        $ids = Data::filter($list, "ids");
+        $ids = Data::filter((array) $list, "ids");
+        $this->updateExistingFilter(static::QUERY_IS, $ids, $mode);
 
-        if (empty($ids)) {
+        if (empty($this->filters[static::QUERY_IS])) {
             $this->filters[static::QUERY_IS] = [0];
-            return $this;
         }
 
-        return $this->updateExistingFilter(static::QUERY_IS, $ids, $mode);
+        return $this;
     }
-
 
     /**
      * Exclude specific posts
      *
-     * @param array|int $list
-     * @param string $mode Define what to do if there is already a list of ID to filter. Either replace, merge or intersect
+     * @param  array|int $list
+     * @param  string    $mode   Define what to do if there is already a list of ID to filter. Either replace, merge or intersect
      * @return void
      */
     public function isnt($list, $mode = "replace")
@@ -251,7 +322,6 @@ abstract class Model implements \Iterator
         $ids = Data::filter($list, "ids");
         return $this->updateExistingFilter(static::QUERY_ISNT, $ids, $mode);
     }
-
 
     /**
      * Force no results
@@ -267,20 +337,22 @@ abstract class Model implements \Iterator
     /**
      * Execute the is method, only if ids are specified
      *
-     * @param array|int $list
+     * @param  array|int $list
      * @return self
      */
     public function isMaybe($list)
     {
-        if (!$list || empty($list)) return $this;
+        if (!$list || empty($list)) {
+            return $this;
+        }
+
         return static::is($list);
     }
-
 
     /**
      * Merge this model with another
      * Only works with IDs filtering
-     * @param Syltaen\Model $model
+     * @param  Syltaen\Model $model
      * @return self
      */
     public function merge($model)
@@ -291,25 +363,25 @@ abstract class Model implements \Iterator
         return $this;
     }
 
-
     /**
      * Execute the isnt method, only if ids are specified
      *
-     * @param array|int $list
+     * @param  array|int $list
      * @return self
      */
     public function isntMaybe($list)
     {
-        if (!$list || empty($list)) return $this;
+        if (!$list || empty($list)) {
+            return $this;
+        }
+
         return static::isnt($list);
     }
-
-
 
     /**
      * Update the status filter.
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Status_Parameters
-     * @param array|string $status : ["publish", "pending", "draft", "future", "private", "trash", "any"]
+     * @param  array|string $status : ["publish", "pending", "draft", "future", "private", "trash", "any"]
      * @return self
      */
     public function status($status = false)
@@ -323,7 +395,7 @@ abstract class Model implements \Iterator
     /**
      * Filter by lang
      *
-     * @param string Lang slug
+     * @param  string Lang slug
      * @return self
      */
     public function lang($lang)
@@ -332,12 +404,10 @@ abstract class Model implements \Iterator
         return $this;
     }
 
-
-
     /**
      * Limit the number of posts returned.
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Pagination_Parameters
-     * @param int $limit
+     * @param  int    $limit
      * @return self
      */
     public function limit($limit = false, $filter_key = "posts_per_page")
@@ -352,7 +422,7 @@ abstract class Model implements \Iterator
     /**
      * Offset the results to a certain page.
      * See https://codex.wordpress.org/Class_Reference/WP_User_Query#Pagination_Parameters
-     * @param int $page
+     * @param  int    $page
      * @return self
      */
     public function page($page = false)
@@ -366,9 +436,9 @@ abstract class Model implements \Iterator
     /**
      * Basic search, should be updated by the children classes
      *
-     * @param string $terms
-     * @param $a To keep the same number of arguments
-     * @param $b To keep the same number of arguments
+     * @param  string $terms
+     * @param  $a     To       keep the same number of arguments
+     * @param  $b     To       keep the same number of arguments
      * @return self
      */
     public function search($terms, $a = false, $b = false)
@@ -377,12 +447,11 @@ abstract class Model implements \Iterator
         return $this;
     }
 
-
     /**
      * Filter on the publication date of a post
      *
-     * @param mixed $after Date to retrieve posts before. Accepts strtotime()-compatible string, or array of 'year', 'month', 'day'
-     * @param mixed $before Same as $after
+     * @param  mixed  $after  Date to retrieve posts before. Accepts strtotime()-compatible string, or array of 'year', 'month', 'day'
+     * @param  mixed  $before Same as $after
      * @return self
      */
     public function date($after = false, $before = false)
@@ -391,8 +460,8 @@ abstract class Model implements \Iterator
             [
                 "after"     => $after,
                 "before"    => $before,
-                "inclusive" => true
-            ]
+                "inclusive" => true,
+            ],
         ];
         return $this;
     }
@@ -400,10 +469,10 @@ abstract class Model implements \Iterator
     /**
      * Change the post order.
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters
-     * @param string $orderby the field to order the posts by
-     * @param int $order ASC or DESC
-     * @param string $meta_key When $orderby is "meta_value", specify the meta_key.
      * Must include a meta query beforehand specifying criteras for that key.
+     * @param  string $orderby  the field to order the posts by
+     * @param  int    $order    ASC or DESC
+     * @param  string $meta_key When $orderby is "meta_value", specify the meta_key.
      * @return self
      */
     public function order($orderby = false, $order = "ASC", $meta_key = false)
@@ -416,32 +485,23 @@ abstract class Model implements \Iterator
         return $this;
     }
 
-
     /**
      * Update the meta filter
      * See https://codex.wordpress.org/Class_Reference/WP_Query#Custom_Field_Parameters
-     * @param string $key Custom field key.
-     * @param string|array $value Custom field value.
-     *        It can be an array only when compare is 'IN', 'NOT IN', 'BETWEEN', or 'NOT BETWEEN'.
-     *        You don't have to specify a value when using the 'EXISTS' or 'NOT EXISTS'
-     * @param string $compare  Operator to test. Possible values are :
-     *        '=', '!=', '>', '>=', '<', '<=', 'LIKE', 'NOT LIKE', 'IN',
-     *        'NOT IN', 'BETWEEN', 'NOT BETWEEN', 'EXISTS' and 'NOT EXISTS'.
-     * @param string $type Custom field type. Possible values are :
-     *        'NUMERIC', 'BINARY', 'CHAR', 'DATE', 'DATETIME', 'DECIMAL', 'SIGNED',
-     *        'TIME', 'UNSIGNED'. Default value is 'CHAR'.
-     *        You can also specify precision and scale for the 'DECIMAL' and 'NUMERIC' types
-     *        (for example, 'DECIMAL(10,5)' or 'NUMERIC(10)' are valid).
-     * @param string $relation Erase the current relation between each meta_query.
-     *        Either "OR", "AND" (default) or false to keep the current one.
-     * @param boolean $replace Specify if the filter should replace any existing one on the same meta_key
+     *
+     * @param  string       $key      Custom field key.
+     * @param  string|array $value    Custom field value. You don't have to specify a value when using the 'EXISTS' or 'NOT EXISTS' It can be an array only when compare is 'IN', 'NOT IN', 'BETWEEN', or 'NOT BETWEEN'.
+     * @param  string       $compare  Operator to test. Possible values are : '=', '!=', '>', '>=', '<', '<=', 'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN', 'EXISTS' and 'NOT EXISTS'.
+     * @param  string       $type     Custom field type. Possible values are : 'NUMERIC', 'BINARY', 'CHAR', 'DATE', 'DATETIME', 'DECIMAL', 'SIGNED', 'TIME', 'UNSIGNED'. Default value is 'CHAR'.
+     * @param  string       $relation Erase the current relation between each meta_query. Either "OR", "AND" (default) or false to keep the current one.
+     * @param  boolean      $replace  Specify if the filter should replace any existing one on the same meta_key
      * @return void
      */
     public function meta($key, $value = null, $compare = "=", $type = null, $relation = false, $replace = false)
     {
         // Create the meta_query if it doesn't exist
         $this->filters["meta_query"] = isset($this->filters["meta_query"]) ? $this->filters["meta_query"] : [
-            "relation" => "AND"
+            "relation" => "AND",
         ];
 
         // Update the relation if specified
@@ -449,7 +509,7 @@ abstract class Model implements \Iterator
 
         // If $replace, remove all filters made on that specific meta_key
         if ($replace) {
-            foreach ($this->filters["meta_query"] as $filter_key=>$filter) {
+            foreach ($this->filters["meta_query"] as $filter_key => $filter) {
                 if (isset($filter["key"]) && $filter["key"] == $key) {
                     unset($this->filters["meta_query"][$filter_key]);
                 }
@@ -461,7 +521,7 @@ abstract class Model implements \Iterator
             "key"     => $key,
             "value"   => $value,
             "compare" => $compare,
-            "type"    => $type
+            "type"    => $type,
         ];
 
         if (is_null($value)) {
@@ -477,6 +537,38 @@ abstract class Model implements \Iterator
         return $this;
     }
 
+    /**
+     * Filter items that have a specific meta defined
+     *
+     * @param  array  $keys     List of keys that should exist
+     * @param  string $relation AND|OR - Specify if all keys should exist or at least one
+     * @return self
+     */
+    public function withMeta($keys, $relation = "AND")
+    {
+        $this->filters["meta_query"] = array_map(function ($key) {
+            return [
+                "relation" => "AND",
+                [
+                    "key"     => $key,
+                    "compare" => "EXISTS",
+                ],
+                [
+                    "key"     => $key,
+                    "compare" => "!=",
+                    "value"   => "",
+                ],
+                [
+                    "key"     => $key,
+                    "compare" => "!=",
+                    "value"   => null,
+                ],
+            ];
+        }, $keys);
+
+        $this->filters["meta_query"]["relation"] = $relation;
+        return $this;
+    }
 
     /**
      * Run all the current filters and combine them into one using the results' IDs
@@ -491,11 +583,10 @@ abstract class Model implements \Iterator
         return $this;
     }
 
-
     /**
      * Clear one, several or all filters
      *
-     * @param array|string $filter_keys
+     * @param  array|string $filter_keys
      * @return self
      */
     public function clearFilters($filter_keys = false, $default_filters = [])
@@ -516,7 +607,7 @@ abstract class Model implements \Iterator
     /**
      * Update filters in the hard way
      *
-     * @param array $filters
+     * @param  array  $filters
      * @return self
      */
     public function addFilters($filters)
@@ -528,9 +619,9 @@ abstract class Model implements \Iterator
     /**
      * Update a filter that maybe already existed
      *
-     * @param string $filter_key
-     * @param array|string $new_value
-     * @param string $mode merge, intersect or replace
+     * @param  string       $filter_key
+     * @param  array|string $new_value
+     * @param  string       $mode         merge, intersect or replace
      * @return array
      */
     public function updateExistingFilter($filter_key, $new_value, $mode)
@@ -544,6 +635,9 @@ abstract class Model implements \Iterator
             case "intersect":
                 $value = array_intersect((array) $previous_value, (array) $new_value);
                 break;
+            case "restrict":
+                $value = $previous_value ? array_intersect((array) $previous_value, (array) $new_value) : (array) $new_value;
+                break;
             case "replace":
             default:
                 $value = $new_value;
@@ -555,22 +649,21 @@ abstract class Model implements \Iterator
         return $this;
     }
 
-
     // ==================================================
     // > SQL QUERY MODIFIER
     // ==================================================
     /**
-     * Register a query modifiers to be applied only when this model WP_Query runs
+     * Register a query modifiers to be applied only when this model Query runs
      *
-     * @param callable $function
-     * @param string $hook
+     * @param  callable $function
+     * @param  string   $hook
      * @return self
      */
-    public function updateQuery($function, $group = "default", $hook = "posts_clauses_request")
+    public function updateQuery($function, $group = "default")
     {
         $this->queryModifiers[$group][] = [
-            "hook"     => $hook,
-            "function" => $function
+            "hook"     => static::QUERY_HOOK,
+            "function" => $function,
         ];
         return $this;
     }
@@ -591,7 +684,6 @@ abstract class Model implements \Iterator
         return $this;
     }
 
-
     /**
      * Remove all global filter updating the SQL query
      *
@@ -606,11 +698,10 @@ abstract class Model implements \Iterator
         }
     }
 
-
     /**
      * Clear all modifiers saved in this model
      *
-     * @param string|boolean $group
+     * @param  string|boolean $group
      * @return self
      */
     public function clearQueryModifiers($group = false)
@@ -623,16 +714,14 @@ abstract class Model implements \Iterator
         return $this;
     }
 
-
-
     // ==================================================
     // > GETTERS
     // ==================================================
     /**
      * Execute the query and retrive all the found posts
      *
-     * @param int $limit Number of posts to return
-     * @param int $page Page offset to use
+     * @param  int   $limit Number of posts to return
+     * @param  int   $page  Page offset to use
      * @return array of WP_Post
      */
     public function get($limit = false, $page = false)
@@ -640,7 +729,7 @@ abstract class Model implements \Iterator
         $this->limit($limit)->page($page);
 
         // Nothing changed since last query run, return result
-        if ($this->filters == $this->cachedFilters && !empty($this->cachedResults)) {
+        if ($this->filters == $this->cachedFilters && $this->cachedResults->count()) {
             return $this->cachedResults;
         }
 
@@ -649,7 +738,7 @@ abstract class Model implements \Iterator
             $this->run()->cachedQuery
         );
 
-        return apply_filters("syltaen_get_" . static::TYPE, $this->cachedResults);
+        return apply_filters("syltaen_get_" . static::TYPE, $this->cachedResults, $this);
     }
 
     /**
@@ -666,26 +755,97 @@ abstract class Model implements \Iterator
     /**
      * Extracts results from the query
      *
-     * @param $query
-     * @return array of ModelItem
+     * @param  $query
+     * @return array    of Item
      */
     protected function getResultsFromQuery($query)
     {
-        return array_map(function ($item) {
-
+        return set(array_map(function ($item) {
             // Anything else than ITEM_CLASS : return as is
-            if (!is_object($item) || get_class($item) !== static::OBJECT_CLASS) return $item;
+            if (!is_object($item) || get_class($item) !== static::OBJECT_CLASS) {
+                return $item;
+            }
 
-            // Wrap objects in ModelItem, return IDs as is
-            $class = "\\Syltaen\\" . static::ITEM_CLASS;
+            // Edge case for models that support joins
+            if ($join_item = $this->parseJoinItem($item)) {
+                return $join_item;
+            }
+
+            // Wrap objects in Item, return IDs as is
+            $class = static::ITEM_CLASS;
             return new $class($item, $this);
-        }, $query->{static::OBJECT_KEY});
+        }, $query->{static::OBJECT_KEY} ?: []));
+    }
+
+    /**
+     * Allow chilidren to support joined model
+     *
+     * @return ModelItem of a different model
+     */
+    public function parseJoinItem($item)
+    {
+        return false;
+    }
+
+    /**
+     * Get an object instance
+     *
+     * @return WP_...
+     */
+    public static function getObject($id)
+    {
+        $class = static::OBJECT_CLASS;
+        return $class::get_instance($id);
+    }
+
+    /**
+     * Get an item instance
+     *
+     * @return ModelItem
+     */
+    public static function getItem($id)
+    {
+        $class = static::ITEM_CLASS;
+        return new $class($id, new static );
+    }
+
+    /**
+     * Shortcut for is + get
+     *
+     * @return ModelItem
+     */
+    public static function getItems($ids)
+    {
+        return (new static )->is($ids)->get();
+    }
+
+    /**
+     * Get an item instance, but only with an ID (prevent useless DB queries)
+     *
+     * @return ModelItem
+     */
+    public static function getLightItem($id)
+    {
+        $class = static::ITEM_CLASS;
+        return new $class($id);
+    }
+
+    /**
+     * Get several light item instances
+     *
+     * @return ModelItem
+     */
+    public static function getLightItems($ids)
+    {
+        return set(array_map(function ($id) {
+            return static::getLightItem($id);
+        }, $ids ?: []));
     }
 
     /**
      * Return only one result
      *
-     * @return ModelItem|bool
+     * @return Item|bool
      */
     public function getOne()
     {
@@ -700,13 +860,15 @@ abstract class Model implements \Iterator
      */
     public function run()
     {
-        if ($this->cachedQuery && $this->filters == $this->cachedFilters) return $this;
+        if ($this->cachedQuery && $this->filters == $this->cachedFilters) {
+            return $this;
+        }
+
         $this->clearCache();
 
         $this->applyQueryModifiers();
-
-        $class = static::QUERY_CLASS;
-        $this->cachedQuery = new $class($this->filters);
+        $class               = static::QUERY_CLASS;
+        $this->cachedQuery   = new $class($this->filters);
         $this->cachedFilters = $this->filters;
         $this->unapplyQueryModifiers();
 
@@ -737,15 +899,17 @@ abstract class Model implements \Iterator
     /**
      * Return the number of posts matching the query
      *
-     * @param bool $paginated Return the number of result on that page, or not
+     * @param  bool  $paginated Return the number of result on that page, or not
      * @return int
      */
     public function count($paginated = true)
     {
-        if ($paginated)
+        if ($paginated) {
             return $this->getQuery()->post_count;
-        else
+        } else {
             return intval($this->getQuery()->found_posts);
+        }
+
     }
 
     /**
@@ -772,12 +936,20 @@ abstract class Model implements \Iterator
      * Put all matching result in a clean array
      * Used for exporting data
      *
-     * @param callable $columns An associative array. $header=>$value
+     * @param  callable $columns An associative array. $header=>$value
      * @return array
      */
     public function getAsTable($getColumnsData = false)
     {
-        if (!is_callable($getColumnsData)) throw_error("\$getColumnsData must be a callable function");
+        $getColumnsData = $getColumnsData ?: function ($item) {
+            return [
+                "ID"     => $item->getID(),
+                "Langue" => $item->getLang(),
+                "Titre"  => $item->getTitle(),
+                "slug"   => $item->getSlug(),
+                "URL"    => $item->url,
+            ];
+        };
 
         // Map rows
         $rows = $this->map(function ($result) use ($getColumnsData) {
@@ -787,24 +959,23 @@ abstract class Model implements \Iterator
         // Return header and rows
         return [
             "header" => array_keys($rows[0]),
-            "rows"   => array_map("array_values", $rows)
+            "rows"   => $rows->map("array_values"),
         ];
     }
-
 
     /**
      * Process the results per group, managing memoy more efficently
      *
-     * @param int $groupSize
-     * @param callable $process_function
+     * @param  int      $groupSize
+     * @param  callable $process_function
      * @return void
      */
     public function processInGroups($groupSize = 100, $process_function)
     {
         $this
-            // Make sure we always target the inital posts
-            ->applyFilters()->status("all")
-            // Fetch X posts at a time
+        // Make sure we always target the inital posts
+        ->applyFilters()->status("all")
+        // Fetch X posts at a time
             ->limit($groupSize);
 
         // Process one group at a time
@@ -814,7 +985,54 @@ abstract class Model implements \Iterator
         }
     }
 
+    // ==================================================
+    // > TRANSLATIONS
+    // ==================================================
+    /**
+     * Parse a list of translations, retrieve an associative array of lang=>id each time
+     *
+     * @param  array   $items
+     * @return array
+     */
+    public static function parseTranslationsList($translations)
+    {
+        $translations = (array) $translations;
+        if (empty($translations)) {
+            return false;
+        }
 
+        // No language information provided, try to guess from each posts
+        if (is_int(array_keys($translations)[0])) {
+            $translations = (array) set($translations)->mapAssoc(function ($i, $id) {
+                return [static::getLightItem($id)->getLang(), $id];
+            });
+        }
+
+        // ModelItems passed instead of IDs, convert them
+        if (array_values($translations)[0] instanceof ModelItem) {
+            $translations = array_map(function ($item) {
+                return $item->getID();
+            }, $translations);
+        }
+
+        // Need several posts to be linked
+        if (count($translations) < 2) {
+            return false;
+        }
+
+        return $translations;
+    }
+
+    /**
+     * Create a translation for each matching element
+     *
+     * @param  string $lang
+     * @return array  List of translations IDs
+     */
+    public function createTranslations($lang)
+    {
+        return $this->callEach()->createTranslation($lang);
+    }
 
     // ==================================================
     // > FIELDS MANIPULATION
@@ -822,40 +1040,52 @@ abstract class Model implements \Iterator
     /**
      * Add/Erase one or several fields to the model
      *
-     * @param array $fields
+     * @param  array  $fields
      * @return self
      */
     public function addFields($fields)
     {
-        $this->fields = array_merge($this->fields, Data::normalizeFieldsKeys((array) $fields));
+        $this->fields      = $this->fields->merge(Data::normalizeFieldsKeys($fields));
         $this->fieldsIndex = Data::generateFieldsIndex($this->fields);
         $this->clearCache();
         return $this;
     }
 
-
     /**
      * Add one or several global data to the model
      *
-     * @param array $fields
+     * @param  array  $fields
      * @return self
      */
     public function addGlobals($fields)
     {
-        $this->globals = array_merge($this->globals, Data::normalizeFieldsKeys((array) $fields));
+        $this->globals      = $this->globals->merge(Data::normalizeFieldsKeys($fields));
         $this->globalsIndex = Data::generateFieldsIndex($this->globals);
         return $this;
     }
 
-
     /**
      * Force the model to fetch and store the result of each field
      *
+     * @param  mxied  $fields true/false to enable/disable all fields fetching, or a list of fields to fetch
      * @return void
      */
-    public function fetchFields()
+    public function fetchFields($fields = true)
     {
-        $this->forceFetchFields = true;
+        // Force all fields fetching
+        if ($fields === true) {
+            $this->forceFetchFields = true;
+            return $this;
+        }
+        // Disable all fields fetching
+        if ($fields === false) {
+            $this->forceFetchFields = true;
+            return $this;
+        }
+        // Limit fetching to specific fields, add to the list
+        $this->forceFetchFields = is_array($this->forceFetchFields) ? $this->forceFetchFields : [];
+        $this->forceFetchFields = array_merge($this->forceFetchFields, (array) $fields);
+
         return $this;
     }
 
@@ -871,7 +1101,7 @@ abstract class Model implements \Iterator
     {
         $this->cachedQuery   = false;
         $this->cachedFilters = false;
-        $this->cachedResults = false;
+        $this->cachedResults = new Set;
         return $this;
     }
 
@@ -885,9 +1115,8 @@ abstract class Model implements \Iterator
      */
     public function json()
     {
-        wp_send_json($this->fetchFields()->get());
+        Log::json($this->fetchFields()->get());
     }
-
 
     /**
      * Dump the result of a model with all its fields loaded
@@ -896,7 +1125,7 @@ abstract class Model implements \Iterator
      */
     public function log()
     {
-        Controller::log($this->fetchFields()->get());
+        Log::console($this->fetchFields()->get());
     }
 
     // ==================================================
@@ -906,17 +1135,15 @@ abstract class Model implements \Iterator
      * Update all items matching the query
      *
      *
-     * @param array $attrs Base attributes
-     * @param array $fields ACF data
-     * @param array $tax_roles Taxonomies or roles to set
-     * @param bool $merge Wether to merge or set the values
+     * @param  array  $attrs     Base attributes
+     * @param  array  $fields    ACF data
+     * @param  array  $tax_roles Taxonomies or roles to set
+     * @param  bool   $merge     Wether to merge or set the values
      * @return self
      */
     public function update($attrs = [], $fields = [], $tax_roles = [], $merge = false)
     {
-        foreach ($this->get() as $item) {
-            $item->update($attrs, $fields, $tax_roles, $merge);
-        }
+        $this->callEach()->update($attrs, $fields, $tax_roles, $merge);
 
         // Force get refresh
         $this->clearCache();
@@ -927,11 +1154,11 @@ abstract class Model implements \Iterator
     /**
      * Update only the attrs of all matching item
      *
-     * @param array $attrs Base attributes
-     * @param bool $merge Wether to merge or set the values
+     * @param  array  $attrs Base attributes
+     * @param  bool   $merge Wether to merge or set the values
      * @return self
      */
-    public function updateAttrs($attrs, $merge = false)
+    public function setProperties($attrs, $merge = false)
     {
         return $this->update($attrs, false, false, $merge);
     }
@@ -939,11 +1166,11 @@ abstract class Model implements \Iterator
     /**
      * Update only the fields of all matching item
      *
-     * @param array $fields ACF data
-     * @param bool $merge Wether to merge or set the values
+     * @param  array  $fields ACF data
+     * @param  bool   $merge  Wether to merge or set the values
      * @return self
      */
-    public function updateFields($fields, $merge = false)
+    public function setFields($fields, $merge = false)
     {
         return $this->update(false, $fields, false, $merge);
     }
@@ -953,11 +1180,9 @@ abstract class Model implements \Iterator
      *
      * @return void
      */
-    public function updateMeta($meta)
+    public function setMetas($meta)
     {
-        foreach ($this->get() as $item) {
-            $item->updateMeta($meta);
-        }
+        $this->get()->callEach()->setMetas($meta);
 
         // Force get refresh
         $this->clearCache();
@@ -968,11 +1193,11 @@ abstract class Model implements \Iterator
     /**
      * Update only the tax of all matching item
      *
-     * @param array $tax_roles Taxonomies or roles to set
-     * @param bool $merge Wether to merge or set the values
+     * @param  array  $tax_roles Taxonomies or roles to set
+     * @param  bool   $merge     Wether to merge or set the values
      * @return self
      */
-    public function updateTaxonomies($tax, $merge = false)
+    public function setTaxonomies($tax, $merge = false)
     {
         return $this->update(false, false, $tax, $merge);
     }
@@ -980,14 +1205,12 @@ abstract class Model implements \Iterator
     /**
      * Update the language of each matching item
      *
-     * @param string $lang The language's code
+     * @param  string $lang The language's code
      * @return self
      */
-    public function updateLang($lang)
+    public function setLang($lang)
     {
-        foreach ($this->lang(false)->get() as $item) {
-            $item->updateLang($lang);
-        }
+        $this->lang(false)->callEach()->setLang($lang);
 
         // Force get refresh
         $this->clearCache();
@@ -995,69 +1218,156 @@ abstract class Model implements \Iterator
         return $this;
     }
 
-
     /**
      * Delete all items matching the query
      *
-     * @param boolean $force Whether to bypass Trash and force deletion.
+     * @param  boolean $force Whether to bypass Trash and force deletion.
      * @return void
      */
     public function delete($force = false)
     {
-        foreach ($this->get() as $item) {
-            $item->delete($force);
+        $this->callEach()->delete($force);
 
-        }
+        // Force get refresh
         $this->clearCache();
+
+        return $this;
     }
 
-
-
+    // ==================================================
+    // > MASS DATA MANIPULATION
+    // ==================================================
     /**
-     * Update one meta field for several posts in one SQL query
+     * Get all the IDs of this model's objects
      *
-     * @param string $meta_key
-     * @param array $posts_values ID=>value
      * @return void
      */
-    public static function updateMetaMulti($meta_key, $posts_values)
+    public static function getAllIDs()
     {
-        if (empty($posts_values)) return false;
+        // Should be implemented by children
+    }
 
-        // Generate an index of post_id=>meta_id to use for INSERT
-        $meta_index = [];
-        $meta = Database::get_results("SELECT meta_id, post_id FROM postmeta WHERE meta_key = '$meta_key' AND post_id IN (".implode(",", array_keys($posts_values)).")");
-        foreach ((array) $meta as $m) $meta_index[$m->post_id] = $m->meta_id;
+    /**
+     * Get the meta values of all the posts for a specific key
+     *
+     * @return void
+     */
+    public static function getMassMeta($meta_keys, $object_ids = false, $groupby_value = false, $index_key = "object_id", $value_key = "meta_value")
+    {
+        // Get the data of ALL the objects of this model
+        if (!$object_ids) {$object_ids = (array) static::getAllIDs();}
 
+        // Get all the metas
+        $metas = Database::get_results(
+            "SELECT "
+            . static::META_ID . " meta_id, "
+            . static::META_OBJECT . " object_id, "
+            . static::META_KEY . " meta_key, "
+            . static::META_VALUE . " meta_value "
+            . "FROM " . static::META_TABLE . " "
+            . "WHERE meta_key IN " . Database::inArray($meta_keys)
+            . " AND " . static::META_OBJECT . " IN " . Database::inArray($object_ids)
+        );
+
+        // Return by grouped values
+        if ($groupby_value) {
+            return $metas->groupBy("meta_value", "object_id");
+        }
+
+        return $metas->index($index_key, $value_key);
+    }
+
+    /**
+     * Get all the matches for specific(s) meta value(s)
+     *
+     * @param $meta_key
+     * @param $meta_values
+     */
+    public static function getMatchingMeta($meta_key, $meta_values, $group_by_values = false)
+    {
+        // Restrict to only objects of this model
+        $object_ids = static::getAllIDs();
+
+        $results = Database::get_results(
+            "SELECT "
+            . static::META_OBJECT . ", "
+            . static::META_VALUE . " "
+            . "FROM " . static::META_TABLE . " meta "
+            . "WHERE " . implode(" AND ", array_filter([
+                static::META_KEY . " = '{$meta_key}'",
+                static::META_VALUE . " IN " . Database::inArray((array) $meta_values),
+                $object_ids ? static::META_OBJECT . " IN " . Database::inArray($object_ids) : "",
+            ]))
+        );
+
+        // Regroup each id by value
+        if ($group_by_values) {
+            return $results->groupBy(static::META_VALUE, static::META_OBJECT);
+        }
+
+        // Return only the matching ids
+        return $results->column(static::META_OBJECT)->map("intval");
+    }
+
+    /**
+     * Allow children to restrict the targets of mass-meta queries
+     *
+     * @return array
+     */
+    public static function getMetaObjectRestrinctions()
+    {
+        return [
+            "JOIN"  => false,
+            "WHERE" => [],
+        ];
+    }
+
+    /**
+     * Apply a serie of meta updates in an optimal way.
+     *
+     * @param  array|string $meta_keys   The meta key to use for each update
+     * @param  array|mixed  $meta_values The meta value to use for each update
+     * @param  array|int    $object_ids  The object ID to apply the update to. Leave to false to apply to every object.
+     * @param  bool         $only_update Only update the existing data, do not create new metadata
+     * @return void
+     */
+    public static function setMassMeta($meta_keys, $meta_values, $object_ids = false, $only_update = false)
+    {
+        // Apply updates to ALL the objects of this model
+        if (!$object_ids) {$object_ids = (array) static::getAllIDs();}
+
+        $index = static::getMassMeta($meta_keys, $object_ids, false, function ($row) {
+            return "{$row->object_id}:{$row->meta_key}";
+        }, false);
+
+        // Uniformize into an array of update
+        $max_updates = max(count((array) $meta_keys), count((array) $meta_values), count((array) $object_ids));
+
+        $updates = [];
+        for ($i = 0; $i < $max_updates; $i++) {
+            $update = [
+                "object_id"  => ($object_id = is_array($object_ids) ? $object_ids[$i] : $object_ids),
+                "meta_key"   => ($meta_key = is_array($meta_keys) ? $meta_keys[$i] : $meta_keys),
+                "meta_value" => ($meta_value = is_array($meta_values) ? $meta_values[$i] : $meta_values),
+                "meta_id"    => $index["{$object_id}:{$meta_key}"]->meta_id ?? "",
+            ];
+            // Do not register updates that have the same value as currently
+            if (($index["{$object_id}:{$meta_key}"]->meta_value ?? null) === $meta_value) {continue;}
+            // Do not register update that do not have a meta_id, if only_update is requested
+            if ($only_update && !$update["meta_id"]) {continue;}
+            // Add update to the lsit
+            $updates[] = $update;
+        }
+
+        // No update
+        if (empty($updates)) {return;}
         // Generate the SQL query to perform
-        $query  = "INSERT INTO postmeta (meta_id, post_id, meta_key, meta_value) VALUES ";
-        $query .= implode(",", array_map(function ($id, $value) use ($meta_key, $meta_index) {
-            return "(".($meta_index[$id] ?? "''").",$id,'$meta_key','$value')";
-        }, array_keys($posts_values), array_values($posts_values)));
-        $query .= " ON DUPLICATE KEY UPDATE meta_value=VALUES(meta_value)";
+        $query = "INSERT INTO " . static::META_TABLE . " (" . static::META_ID . ", " . static::META_OBJECT . ", " . static::META_KEY . ", " . static::META_VALUE . ") VALUES ";
+        $query .= implode(",\n", array_map(function ($update) {
+            return "(\"{$update['meta_id']}\",\"{$update['object_id']}\",\"{$update['meta_key']}\",\"{$update['meta_value']}\")";
+        }, $updates));
+        $query .= " ON DUPLICATE KEY UPDATE " . static::META_VALUE . "=VALUES(" . static::META_VALUE . ")";
+
         return Database::query($query);
     }
-
-
-    /**
-     * Set one meta field & value for several posts in one SQL query
-     *
-     * @param string $meta_key
-     * @param array $posts_values ID=>value
-     * @return void
-     */
-    public static function setMetaMulti($meta_key, $meta_value, $post_ids = false)
-    {
-        return Database::query(
-           "UPDATE postmeta
-            SET meta_value = '$meta_value'
-            WHERE meta_key = '$meta_key'
-           " . (empty($post_ids) ? "" : " AND post_id IN (".implode(",", $post_ids).")")
-        );
-    }
-
-
-
-
-
 }

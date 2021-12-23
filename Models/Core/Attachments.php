@@ -6,10 +6,11 @@ class Attachments extends PostsModel
 {
     const TYPE       = "attachment";
     const LABEL      = "Attachements";
-    const ITEM_CLASS = "ModelItemAttachment";
+    const ITEM_CLASS = "\Syltaen\Attachment";
 
-    const HAS_THUMBNAIL = true;
-
+    /**
+     * @return mixed
+     */
     public function __construct()
     {
         parent::__construct();
@@ -17,11 +18,11 @@ class Attachments extends PostsModel
         $this->addGlobals([
             "@upload_dir" => function () {
                 return wp_upload_dir();
-            }
+            },
         ]);
 
         $this->addFields([
-            "@url" => function ($attachment) {
+            "@url"   => function ($attachment) {
                 return Data::filter($attachment, "img:url");
             },
 
@@ -29,7 +30,7 @@ class Attachments extends PostsModel
              * Path to the image
              */
             "_wp_attached_file",
-            "@path" => function ($attachment) {
+            "@path"  => function ($attachment) {
                 return $this->upload_dir["basedir"] . "/" . $attachment->_wp_attached_file;
             },
 
@@ -51,7 +52,7 @@ class Attachments extends PostsModel
                     $size["path"] = dirname($attachment->path) . "/" . $size["file"];
                     return $size;
                 }, $sizes);
-            }
+            },
         ]);
 
         $this->status("inherit");
@@ -60,6 +61,10 @@ class Attachments extends PostsModel
     // ==================================================
     // > FILTERS
     // ==================================================
+    /**
+     * @param  $post_id
+     * @return mixed
+     */
     public function of($post_id)
     {
         return $this->parent($post_id);
@@ -68,14 +73,13 @@ class Attachments extends PostsModel
     /**
      * Filter based on encoded data returned by an UploadField
      *
-     * @param string $json_encoded
+     * @param  string $json_encoded
      * @return self
      */
     public function fromEncoded($json_encoded)
     {
         return $this->is(json_decode(stripslashes($json_encoded)));
     }
-
 
     /**
      * Filter all medias that are not offloaded
@@ -89,7 +93,6 @@ class Attachments extends PostsModel
         );
     }
 
-
     /**
      * Filter all images who where scaled down by WordPress
      *
@@ -100,24 +103,22 @@ class Attachments extends PostsModel
         return $this->meta("_wp_attached_file", "-scaled", "LIKE");
     }
 
-
     // ==================================================
     // > ACTIONS
     // ==================================================
     /**
      * Attach an attachment to a post
      *
-     * @param int $parent_id
+     * @param  int    $parent_id
      * @return self
      */
     public function attach($parent_id)
     {
         $this->update([
-            "post_parent" => $parent_id
+            "post_parent" => $parent_id,
         ]);
         return $this;
     }
-
 
     // ==================================================
     // > MODEL UPDATES
@@ -160,15 +161,17 @@ class Attachments extends PostsModel
         return array_filter(array_map(function ($sizes) {
             return array_filter(array_map(function ($size) {
                 $headers = get_headers($size["url"] . "?t=" . time(), true);
-                if ($headers[0] == "HTTP/1.1 200 OK") return false;
+                if ($headers[0] == "HTTP/1.1 200 OK") {
+                    return false;
+                }
+
                 return [
                     $size["url"],
-                    $headers[0]
+                    $headers[0],
                 ];
             }, $sizes));
         }, $this->sizes));
     }
-
 
     /**
      * Regenerate the sizes for the matching media
@@ -188,7 +191,7 @@ class Attachments extends PostsModel
     /**
      * Force the optimization through EWWW for all matching media
      *
-     * @param bool $all_sizes Include all the sizes of the image
+     * @param  bool  $all_sizes Include all the sizes of the image
      * @return array of results
      */
     public function optimize($all_sizes = true)
@@ -198,8 +201,8 @@ class Attachments extends PostsModel
 
         $this->optimizeResults = $this->map(function ($attachment) use ($all_sizes) {
             $results = [];
-            foreach ($attachment->sizes as $size=>$data) {
-                $results[$size] = ($size != "full" && !$all_sizes) ? false :  ewww_image_optimizer($data["path"], 4, false, $size == "full");
+            foreach ($attachment->sizes as $size => $data) {
+                $results[$size] = ($size != "full" && !$all_sizes) ? false : ewww_image_optimizer($data["path"], 4, false, $size == "full");
             }
             return $results;
         });

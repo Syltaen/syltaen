@@ -4,7 +4,6 @@ namespace Syltaen;
 
 abstract class Geolocation
 {
-
     /**
      * Radius of the earth in meters
      */
@@ -17,9 +16,9 @@ abstract class Geolocation
      * Calculates the great-circle distance between two points, with
      * the Haversine formula.
      *
-     * @param array $point_a
-     * @param array $point_b
-     * @return int Number of meters between the two points
+     * @param  array $point_a
+     * @param  array $point_b
+     * @return int   Number of meters between the two points
      */
     public static function getHaversineDistance($point_a, $point_b)
     {
@@ -38,26 +37,27 @@ abstract class Geolocation
         return $angle * static::EARTH_RADIUS;
     }
 
-
     // ==================================================
     // > COORDONATES
     // ==================================================
     /**
      * Get both a name and coord by providing one information or the other
      *
-     * @param string $location
-     * @param string $coord
+     * @param  string  $location
+     * @param  string  $coord
      * @return array
      */
     public static function get($name = false, $coord = false)
     {
-        if (empty($name) && empty($coord)) return false;
+        if (empty($name) && empty($coord)) {
+            return false;
+        }
 
         // Parse the coord if provided
         if (!empty($coord) && preg_match("/(\-?[0-9]+\.[0-9]+), ?\-?([0-9]+\.[0-9]+)/", $coord, $parts)) {
             $coord = [
                 "lat" => (float) $parts[1],
-                "lng" => (float) $parts[2]
+                "lng" => (float) $parts[2],
             ];
         }
 
@@ -65,27 +65,29 @@ abstract class Geolocation
         if (empty($coord)) {
             $results = static::geocode($name);
 
-            if (empty($results)) return [
-                "name" => $name,
-                "error" => "Ce lieu est inconnu.<br>Merci de vérifier votre recherche."
-            ];
+            if (empty($results)) {
+                return [
+                    "name"  => $name,
+                    "error" => "Ce lieu est inconnu.<br>Merci de vérifier votre recherche.",
+                ];
+            }
 
             $coord = [
                 "lat" => $results[0]->location->y,
-                "lng" => $results[0]->location->x
+                "lng" => $results[0]->location->x,
             ];
         }
 
         // If coord but no name : reverse geocoding
         if (empty($name)) {
             $reverse = Geolocation::reverseGeocoding($coord);
-            $name = !empty($reverse->address->City) ? $reverse->address->City : "Ma position";
+            $name    = !empty($reverse->address->City) ? $reverse->address->City : "Ma position";
         }
 
         // Should always have both at this point
         return [
             "name"  => $name,
-            "coord" => $coord
+            "coord" => $coord,
         ];
     }
 
@@ -95,8 +97,8 @@ abstract class Geolocation
     /**
      * Geocode search terms
      *
-     * @param string $search
-     * @return array of results
+     * @param  string $search
+     * @return array  of results
      */
     public static function geocode($search)
     {
@@ -104,16 +106,16 @@ abstract class Geolocation
             "f=json",
             "countryCode=BE",
             "langCode=FR",
-            "SingleLine=$search"
+            "SingleLine=$search",
         ])))->get()->body->candidates;
     }
 
     /**
      * Use the ESRI geocoder to get a list of propositions
      *
-     * @param string $search
-     * @param int $limit
-     * @param boolean $extend
+     * @param  string  $search
+     * @param  int     $limit
+     * @param  boolean $extend
      * @return array
      */
     public static function getSuggestions($search, $limit = 10, $extent = false)
@@ -125,20 +127,22 @@ abstract class Geolocation
             "maxSuggestions=$limit",
             "countryCode=BE",
             "langCode=FR",
-            "text=$search"
+            "text=$search",
         ];
-        if ($extent) $query[] = stripcslashes("searchExtent=$extent");
+        if ($extent) {
+            $query[] = stripcslashes("searchExtent=$extent");
+        }
+
         $endpoint .= "?" . implode("&", $query);
 
         // Make the call
         return (new Request($endpoint))->get()->body->suggestions;
     }
 
-
     /**
      * Get an address details using its magic key
      *
-     * @param string $magicKey
+     * @param  string   $magicKey
      * @return object
      */
     public static function getSuggestionInfo($magicKey)
@@ -147,15 +151,17 @@ abstract class Geolocation
             "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&maxLocations=1&outFields=*&SingleLine=Li%C3%A8ge,%20BEL&outSR=%7b%22wkid%22:102100,%22latestWkid%22:3857%7d&magicKey=$magicKey"
         ))->get()->body;
 
-        if (empty($info->candidates[0])) return false;
+        if (empty($info->candidates[0])) {
+            return false;
+        }
+
         return $info->candidates[0];
     }
-
 
     /**
      * Reverse coordonates into an address name
      *
-     * @param array $coord
+     * @param  array   $coord
      * @return array
      */
     public static function reverseGeocoding($coord)

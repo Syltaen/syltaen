@@ -1,49 +1,53 @@
 <?php
 
 namespace Syltaen;
+
+use \Jawira\CaseConverter\Convert;
 use \WP_CLI as WP_CLI;
-use Jawira\CaseConverter\Convert;
 
 class CLI_Make
 {
     /**
      * Create a new post model
      *
-     * @param string $name Name of the class
+     * @param  string $name Name of the class
      * @return void
      */
     public static function post($name)
     {
         static::make(
             "PostsModelTemplate",
-            $name,
+            (new Convert($name))->toPascal(),
             "Models/Posts",
             [
-                "postsmodeltemplate" => strtolower($name)
+                "postsmodeltemplate" => strtolower($name),
             ]
         );
     }
+
     // Alias for static::post()
+    /**
+     * @param $name
+     */
     public static function model($name)
     {
         return static::post($name);
     }
 
-
     /**
      * Create a new post taxonomy
      *
-     * @param string $name Name of the class
+     * @param  string $name Name of the class
      * @return void
      */
     public static function tax($name)
     {
         static::make(
             "TaxonomyModelTemplate",
-            $name . "Taxonomy",
+            (new Convert($name))->toPascal() . "Taxonomy",
             "Models/Taxonomies",
             [
-                "taxonomy" => strtolower($name)
+                "taxonomy" => strtolower($name),
             ]
         );
     }
@@ -51,58 +55,55 @@ class CLI_Make
     /**
      * Create a new controller
      *
-     * @param string $name Name of the class
+     * @param  string $name Name of the class
      * @return void
      */
     public static function controller($name)
     {
         static::make(
             "ControllerTemplate",
-            $name,
+            (new Convert($name . "Controller"))->toPascal(),
             "Controllers",
             [
-                "templateview" => strtolower($name)
+                "templateview" => (new Convert($name))->toKebab(),
             ]
         );
     }
 
-
     /**
      * Create a new processor
      *
-     * @param string $name Name of the class
+     * @param  string $name Name of the class
      * @return void
      */
     public static function processor($name)
     {
         static::make(
             "ProcessorTemplate",
-            $name,
+            (new Convert($name . "Processor"))->toPascal(),
             "Controllers/Processors"
         );
     }
 
-
     /**
      * Create a new helper
      *
-     * @param string $name Name of the class
+     * @param  string $name Name of the class
      * @return void
      */
     public static function helper($name)
     {
         static::make(
             "HelperTemplate",
-            $name,
+            (new Convert($name))->toPascal(),
             "app/Helpers"
         );
     }
 
-
     /**
      * Create a new actions list
      *
-     * @param string $name
+     * @param  string $name
      * @return void
      */
     public static function actions($name)
@@ -114,11 +115,10 @@ class CLI_Make
         );
     }
 
-
     /**
      * Create a new filters list
      *
-     * @param string $name
+     * @param  string $name
      * @return void
      */
     public static function filters($name)
@@ -128,16 +128,15 @@ class CLI_Make
             "filters-$name",
             "app/hooks/filters",
             [
-                "add_action" => "add_filter"
+                "add_action" => "add_filter",
             ]
         );
     }
 
-
     /**
      * Create a new filters list
      *
-     * @param string $name
+     * @param  string $name
      * @return void
      */
     public static function ajax($name)
@@ -148,21 +147,20 @@ class CLI_Make
             "app/hooks/ajax",
             [
                 "add_action" => "Hooks::ajax",
-                ", 10"       => ""
+                ", 10"       => "",
             ]
         );
     }
 
-
     /**
      * Create a new style module
      *
-     * @param string $name
+     * @param  string $name
      * @return void
      */
     public static function style($name)
     {
-        $dir = dirname($name);
+        $dir  = dirname($name);
         $name = basename($name);
 
         static::make(
@@ -171,7 +169,7 @@ class CLI_Make
             "styles/modules/$dir",
             [
                 "name" => $name,
-                "DIR" => strtoupper($dir),
+                "DIR"  => strtoupper($dir),
                 "NAME" => strtoupper($name),
             ],
             ".sass",
@@ -181,11 +179,16 @@ class CLI_Make
                 $builder = array_reverse($builder);
 
                 // Search where to register the new module
-                foreach ($builder as $i=>$line) {
-                    if (strpos($line, "@import \"modules/$dir") !== false) break;
+                foreach ($builder as $i => $line) {
+                    if (strpos($line, "@import \"modules/$dir") !== false) {
+                        break;
+                    }
+
                 }
                 // Module place was not found
-                if ($i >= count($builder)) WP_CLI::error("Could not add the module to the builder.");
+                if ($i >= count($builder)) {
+                    WP_CLI::error("Could not add the module to the builder.");
+                }
 
                 // Insert the new line
                 array_splice($builder, $i, 0, ["@import \"modules/$dir/$name\""]);
@@ -198,11 +201,10 @@ class CLI_Make
         );
     }
 
-
     /**
      * Create a new style module
      *
-     * @param string $name
+     * @param  string $name
      * @return void
      */
     public static function script($name)
@@ -216,16 +218,15 @@ class CLI_Make
         );
     }
 
-
     // ==================================================
     // > COMMON
     // ==================================================
     /**
      * Create a new file from a template
      *
-     * @param string $template
-     * @param string $class
-     * @param string $folder
+     * @param  string $template
+     * @param  string $class
+     * @param  string $folder
      * @return string The final file path
      */
     private static function make($template, $class, $folder, $replaces = [], $ext = ".php", $more = false)
@@ -254,7 +255,9 @@ class CLI_Make
         WP_CLI::success("File $folder/$class$ext has been created.");
 
         // Do more once the file was created
-        if ($more) $more($dest);
+        if ($more) {
+            $more($dest);
+        }
 
         // Open file in VS Code
         exec("code $dest");

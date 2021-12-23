@@ -15,13 +15,13 @@ class RowsProcessor extends DataProcessor
             $row["spacing"] . "-gutters",
             $row["spacing_top"] . "-margin-top",
             $row["spacing_bottom"] . "-margin-bottom",
-            $row["responsive"] != "none" ? $row["responsive"] : ""
+            $row["responsive"] != "none" ? $row["responsive"] : "",
         ];
 
         // Attributes
         $row["attrs"] = [];
         if ($row["animation"] != "none") {
-            $row["attrs"]["data-bottom-top"]  = "";
+            $row["attrs"]["data-bottom-top"] = "";
             $row["attrs"]["data-top-bottom"] = "";
         }
 
@@ -35,7 +35,7 @@ class RowsProcessor extends DataProcessor
     /**
      * Handle data for the "columns" content type
      *
-     * @param [type] $c
+     * @param  [type] $c
      * @return void
      */
     private function processColumns($row)
@@ -43,7 +43,6 @@ class RowsProcessor extends DataProcessor
         $i = 0;
 
         return array_map(function ($col) use ($row, &$i) {
-
             $col["styles"]  = [];
             $col["classes"] = [];
 
@@ -68,6 +67,4 @@ class RowsProcessor extends DataProcessor
 
         }, $row["columns"]);
     }
-
-
 }

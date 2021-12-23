@@ -6,7 +6,6 @@ namespace Syltaen;
 // > UPLOAD A FILE WITH AJAX
 // ==================================================
 Hooks::ajax("syltaen_ajax_upload", function () {
-
     wp_send_json(
         Files::upload(
 
@@ -20,7 +19,7 @@ Hooks::ajax("syltaen_ajax_upload", function () {
             false,
 
             // Custom folder
-            !empty($_POST["folder"]) ? str_replace("[uniqid]", uniqid(), $_POST["folder"]): false
+            !empty($_POST["folder"]) ? str_replace("[uniqid]", uniqid(), $_POST["folder"]) : false
 
         )
     );

@@ -14,12 +14,15 @@ abstract class CommentsModel extends Model
      */
     const QUERY_CLASS  = "WP_Comment_Query";
     const OBJECT_CLASS = "WP_Comment";
+    const ITEM_CLASS   = "\Syltaen\Comment";
     const OBJECT_KEY   = "comments";
-    const ITEM_CLASS   = "ModelItemComment";
     const QUERY_IS     = "comment__in";
     const QUERY_ISNT   = "comment__not_in";
     const QUERY_LIMIT  = "number";
     const QUERY_STATUS = "status";
+    const QUERY_HOOK   = "pre_get_comments";
+    const META_TABLE   = "commentmeta";
+    const META_OBJECT  = "comment_id";
 
     /**
      * List of date formats to be stored in each comment.
@@ -33,7 +36,8 @@ abstract class CommentsModel extends Model
     /**
      * Add fields shared by all comments types
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->addFields([
@@ -47,16 +51,18 @@ abstract class CommentsModel extends Model
             /**
              * The comment date in various format, defined by $dateFormats
              */
-            "@date" => function ($comment) {
+            "@date"   => function ($comment) {
                 $date = [];
-                foreach ($this->dateFormats as $name=>$format) {
-                    if ($format) $date[$name] = get_comment_date($format, $comment->ID);
+                foreach ($this->dateFormats as $name => $format) {
+                    if ($format) {
+                        $date[$name] = get_comment_date($format, $comment->ID);
+                    }
+
                 }
                 return $date;
             },
         ]);
     }
-
 
     // =============================================================================
     // > FILTERS
@@ -75,20 +81,20 @@ abstract class CommentsModel extends Model
     /**
      * Filter by comment author
      *
-     * @param [type] $user
+     * @param  [type] $user
      * @return void
      */
     public function author($user)
     {
         if (is_int($user)) {
             $filter = "user_id";
-        }
-        elseif (is_array($user)) {
+        } elseif (is_array($user)) {
             $filter = "author__in";
-        }
-        elseif (is_string($user)) {
+        } elseif (is_string($user)) {
             $filter = "author__email";
-        } else return $this;
+        } else {
+            return $this;
+        }
 
         $this->filters[$filter] = $user;
         return $this;
@@ -97,7 +103,7 @@ abstract class CommentsModel extends Model
     /**
      * Filter by parent(s)
      *
-     * @param array|int $ids List of parent ids
+     * @param  array|int $ids List of parent ids
      * @return self
      */
     public function parent($ids)
@@ -106,31 +112,33 @@ abstract class CommentsModel extends Model
         return $this;
     }
 
-
-
     // =============================================================================
     // > GETTERS
     // =============================================================================
 
     /* Update parent method */
+    /**
+     * @param $paginated
+     */
     public function count($paginated = true)
     {
         return count($this->getQuery()->comments);
     }
 
-
     /**
      * Add all date formats specified in the model to a post object
      *
-     * @param WP_Post $post
+     * @param  WP_Post $post
      * @return void
      */
     protected function populateDateFormats(&$comment)
     {
-        if (!$this->hasAttr("date")) return false;
+        if (!$this->hasAttr("date")) {
+            return false;
+        }
 
         $comment->date = [];
-        foreach ($this->dateFormats as $name=>$format) {
+        foreach ($this->dateFormats as $name => $format) {
             if ($format) {
                 $comment->date[$name] = get_comment_date($format, $comment->ID);
             }
@@ -140,15 +148,25 @@ abstract class CommentsModel extends Model
     /**
      * Set a default filter because runing WP_User_Query without any argument return no result
      *
-     * @param boolean $filter_keys
-     * @param array $default_filters
+     * @param  boolean $filter_keys
+     * @param  array   $default_filters
      * @return self
      */
     public function clearFilters($filter_keys = false, $default_filters = null)
     {
         return parent::clearFilters($filter_keys, [
-            "prevent_empty"   => true
+            "prevent_empty" => true,
         ]);
+    }
+
+    /**
+     * Get all the IDs of this model's objects
+     *
+     * @return array
+     */
+    public static function getAllIDs()
+    {
+        return (array) Database::get_col("SELECT comment_ID FROM comments");
     }
 
     // =============================================================================
@@ -157,9 +175,9 @@ abstract class CommentsModel extends Model
     /**
      * Create a new comment
      * see https://codex.wordpress.org/Function_Reference/wp_insert_comment
-     * @param array $attrs
-     * @param array $fileds
-     * @return self A new model instance containing the new item
+     * @param  array $attrs
+     * @param  array $fileds
+     * @return self  A new model instance containing the new item
      */
     public static function add($attrs = [], $fields = false)
     {
@@ -173,6 +191,6 @@ abstract class CommentsModel extends Model
             // "comment_approved" => 0
         ], $attrs));
 
-        return (new static)->is($comment_id)->updateFields($fields);
+        return static::getItem($comment_id)->setFields($fields);
     }
 }

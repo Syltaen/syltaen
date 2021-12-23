@@ -6,7 +6,6 @@ namespace Syltaen;
 // > ACF OPTIONS PAGES
 // ==================================================
 if (function_exists("acf_add_options_page")) {
-
     // ========== HEADER & FOOTER ========== //
     acf_add_options_page([
         "page_title" => "Header & Footer",
@@ -34,7 +33,6 @@ add_filter("acf/settings/load_json", function ($paths) {
     $paths[] = Files::path("app/cache/acf");
     return $paths;
 });
-
 
 // ==================================================
 // > GOOGLE MAP KEY

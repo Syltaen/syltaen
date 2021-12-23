@@ -7,7 +7,7 @@ class ActionRegisterUser extends \NF_Abstracts_Action
     /**
      * @var string
      */
-    protected $_name  = "actionregisteruser";
+    protected $_name = "actionregisteruser";
 
     /**
      * @var array
@@ -41,38 +41,39 @@ class ActionRegisterUser extends \NF_Abstracts_Action
             "placeholder"    => "",
             "value"          => "",
             "width"          => "full",
-            "use_merge_tags" => false
+            "use_merge_tags" => false,
         ];
     }
 
     /**
      * Save the data
      *
-     * @param array $action_settings
+     * @param  array  $action_settings
      * @return void
      */
     public function save($action_settings)
     {
-
     }
 
     /**
      * Process the data
      *
-     * @param array $action_settings
-     * @param int $form_id
-     * @param array $data
+     * @param  array  $action_settings
+     * @param  int    $form_id
+     * @param  array  $data
      * @return void
      */
     public function process($action_settings, $form_id, $data)
     {
-
         // ==================================================
         // > VALUES
         // ==================================================
         $val = [];
         foreach ($data["fields"] as $field) {
-            if ($field["key"]) $val[$field["key"]] = $field["value"];
+            if ($field["key"]) {
+                $val[$field["key"]] = $field["value"];
+            }
+
         }
 
         // ==================================================
@@ -82,19 +83,18 @@ class ActionRegisterUser extends \NF_Abstracts_Action
 
             // Attrs
             [
-                "first_name"           => $val["firstname"],
-                "last_name"            => $val["lastname"],
-                "user_nicename"        => urlencode($val["firstname"]."-".$val["lastname"]),
-                "display_name"         => $val["firstname"]." ".$val["lastname"],
-                "nickname"             => $val["email"]
+                "first_name"    => $val["firstname"],
+                "last_name"     => $val["lastname"],
+                "user_nicename" => urlencode($val["firstname"] . "-" . $val["lastname"]),
+                "display_name"  => $val["firstname"] . " " . $val["lastname"],
+                "nickname"      => $val["email"],
             ],
 
             // Fields
             [
-                "phone"            => $val["phone"],
+                "phone" => $val["phone"],
             ]
         );
-
 
         if ($user_id instanceof \WP_Error) {
             $data["actions"]["success_message"] = "<p class='error'>Une erreur s'est produite lors de votre inscription :</p>";
@@ -105,7 +105,6 @@ class ActionRegisterUser extends \NF_Abstracts_Action
             }
             return $data;
         }
-
 
         // ==================================================
         // > SUCCESS MESSAGE

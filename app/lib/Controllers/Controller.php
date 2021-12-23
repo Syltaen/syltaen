@@ -4,22 +4,19 @@ namespace Syltaen;
 
 class Controller
 {
-
     /**
      * Store all the data needed for the rendering
      *
-     * @var array
+     * @var Set
      */
-    public $data = [];
-
+    public $data;
 
     /**
      * Default view used by the controller
      *
      * @var string
      */
-    public $view = false;
-
+    public $view;
 
     /**
      * List of custom arguments set in the constructor
@@ -28,7 +25,6 @@ class Controller
      */
     protected $args = [];
 
-
     /**
      * Dependencies creation
      *
@@ -36,9 +32,9 @@ class Controller
      */
     public function __construct($args = [])
     {
+        $this->data = new Set;
         $this->args = $args;
     }
-
 
     /**
      * Add data to the context
@@ -47,76 +43,76 @@ class Controller
      */
     public function addData($array, $post_id = null)
     {
-        Data::store($this->data, (array) $array, $post_id);
-        return $this->data;
+        return $this->data->store((array) $array, $post_id);
     }
 
+    /**
+     * Get the context
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function getData($key = false)
+    {
+        if ($key) {
+            return $this->data[$key];
+        }
+
+        return $this->data;
+    }
 
     /**
      * Return rendered HTML by passing a view filename
      *
-     * @param string $filename
-     * @param array $data
+     * @param  string   $filename
+     * @param  array    $data
      * @return string
      */
     public function view($filename = false, $data = false)
     {
         return View::render(
             $filename ?: $this->view,
-            $data ?: $this->data
+            $data ?: $this->data,
+            true
         );
     }
-
 
     /**
      * Display a view
      *
-     * @param string $filename
-     * @param array $data
+     * @param  string $filename
+     * @param  array  $data
      * @return void
      */
     public function render($filename = false, $data = false)
     {
+        if (isset($_GET["profiler"])) {
+            Performances::profiler(
+                $filename ?: $this->view,
+                $data ?: $this->data,
+                $_GET["profiler"]
+            );
+        }
+
         View::display(
             $filename ?: $this->view,
-            $data ?: $this->data
+            $data ?: $this->data,
+            true
         );
         exit;
     }
 
-
     /**
      * Log data into the console
      *
-     * @param $data
-     * @param string $tags
+     * @param  $data
+     * @param  string  $tag
      * @return void
      */
-    public static function log($data, $tags = null, $levelLimit = 10, $itemsCountLimit = 100, $itemSizeLimit = 50000, $dumpSizeLimit = 500000)
+    public static function log($data, $tag = null)
     {
-        $dumper    = new \PhpConsole\Dumper($levelLimit, $itemsCountLimit, $itemSizeLimit, $dumpSizeLimit);
-        $connector = \PhpConsole\Connector::getInstance();
-        $connector->setDebugDispatcher(new \PhpConsole\Dispatcher\Debug($connector, $dumper));
-        $connector->getDebugDispatcher()->dispatchDebug($data, $tags, 1);
+        Log::console($data, $tag);
     }
-
-
-    /**
-     * Log the controller data into the console
-     *
-     * @param string $key
-     * @param string $tags
-     * @return void
-     */
-    public function dlog($key = false, $tags = null, $levelLimit = 10, $itemsCountLimit = 100, $itemSizeLimit = 50000, $dumpSizeLimit = 500000)
-    {
-        if ($key) {
-            self::log($this->data[$key], $tags, $levelLimit, $itemsCountLimit, $itemSizeLimit, $dumpSizeLimit);
-        } else {
-            self::log($this->data, $tags, $levelLimit, $itemsCountLimit, $itemSizeLimit, $dumpSizeLimit);
-        }
-    }
-
 
     /**
      * Return data in JSON format
@@ -125,10 +121,8 @@ class Controller
      */
     public function json($data = false)
     {
-        $data = $data ? $data : $this->data;
-        wp_send_json($data);
+        Log::json($data ?: $this->data);
     }
-
 
     /**
      * Return data in XML format
@@ -140,7 +134,6 @@ class Controller
         header("Content-type: text/xml; charset=utf-8");
         return $this->data;
     }
-
 
     /**
      * Return data in a PHP format
@@ -158,11 +151,10 @@ class Controller
         echo "</pre>";
     }
 
-
     /**
      * Make and send an excel file form an array of data
      *
-     * @param array $table
+     * @param  array  $table
      * @return void
      */
     public static function excel($table, $filename = "export")
@@ -170,33 +162,37 @@ class Controller
         header("Content-Type: application/xlsx");
         header("Content-Disposition: attachment; filename={$filename}.xlsx;");
 
+        error_reporting(null);
+        ini_set("display_errors", 0);
+
         $writer = new \XLSXWriter();
 
-        $writer->setAuthor(App::config("project"));
-        $writer->setCompany(App::config("client"));
+        $writer->setAuthor(config("project"));
+        $writer->setCompany(config("client"));
 
         // Add sytled header
         if (!empty($table["header"])) {
             $writer->writeSheetRow("Export", $table["header"], [
                 "font-style" => "bold",
-                "fill"       => App::config("color_primary"),
+                "fill"       => config("color.primary"),
                 "color"      => "#fff",
                 "font-size"  => 9,
                 "border"     => "bottom",
                 "halign"     => "left",
                 "valign"     => "center",
-                "height"     => 20
+                "height"     => 20,
             ]);
         }
 
         // Add each rows
-        foreach ($table["rows"] as $row) $writer->writeSheetRow("Export", $row, [
-            "height"     => 15,
-            "font-size"  => 8,
-            "halign"     => "left",
-            "valign"     => "center",
-        ]);
-
+        foreach ($table["rows"] as $row) {
+            $writer->writeSheetRow("Export", $row, [
+                "height"    => 15,
+                "font-size" => 8,
+                "halign"    => "left",
+                "valign"    => "center",
+            ]);
+        }
 
         // Send file
         $f = fopen("php://output", "w");
@@ -204,18 +200,16 @@ class Controller
         exit;
     }
 
-
-
     /**
      * Make and send a CSV file form an array of data
      *
-     * @param array $table
+     * @param  array  $table
      * @return void
      */
     public static function csv($table, $filename = "export.csv", $delimiter = ";")
     {
         header("Content-Type: application/csv");
-        header("Content-Disposition: attachment; filename='{$filename}';");
+        header("Content-Disposition: attachment; filename={$filename};");
 
         $f = fopen("php://output", "w");
         foreach ($table as $row) {
@@ -224,11 +218,10 @@ class Controller
         exit;
     }
 
-
     /**
      * Force the download of a media
      *
-     * @param $id The media ID
+     * @param  $id    The media ID
      * @return void
      */
     public function media($id)
@@ -252,11 +245,17 @@ class Controller
     // ==================================================
     // > MESSAGES : Errors, success, warnings...
     // ==================================================
+    /**
+     * @param $message
+     * @param $redirection
+     * @param false          $replace_content
+     * @param false          $message_key
+     */
     public function message($message, $redirection = false, $replace_content = false, $message_key = "message")
     {
         $message_data = [
             $message_key    => $message,
-            "empty_content" => $replace_content
+            "empty_content" => $replace_content,
         ];
 
         if (!$redirection) {

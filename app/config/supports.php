@@ -3,7 +3,6 @@
 namespace Syltaen;
 
 add_action("after_setup_theme", function () {
-
     // ==================================================
     // > THEME SUPPORTS
     // ==================================================
@@ -11,7 +10,6 @@ add_action("after_setup_theme", function () {
     add_theme_support("title-tag");
     add_theme_support("post-thumbnails");
     add_theme_support("breadcrumb-trail");
-
 
     // ==================================================
     // > IMAGE SIZES
@@ -56,10 +54,9 @@ add_action("after_setup_theme", function () {
     //     "custom_capabitily_to_add"
     // ]);
 
-
     // ==================================================
     // > FIXES
     // ==================================================
-    remove_action("shutdown", "wp_ob_end_flush_all", 1 );
+    remove_action("shutdown", "wp_ob_end_flush_all", 1);
     add_filter("run_wptexturize", "__return_false");
 });

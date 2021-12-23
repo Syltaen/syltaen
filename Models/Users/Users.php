@@ -16,21 +16,19 @@ class Users extends UsersModel
         ]);
     }
 
-
     // =============================================================================
     // > UNIQUE KEY
     // =============================================================================
     /**
      * Get a user by its user unique key
      *
-     * @param string $key
+     * @param  string $key
      * @return self
      */
     public function withKey($key)
     {
         return $this->meta("key", $key);
     }
-
 
     /**
      * Generate a unique user key

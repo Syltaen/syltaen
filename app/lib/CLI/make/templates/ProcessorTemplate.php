@@ -4,7 +4,6 @@ namespace Syltaen;
 
 class ClassName extends DataProcessor
 {
-
     /**
      * Processing of each data
      */
@@ -14,5 +13,4 @@ class ClassName extends DataProcessor
 
         return $data;
     }
-
 }
