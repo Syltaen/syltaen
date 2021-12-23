@@ -6,14 +6,16 @@ mixin card-news(news)
 
     .card-news.button__parent
 
-        .card-news__visual(href=$news->url style="background-image: url(".$news->thumb["url"]["archive"].")")
-            != $news->thumb["tag"]["archive"]
+        .card-news__visual(href=$news->url style=$news->thumb->bg())
+            != $news->thumb->tag()
 
         .card-news__content
             p.text-small
                 i.fa.fa-folder.xs-margin-right
-                != $news->terms["list"]
+                != $news->news_type->getLinks()->join(", ")
+
             time= $news->date["short"]
+
             h2.h2.card-news__title= $news->post_title
             p.card-news__excerpt= $news->post_excerpt
             a.button(href=$news->url)!= __("Lire plus", "syltaen")

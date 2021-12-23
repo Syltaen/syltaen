@@ -11,9 +11,9 @@ mixin colcontent(col)
 //- > COLLAPSABLE
 //- ==================================================
 mixin collapsable(row)
-    if $row["collapsable"]
+    if $row["layout_settings"]["collapsable"]
         .collapsable
-            .collapsable__header.trigger!= $row["collapsable"]
+            .collapsable__header.trigger!= $row["layout_settings"]["collapsable"]
             .collapsable__content
                 block
     else
@@ -53,8 +53,8 @@ mixin sections(sections)
                         .bg-halfimage__cache: .bg-halfimage__image(class=$s["halfimage"]["classes"] data-top-bottom="background-position-y: 0%;" data-bottom-top="background-position-y: 100%;")&attributes($s["halfimage"]["attr"])
 
                 each $row in $s["rows"]
-                    if $row["width"] == "full"
+                    if $row["layout_settings"]["width"] == "full"
                         +sectionrow($row)
                     else
-                        .container(class="container--".$row["width"]."")
+                        .container(class="container--".$row["layout_settings"]["width"]."")
                             +sectionrow($row)

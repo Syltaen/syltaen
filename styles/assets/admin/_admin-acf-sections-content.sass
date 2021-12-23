@@ -2,27 +2,37 @@
 // > ADMIN : ACF-SECTIONS-CONTENT
 // =============================================================================
 
-.acf-sections-content > .acf-input > .acf-flexible-content > .values > .layout
+.acf-sections-content > .acf-input > .acf-flexible-content
+
 
     // ==================================================
-    // > HANDLE
+    // > LAYOUT
     // ==================================================
-    & > .acf-fc-layout-handle
-        background: #F5F5F5
-        &::before
-            +fa(th-large)
-            +font(16px primary)
-            margin-right: .5em
+    & > .values > .layout
+        border: 1px solid #CCC
 
-    @each $layout, $icon in $section-content-icons
-        &[data-layout="#{$layout}"] > .acf-fc-layout-handle::before
-            content: fa-content($icon)
+        & > .acf-fc-layout-handle
+            background: #F5F5F5
+            &::before
+                +fa(th-large)
+                +font(16px primary)
+                margin-right: .5em
+
+        @each $layout, $icon in $section-content-icons
+            &[data-layout="#{$layout}"] > .acf-fc-layout-handle::before
+                content: fa-content($icon)
+
+
+    // ==================================================
+    // > ACTIONS
+    // ==================================================
+    & > .acf-actions
+        +flex(row nowrap, center, center)
 
 
 // ==================================================
 // > DROPDOWN
 // ==================================================
-
 .acf-tooltip a[data-layout]::before
     +fa(th-large)
     margin-right: .5em

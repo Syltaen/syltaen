@@ -2,64 +2,27 @@
 // > ADMIN : ACF-HORIZONTAL-REPEATER
 // =============================================================================
 
-.acf-horizontal-repeater
-    & > .acf-input > .acf-repeater
+.acf-horizontal-repeater > .acf-input > .acf-flexible-content
+    position: relative
+
+    // ROW / COLUMNS
+    & > .values
+        +flex(row nowrap)
         padding-right: 40px
 
-        & > .acf-table > tbody
-            +flex(row nowrap)
-            & > .acf-row:not(.acf-clone)
-                flex: 1
-                &,
-                & > .acf-fields
-                    +flex(column nowrap)
-                    // flex-grow: 1
+        & > .layout
+            margin-top: 0
+            flex: 1
+            border-right: 1px solid #ccd0d4
 
-                    & > .acf-row-handle
-                        order: -1
+            & > .acf-fc-layout-handle
+                border-bottom: 0
 
-            & > .acf-row
-                &,
-                & > td
-                    width: 100% !important
-                    box-sizing: border-box
-                    & > .acf-field
-                        width: 100%  !important
-                        height: auto !important
+            & > .acf-fc-layout-controls .acf-icon.-plus
+                display: none
 
-                & > td > .acf-icon
-                    &.-plus
-                        left: -9px
-                        top: 6px
-                    &.-minus
-                        left: 50%
-
-            & > tr
-                & > td
-                    border-width: 0 0 0 1px
-                &:first-child > td
-                    border-width: 0
-
-        & > .acf-actions
-            +absolute(top 50% right 5px)
-            margin-top: -30px
-            .button
-                text-shadow: none
-                background: #F5F5F5
-                border: 1px solid #F5F5F5
-                box-shadow: none
-                +font(#F5F5F5)
-                +size(30px)
-                position: relative
-                border-radius: 50%
-                &::before
-                    content: "+"
-                    +absolute(top 0 left 0)
-                    +size(100%)
-                    +font(20px 25px #72777c center)
-                &:hover
-                    background: color(primary)
-                    +font(primary)
-                    border-color: color(primary)
-                    &::before
-                        +font(white)
+    // ROW ACTIONS
+    & > .acf-actions
+        +absolute(top 50% right 0)
+        transform: translateY(-50%)
+        +flex(column nowrap)

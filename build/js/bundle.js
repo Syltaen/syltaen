@@ -374,7 +374,7 @@ module.exports = jQuery;
 /******/ 		        // webpack-livereload-plugin
 /******/ 		        (function() {
 /******/ 		          if (typeof window === "undefined") { return };
-/******/ 		          var id = "webpack-livereload-plugin-script-71c59dbf5947a5cb";
+/******/ 		          var id = "webpack-livereload-plugin-script-d8179107e5ea8d47";
 /******/ 		          if (document.getElementById(id)) { return; }
 /******/ 		          var el = document.createElement("script");
 /******/ 		          el.id = id;

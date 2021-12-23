@@ -4,6 +4,10 @@ import "jquery.transit"
 # =============================================================================
 # > ACF PAGE BUILDER
 # =============================================================================
+
+###
+# Sections display preview
+###
 class ACFSection
     constructor: (@$section) ->
         @$section.attr "data-processed", true
@@ -44,28 +48,65 @@ class ACFSection
         else
             @$handle.css("background-image", "")
 
+###
+# Columns width preview
+###
+class ColumnWidthWatcher
+    constructor: (@input) ->
+
+        # On trigger : update row widths
+        $("body").on "update-column-width", ".acf-sections-row__columns", (e) => @updateRow $(e.target)
+
+        # Triger on input change
+        $("body").on "keyup", ".acf-sections-row__columns " + @input, ->
+            $(@).closest(".acf-sections-row__columns").trigger("update-column-width")
+
+        # Trigger on mouseup in row (add/remove columns...)
+        $("body").on "mouseup", ".acf-sections-row__columns", (e) ->
+            setTimeout =>
+                $(@).trigger("update-column-width")
+            , 100
+
+        # Trigger on page load
+        $(@input).trigger("keyup")
+
+    ###
+    # Update a row's columns' widths
+    ###
+    updateRow: ($row) ->
+        total = 0
+        $row.find(@input).each -> total += parseInt $(@).val()
+        $row.find(@input).each ->
+            $(@).closest(".layout").css "flex", $(@).val()
+            .children(".acf-fc-layout-handle").find(".no-thumbnail").text "Colonne [" + $(@).val() + "/" + total + "]"
+
+
 $ ->
+    # Skip if not a page builder
+    unless $(".acf-page-sections, .acf-light-repeater").length then return
+
     # Section display
     setInterval ->
         $(".acf-page-sections__bg").map ->
             $section = $(@).closest(".acf-row")
             if $section.data("processed") || $section.is(".acf-clone") then return false
             new ACFSection $section
+
+        # Choices tooltips
+        $(".acf-choice .acf-input label:not(.acf-label-tooltip__parent)").each ->
+            $(@).append "<span class='acf-label-tooltip'>" + $(@).text() + "</span>"
+            $(@).addClass "acf-label-tooltip__parent"
+
+        # Repeater tooltip
+        $(".acf-light-repeater > .acf-input > .acf-flexible-content > .acf-actions > .button:not(.acf-label-tooltip__parent)").each ->
+            text = $(@).text().trim() || "Copier/Coller" + (if $(@).closest(".acf-sections-content").length then " du contenu" else " une rangée")
+            $(@).html "<span class='acf-label-tooltip acf-label-tooltip--right'>" + text + "</span>"
+            $(@).addClass "acf-label-tooltip__parent"
     , 1000
 
     # Columns width
-    $("body").on "keyup change", ".acf-sections-row__columns__width input[type='number']", ->
-        console.log "change"
-        $(@).closest(".acf-row").css "flex", $(@).val()
+    new ColumnWidthWatcher ".acf-input > .acf-flexible-content > .values > .layout > .acfe-modal.-settings input[type='number']"
 
-    # Label tooltips
-    $(".acf-choice .acf-input label").each ->
-        $(@).append "<span class='acf-label-tooltip'>" + $(@).text() + "</span>"
-        $(@).addClass "acf-label-tooltip__parent"
-
-    $(".acf-light-repeater > .acf-input > .acf-repeater > .acf-table > tbody > .acf-row > .acf-fields > .acf-field > .acf-input > div > .acf-actions .button, .acf-horizontal-repeater > .acf-input > .acf-repeater > .acf-actions .button").each ->
-        $(@).html "<span class='acf-label-tooltip acf-label-tooltip--right'>" + $(@).text() + "</span>"
-        $(@).addClass "acf-label-tooltip__parent"
 
 
 # =============================================================================

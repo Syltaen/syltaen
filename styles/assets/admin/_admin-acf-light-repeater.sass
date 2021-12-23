@@ -2,52 +2,54 @@
 // > ADMIN : ACF-LIGHT-REPEATER
 // =============================================================================
 
-.acf-light-repeater
-    & > .acf-input > .acf-repeater
-        & > .acf-table
-            border: 0
-            &> tbody > .acf-row
-                background: white
-                & > .acf-row-handle
-                    +size(10px)
-                    padding: 0
-                    opacity: 0
-                    // &:hover
-                    //     opacity: 1
-                    &.order
-                        height: 15px
-                        line-height: 15px
-                        +font(10px)
-                &:hover > .acf-row-handle
-                    opacity: 1
-                & > .acf-fields
-                    border: 0
-                    & > .acf-field
-                        &.acf-field-flexible-content,
-                        &.acf-field-repeater
-                            padding: 5px
-                    & > .acf-field > .acf-input > div >
-                        .acf-actions
-                            +flex(row nowrap, center)
+.acf-light-repeater > .acf-input > .acf-flexible-content
 
-                            .button
-                                display: block
-                                text-shadow: none
-                                background: #F5F5F5
-                                border: 1px solid #F5F5F5
-                                box-shadow: none
-                                +font(white)
-                                +size(30px)
-                                position: relative
-                                border-radius: 50%
-                                &::before
-                                    content: "+"
-                                    +absolute(top 0 left 0)
-                                    +size(100%)
-                                    +font(20px 25px #72777c center)
-                                &:hover
-                                    background: color(primary)
-                                    +font(primary)
-                                    border-color: color(primary)
-                                    &::before
-                                        +font(white)
+    // Remove borders and padding
+    & > .values > .layout
+        border: 0
+
+        & > .acf-fc-layout-handle
+            .acf-fc-layout-order
+                +size(16px)
+                +font(10px 16px)
+            .acfe-layout-title-text
+                +font(12px)
+                // font-weight: 400
+            &:hover
+                background: color(light-grey)
+
+        & > .acf-fields > .acf-field
+            // border: 0
+            // padding: 1em .5em
+
+
+    // ACTIONS
+    & > .acf-actions .button
+        text-shadow: none
+        background: #F5F5F5
+        border: 1px solid #F5F5F5
+        box-shadow: none
+        margin: .5em 0 !important
+        +font(#F5F5F5)
+        +size(30px)
+        position: relative
+        border-radius: 50%
+        text-indent: -9999em
+        display: block
+        &::before
+            content: "+"
+            +absolute(top 0 left 0)
+            +size(100%)
+            +font(20px 25px #72777c center)
+            text-indent: 0
+        &:hover
+            background: color(primary)
+            +font(primary)
+            border-color: color(primary)
+            &::before
+                +font(white)
+        &[data-name="add-layout"]::before
+            content: "+"
+        &[data-name="acfe-flexible-control-button"]::before
+            +far(copy)
+            +font(14px)

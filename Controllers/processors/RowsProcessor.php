@@ -9,25 +9,27 @@ class RowsProcessor extends DataProcessor
      */
     public function process($row)
     {
+        $settings = $row["layout_settings"];
+
         // Classes
         $row["classes"] = [
-            "flex-align-" . $row["valign"],
-            $row["spacing"] . "-gutters",
-            $row["spacing_top"] . "-margin-top",
-            $row["spacing_bottom"] . "-margin-bottom",
-            $row["responsive"] != "none" ? $row["responsive"] : "",
+            "flex-align-" . $settings["valign"],
+            $settings["spacing"] . "-gutters",
+            $settings["spacing_top"] . "-margin-top",
+            $settings["spacing_bottom"] . "-margin-bottom",
+            $settings["responsive"] != "none" ? $settings["responsive"] : "",
         ];
 
         // Attributes
         $row["attrs"] = [];
-        if ($row["animation"] != "none") {
-            $row["attrs"]["data-bottom-top"] = "";
-            $row["attrs"]["data-top-bottom"] = "";
+        if ($settings["animation"] != "none") {
+            $settings["attrs"]["data-bottom-top"] = "";
+            $settings["attrs"]["data-top-bottom"] = "";
         }
 
         // Columns
-        $row["columns"] = $this->processColumns($row);
-        $row["light"]   = count($row["columns"]) <= 1 && $row["animation"] == "none" && $row["spacing_top"] == "no" && $row["spacing_bottom"] == "no";
+        $row["columns"] = $this->processColumns($row["columns"], $settings);
+        $row["light"]   = count($row["columns"]) <= 1 && $settings["animation"] == "none" && $settings["spacing_top"] == "no" && $settings["spacing_bottom"] == "no";
 
         return $row;
     }
@@ -38,24 +40,24 @@ class RowsProcessor extends DataProcessor
      * @param  [type] $c
      * @return void
      */
-    private function processColumns($row)
+    private function processColumns($columns, $settings)
     {
         $i = 0;
 
-        return array_map(function ($col) use ($row, &$i) {
+        return array_map(function ($col) use ($settings, &$i) {
             $col["styles"]  = [];
             $col["classes"] = [];
 
             // Proportions
-            if ($row["custom_proportions"]) {
-                $col["styles"][] = "flex: " . $col["width"] . ";";
+            if ($col["layout_settings"]["width"] != 1) {
+                $col["styles"][] = "flex: " . $col["layout_settings"]["width"] . ";";
             }
 
             // Animations
-            if ($row["animation"] != "none") {
-                $col["classes"][] = "animation animation--" . $row["animation"];
+            if ($settings["animation"] != "none") {
+                $col["classes"][] = "animation animation--" . $settings["animation"];
 
-                if ($row["delayed"]) {
+                if ($settings["delayed"]) {
                     $col["classes"][] = "delay-" . ($i++ * 2);
                 }
             }
@@ -65,6 +67,6 @@ class RowsProcessor extends DataProcessor
 
             return $col;
 
-        }, $row["columns"]);
+        }, $columns);
     }
 }

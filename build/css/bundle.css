@@ -229,7 +229,7 @@
   src: url("https://d2rl04ld38f57x.cloudfront.net/cdn/fa5/fa-brands-400.eot?#iefix") format("embedded-opentype"), url("https://d2rl04ld38f57x.cloudfront.net/cdn/fa5/fa-brands-400.woff2") format("woff2"), url("https://d2rl04ld38f57x.cloudfront.net/cdn/fa5/fa-brands-400.woff") format("woff"), url("https://d2rl04ld38f57x.cloudfront.net/cdn/fa5/fa-brands-400.ttf") format("truetype"), url("https://d2rl04ld38f57x.cloudfront.net/cdn/fa5/fa-brands-400.svg#fontawesome") format("svg");
 }
 @font-face {
-  font-family: "Font Awesome 5 Duotone";
+  font-family: "Font Awesome Duotone";
   font-style: normal;
   font-display: swap;
   font-weight: 900;
@@ -414,6 +414,10 @@ readers do not read off random characters that represent icons */
 
 .fa-compress-arrows-alt:before {
   content: "\f78c";
+}
+
+.fa-copy:before {
+  content: "\f0c5";
 }
 
 .fa-desktop:before {

@@ -87,7 +87,7 @@ $edge-height: 42px
 // > COLORS
 // ==================================================
 @each $color, $value in $colors
-    .bg-#{$color}
+    .bg-#{"" + $color}
         &.has-edge-top
             &--in-ascending::before,
             &--in-descending::before
@@ -107,7 +107,7 @@ $edge-height: 42px
                 border-top-color: $value
 
 @each $color, $value in $colors
-    .has-edge-top--#{$color}
+    .has-edge-top--#{"" + $color}
         &.has-edge-top
             &--in-ascending::before,
             &--in-descending::before
@@ -117,7 +117,7 @@ $edge-height: 42px
             &--out-descending::before
                 border-bottom-color: $value
 
-    .has-edge-bottom--#{$color}
+    .has-edge-bottom--#{"" + $color}
         &.has-edge-bottom
             &--in-ascending::after,
             &--in-descending::after
@@ -133,14 +133,14 @@ $edge-height: 42px
 // ==================================================
 .has-edge-top
     &--small
-        &.has-edge-top--in-ascending::before
+        &.has-edge-top--in-ascending::before,
         &.has-edge-top--in-descending::before
             border-top-width: math.div($edge-height, 2)
         &.has-edge-top--out-ascending::before,
         &.has-edge-top--out-descending::before
             border-bottom-width: math.div($edge-height, 2)
     &--large
-        &.has-edge-top--in-ascending::before
+        &.has-edge-top--in-ascending::before,
         &.has-edge-top--in-descending::before
             border-top-width: math.div($edge-height, 2)
         &.has-edge-top--out-ascending::before,
@@ -149,14 +149,14 @@ $edge-height: 42px
 
 .has-edge-bottom
     &--small
-        &.has-edge-bottom--in-ascending::before
+        &.has-edge-bottom--in-ascending::before,
         &.has-edge-bottom--in-descending::before
             border-bottom-width: math.div($edge-height, 2)
         &.has-edge-top--out-ascending::before,
         &.has-edge-top--out-descending::before
             border-top-width: math.div($edge-height, 2)
     &--large
-        &.has-edge-bottom--in-ascending::before
+        &.has-edge-bottom--in-ascending::before,
         &.has-edge-bottom--in-descending::before
             border-bottom-width: math.div($edge-height, 2)
         &.has-edge-top--out-ascending::before,

@@ -1,0 +1,293 @@
+{
+    "key": "group_61c44d97ac890",
+    "title": "Rangée - Options",
+    "fields": [
+        {
+            "key": "field_61c44d97b31db",
+            "label": "Largeur",
+            "name": "width",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "acf-choice acf-choice--spacing",
+                "id": ""
+            },
+            "choices": {
+                "xs": "Smartphone",
+                "sm": "Tablette",
+                "md": "Laptop",
+                "lg": "Desktop",
+                "full": "Toute la largeur"
+            },
+            "allow_null": 0,
+            "other_choice": 0,
+            "default_value": "lg",
+            "layout": "horizontal",
+            "return_format": "value",
+            "save_other_choice": 0
+        },
+        {
+            "key": "field_61c44d97b31f7",
+            "label": "Comportement responsive",
+            "name": "responsive",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "acf-choice acf-choice--icons",
+                "id": ""
+            },
+            "choices": {
+                "none": "Aucun",
+                "column-xs": "En colonne sur smartphone",
+                "column-sm": "En colonne sur tablette et en dessous",
+                "column-md": "En colonne sur desktop et en dessous",
+                "column-reverse-xs": "En colonne inversée sur smartphone",
+                "column-reverse-sm": "En colonne inversée sur tablette et en dessous",
+                "column-reverse-md": "En colonne inversée sur desktop et en dessous"
+            },
+            "allow_null": 0,
+            "other_choice": 0,
+            "default_value": "column-sm",
+            "layout": "horizontal",
+            "return_format": "value",
+            "save_other_choice": 0
+        },
+        {
+            "key": "field_61c44d97b31e4",
+            "label": "Espacement entre les colonnes",
+            "name": "spacing",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "acf-choice acf-choice--spacing",
+                "id": ""
+            },
+            "choices": {
+                "no": "Aucun",
+                "xxs": "Très très petit",
+                "xs": "Très petit",
+                "sm": "Petit",
+                "ms": "Moyen petit",
+                "md": "Moyen",
+                "ml": "Moyen grand",
+                "lg": "Grand",
+                "xl": "Très grand"
+            },
+            "allow_null": 0,
+            "other_choice": 0,
+            "default_value": "xs",
+            "layout": "horizontal",
+            "return_format": "value",
+            "save_other_choice": 0
+        },
+        {
+            "key": "field_61c44d97b31e9",
+            "label": "Alignement vertical",
+            "name": "valign",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "acf-choice acf-choice--icons",
+                "id": ""
+            },
+            "choices": {
+                "none": "Non spécifié",
+                "start": "Haut",
+                "center": "Centré",
+                "end": "Bas"
+            },
+            "allow_null": 0,
+            "other_choice": 0,
+            "default_value": "none",
+            "layout": "horizontal",
+            "return_format": "value",
+            "save_other_choice": 0
+        },
+        {
+            "key": "field_61c44d97b31ee",
+            "label": "Espacement en haut",
+            "name": "spacing_top",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "acf-choice acf-choice--spacing",
+                "id": ""
+            },
+            "choices": {
+                "no": "Aucun",
+                "xxs": "Très très petit",
+                "xs": "Très petit",
+                "sm": "Petit",
+                "ms": "Moyen petit",
+                "md": "Moyen",
+                "ml": "Moyen grand",
+                "lg": "Grand",
+                "xl": "Très grand"
+            },
+            "allow_null": 0,
+            "other_choice": 0,
+            "default_value": "no",
+            "layout": "horizontal",
+            "return_format": "value",
+            "save_other_choice": 0
+        },
+        {
+            "key": "field_61c44d97b31f2",
+            "label": "Espacement en bas",
+            "name": "spacing_bottom",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "acf-choice acf-choice--spacing",
+                "id": ""
+            },
+            "choices": {
+                "no": "Aucun",
+                "xxs": "Très très petit",
+                "xs": "Très petit",
+                "sm": "Petit",
+                "ms": "Moyen petit",
+                "md": "Moyen",
+                "ml": "Moyen grand",
+                "lg": "Grand",
+                "xl": "Très grand"
+            },
+            "allow_null": 0,
+            "other_choice": 0,
+            "default_value": "no",
+            "layout": "horizontal",
+            "return_format": "value",
+            "save_other_choice": 0
+        },
+        {
+            "key": "field_61c44d97b31fb",
+            "label": "Animation",
+            "name": "animation",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "acf-choice acf-choice--icons",
+                "id": ""
+            },
+            "choices": {
+                "none": "Aucun",
+                "fadein": "Fade in",
+                "fadein-left": "Fade in depuis la gauche",
+                "fadein-right": "Fade in depuis la droite",
+                "fadein-top": "Fade in depuis le dessus",
+                "fadein-bottom": "Fade in depuis le bas",
+                "fadein-sides": "Fade in depuis tous les côtés"
+            },
+            "allow_null": 0,
+            "other_choice": 0,
+            "default_value": "none",
+            "layout": "horizontal",
+            "return_format": "value",
+            "save_other_choice": 0
+        },
+        {
+            "key": "field_61c44d97b3200",
+            "label": "Délai",
+            "name": "delayed",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "Mettre un délai différent pour chaque colonne",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_61c44d97b3204",
+            "label": "Ascenseur",
+            "name": "collapsable",
+            "type": "text",
+            "instructions": "Renseigner un titre pour inclure ces colonnes dans une boite refermable",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "page"
+            },
+            {
+                "param": "post_type",
+                "operator": "!=",
+                "value": "page"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "acf_after_title",
+    "style": "seamless",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content",
+        "excerpt",
+        "discussion",
+        "comments",
+        "author",
+        "format",
+        "page_attributes",
+        "categories",
+        "tags",
+        "send-trackbacks"
+    ],
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "acfe_display_title": "",
+    "acfe_autosync": [
+        "json"
+    ],
+    "acfe_form": 0,
+    "acfe_meta": "",
+    "acfe_note": "",
+    "modified": 1640259492,
+    "acfe_categories": {
+        "layout": "Layout"
+    }
+}

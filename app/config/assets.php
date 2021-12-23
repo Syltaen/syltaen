@@ -9,7 +9,7 @@ namespace Syltaen;
 // ==================================================
 // > JS
 // ==================================================
-Files::addScript("bundle.js");
+Files::addScript("bundle.js", ["jquery"]);
 
 add_action("wp", function () {
     Data::registerJSVars([

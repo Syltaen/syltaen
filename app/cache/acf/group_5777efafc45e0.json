@@ -41,7 +41,7 @@
                     "key": "field_5d3fec4c8e986",
                     "label": "",
                     "name": "rows",
-                    "type": "repeater",
+                    "type": "clone",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
@@ -50,394 +50,13 @@
                         "class": "acf-light-repeater acf-sections-row",
                         "id": ""
                     },
-                    "collapsed": "",
-                    "min": 1,
-                    "max": 0,
+                    "clone": [
+                        "field_61c44de722b1a"
+                    ],
+                    "display": "seamless",
                     "layout": "block",
-                    "button_label": "Ajouter une rangée",
-                    "sub_fields": [
-                        {
-                            "key": "field_5d3fece077276",
-                            "label": "Colonnes",
-                            "name": "",
-                            "type": "tab",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "placement": "left",
-                            "endpoint": 0
-                        },
-                        {
-                            "key": "field_5d3fe969747e1",
-                            "label": "",
-                            "name": "columns",
-                            "type": "repeater",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "acf-light-repeater acf-horizontal-repeater acf-sections-row__columns",
-                                "id": ""
-                            },
-                            "collapsed": "",
-                            "min": 1,
-                            "max": 0,
-                            "layout": "block",
-                            "button_label": "Ajouter une colonne",
-                            "sub_fields": [
-                                {
-                                    "key": "field_5d3ffb229dc86",
-                                    "label": "",
-                                    "name": "width",
-                                    "type": "number",
-                                    "instructions": "",
-                                    "required": 0,
-                                    "conditional_logic": [
-                                        [
-                                            {
-                                                "field": "field_5b221b2e894be",
-                                                "operator": "==",
-                                                "value": "1"
-                                            }
-                                        ]
-                                    ],
-                                    "wrapper": {
-                                        "width": "",
-                                        "class": "acf-sections-row__columns__width",
-                                        "id": ""
-                                    },
-                                    "default_value": 1,
-                                    "placeholder": "",
-                                    "prepend": "Indice de largeur",
-                                    "append": "",
-                                    "min": "",
-                                    "max": "",
-                                    "step": ""
-                                },
-                                {
-                                    "key": "field_5d3feb1966c77",
-                                    "label": "",
-                                    "name": "col_content",
-                                    "type": "clone",
-                                    "instructions": "",
-                                    "required": 0,
-                                    "conditional_logic": 0,
-                                    "wrapper": {
-                                        "width": "",
-                                        "class": "",
-                                        "id": ""
-                                    },
-                                    "clone": [
-                                        "group_5ae17f6cb919e"
-                                    ],
-                                    "display": "seamless",
-                                    "layout": "block",
-                                    "prefix_label": 0,
-                                    "prefix_name": 0
-                                }
-                            ]
-                        },
-                        {
-                            "key": "field_5b221afb894bc",
-                            "label": "Paramètres",
-                            "name": "",
-                            "type": "tab",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "placement": "left",
-                            "endpoint": 0
-                        },
-                        {
-                            "key": "field_5d40027f252c6",
-                            "label": "",
-                            "name": "",
-                            "type": "message",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "message": "<h3>Paramètres de la rangée de colonnes<\/h3>",
-                            "new_lines": "",
-                            "esc_html": 0
-                        },
-                        {
-                            "key": "field_5d400218252c5",
-                            "label": "Largeur",
-                            "name": "width",
-                            "type": "radio",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "acf-choice acf-choice--spacing",
-                                "id": ""
-                            },
-                            "choices": {
-                                "xs": "Smartphone",
-                                "sm": "Tablette",
-                                "md": "Laptop",
-                                "lg": "Desktop",
-                                "full": "Toute la largeur"
-                            },
-                            "allow_null": 0,
-                            "other_choice": 0,
-                            "default_value": "lg",
-                            "layout": "horizontal",
-                            "return_format": "value",
-                            "save_other_choice": 0
-                        },
-                        {
-                            "key": "field_5b221b2e894be",
-                            "label": "",
-                            "name": "custom_proportions",
-                            "type": "true_false",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "",
-                                "id": ""
-                            },
-                            "message": "Définir des proportions personnalisées pour chaque colonne",
-                            "default_value": 0,
-                            "ui": 1,
-                            "ui_on_text": "",
-                            "ui_off_text": ""
-                        },
-                        {
-                            "key": "field_5b22177fdc038",
-                            "label": "Espacement entre les colonnes",
-                            "name": "spacing",
-                            "type": "radio",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "acf-choice acf-choice--spacing",
-                                "id": ""
-                            },
-                            "choices": {
-                                "no": "Aucun",
-                                "xxs": "Très très petit",
-                                "xs": "Très petit",
-                                "sm": "Petit",
-                                "ms": "Moyen petit",
-                                "md": "Moyen",
-                                "ml": "Moyen grand",
-                                "lg": "Grand",
-                                "xl": "Très grand"
-                            },
-                            "allow_null": 0,
-                            "other_choice": 0,
-                            "default_value": "xs",
-                            "layout": "horizontal",
-                            "return_format": "value",
-                            "save_other_choice": 0
-                        },
-                        {
-                            "key": "field_5b2218acdc03a",
-                            "label": "Alignement vertical",
-                            "name": "valign",
-                            "type": "radio",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "acf-choice acf-choice--icons",
-                                "id": ""
-                            },
-                            "choices": {
-                                "none": "Non spécifié",
-                                "start": "Haut",
-                                "center": "Centré",
-                                "end": "Bas"
-                            },
-                            "allow_null": 0,
-                            "other_choice": 0,
-                            "default_value": "none",
-                            "layout": "horizontal",
-                            "return_format": "value",
-                            "save_other_choice": 0
-                        },
-                        {
-                            "key": "field_5fe206dbb0cdc",
-                            "label": "Espacement en haut",
-                            "name": "spacing_top",
-                            "type": "radio",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "acf-choice acf-choice--spacing",
-                                "id": ""
-                            },
-                            "choices": {
-                                "no": "Aucun",
-                                "xxs": "Très très petit",
-                                "xs": "Très petit",
-                                "sm": "Petit",
-                                "ms": "Moyen petit",
-                                "md": "Moyen",
-                                "ml": "Moyen grand",
-                                "lg": "Grand",
-                                "xl": "Très grand"
-                            },
-                            "allow_null": 0,
-                            "other_choice": 0,
-                            "default_value": "no",
-                            "layout": "horizontal",
-                            "return_format": "value",
-                            "save_other_choice": 0
-                        },
-                        {
-                            "key": "field_5fe206efb0cdd",
-                            "label": "Espacement en bas",
-                            "name": "spacing_bottom",
-                            "type": "radio",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "acf-choice acf-choice--spacing",
-                                "id": ""
-                            },
-                            "choices": {
-                                "no": "Aucun",
-                                "xxs": "Très très petit",
-                                "xs": "Très petit",
-                                "sm": "Petit",
-                                "ms": "Moyen petit",
-                                "md": "Moyen",
-                                "ml": "Moyen grand",
-                                "lg": "Grand",
-                                "xl": "Très grand"
-                            },
-                            "allow_null": 0,
-                            "other_choice": 0,
-                            "default_value": "no",
-                            "layout": "horizontal",
-                            "return_format": "value",
-                            "save_other_choice": 0
-                        },
-                        {
-                            "key": "field_5b221fbf19e13",
-                            "label": "Comportement responsive",
-                            "name": "responsive",
-                            "type": "radio",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "acf-choice acf-choice--icons",
-                                "id": ""
-                            },
-                            "choices": {
-                                "none": "Aucun",
-                                "column-xs": "En colonne sur smartphone",
-                                "column-sm": "En colonne sur tablette et en dessous",
-                                "column-md": "En colonne sur desktop et en dessous",
-                                "column-reverse-xs": "En colonne inversée sur smartphone",
-                                "column-reverse-sm": "En colonne inversée sur tablette et en dessous",
-                                "column-reverse-md": "En colonne inversée sur desktop et en dessous"
-                            },
-                            "allow_null": 0,
-                            "other_choice": 0,
-                            "default_value": "column-sm",
-                            "layout": "horizontal",
-                            "return_format": "value",
-                            "save_other_choice": 0
-                        },
-                        {
-                            "key": "field_5b221c9567a0b",
-                            "label": "Animation",
-                            "name": "animation",
-                            "type": "radio",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "acf-choice acf-choice--icons",
-                                "id": ""
-                            },
-                            "choices": {
-                                "none": "Aucun",
-                                "fadein": "Fade in",
-                                "fadein-left": "Fade in depuis la gauche",
-                                "fadein-right": "Fade in depuis la droite",
-                                "fadein-top": "Fade in depuis le dessus",
-                                "fadein-bottom": "Fade in depuis le bas",
-                                "fadein-sides": "Fade in depuis tous les côtés"
-                            },
-                            "allow_null": 0,
-                            "other_choice": 0,
-                            "default_value": "none",
-                            "layout": "horizontal",
-                            "return_format": "value",
-                            "save_other_choice": 0
-                        },
-                        {
-                            "key": "field_5b221cdc67a0c",
-                            "label": "Délai",
-                            "name": "delayed",
-                            "type": "true_false",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "50",
-                                "class": "",
-                                "id": ""
-                            },
-                            "message": "Mettre un délai différent pour chaque colonne",
-                            "default_value": 0,
-                            "ui": 1,
-                            "ui_on_text": "",
-                            "ui_off_text": ""
-                        },
-                        {
-                            "key": "field_5c1ba5bd20bc5",
-                            "label": "Ascenseur",
-                            "name": "collapsable",
-                            "type": "text",
-                            "instructions": "Renseigner un titre pour inclure ces colonnes dans une boite refermable",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "",
-                            "placeholder": "",
-                            "prepend": "",
-                            "append": "",
-                            "maxlength": ""
-                        }
-                    ]
+                    "prefix_label": 0,
+                    "prefix_name": 0
                 },
                 {
                     "key": "field_5a0ea2bf36f42",
@@ -759,6 +378,68 @@
                     "save_other_choice": 0
                 },
                 {
+                    "key": "field_61c453fe066e8",
+                    "label": "Espacement à gauche",
+                    "name": "padding_left",
+                    "type": "radio",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "acf-choice acf-choice--spacing acf-choice acf-choice--spacing--top",
+                        "id": ""
+                    },
+                    "choices": {
+                        "no": "Aucun",
+                        "xxs": "Très très petit",
+                        "xs": "Très petit",
+                        "sm": "Petit",
+                        "ms": "Moyen petit",
+                        "md": "Moyen",
+                        "ml": "Moyen grand",
+                        "lg": "Grand",
+                        "xl": "Très grand"
+                    },
+                    "allow_null": 0,
+                    "other_choice": 0,
+                    "default_value": "md",
+                    "layout": "horizontal",
+                    "return_format": "value",
+                    "save_other_choice": 0
+                },
+                {
+                    "key": "field_61c45408066e9",
+                    "label": "Espacement à droite",
+                    "name": "padding_right",
+                    "type": "radio",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "acf-choice acf-choice--spacing acf-choice acf-choice--spacing--top",
+                        "id": ""
+                    },
+                    "choices": {
+                        "no": "Aucun",
+                        "xxs": "Très très petit",
+                        "xs": "Très petit",
+                        "sm": "Petit",
+                        "ms": "Moyen petit",
+                        "md": "Moyen",
+                        "ml": "Moyen grand",
+                        "lg": "Grand",
+                        "xl": "Très grand"
+                    },
+                    "allow_null": 0,
+                    "other_choice": 0,
+                    "default_value": "md",
+                    "layout": "horizontal",
+                    "return_format": "value",
+                    "save_other_choice": 0
+                },
+                {
                     "key": "field_5777f0a0a4edd",
                     "label": "Paramètres avancés",
                     "name": "",
@@ -913,5 +594,15 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1637250755
+    "acfe_display_title": "",
+    "acfe_autosync": [
+        "json"
+    ],
+    "acfe_form": 0,
+    "acfe_meta": "",
+    "acfe_note": "",
+    "modified": 1640256534,
+    "acfe_categories": {
+        "layout": "Layout"
+    }
 }
