@@ -161,8 +161,8 @@ abstract class Geolocation
     /**
      * Reverse coordonates into an address name
      *
-     * @param  array   $coord
-     * @return array
+     * @param  array    $coord
+     * @return object
      */
     public static function reverseGeocoding($coord)
     {

@@ -5,33 +5,6 @@ namespace Syltaen;
 class SEO
 {
     /**
-     * Generate structured data for a product
-     */
-    public static function generateProductStructuredData($variation, $product)
-    {
-        add_filter("woocommerce_structured_data_product", function ($data, $wc_product) use ($variation, $product) {
-            $data["gtin"] = $variation->getMeta("_ean");
-
-            if ($brand = $product->pa_brand->getOne()) {
-                $data["brand"] = [
-                    "@type" => "Brand",
-                    "name"  => $brand->name,
-                    "url"   => $brand->url,
-                ];
-            }
-
-            $data["category"] = $product->product_cat->getAncestors()->callEach()->getNames()->callEach()->join(" > ")->values()[0] ?? "";
-            $data["color"]    = $variation->getAttribute("pa_color") ?: "";
-
-            return $data;
-        }, 10, 2);
-
-        $sd = (new \WC_Structured_Data);
-        $sd->generate_product_data($variation->wc);
-        return $sd->get_data();
-    }
-
-    /**
      * Set the meta description if it was not provided
      *
      * @return void
@@ -49,27 +22,6 @@ class SEO
 
             return $used_description;
         }, 100, 1);
-    }
-
-    /**
-     * Generate data to send to the data layer
-     *
-     * @param  [type] $product_id
-     * @return void
-     */
-    public static function getProductDataLayer($product_id, $extra = [])
-    {
-        $product = get_post_type($product_id) == Variations::TYPE ? Variations::getItem($product_id) : Products::getItem($product_id);
-        $parent  = get_post_type($product_id) == Variations::TYPE ? $product->parent : $product;
-
-        return array_merge([
-            "name"       => $product->post_title,
-            "id"         => $product->getMeta("_sku"),
-            "price"      => (float) $product->getMeta("_price"),
-            "category"   => $parent->product_cat->getNames()->join(", "),
-            "stocklevel" => $product->getMeta("_stock") ?: 0,
-            "brand"      => $parent->pa_brand->getNames()->join(", "),
-        ], $extra);
     }
 
     /**

@@ -34,6 +34,18 @@ class Comment extends ModelItem
     }
 
     /**
+     * Remove a post meta
+     *
+     * @param  string $key    The meta key to remove
+     * @param  mixed  $value  Allow to filter by type
+     * @return bool   Success or failure
+     */
+    public function removeMeta($key, $value = null)
+    {
+        return delete_comment_meta($this->getID(), $key, $value);
+    }
+
+    /**
      * Set the attributes of an item
      *
      * @param  int          $id

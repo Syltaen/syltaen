@@ -44,7 +44,7 @@ class Attachments extends PostsModel
                 $sizes = array_merge(["full" => [
                     "width"  => $attachment->metadata["width"] ?? false,
                     "height" => $attachment->metadata["height"] ?? false,
-                    "file"   => basename($attachment->metadata["file"]) ?? false,
+                    "file"   => basename($attachment->metadata["file"] ?? false) ?? false,
                 ]], $sizes);
 
                 return array_map(function ($size) use ($attachment) {
@@ -89,7 +89,7 @@ class Attachments extends PostsModel
     public function notOffloaded()
     {
         return $this->isnt(
-            Database::get_col("SELECT source_id FROM as3cf_items")
+            (array) Database::get_col("SELECT source_id FROM as3cf_items")
         );
     }
 

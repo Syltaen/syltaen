@@ -1,0 +1,18 @@
+/*!
+ * jQuery Transit - CSS3 transitions and transformations
+ * (c) 2011-2014 Rico Sta. Cruz
+ * MIT Licensed.
+ *
+ * http://ricostacruz.com/jquery.transit
+ * http://github.com/rstacruz/jquery.transit
+ */
+
+/*! Hammer.JS - v2.0.7 - 2016-04-22
+ * http://hammerjs.github.io/
+ *
+ * Copyright (c) 2016 Jorik Tangelder;
+ * Licensed under the MIT license */
+
+/*! rangeslider.js - v2.3.2 | (c) 2018 @andreruffert | MIT license | https://github.com/andreruffert/rangeslider.js */
+
+/*! skrollr 0.6.26 (2014-06-08) | Alexander Prinzhorn - https://github.com/Prinzhorn/skrollr | Free to use under terms of MIT license */

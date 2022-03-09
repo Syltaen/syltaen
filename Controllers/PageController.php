@@ -11,27 +11,31 @@ class PageController extends BaseController
      */
     public function page()
     {
-        $this->addData([
-            "@intro_image"   => get_the_post_thumbnail_url(),
-            "@intro_content" => "<h1>{$this->post->post_title}</h1>",
-            "@sections"      => (new SectionsProcessor($this))->processEach(Data::get("sections")),
-        ]);
-
+        $this->data["sections"] = $this->processSections();
         $this->render();
     }
 
     /**
-     * Handle context & rendering for the homepage
+     * Handle context & rendering for homepage
      *
      * @return void
      */
     public function home()
     {
-        $this->addData([
-
-        ]);
-
         $this->render("home");
+    }
+
+    /**
+     * Store section passed through section processor
+     *
+     * @param  string $acf_key
+     * @return Set
+     */
+    public function processSections($acf_key = "sections")
+    {
+        return set(Data::get($acf_key))->mapWithKey(function ($section, $i) {
+            return (new SectionProcessor($section, $this, $i))->getData();
+        });
     }
 
     // ==================================================
@@ -47,7 +51,8 @@ class PageController extends BaseController
     {
         $this->data["content"] = [[
             "acf_fc_layout" => "txt",
-            "txt"           => $content,
+            "txt"           => do_shortcode($content),
+            "attrs"         => false,
         ]];
 
         $this->render("simple");

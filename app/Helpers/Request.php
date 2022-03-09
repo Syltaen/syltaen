@@ -108,7 +108,7 @@ class Request
      * @param  string method   The HTTP method to use
      * @param  mixed  $body    The body of the request
      * @param  array  $headers The headers of the request
-     * @return array  the Response
+     * @return object the Response
      */
     public function send($method, $body = false, $headers = false)
     {
@@ -169,7 +169,7 @@ class Request
     /**
      * Remove a specific header linke
      *
-     * @param  string] $header
+     * @param  string $header
      * @return self
      */
     public function removeHeader($header)
@@ -236,7 +236,7 @@ class Request
      *
      * @return void
      */
-    private function onFailure()
+    private function onFailure($log = "")
     {
         // Log failure
         Log::failed_requests("Request failed : {$this->args['method']} to {$this->url}");

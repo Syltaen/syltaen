@@ -1,0 +1,41 @@
+//- =============================================================================
+//- > VIEW MIXIN - CONTENTS
+//- =============================================================================
+
+mixin content(c)
+
+    case $c["acf_fc_layout"]
+
+        //- ==================================================
+        //- > TEXT
+        //- ==================================================
+        when "txt"
+            if $c["attrs"]
+                div&attributes($c["attrs"])
+                    != $c["txt"]
+            else
+                != $c["txt"]
+
+        //- ==================================================
+        //- > IMAGE
+        //- ==================================================
+        when "image"
+            .image-block(class="image-block--justify-{$c['halign']} image-block--align-{$c['valign']} image-block--size-{$c['size']}")&attributes($c["attrs"])
+                != $_imgtag($c["image"])
+
+        //- ==================================================
+        //- > ELEVATOR
+        //- ==================================================
+        when "collapsable"
+            .collapsable&attributes($c["attrs"])
+                .collapsable__header!= $c["title"]
+                .collapsable__content!= $c["content"]
+
+        //- ==================================================
+        //- > ARCHIVE
+        //- ==================================================
+        when "archive"
+            case $c["list"]
+                //- News
+                when "news"
+                    +archive-news($c["posts"], $c["walker"], $c["filters"])&attributes($c["attrs"])

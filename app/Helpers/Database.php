@@ -155,7 +155,7 @@ abstract class Database
      */
     public static function update($table, $data, $where, $format = null, $where_format = null)
     {
-        return static::db()->update(static::db()->prefix . $table, $data, $where, $format, $where_format);
+        return static::db()->update(static::db()->prefix . $table, $data, $where ?: false, $format, $where_format);
     }
 
     /**
@@ -259,10 +259,10 @@ abstract class Database
     /**
      * Generate a runnable MySql command using that use the provided binary
      *
-     * @param  string $commad   The command to executre
-     * @param  string $bin      The binary to use : mysql, mysqldump, ...
-     * @param  string $bin_path You may need to change that depending on the system running your databases
-     * @return void
+     * @param  string   $commad   The command to executre
+     * @param  string   $bin      The binary to use : mysql, mysqldump, ...
+     * @param  string   $bin_path You may need to change that depending on the system running your databases
+     * @return string
      */
     public static function mysqlCommand($command, $bin = "mysql", $bin_path = "/Applications/MAMP/Library/bin/")
     {

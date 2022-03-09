@@ -80,6 +80,8 @@ class FormRegisterer
     {
         $classes = [];
 
+        if (!is_dir($this->dir . $folder)) return [];
+
         foreach (scandir($this->dir . $folder) as $file) {
             $extension_pos = strpos($file, ".php");
             if ($extension_pos) {

@@ -27,7 +27,10 @@
 .is-disabled,
 .is-logged .is-disabled--logged,
 .is-unlogged .is-disabled--unlogged
-    opacity: .25
+    opacity: .5
+    pointer-events: none
+
+.is-locked
     pointer-events: none
 
 .is-scroll-locked
@@ -37,12 +40,12 @@
 // ==================================================
 // > RESPONSIVE SHOW/HIDE
 // ==================================================
-@each $bp, $bp_data in $responsive
-    .show#{screen_suffix($bp)}
++screen-suffixes() using ($suffix, $bp)
+    .show#{$suffix}
         display: none
 
     +screen($bp)
-        .show#{screen_suffix($bp)}
+        .show#{$suffix}
             display: auto
-        .hide#{screen_suffix($bp)}
+        .hide#{$suffix}
             display: none

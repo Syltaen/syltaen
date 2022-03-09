@@ -25,41 +25,27 @@ abstract class CommentsModel extends Model
     const META_OBJECT  = "comment_id";
 
     /**
-     * List of date formats to be stored in each comment.
-     * see https://codex.wordpress.org/Formatting_Date_and_Time
-     * @var array
-     */
-    protected $dateFormats = [
-        // "formatname" => "format"
-    ];
-
-    /**
      * Add fields shared by all comments types
      */
     public function __construct()
     {
         parent::__construct();
 
+        $this->status("approve");
+
         $this->addFields([
             /*
              * The comment author
              */
             "@author" => function ($comment) {
-                return (new Users)->is($comment->user_id);
+                return Users::getItem($comment->user_id);
             },
 
             /**
-             * The comment date in various format, defined by $dateFormats
+             * The permalink
              */
-            "@date"   => function ($comment) {
-                $date = [];
-                foreach ($this->dateFormats as $name => $format) {
-                    if ($format) {
-                        $date[$name] = get_comment_date($format, $comment->ID);
-                    }
-
-                }
-                return $date;
+            "@url"    => function ($comment) {
+                return get_comment_link($comment->getID());
             },
         ]);
     }
@@ -81,8 +67,8 @@ abstract class CommentsModel extends Model
     /**
      * Filter by comment author
      *
-     * @param  [type] $user
-     * @return void
+     * @param  User|int $user
+     * @return serlf
      */
     public function author($user)
     {
@@ -97,6 +83,7 @@ abstract class CommentsModel extends Model
         }
 
         $this->filters[$filter] = $user;
+
         return $this;
     }
 
@@ -110,6 +97,16 @@ abstract class CommentsModel extends Model
     {
         $this->filters["parent__in"] = (array) $ids;
         return $this;
+    }
+
+    /**
+     * Filter comments that are on hold
+     *
+     * @return self
+     */
+    public function onHold()
+    {
+        return $this->status("hold");
     }
 
     // =============================================================================
@@ -169,6 +166,32 @@ abstract class CommentsModel extends Model
         return (array) Database::get_col("SELECT comment_ID FROM comments");
     }
 
+    /**
+     * Get a dummy object instance
+     *
+     * @return object
+     */
+    public static function getDummyObject()
+    {
+        return (object) [
+            "comment_ID"           => "0",
+            "comment_post_ID"      => "0",
+            "comment_author"       => "",
+            "comment_author_email" => "",
+            "comment_author_url"   => "",
+            "comment_author_IP"    => "",
+            "comment_date"         => "",
+            "comment_date_gmt"     => "",
+            "comment_content"      => "",
+            "comment_karma"        => "0",
+            "comment_approved"     => "0",
+            "comment_agent"        => "",
+            "comment_type"         => "comment",
+            "comment_parent"       => "0",
+            "user_id"              => "0",
+        ];
+    }
+
     // =============================================================================
     // > ACTION
     // =============================================================================
@@ -186,11 +209,11 @@ abstract class CommentsModel extends Model
         // Create the comment
         $comment_id = wp_insert_comment(array_merge([
             "comment_post_ID" => $post ? $post->ID : false,
-            "user_id"         => (new Users)->logged()->ID,
+            "user_id"         => get_current_user_id(),
             "comment_content" => "",
             // "comment_approved" => 0
         ], $attrs));
 
-        return static::getItem($comment_id)->setFields($fields);
+        return static::getItem($comment_id)->update(false, $fields);
     }
 }

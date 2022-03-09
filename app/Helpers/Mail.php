@@ -34,45 +34,25 @@ abstract class Mail
     /**
      * Put the text body into a mail template
      *
+     * @param  string   $subject
      * @param  string   $body
+     * @param  string   $template  to use
      * @return string
      */
-    public static function render($subject, $body)
+    public static function render($subject, $body, $template = "mail-default", $additional_context = [])
     {
-        // Already an HTML email
-        if (strpos($body, "<table")) {
-            return $body;
-        }
+        return View::render("mails/" . $template, array_merge([
+            "subject"   => $subject,
+            "body"      => $body,
+            "from"      => config("mail.from.name"),
 
-        // Render with WooCommerce template
-        $email = WC()->mailer()->emails["WC_Email_New_Order"];
-        return $email->style_inline(
-            wc_get_template_html("emails/custom-email.php", [
-                "email"         => $email,
-                "email_heading" => $subject,
-                "content"       => $body,
-            ])
-        );
-    }
+            "imgpath"   => Files::url("build/img/mails/"),
+            "primary"   => config("color.primary"),
+            "secondary" => config("color.secondary"),
+            "logo"      => Data::option("mail_logo"),
 
-    /**
-     * Render an order's email
-     *
-     * @param  WC_Mail $email
-     * @param  array   $extra_args
-     * @return html
-     */
-    public static function renderOrder($email, $extra_args = [])
-    {
-        return wc_get_template_html("emails/custom-order-email.php", array_merge([
-            "order"              => $email->object,
-            "email_heading"      => $email->get_heading(),
-            "content"            => $email->format_string($email->get_option("content", "")),
-            "additional_content" => $email->get_additional_content(),
-            "sent_to_admin"      => false,
-            "plain_text"         => false,
-            "email"              => $email,
-        ], $extra_args));
+            "url"       => get_bloginfo("url"),
+        ], $additional_context));
     }
 
     // ==================================================
@@ -91,6 +71,38 @@ abstract class Mail
         } else {
             return "An error occured";
         }
+    }
+
+    /**
+     * Send a mail using a template defined in the options
+     *
+     * @param  string  $option_key The option key
+     * @param  array   $tags       A set of dynamic tags to use. Provide "to" if it's not define in the options.
+     * @return boolean True if no error during the sending
+     */
+    public static function sendTemplate($option_key, $tags = [])
+    {
+        $mail = Data::option($option_key);
+
+        // Mail not found or Option specify that the mail should not be sent
+        if (empty($mail) || (isset($mail["send"]) && !$mail["send"])) {
+            return false;
+        }
+
+        // Some info is lacking
+        $mail = array_merge($mail, $tags);
+        if (empty($mail["to"]) || empty($mail["subject"]) || empty($mail["body"])) {
+            return false;
+        }
+
+        $tags_keys = array_map(function ($tag) {return "[$tag]";}, array_keys($mail));
+        $tags_values = array_values($mail);
+
+        Mail::send(
+            str_replace($tags_keys, $tags_values, $mail["to"]),
+            str_replace($tags_keys, $tags_values, $mail["subject"]),
+            str_replace($tags_keys, $tags_values, $mail["body"])
+        );
     }
 
     // ==================================================

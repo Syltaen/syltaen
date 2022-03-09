@@ -1,0 +1,13 @@
+//- =============================================================================
+//- > FORM : USER
+//- =============================================================================
+
+mixin user-form($form)
+
+    +form($form)
+        +input-field($form, __("Nom", "syltaen"), "lastname")
+        +input-field($form, __("Prénom", "syltaen"), "firstname")
+        +input-field($form, __("Adresse e-mail", "syltaen"), "email", "email")
+        +input-field($form, __("Mot de passe", "syltaen"), "password", "password")
+        +input-field($form, __("Répéter le mot de passe", "syltaen"), "password_check", "password")
+        block

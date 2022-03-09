@@ -182,68 +182,6 @@
                     "mime_types": ""
                 },
                 {
-                    "key": "field_6195567312b5e",
-                    "label": "Image de fond - Moitié seulement",
-                    "name": "bg_img_half",
-                    "type": "true_false",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": [
-                        [
-                            {
-                                "field": "field_6195563d12b5d",
-                                "operator": "!=empty"
-                            }
-                        ]
-                    ],
-                    "wrapper": {
-                        "width": "20",
-                        "class": "",
-                        "id": ""
-                    },
-                    "message": "",
-                    "default_value": 0,
-                    "ui": 1,
-                    "ui_on_text": "",
-                    "ui_off_text": ""
-                },
-                {
-                    "key": "field_619556ae12b5f",
-                    "label": "Image de fond - Position de la moitié",
-                    "name": "bg_img_half_position",
-                    "type": "radio",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": [
-                        [
-                            {
-                                "field": "field_6195563d12b5d",
-                                "operator": "!=empty"
-                            },
-                            {
-                                "field": "field_6195567312b5e",
-                                "operator": "==",
-                                "value": "1"
-                            }
-                        ]
-                    ],
-                    "wrapper": {
-                        "width": "29",
-                        "class": "",
-                        "id": ""
-                    },
-                    "choices": {
-                        "left": "Gauche",
-                        "right": "Droite"
-                    },
-                    "allow_null": 0,
-                    "other_choice": 0,
-                    "default_value": "",
-                    "layout": "vertical",
-                    "return_format": "value",
-                    "save_other_choice": 0
-                },
-                {
                     "key": "field_582d6ef846b5d",
                     "label": "Image de fond - Taille",
                     "name": "bg_img_size",
@@ -259,7 +197,7 @@
                         ]
                     ],
                     "wrapper": {
-                        "width": "50",
+                        "width": "24",
                         "class": "",
                         "id": ""
                     },
@@ -292,7 +230,7 @@
                         ]
                     ],
                     "wrapper": {
-                        "width": "50",
+                        "width": "25",
                         "class": "",
                         "id": ""
                     },
@@ -403,7 +341,7 @@
                     },
                     "allow_null": 0,
                     "other_choice": 0,
-                    "default_value": "md",
+                    "default_value": "no",
                     "layout": "horizontal",
                     "return_format": "value",
                     "save_other_choice": 0
@@ -434,7 +372,7 @@
                     },
                     "allow_null": 0,
                     "other_choice": 0,
-                    "default_value": "md",
+                    "default_value": "no",
                     "layout": "horizontal",
                     "return_format": "value",
                     "save_other_choice": 0
@@ -534,7 +472,7 @@
                         "id": ""
                     },
                     "display_format": "d\/m\/Y g:i a",
-                    "return_format": "d\/m\/Y g:i a",
+                    "return_format": "U",
                     "first_day": 1
                 },
                 {
@@ -559,7 +497,7 @@
                         "id": ""
                     },
                     "display_format": "d\/m\/Y g:i a",
-                    "return_format": "d\/m\/Y g:i a",
+                    "return_format": "U",
                     "first_day": 1
                 }
             ]
@@ -601,7 +539,7 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1640256534,
+    "modified": 1646825761,
     "acfe_categories": {
         "layout": "Layout"
     }

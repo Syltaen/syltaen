@@ -71,7 +71,7 @@ class Controller
     public function view($filename = false, $data = false)
     {
         return View::render(
-            $filename ?: $this->view,
+            "pages/" . ($filename ?: $this->view),
             $data ?: $this->data,
             true
         );
@@ -86,16 +86,8 @@ class Controller
      */
     public function render($filename = false, $data = false)
     {
-        if (isset($_GET["profiler"])) {
-            Performances::profiler(
-                $filename ?: $this->view,
-                $data ?: $this->data,
-                $_GET["profiler"]
-            );
-        }
-
         View::display(
-            $filename ?: $this->view,
+            "pages/" . ($filename ?: $this->view),
             $data ?: $this->data,
             true
         );

@@ -1,0 +1,29 @@
+//- =============================================================================
+//- > VIEW MIXIN - ARCHIVE FILTERS
+//- =============================================================================
+
+mixin archive-filters(filters)
+
+    form.archive-filters.form(method="GET" action=$filters["action"])
+
+        for $field in $filters["fields"]
+
+            fieldset.archive-filters__set
+
+                label.archive-filters__label!= $field["label"]
+
+                case $field["type"]
+
+                    //- ==================================================
+                    //- > TEXT
+                    //- ==================================================
+                    when "text"
+                        input(name=$field["name"] value=$field["value"])
+
+                    //- ==================================================
+                    //- > SELECT
+                    //- ==================================================
+                    when "select"
+                        select(name=$field["name"] data-value=$field["value"] data-append data-autosubmit)
+                            each $l, $v in $field["options"]
+                                option(value=$v)!= $l

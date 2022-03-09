@@ -78,6 +78,28 @@ class Set extends \ArrayObject implements \JsonSerializable
         return false;
     }
 
+    /**
+     * Return the last item in the set
+     *
+     * @return mixed
+     */
+    public function first()
+    {
+        $array = $this->getArrayCopy();
+        return current($array);
+    }
+
+    /**
+     * Return the last item in the set
+     *
+     * @return mixed
+     */
+    public function last()
+    {
+        $array = $this->getArrayCopy();
+        return end($array);
+    }
+
     // ==================================================
     // > SORTING ITEMS
     // ==================================================
@@ -115,16 +137,16 @@ class Set extends \ArrayObject implements \JsonSerializable
      *
      * @return self
      */
-    public function insert($position, $array)
+    public function insert($array, $position = null)
     {
         // Get the numerical index where the set should be split
         $index = is_int($position) ? $position
         // If a string/key is given : try to get its position
          : (($index = $this->keys()->search($position)) !== false ? $index + 1
             // Default to the end of the set
-             : count($array));
+             : $this->count());
 
-        static::exchangeArray(array_merge(
+        $this->exchangeArray(array_merge(
             array_slice((array) $this, 0, $index, true),
             (array) $array,
             array_slice((array) $this, $index, null, true)
@@ -271,10 +293,10 @@ class Set extends \ArrayObject implements \JsonSerializable
     /**
      * Implementation of the "array_diff" function
      *
-     * @param  [type] $array
-     * @return void
+     * @param  array $array
+     * @return Set
      */
-    public function diff($array, $preserve_keys = false)
+    public function remove($array, $preserve_keys = false)
     {
         $array = array_diff((array) $this, (array) $array);
         if (!$preserve_keys) {
@@ -285,14 +307,15 @@ class Set extends \ArrayObject implements \JsonSerializable
     }
 
     /**
-     * Implementation of the "array_diff_key" function
+     * Implementation of the "array_diff" function
      *
-     * @param  [type] $array
-     * @return void
+     * @param  array $array
+     * @return Set
      */
-    public function keyDiff($array)
+    public function keep($array)
     {
-        return new static(array_diff_key((array) $this, (array) $array));
+        $array = array_intersect((array) $this, (array) $array);
+        return new static($array);
     }
 
     /**
@@ -386,7 +409,7 @@ class Set extends \ArrayObject implements \JsonSerializable
     /**
      * Implementation of the "array_keys" function
      *
-     * @return array
+     * @return Set
      */
     public function keys()
     {
@@ -396,7 +419,7 @@ class Set extends \ArrayObject implements \JsonSerializable
     /**
      * Implementation of the array_v"alues function
      *
-     * @return array
+     * @return Set
      */
     public function values()
     {
@@ -416,8 +439,8 @@ class Set extends \ArrayObject implements \JsonSerializable
     /**
      * Keep only a specific column of each child array/set
      *
-     * @param  string  $name
-     * @return array
+     * @param  string $name
+     * @return Set
      */
     public function column($name)
     {
@@ -498,7 +521,7 @@ class Set extends \ArrayObject implements \JsonSerializable
     public function walkRecursive($callback)
     {
         foreach ($this as $key => &$value) {
-            if ($value instanceof \Traversable) {
+            if ($value instanceof Set) {
                 $value->walkRecursive($callback);
             } else {
                 $callback($value, $key);

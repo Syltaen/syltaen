@@ -51,6 +51,11 @@ abstract class PostsModel extends Model
     const HAS_PAGINATION = true;
 
     /**
+     * Default thumbnail ACF key in the "display" option page
+     */
+    const HAS_DEFAULT_THUMBNAIL = false;
+
+    /**
      * If defined, use a custom path instead of the slug
      * @see https://codex.wordpress.org/Function_Reference/register_post_type#Flushing_Rewrite_on_Activation
      */
@@ -59,22 +64,13 @@ abstract class PostsModel extends Model
     /**
      * List of taxonomies' slugs to use for this post type
      */
-    const TAXONOMIES = false;
+    const TAXONOMIES = [];
 
     /**
      * List of custom status to use
      * Exemple : "old_news"  => ["News dépassée", "News dépassées"]
      */
     const CUSTOM_STATUS = false;
-
-    /**
-     * List of date formats to be stored in each post.
-     * see https://codex.wordpress.org/Formatting_Date_and_Time
-     * @var array
-     */
-    protected $dateFormats = [
-        // "formatname" => "format"
-    ];
 
     /**
      * A list of other post models joined to this one with $this->join().
@@ -98,7 +94,7 @@ abstract class PostsModel extends Model
              * The URL of the post
              */
             "@url"   => function ($post) {
-                return static::HAS_PAGE ? get_the_permalink($post->ID) : false;
+                return static::HAS_PAGE && $post->ID ? get_post_permalink($post->ID) : false;
             },
 
             /**
@@ -110,27 +106,21 @@ abstract class PostsModel extends Model
                 }
 
                 $thumb_id = $post->getMeta("_thumbnail_id") ?: 0;
-                return Attachments::getLightItem((int) $thumb_id);
-            },
 
-            /**
-             * The post date in various format, defined by $dateFormats
-             */
-            "@date"  => function ($post) {
-                $date = [];
-                foreach ($this->dateFormats as $name => $format) {
-                    if ($format) {
-                        $date[$name] = get_the_date($format, $post->ID);
-                    }
+                if (!$thumb_id && static::HAS_DEFAULT_THUMBNAIL) {
+                    $thumb_id = Data::option(static::HAS_DEFAULT_THUMBNAIL);
 
+                    $post->use_default_thumbnail = true;
                 }
-                return $date;
+
+                return Attachments::getLightItem((int) $thumb_id);
             },
         ]);
 
         // Add a new field for each linked taxonomy
         if (!empty(static::TAXONOMIES)) {
             foreach (static::TAXONOMIES as $tax) {
+                $tax = Text::namespaced($tax);
                 $this->addFields([
                     $tax::SLUG => function ($post) use ($tax) {
                         return (new $tax)->for($post->ID);
@@ -138,6 +128,17 @@ abstract class PostsModel extends Model
                 ]);
             }
         }
+    }
+
+    /**
+     * Get the labal of the post type, allow for translations
+     *
+     * @param  bool     $singular
+     * @return string
+     */
+    public static function getLabel($singular = false)
+    {
+        return static::LABEL;
     }
 
     // ==================================================
@@ -221,6 +222,18 @@ abstract class PostsModel extends Model
     }
 
     /**
+     * Filter by post_name
+     *
+     * @param  string $name
+     * @return self
+     */
+    public function name($name)
+    {
+        $this->filters["name"] = $name;
+        return $this;
+    }
+
+    /**
      * Filter by author(s)
      *
      * @param  int    $ids
@@ -277,6 +290,7 @@ abstract class PostsModel extends Model
 
             // Get all terms of all taxonomies matching this word
             foreach (static::TAXONOMIES as $tax) {
+                $tax   = Text::namespaced($tax);
                 $terms = get_terms([
                     "taxonomy"   => $tax::SLUG,
                     "hide_empty" => true,
@@ -462,18 +476,20 @@ abstract class PostsModel extends Model
      */
     public static function register()
     {
-        $supports = [];
-        if (static::HAS_TITLE) {$supports[] = "title";}
-        if (static::HAS_EDITOR) {$supports[] = "editor";}
-        if (static::HAS_AUTHOR) {$supports[] = "author";}
-        if (static::HAS_THUMBNAIL) {$supports[] = "thumbnail";}
-        if (static::HAS_EXCERPT) {$supports[] = "excerpt";}
-        if (static::HAS_TRACKBACKS) {$supports[] = "trackbacks";}
-        if (static::HAS_CUSTOMFIELDS) {$supports[] = "custom-fields";}
-        if (static::HAS_COMMENTS) {$supports[] = "comments";}
-        if (static::HAS_REVISIONS) {$supports[] = "revisions";}
-        if (static::HAS_PAGEATTRIBUTES) {$supports[] = "page-attributes";}
-        if (static::HAS_POSTFORMATS) {$supports[] = "post-formats";}
+        $supports = array_keys(array_filter([
+            "title"           => static::HAS_TITLE,
+            "editor"          => static::HAS_EDITOR,
+            "author"          => static::HAS_AUTHOR,
+            "thumbnail"       => static::HAS_THUMBNAIL,
+            "excerpt"         => static::HAS_EXCERPT,
+            "trackbacks"      => static::HAS_TRACKBACKS,
+            "custom-fields"   => static::HAS_CUSTOMFIELDS,
+            "comments"        => static::HAS_COMMENTS,
+            "revisions"       => static::HAS_REVISIONS,
+            "page-attributes" => static::HAS_PAGEATTRIBUTES,
+            "post-formats"    => static::HAS_POSTFORMATS,
+        ]));
+
         $rewrite = static::CUSTOMPATH ? ["slug" => static::CUSTOMPATH] : static::HAS_PAGE;
 
         register_post_type(static::TYPE, [
@@ -489,6 +505,8 @@ abstract class PostsModel extends Model
 
         if (!empty(static::TAXONOMIES)) {
             foreach ((array) static::TAXONOMIES as $class) {
+                $class = Text::namespaced($class);
+
                 register_taxonomy_for_object_type(
                     $class::SLUG,
                     static::TYPE
@@ -548,10 +566,11 @@ abstract class PostsModel extends Model
         if ($show_in_list) {
             add_filter("display_post_states", function ($statuses) use ($status, $label) {
                 global $post;
+                if (empty($post)) {return $statuses;}
+
                 if (get_query_var("post_status") == $status) {
                     return;
                 }
-
                 if ($post->post_status == $status) {
                     return [$label];
                 }

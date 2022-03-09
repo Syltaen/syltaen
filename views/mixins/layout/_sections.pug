@@ -1,0 +1,55 @@
+//- =============================================================================
+//- > VIEW MIXIN - SECTIONS
+//- =============================================================================
+
+mixin colcontent(col)
+    if $col["content"]
+        each $c in $col["content"]
+            +content($c)
+
+//- ==================================================
+//- > COLLAPSABLE
+//- ==================================================
+mixin collapsable(row)
+    if $row["layout_settings"]["collapsable"]
+        .collapsable
+            .collapsable__header.trigger!= $row["layout_settings"]["collapsable"]
+            .collapsable__content
+                block
+    else
+        block
+
+//- ==================================================
+//- > ROW
+//- ==================================================
+mixin sectionrow(row)
+
+    +collapsable($row)
+
+        //- Light markup when there is only one column
+        if $row["light"]
+            each col in $row["columns"]
+                +colcontent($col)
+
+        //- Display columns when there are more than one
+        else
+            .row&attributes($row["attrs"])
+                each $col in $row["columns"]
+                    .gr&attributes($col["attrs"])
+                        +colcontent($col)
+
+
+//- ==================================================
+//- > SECTIONS
+//- ==================================================
+mixin sections(sections)
+    if !empty($sections)
+        each $s in $sections
+            section&attributes(($s["attrs"]))
+
+                if !empty($s["image"])
+                    .site-section__image&attributes(($s["image"]))
+
+                each $row in $s["rows"]
+                    .container(class="container--".$row["layout_settings"]["width"]."")
+                        +sectionrow($row)

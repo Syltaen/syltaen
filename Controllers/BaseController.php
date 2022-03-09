@@ -37,7 +37,7 @@ abstract class BaseController extends Controller
         $this->data["post"] = $this->post;
 
         // Store the current user of internal use
-        $this->user = (new Users)->logged();
+        $this->user = Users::getCurrent();
 
         // Add common data needed all pages
         $this->setBase();
@@ -139,7 +139,7 @@ abstract class BaseController extends Controller
         return array_map(function ($formModel) {
             return [
                 "id"   => $formModel->get_id(),
-                "html" => "[ninja_forms id={$formModel->get_id()}]",
+                "html" => do_shortcode("[ninja_forms id={$formModel->get_id()}]"),
             ];
         }, Ninja_Forms()->form()->get_forms());
     }
@@ -154,7 +154,7 @@ abstract class BaseController extends Controller
         $classes = get_body_class();
 
         // Logged as admin
-        if ($this->user->found()) {
+        if ($this->user->getID()) {
             $classes[] = "is-logged";
             if ($this->user->can("administrator")) {
                 $classes[] = "is-logged--admin";

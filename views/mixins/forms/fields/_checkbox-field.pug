@@ -1,0 +1,13 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELD - PASSWORD
+//- =============================================================================
+
+mixin checkbox-field(form, label, name, layout = "vertical")
+
+    +fieldset($form, $label, $name)&attributes($attributes)
+        if !empty($form["options"][$name])
+            ul.column
+                each $label, $value in $form["options"][$name]
+                    li.gr-none: label.choice-label
+                        input(type="checkbox" name=$name value=$value checked=!empty($form["prefill"][$name]) && $form["prefill"][$name]==$value)
+                        != $label

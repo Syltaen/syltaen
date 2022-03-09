@@ -1,0 +1,9 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELD - PASSWORD
+//- =============================================================================
+
+mixin input-field(form, label, name, $type = "text")
+
+    +fieldset($form, $label, $name)&attributes($attributes)
+        input(type=$type name=$name value=$form["prefill"][$name]??"")&attributes($attributes)
+        block

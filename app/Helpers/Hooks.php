@@ -16,7 +16,7 @@ abstract class Hooks
     {
         // No callback : execute ajax
         if (!$callback) {
-            return self::do("wp_ajax_" . $name);
+            return self::exec("wp_ajax_" . $name);
         }
 
         // Else : Register hook
@@ -51,7 +51,8 @@ abstract class Hooks
      * @param  string $name
      * @return void
      */
-    function do($name) {
+    public static function exec($name)
+    {
         do_action($name);
     }
 
@@ -83,8 +84,7 @@ abstract class Hooks
      *
      * @return void
      */
-    public static function list($hook)
-    {
+    public static function list($hook) {
         global $wp_filter;
         return $wp_filter[$hook];
     }

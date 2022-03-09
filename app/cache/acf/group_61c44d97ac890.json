@@ -20,6 +20,7 @@
                 "sm": "Tablette",
                 "md": "Laptop",
                 "lg": "Desktop",
+                "xl": "Desktop (large)",
                 "full": "Toute la largeur"
             },
             "allow_null": 0,
@@ -84,7 +85,7 @@
             },
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "xs",
+            "default_value": "sm",
             "layout": "horizontal",
             "return_format": "value",
             "save_other_choice": 0
@@ -286,7 +287,7 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1640259492,
+    "modified": 1641908720,
     "acfe_categories": {
         "layout": "Layout"
     }

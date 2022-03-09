@@ -8,8 +8,6 @@ namespace Syltaen;
 
 class Post extends ModelItem
 {
-    const FIELD_PREFIX = "";
-
     /**
      * Get the title of the post
      *
@@ -28,6 +26,16 @@ class Post extends ModelItem
     public function getSlug()
     {
         return $this->post_name;
+    }
+
+    /**
+     * Get the type of the item
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->post_type;
     }
 
     /**
@@ -51,6 +59,44 @@ class Post extends ModelItem
     public function setMeta($key, $value)
     {
         return update_post_meta($this->getID(), $key, $value);
+    }
+
+    /**
+     * Add a new meta value to a multi-value meta
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function addMeta($key, $value)
+    {
+        return add_post_meta($this->getID(), $key, $value);
+    }
+
+    /**
+     * Remove a post meta
+     *
+     * @param  string $key    The meta key to remove
+     * @param  mixed  $value  Allow to filter by type
+     * @return bool   Success or failure
+     */
+    public function removeMeta($key, $value = null)
+    {
+        return delete_post_meta($this->getID(), $key, $value);
+    }
+
+    /**
+     * Set the post thumbnail
+     *
+     * @param  int  $attachment_id
+     * @return bool Success or failure
+     */
+    public function setThumbnail($attachment_id)
+    {
+        if ($attachment_id) {
+            return set_post_thumbnail($this->getID(), $attachment_id);
+        } else {
+            return delete_post_thumbnail($this->getID());
+        }
     }
 
     /**
@@ -183,7 +229,11 @@ class Post extends ModelItem
      */
     public function delete($force = false)
     {
-        wp_delete_post($this->ID, $force);
+        if ($force) {
+            wp_delete_post($this->ID, true);
+        } else {
+            wp_trash_post($this->ID, true);
+        }
     }
 
     /**
@@ -240,7 +290,7 @@ class Post extends ModelItem
      */
     public function addComment($message, $author_name = "", $author_email = "", $author_url = "", $parent_comment = 0)
     {
-        return Comments::add([
+        return CommentsModel::add([
             "comment_post_ID"      => $this->getID(),
             "comment_author"       => $author_name,
             "comment_author_email" => $author_email,
@@ -259,6 +309,10 @@ class Post extends ModelItem
      */
     public static function filterObjectKeys($post)
     {
+        if (function_exists("qtranxf_translate_post")) {
+            qtranxf_translate_post($post, Lang::getCurrent());
+        }
+
         if (!empty($post->post_title)) {
             $post->post_title = do_shortcode($post->post_title);
         }

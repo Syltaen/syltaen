@@ -124,7 +124,7 @@ class Cache
         $last = $this->getDataFrom(0);
 
         if ($resultCallback && $this->isExpired()) {
-            return static::store($resultCallback($last));
+            return $this->store($resultCallback($last));
         } else {
             return $last;
         }
@@ -190,7 +190,7 @@ class Cache
     /**
      * Cache a specific value to avoid multiple processing during a same page load
      *
-     * @return void
+     * @return mixed
      */
     public static function value($key, $value_or_callback = null)
     {

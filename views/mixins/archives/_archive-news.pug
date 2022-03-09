@@ -1,0 +1,18 @@
+//- =============================================================================
+//- > VIEW MIXIN - NEWS ARCHIVE
+//- =============================================================================
+
+mixin archive-news(posts, walker=false, filters=false)
+
+    .archive.archive--news
+
+        if $filters
+            +archive-filters($filters)
+
+        ul.archive__list
+            each $news in $posts
+                li.archive__item
+                    +card-news($news)
+
+        if $walker
+            +pagination($walker)

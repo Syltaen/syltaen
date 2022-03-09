@@ -103,4 +103,19 @@ abstract class Text
     {
         return strpos($haystack, $needle) !== false;
     }
+
+    /**
+     * namespace a class name if it is not already
+     *
+     * @param  string   $class
+     * @return string
+     */
+    public static function namespaced($class)
+    {
+        if (static::startsWith($class, "Syltaen")) {
+            return $class;
+        }
+
+        return "\\Syltaen\\$class";
+    }
 }

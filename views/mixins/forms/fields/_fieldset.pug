@@ -1,0 +1,26 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELDSET
+//- =============================================================================
+
+mixin fieldset(form, label, name)
+
+    fieldset(class=in_array($name, $form["hidden"])?"is-hidden":"")&attributes($attributes)
+
+        if $label
+            label(class=!empty($form["locks"][$name])?"is-locked":"")!= $label
+
+        if !empty($form["locks"][$name])
+            p.input.input--display.no-margin
+                if !empty($form["options"][$name][$form["locks"][$name]])
+                    != $form["options"][$name][$form["locks"][$name]]
+                    input(type="hidden" name=$name value=$form["locks"][$name])
+                else
+                    != $form["locks"][$name]
+                    input(type="hidden" name=$name value=$form["locks"][$name])
+
+        else
+            block
+                //- The field
+
+            if !empty($form["errors"][$name])
+                p.form__error!= $form["errors"][$name]

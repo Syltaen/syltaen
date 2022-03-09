@@ -9,13 +9,17 @@
     position: relative
     z-index: 1
     width: calc(100% - 20px)
-    max-width: container(md)
+    max-width: container(lg)
     margin: 0 auto
 
     // Create a container modifier for each breakpoint
     @each $slug, $bp in $responsive
         &--#{$slug}
             max-width: container($slug)
+
+        &--full
+            width: 100%
+            max-width: 100%
 
         // Set the container max size for each breakpoint
         @if breakpoint($slug)
@@ -26,43 +30,44 @@
 // > ROW / COLUMNS
 // > Exemple : "row column-reverse-sm"
 // ==================================================
-@each $bp, $bp_data in $responsive
-    +screen($bp)
-        .row#{screen_suffix($bp)}
-            +flex(row nowrap)
-        .row-wrap#{screen_suffix($bp)}
-            +flex(row wrap)
-        .row-reverse#{screen_suffix($bp)}
-            +flex(row-reverse nowrap)
-        .row-reverse-wrap#{screen_suffix($bp)}
-            +flex(row-reverse wrap)
++screen-suffixes() using ($suffix, $bp)
+    .row#{$suffix}
+        +flex(row nowrap)
+    .row-wrap#{$suffix}
+        +flex(row wrap)
+    .row-reverse#{$suffix}
+        +flex(row-reverse nowrap)
+    .row-reverse-wrap#{$suffix}
+        +flex(row-reverse wrap)
 
-        .column#{screen_suffix($bp)}
-            +flex(column nowrap)
-        .column-wrap#{screen_suffix($bp)}
-            +flex(column wrap)
-        .column-reverse#{screen_suffix($bp)}
-            +flex(column-reverse nowrap)
-        .column-reverse-wrap#{screen_suffix($bp)}
-            +flex(column-reverse wrap)
+    .column#{$suffix}
+        +flex(column nowrap)
+    .column-wrap#{$suffix}
+        +flex(column wrap)
+    .column-reverse#{$suffix}
+        +flex(column-reverse nowrap)
+    .column-reverse-wrap#{$suffix}
+        +flex(column-reverse wrap)
 
 // ==================================================
 // > GRID ITEM
 // > Exemple : .gr-4-sm
 // ==================================================
-@each $bp, $bp_data in $responsive
-    +screen($bp)
-        .gr#{screen_suffix($bp)}
-            flex: 1
-            max-width: 100%
-        @for $i from 1 through 12
-            .gr-#{$i}#{screen_suffix($bp)}
-                flex: $i
-        .gr-auto
-            flex: unset
-            flex-grow: 1
-        .gr-none
-            flex: unset
++screen-suffixes() using ($suffix, $bp)
+    .gr#{$suffix}
+        flex: 1
+        max-width: 100%
+        width: 100%
+    @for $i from 1 through 12
+        .gr-#{$i}#{$suffix}
+            flex: $i
+            // flex-shrink: 1
+            // flex-grow: 1
+    .gr-auto
+        flex: unset
+        flex-grow: 1
+    .gr-none
+        flex: unset
 
 // ==================================================
 // > GUTTERS
@@ -75,17 +80,16 @@
         padding-left: spacing(xs)
         padding-right: spacing(xs)
 
-@each $bp, $bp_data in $responsive
-    +screen($bp)
-        $ratio: map_get($bp_data, "spacingratio")
-        @each $sp, $value in $spacing
-            .#{$sp}-gutters#{screen_suffix($bp)}
-                margin-left: -1 * $value * $ratio
-                margin-right: -1 * $value * $ratio
++screen-spacing using ($sp, $value, $ratio, $suffix, $bp)
+    .#{$sp}-gutters#{$suffix}
+        margin-left: -1 * $value
+        margin-right: -1 * $value
 
-            .#{$sp}-gutters#{screen_suffix($bp)} > [class^="gr"]
-                padding-left: $value * $ratio
-                padding-right: $value * $ratio
+    .#{$sp}-gutters#{$suffix} > [class^="gr"]
+        padding-left: $value
+        padding-right: $value
+
+
 
 // // ==================================================
 // // > PREFIX / SUFFIX

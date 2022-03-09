@@ -59,38 +59,28 @@ abstract class Data
                 if (!preg_match("~^(?:f|ht)tps?://~i", $value)) {
                     return "http://" . $value;
                 }
-
                 return $value;
             case "json_decode":
                 if (is_object($value) || is_array($value)) {
                     return $value;
                 }
-
                 return json_decode(stripslashes($value));
-            default: // Model(s) or ModelItem
-                $ids   = static::extractIds($value);
-                $model = false;
+            default: // Classes
+                $filter = explode("::", $filter);
+                $class  = "\\Syltaen\\" . ($filter[0] ?? "Posts");
+                $method = $filter[1] ?? (is_subclass_of($class, Model::class) ? "is" : false);
 
-                // Check each classes
-                foreach (explode(",", $filter) as $class) {
-                    $class = "\\Syltaen\\" . trim($class);
-
-                    // A ModelItem is met, return an instance of it
-                    if (is_subclass_of($class, ModelItem::class)) {
-                        return new $class($ids[0]);
-                    }
-
-                    // Create a new model instance, join several model if there is more that one
-                    if (!$model) {
-                        $model = new $class;
-                    } else {
-                        $model->join(new $class);
-                    }
+                // No method : instanciate class
+                if (!$method) {
+                    return new $class($value);
                 }
 
-                return $model->is($ids);
-
-                break;
+                // Method : use statically or on new instance
+                if ((new \ReflectionMethod($class, $method))->isStatic()) {
+                    return $class::$method($value);
+                } else {
+                    return (new $class())->$method($value);
+                }
         }
     }
 
@@ -237,7 +227,7 @@ abstract class Data
      * Get a list of IDs from a value
      *
      * @param  array|WP_Post|int $data
-     * @return void
+     * @return array
      */
     public static function extractIds($data)
     {
@@ -276,6 +266,17 @@ abstract class Data
         }
 
         return false;
+    }
+
+    /**
+     * Get an option for the ACF page
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public static function option($key, $fallback = false, $filter = false)
+    {
+        return Data::get($key, "options", $fallback, $filter);
     }
 
     // ==================================================

@@ -1,0 +1,21 @@
+// =============================================================================
+// > MODULE : NAVIGATION - ICONS
+// =============================================================================
+
+.icons
+    +flex(row nowrap, flex-end)
+
+    &__item
+        margin: 0 3px
+
+    &__link
+        display: block
+        +size(2.25em)
+        +font(20px 2.25 primary center)
+        border: 1px solid #EBEBEB
+        border-radius: 50%
+        background: white
+        transition: all .35s ease
+        &:hover
+            +font(white)
+            background: color(primary)

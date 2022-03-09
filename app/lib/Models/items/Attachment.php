@@ -11,11 +11,29 @@ class Attachment extends Post
     /**
      * Check that this is not an empty image
      *
-     * @return void
+     * @return bool
      */
     public function found()
     {
         return $this->getID() != 0;
+    }
+
+    /**
+     * Get the file info
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        $upload_dir = wp_upload_dir();
+        $file       = $this->getMeta("_wp_attached_file");
+        return (object) [
+            "ID"   => $this->getID(),
+            "name" => basename($file),
+            "path" => $upload_dir["basedir"] . "/" . $file,
+            "url"  => $this->url("thumbnail"),
+            "size" => filesize($upload_dir["basedir"] . "/" . $file),
+        ];
     }
 
     /**
@@ -30,8 +48,12 @@ class Attachment extends Post
             return "";
         }
 
-        return wp_get_attachment_image_url($this->getID(), $size);
+        return wp_get_attachment_image_url($this->getID(), $size) ?: wp_get_attachment_url($this->getID());
     }
+
+    // =============================================================================
+    // > IMAGES
+    // =============================================================================
 
     /**
      * Output the image as a background-image style attribute
@@ -66,5 +88,31 @@ class Attachment extends Post
         }
 
         return $tag;
+    }
+
+    // =============================================================================
+    // > VIDEOS
+    // =============================================================================
+
+    /**
+     * Get a video tag
+     *
+     * @param  string   $attributes
+     * @return string
+     */
+    public function video($attributes = "")
+    {
+        return "<video src='" . $this->url() . "' $attributes></video>";
+    }
+
+    /**
+     * Check that the attachment is a video
+     *
+     * @return boolean
+     */
+    public function isVideo()
+    {
+        $mime = isset($this->post_mime_type) ? $this->post_mime_type : get_post_mime_type($this->getID());
+        return strpos($mime, "video") !== false;
     }
 }

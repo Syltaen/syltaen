@@ -24,6 +24,24 @@ abstract class UsersModel extends Model
     const META_ID      = "umeta_id";
     const META_OBJECT  = "user_id";
 
+    /**
+     * Add fields shared by all post types
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->addFields([
+            /**
+             * Unique profile URL
+             */
+            "@url" => function ($user) {
+                return get_author_posts_url($user->getID());
+            },
+        ]);
+
+    }
+
     // =============================================================================
     // > QUERY MODIFIERS
     // =============================================================================
@@ -46,13 +64,13 @@ abstract class UsersModel extends Model
     }
 
     /**
-     * Filter to the current logged user
+     * Get the current logged user
      *
-     * @return self
+     * @return User
      */
-    public function logged()
+    public static function getCurrent()
     {
-        return $this->is(wp_get_current_user()->ID);
+        return self::getItem(wp_get_current_user());
     }
 
     /**
@@ -73,8 +91,8 @@ abstract class UsersModel extends Model
      */
     public static function getTargetID($target = false)
     {
-        if ($user) {
-            return Data::extractIds($user)[0] ?? false;
+        if ($target) {
+            return Data::extractIds($target)[0] ?? false;
         }
 
         return get_current_user_id();
@@ -89,6 +107,10 @@ abstract class UsersModel extends Model
      */
     public function role($roles, $relation = "all")
     {
+        unset($this->filters["role__in"]);
+        unset($this->filters["role__not_in"]);
+        unset($this->filters["role"]);
+
         switch ($relation) {
             case "any":
                 $this->filters["role__in"] = $roles;
@@ -168,7 +190,7 @@ abstract class UsersModel extends Model
      *
      * @param  string|array $capability Capability or Role to check, or an array of them
      * @param  string       $relation   If $capability is an array, specify if the users should have any or all capacility (any|all)
-     * @return void
+     * @return bool
      */
     public function can($capability, $relation = "all")
     {
@@ -177,37 +199,21 @@ abstract class UsersModel extends Model
         }
 
         foreach ($this->get() as $user) {
-            if (is_array($capability)) {
-                switch ($relation) {
-                    case "any":
-                        $user_can = false;
-                        foreach ($capability as $cap) {
-                            if (isset($user->caps[$cap]) && $user->caps[$cap]) {
-                                $user_can = true;
-                                break;
-                            }
-                        }
-                        if (!$user_can) {
-                            return false;
-                        }
+            $can = $user->can($capability, $relation);
 
-                        break;
-                    case "all":
-                    default:
-                        foreach ($capability as $cap) {
-                            if (!isset($user->caps[$cap]) || !$user->caps[$cap]) {
-                                return false;
-                            }
-                        }
-                        break;
-                }
-            } else {
-                if (!isset($user->caps[$capability]) || !$user->caps[$capability]) {
-                    return false;
-                }
+            // One user who cannot was met, need all of them
+            if ($relation == "all" && !$can) {
+                return false;
+            }
+
+            // One user who can was met, need only one of them
+            if ($relation == "any" && $can) {
+                return true;
             }
         }
-        return true;
+
+        // Not stopped, return oposite value of user-specific checks
+        return $relation == "all";
     }
 
     /**
@@ -249,6 +255,37 @@ abstract class UsersModel extends Model
     {
         $class = static::OBJECT_CLASS;
         return new $class($id);
+    }
+
+    /**
+     * Get a dummy object instance
+     *
+     * @return object
+     */
+    public static function getDummyObject()
+    {
+        return (object) [
+            "ID"         => 0,
+            "roles"      => [],
+            "data"       => [
+                "ID"                  => "0",
+                "user_login"          => "",
+                "user_pass"           => "",
+                "user_nicename"       => "",
+                "user_email"          => "",
+                "user_url"            => "",
+                "user_registered"     => "",
+                "user_activation_key" => "",
+                "user_status"         => "0",
+                "display_name"        => "<i>" . __("Utilisateur supprimé", "syltaen") . "</i>",
+            ],
+            "first_name" => "",
+            "last_name"  => "",
+            "cap_key"    => "",
+            "caps"       => [],
+            "allcaps"    => [],
+            "filter"     => null,
+        ];
     }
 
     // =============================================================================

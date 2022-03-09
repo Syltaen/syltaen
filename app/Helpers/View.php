@@ -20,10 +20,33 @@ class View
      */
     public static function render($filename, $context = false, $is_main_context = false)
     {
-        return apply_filters("syltaen_render", static::getRenderer()->renderFile(
-            static::path($filename),
-            (array) ($is_main_context ? static::prepareMainContext($context) : $context)
-        ));
+        // Register defual default context and render hooks
+        static::registerHooks();
+
+        if ($is_main_context) {
+            apply_filters("syltaen_render_main_context", $context);
+        }
+
+        return apply_filters("syltaen_render",
+            static::getRenderer()->renderFile(
+                static::path($filename),
+                (array) apply_filters("syltaen_render_context", $context)
+            )
+        );
+    }
+
+    /**
+     * Register defual default context and render hooks
+     *
+     * @return void
+     */
+    public static function registerHooks()
+    {
+        // Add stuff for the main context
+        add_filter("syltaen_render_main_context", "\Syltaen\View::prepareMainContext");
+
+        // Add helpers
+        add_filter("syltaen_render_context", "\Syltaen\View::addHelpers");
     }
 
     /**
@@ -82,6 +105,25 @@ class View
         return do_shortcode($menu);
     }
 
+    /**
+     * Render the result of a mixin, with specific arguments
+     *
+     * @param  string   $path
+     * @param  array    $args
+     * @return string
+     */
+    public static function mixin($path, $args)
+    {
+        // Include the mixin
+        $include = "include /views/mixins/{$path}";
+        // Generate mixin call
+        $mixin = explode("/_", $path);
+        $mixin = end($mixin);
+        $mixin = "+$mixin(" . implode(", ", array_map(function ($var) {return "\$$var";}, array_keys($args))) . ")";
+        // Render both with arguments
+        return View::parsePug(implode("\n", [$include, $mixin]), $args);
+    }
+
     // ==================================================
     // > PRIVATE
     // ==================================================
@@ -95,7 +137,7 @@ class View
     /**
      * Get the singleton renderer
      *
-     * @return void
+     * @return object
      */
     private static function getRenderer()
     {
@@ -135,13 +177,16 @@ class View
         return $filepath;
     }
 
+    // =============================================================================
+    // > HOOKED METHODS
+    // =============================================================================
     /**
      * Get the full path of a view file
      *
      * @param  array|bool $context
      * @return string
      */
-    private static function prepareMainContext($context = false)
+    public static function prepareMainContext($context = false)
     {
         // Make sure every array in the context is a set
         $context = new RecursiveSet($context, true);
@@ -155,12 +200,6 @@ class View
             $context->sections = [];
         }
 
-        // Add custom data from hooks
-        $context = apply_filters("syltaen_render_context", $context);
-
-        // Add helper functions
-        $context = $context->merge(static::helpers());
-
         // Apply global filters
         return $context;
     }
@@ -170,34 +209,65 @@ class View
      *
      * @return void
      */
-    private static function helpers()
+    public static function addHelpers($context)
     {
-        // return $ambiance ?: Files::url("build/img/thumb_placeholder.png");
+        $_img = function ($image, $size = "full") {
+            // Image ID, from WordPress
+            if (is_int($image)) {
+                return wp_get_attachment_image_url($image, $size);
+            }
 
-        return [
+            // Else image in asset
+            return Files::url("build/img/" . $image);
+        };
+
+        return set($context)->merge([
 
             // Return an image url
-            "_img"    => function ($image, $size = "full") {
-                // Image ID, from WordPress
-                if (is_int($image)) {
-                    return wp_get_attachment_image_url($image, $size);
-                }
+            "_img"       => $_img,
 
-                // Else image in asset
-                return Files::url("build/img/" . $image);
+            // Return an image
+            "_bg"        => function ($image, $size = "full") use ($_img) {
+                return "background-image: url(" . $_img($image, $size) . ");";
             },
 
-            "_imgtag" => function ($id, $size = "full") {
+            // Image tag
+            "_imgtag"    => function ($id, $size = "full") {
                 return wp_get_attachment_image($id, $size);
             },
 
-            "_tel"    => function ($tel) {
+            // Phone number link
+            "_tel"       => function ($tel) {
                 return "tel:" . preg_replace("/[^0-9]/", "", $tel);
             },
 
-            "_mailto" => function ($mail) {
+            // Mailto link
+            "_mailto"    => function ($mail) {
                 return "mailto:" . $mail;
             },
-        ];
+
+            // Localized date format
+            "_date"      => function ($format, $date) {
+                return date_i18n($format, strtotime($date));
+            },
+
+            // Class modifier(s)
+            "_modifiers" => function ($class, $modifiers, $include_class = false) {
+                $modifiers = array_map(function ($modifier) use ($class) {
+                    return "{$class}--{$modifier}";
+                }, (array) $modifiers);
+                return $include_class ? array_merge([$class], $modifiers) : $modifiers;
+            },
+
+            // Option
+            "_option"    => function ($key, $fallback = "") {
+                return Data::option($key, $fallback);
+            },
+
+            // Get a custom route
+            "_route"     => function ($key) {
+                return Route::getCustom($key);
+            },
+        ]);
     }
 };

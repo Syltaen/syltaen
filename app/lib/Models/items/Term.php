@@ -41,6 +41,16 @@ class Term extends ModelItem
     }
 
     /**
+     * Get the type of the item
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->taxonomy;
+    }
+
+    /**
      * Get the slug of the term
      *
      * @return string

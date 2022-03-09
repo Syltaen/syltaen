@@ -61,13 +61,15 @@ abstract class Model implements \Iterator
     /**
      * List of fields definition with their default values and processing callbacks
      *
-     * @var array
+     * @var Set
      */
     public $fields = null;
+
     /**
-     * @var array
+     * @var Set
      */
     public $fieldsIndex = null;
+
     /**
      * @var array
      */
@@ -76,13 +78,15 @@ abstract class Model implements \Iterator
     /**
      * List of global data that can be used everywhere in the model
      *
-     * @var array
+     * @var Set
      */
     public $globals = [];
+
     /**
      * @var array
      */
     public $globalsIndex = [];
+
     /**
      * @var mixed
      */
@@ -126,7 +130,8 @@ abstract class Model implements \Iterator
 
         // There are no result for the query
         if ($this->count() <= 0) {
-            return null;
+            $key_parts = Data::parseDataKey($this->fieldsIndex[$property] ?? false);
+            return !empty($key_parts["filter"]) ? Data::filter(null, $key_parts["filter"]) : false;
         }
 
         // Get the results
@@ -144,9 +149,9 @@ abstract class Model implements \Iterator
         }
 
         // Only one post queried and found : return the value of the match
-        if ($items->count() == 1 && (empty($this->filters[static::QUERY_LIMIT]) || $this->filters[static::QUERY_LIMIT] != -1)) {
-            return $items[0]->$property;
-        }
+        // if ($items->count() == 1 && (empty($this->filters[static::QUERY_LIMIT]) || $this->filters[static::QUERY_LIMIT] != -1)) {
+        //     return $items[0]->$property;
+        // }
 
         // Several posts : return a set of all the property of all matches
         return $items->reduce(function ($set, $item) use ($property) {
@@ -158,7 +163,7 @@ abstract class Model implements \Iterator
                 }
 
                 // Merge everything
-                $set->merge($item->$property);
+                $set = $set->merge($item->$property);
 
                 // Not a model, just add the value to the list
             } else {
@@ -202,7 +207,7 @@ abstract class Model implements \Iterator
      *
      * @return void
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->iteration_key = 0;
         $this->get();
@@ -233,7 +238,7 @@ abstract class Model implements \Iterator
      *
      * @return void
      */
-    public function next()
+    public function next(): void
     {
         ++$this->iteration_key;
     }
@@ -243,7 +248,7 @@ abstract class Model implements \Iterator
      *
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->cachedResults[$this->iteration_key]);
     }
@@ -251,7 +256,7 @@ abstract class Model implements \Iterator
     /**
      * Call a function on each items
      *
-     * @return array Result of each call
+     * @return Set Result of each call
      */
     public function map($callable)
     {
@@ -271,7 +276,7 @@ abstract class Model implements \Iterator
     /**
      * Retrieve a list of items based on a callback
      *
-     * @return array The filtered results
+     * @return Set The filtered results
      */
     public function filter($callable)
     {
@@ -315,7 +320,7 @@ abstract class Model implements \Iterator
      *
      * @param  array|int $list
      * @param  string    $mode   Define what to do if there is already a list of ID to filter. Either replace, merge or intersect
-     * @return void
+     * @return self
      */
     public function isnt($list, $mode = "replace")
     {
@@ -326,11 +331,11 @@ abstract class Model implements \Iterator
     /**
      * Force no results
      *
-     * @return void
+     * @return self
      */
     public function none()
     {
-        $this->is(-1);
+        $this->is(0);
         return $this;
     }
 
@@ -346,7 +351,7 @@ abstract class Model implements \Iterator
             return $this;
         }
 
-        return static::is($list);
+        return $this->is($list);
     }
 
     /**
@@ -357,10 +362,9 @@ abstract class Model implements \Iterator
      */
     public function merge($model)
     {
-        if (isset($model->filters[static::QUERY_IS])) {
-            $this->is($model->filters[static::QUERY_IS], "merge");
-        }
-        return $this;
+        $merge = (clone $this)->applyFilters();
+        $merge->is((clone $model)->getIDs(), "merge");
+        return $merge;
     }
 
     /**
@@ -375,7 +379,7 @@ abstract class Model implements \Iterator
             return $this;
         }
 
-        return static::isnt($list);
+        return $this->isnt($list);
     }
 
     /**
@@ -495,7 +499,7 @@ abstract class Model implements \Iterator
      * @param  string       $type     Custom field type. Possible values are : 'NUMERIC', 'BINARY', 'CHAR', 'DATE', 'DATETIME', 'DECIMAL', 'SIGNED', 'TIME', 'UNSIGNED'. Default value is 'CHAR'.
      * @param  string       $relation Erase the current relation between each meta_query. Either "OR", "AND" (default) or false to keep the current one.
      * @param  boolean      $replace  Specify if the filter should replace any existing one on the same meta_key
-     * @return void
+     * @return self
      */
     public function meta($key, $value = null, $compare = "=", $type = null, $relation = false, $replace = false)
     {
@@ -720,9 +724,9 @@ abstract class Model implements \Iterator
     /**
      * Execute the query and retrive all the found posts
      *
-     * @param  int   $limit Number of posts to return
-     * @param  int   $page  Page offset to use
-     * @return array of WP_Post
+     * @param  int $limit Number of posts to return
+     * @param  int $page  Page offset to use
+     * @return Set of WP_Post
      */
     public function get($limit = false, $page = false)
     {
@@ -744,7 +748,7 @@ abstract class Model implements \Iterator
     /**
      * Only return the matching items' IDs
      *
-     * @return array
+     * @return Set
      */
     public function getIDs()
     {
@@ -799,20 +803,55 @@ abstract class Model implements \Iterator
     }
 
     /**
+     * Get a dummy object instance
+     *
+     * @return object
+     */
+    public static function getDummyObject()
+    {
+        return (object) [
+            "ID"                    => 0,
+            "post_author"           => "",
+            "post_date"             => "",
+            "post_date_gmt"         => "",
+            "post_content"          => "",
+            "post_title"            => "<i>" . __("Contenu supprimé", "syltaen") . "</i>",
+            "post_excerpt"          => "",
+            "post_status"           => "nonexistant",
+            "comment_status"        => "",
+            "ping_status"           => "",
+            "post_password"         => "",
+            "post_name"             => "",
+            "to_ping"               => "",
+            "pinged"                => "",
+            "post_modified"         => "",
+            "post_modified_gmt"     => "",
+            "post_content_filtered" => "",
+            "post_parent"           => 0,
+            "guid"                  => "",
+            "menu_order"            => 0,
+            "post_type"             => "",
+            "post_mime_type"        => "",
+            "comment_count"         => "",
+            "filter"                => "",
+        ];
+    }
+
+    /**
      * Get an item instance
      *
-     * @return ModelItem
+     * @return ModelItem|mixed
      */
-    public static function getItem($id)
+    public static function getItem($id_or_object)
     {
         $class = static::ITEM_CLASS;
-        return new $class($id, new static );
+        return new $class($id_or_object, new static );
     }
 
     /**
      * Shortcut for is + get
      *
-     * @return ModelItem
+     * @return self
      */
     public static function getItems($ids)
     {
@@ -822,12 +861,24 @@ abstract class Model implements \Iterator
     /**
      * Get an item instance, but only with an ID (prevent useless DB queries)
      *
-     * @return ModelItem
+     * @return ModelItem|mixed
      */
     public static function getLightItem($id)
     {
         $class = static::ITEM_CLASS;
-        return new $class($id);
+        $item  = new $class($id);
+        $item->setModel(new static );
+        return $item;
+    }
+
+    /**
+     * Get a dummy object instance
+     *
+     * @return object
+     */
+    public static function getDummyItem()
+    {
+        return static::getItem(0);
     }
 
     /**
@@ -909,7 +960,16 @@ abstract class Model implements \Iterator
         } else {
             return intval($this->getQuery()->found_posts);
         }
+    }
 
+    /**
+     * Check if only one result was found, can be used in _n functions
+     *
+     * @return int
+     */
+    public function singular()
+    {
+        return $this->count() <= 1 ? 1 : 0;
     }
 
     /**
@@ -930,6 +990,20 @@ abstract class Model implements \Iterator
     public function found()
     {
         return $this->count() > 0;
+    }
+
+    /**
+     * Check that the model's results contain a specific item
+     *
+     * @param  ModelItem $item
+     * @return boolean
+     */
+    public function contains($item)
+    {
+        return !empty(array_intersect(
+            Data::extractIds($item) ?: [],
+            (array) (clone $this)->getIDs()
+        ));
     }
 
     /**
@@ -979,9 +1053,9 @@ abstract class Model implements \Iterator
             ->limit($groupSize);
 
         // Process one group at a time
-        for ($page = 1; $page <= $cluster->getPagesCount(); $page++) {
-            $cluster->page($page);
-            $process_function($cluster);
+        for ($page = 1; $page <= $this->getPagesCount(); $page++) {
+            $this->page($page);
+            $process_function($this);
         }
     }
 
@@ -1068,7 +1142,7 @@ abstract class Model implements \Iterator
      * Force the model to fetch and store the result of each field
      *
      * @param  mxied  $fields true/false to enable/disable all fields fetching, or a list of fields to fetch
-     * @return void
+     * @return self
      */
     public function fetchFields($fields = true)
     {

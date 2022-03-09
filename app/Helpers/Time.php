@@ -12,10 +12,10 @@ class Time
      *
      * @return void
      */
-    public static function planEvent($hook, $time = "+ 5 minutes")
+    public static function planEvent($hook, $time = "+ 5 minutes", $args = [])
     {
-        if (!wp_next_scheduled($hook)) {
-            wp_schedule_single_event(strtotime($time), $hook);
+        if (!wp_next_scheduled($hook, $args)) {
+            wp_schedule_single_event(strtotime($time), $hook, $args);
         }
     }
 
@@ -82,6 +82,21 @@ class Time
     }
 
     /**
+     * Format a number of seconds to a readable text
+     *
+     * @param  int      $span
+     * @return string
+     */
+    public static function spanToText($span)
+    {
+        $days  = "<strong>" . floor($span / DAY_IN_SECONDS) . "</strong>";
+        $hours = "<strong>" . floor($span % DAY_IN_SECONDS / HOUR_IN_SECONDS) . "</strong>";
+        $min   = "<strong>" . floor($span % HOUR_IN_SECONDS / MINUTE_IN_SECONDS) . "</strong>";
+
+        return sprintf(__("%s jours %s h %s min", "syltaen"), $days, $hours, $min);
+    }
+
+    /**
      * Set a default timezone for the application
      *
      * @return void
@@ -94,8 +109,8 @@ class Time
     /**
      * Normalize a value into a timestamp
      *
-     * @param  mixed  $date A timestamp, a string, an array
-     * @return void
+     * @param  mixed $date A timestamp, a string, an array
+     * @return int
      */
     public static function normalize($date)
     {
@@ -139,5 +154,36 @@ class Time
         }
 
         return date(DATE_ATOM, static::normalize($date)+static::getTimezoneOffset());
+    }
+
+    /**
+     * Check that a date is today
+     *
+     * @return boolean
+     */
+    public static function isToday($date)
+    {
+        return date("Y-m-d", strtotime($date)) == Time::current("Y-m-d");
+    }
+
+    /**
+     * Check that a date is yesterday
+     *
+     * @return boolean
+     */
+    public static function isYesterday($date)
+    {
+        return date("Y-m-d", strtotime($date)) == Time::fromString("yesterday", "Y-m-d");
+    }
+
+    /**
+     * Change the format of a string
+     *
+     * @return void
+     */
+    public static function format($time, $format)
+    {
+        $time = is_int($time) ? $time : strtotime($time);
+        return date($format, $time);
     }
 }

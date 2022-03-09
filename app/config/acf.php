@@ -14,10 +14,19 @@ if (function_exists("acf_add_options_page")) {
         "post_id"    => "headerfooter",
         "capability" => "edit_posts",
         "redirect"   => false,
-        "icon_url"   => "dashicons-align-center",
-        "position"   => 4,
+        "autoload"   => true,
     ]);
 
+    // // ========== OPTIONS ========== //
+    // acf_add_options_page([
+    //     "page_title" => "Paramètres",
+    //     "menu_title" => "Paramètres",
+    //     "menu_slug"  => "options",
+    //     "post_id"    => "options",
+    //     "capability" => "edit_theme_options",
+    //     "redirect"   => false,
+    //     "autoload"   => true,
+    // ]);
 }
 
 // ==================================================

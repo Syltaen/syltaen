@@ -2,116 +2,51 @@
 // > SPACING
 // =============================================================================
 
-@each $bp, $bp_data in $responsive
-    +screen($bp)
-
-        // Ratio for each breakpoint
-        $ratio: map_get($bp_data, "spacingratio")
+=screen-spacing
+    +screen-suffixes() using ($suffix, $bp)
+        $ratio: spacingratio($bp)
         @each $sp, $value in $spacing
             $value: $value * $ratio
+            @content($sp, $value, $ratio, $suffix, $bp)
 
-            // ==================================================
-            // > PADDINGS
-            // > Ex: .lg-padding-vertical
-            // ==================================================
-            @if (breakpoint($bp) == null or $ratio != 1) and (breakpoint($bp) == null or $value != 0)
-                .#{$sp}-padding
-                    padding: $value !important
+=spacing-list($spacing_class, $spacing_property, $sp, $value, $suffix: "")
+    .#{$sp}-#{$spacing_class}#{$suffix}
+        #{$spacing_property}: $value !important
 
-                .#{$sp}-padding-top
-                    padding-top: $value !important
+    .#{$sp}-#{$spacing_class}-top#{$suffix}
+        #{$spacing_property}-top: $value !important
 
-                .#{$sp}-padding-bottom
-                    padding-bottom: $value !important
+    .#{$sp}-#{$spacing_class}-bottom#{$suffix}
+        #{$spacing_property}-bottom: $value !important
 
-                .#{$sp}-padding-left
-                    padding-left: $value !important
+    .#{$sp}-#{$spacing_class}-left#{$suffix}
+        #{$spacing_property}-left: $value !important
 
-                .#{$sp}-padding-right
-                    padding-right: $value !important
+    .#{$sp}-#{$spacing_class}-right#{$suffix}
+        #{$spacing_property}-right: $value !important
 
-                .#{$sp}-padding-vertical
-                    padding-top: $value !important
-                    padding-bottom: $value !important
+    .#{$sp}-#{$spacing_class}-vertical#{$suffix}
+        #{$spacing_property}-top: $value !important
+        #{$spacing_property}-bottom: $value !important
 
-                .#{$sp}-padding-horizontal
-                    padding-left: $value !important
-                    padding-right: $value !important
+    .#{$sp}-#{$spacing_class}-horizontal#{$suffix}
+        #{$spacing_property}-left: $value !important
+        #{$spacing_property}-right: $value !important
 
-            // Force spacing by breakpoint
-            @if breakpoint($bp)
-                .#{$sp}-padding#{screen_suffix($bp)}
-                    padding: $value !important
 
-                .#{$sp}-padding-top#{screen_suffix($bp)}
-                    padding-top: $value !important
+// Each spacing, with a ratio for each media query.
+// Does not output items that would have the same result of an earlier query.
+// Ex: .sm-margin-top
++screen-spacing using ($sp, $value, $ratio, $suffix, $bp)
+    @if (breakpoint($bp) == null or $ratio != 1) and (breakpoint($bp) == null or $value != 0px)
+        +spacing-list("padding", "padding", $sp, $value)
+        +spacing-list("margin", "margin", $sp, $value)
+        +spacing-list("offset", "margin", $sp, $value * -1)
 
-                .#{$sp}-padding-bottom#{screen_suffix($bp)}
-                    padding-bottom: $value !important
-
-                .#{$sp}-padding-left#{screen_suffix($bp)}
-                    padding-left: $value !important
-
-                .#{$sp}-padding-right#{screen_suffix($bp)}
-                    padding-right: $value !important
-
-                .#{$sp}-padding-vertical#{screen_suffix($bp)}
-                    padding-top: $value !important
-                    padding-bottom: $value !important
-
-                .#{$sp}-padding-horizontal#{screen_suffix($bp)}
-                    padding-left: $value !important
-                    padding-right: $value !important
-
-            // ==================================================
-            // > MARGINS
-            // > Ex: .lg-padding-vertical
-            // ==================================================
-            @if (breakpoint($bp) == null or $ratio != 1) and (breakpoint($bp) == null or $value != 0)
-                .#{$sp}-margin
-                    margin: $value !important
-
-                .#{$sp}-margin-top
-                    margin-top: $value !important
-
-                .#{$sp}-margin-bottom
-                    margin-bottom: $value !important
-
-                .#{$sp}-margin-left
-                    margin-left: $value !important
-
-                .#{$sp}-margin-right
-                    margin-right: $value !important
-
-                .#{$sp}-margin-vertical
-                    margin-top: $value !important
-                    margin-bottom: $value !important
-
-                .#{$sp}-margin-horizontal
-                    margin-left: $value !important
-                    margin-right: $value !important
-
-            // Force spacing by breakpoint
-            @if breakpoint($bp)
-                .#{$sp}-margin#{screen_suffix($bp)}
-                    margin: $value !important
-
-                .#{$sp}-margin-top#{screen_suffix($bp)}
-                    margin-top: $value !important
-
-                .#{$sp}-margin-bottom#{screen_suffix($bp)}
-                    margin-bottom: $value !important
-
-                .#{$sp}-margin-left#{screen_suffix($bp)}
-                    margin-left: $value !important
-
-                .#{$sp}-margin-right#{screen_suffix($bp)}
-                    margin-right: $value !important
-
-                .#{$sp}-margin-vertical#{screen_suffix($bp)}
-                    margin-top: $value !important
-                    margin-bottom: $value !important
-
-                .#{$sp}-margin-horizontal#{screen_suffix($bp)}
-                    margin-left: $value !important
-                    margin-right: $value !important
+// Force a different spacing for each breakpoints
+// Ex: .lg-padding-vertical-sm
++screen-spacing using ($sp, $value, $ratio, $suffix, $bp)
+    @if breakpoint($bp)
+        +spacing-list("padding", "padding", $sp, $value, $suffix)
+        +spacing-list("margin", "margin", $sp, $value, $suffix)
+        +spacing-list("offset", "margin", $sp, $value * -1, $suffix)

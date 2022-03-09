@@ -29,6 +29,8 @@ class ApiController extends Controller
      */
     private function lab($target = false)
     {
+        echo Mail::render("test", "test");
+        die();
     }
 
     /**
@@ -44,12 +46,14 @@ class ApiController extends Controller
             wp_die("Please provide a user ID");
         }
 
-        $user = (new Users)->logged();
+        $user   = Users::getCurrent();
+        $target = Users::getItem($user_id);
+
         if (!$user || !$user->can("administrator")) {
             wp_die("Please log-in as an admin before.");
         }
 
-        (new Users)->is($user_id)->login("wp-admin");
+        $target->login("wp-admin");
     }
 
     /**

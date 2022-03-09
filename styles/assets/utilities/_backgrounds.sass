@@ -6,23 +6,19 @@
 // ==================================================
 // > GENERATED BACKGOUNDS COLOR CLASSES. Ex: .bg-primary
 // ==================================================
-@each $bp, $bp_data in $responsive
-    +screen($bp)
-        @each $color, $value in $colors
-            .bg-#{"" + $color}#{screen_suffix($bp)}
-                background-color: $value
++screen-suffixes() using ($suffix, $bp)
+    @each $color, $value in $colors
+        .bg-#{"" + $color}#{$suffix}
+            background-color: $value
 
-            .bg-#{"" + $color}-hover#{screen_suffix($bp)}:hover
-                background-color: $value
+        .bg-#{"" + $color}-hover#{$suffix}:hover
+            background-color: $value
 
-            .border-#{"" + $color}#{screen_suffix($bp)}
-                border: 1px solid $value
+        .border-#{"" + $color}#{$suffix}
+            border: 1px solid $value
 
-        .no-background#{screen_suffix($bp)}
-            background: none !important
-
-.border-grey
-    border: 1px solid #EBEBEB
+    .no-background#{$suffix}
+        background: none !important
 
 // ==================================================
 // > BACKGROUND IMAGE
@@ -31,37 +27,36 @@
     background-position: center center
     background-repeat: no-repeat
 
-@each $bp, $bp_data in $responsive
-    +screen($bp)
-        .bg-image
-            &--cover#{screen_suffix($bp)}
-                background-size: cover
-            &--contain#{screen_suffix($bp)}
-                background-size: contain
-            &--left#{screen_suffix($bp)}
-                background-position-x: left
-            &--right#{screen_suffix($bp)}
-                background-position-x: right
-            &--top#{screen_suffix($bp)}
-                background-position-y: top
-            &--bottom#{screen_suffix($bp)}
-                background-position-y: bottom
++screen-suffixes() using ($suffix, $bp)
+    .bg-image
+        &--cover#{$suffix}
+            background-size: cover
+        &--contain#{$suffix}
+            background-size: contain
+        &--left#{$suffix}
+            background-position-x: left
+        &--right#{$suffix}
+            background-position-x: right
+        &--top#{$suffix}
+            background-position-y: top
+        &--bottom#{$suffix}
+            background-position-y: bottom
 
-            &--left-top#{screen_suffix($bp)}
-                background-position: left top
-            &--center-top#{screen_suffix($bp)}
-                background-position: center top
-            &--right-top#{screen_suffix($bp)}
-                background-position: right top
-            &--left-center#{screen_suffix($bp)}
-                background-position: left center
-            &--center-center#{screen_suffix($bp)}
-                background-position: center center
-            &--right-center#{screen_suffix($bp)}
-                background-position: right center
-            &--left-bottom#{screen_suffix($bp)}
-                background-position: left bottom
-            &--center-bottom#{screen_suffix($bp)}
-                background-position: center bottom
-            &--right-bottom#{screen_suffix($bp)}
-                background-position: right bottom
+        &--left-top#{$suffix}
+            background-position: left top
+        &--center-top#{$suffix}
+            background-position: center top
+        &--right-top#{$suffix}
+            background-position: right top
+        &--left-center#{$suffix}
+            background-position: left center
+        &--center-center#{$suffix}
+            background-position: center center
+        &--right-center#{$suffix}
+            background-position: right center
+        &--left-bottom#{$suffix}
+            background-position: left bottom
+        &--center-bottom#{$suffix}
+            background-position: center bottom
+        &--right-bottom#{$suffix}
+            background-position: right bottom

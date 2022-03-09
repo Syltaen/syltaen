@@ -9,13 +9,6 @@ class Posts extends PostsModel
 
     const HAS_THUMBNAIL = true;
 
-    /**
-     * @var array
-     */
-    protected $dateFormats = [
-        "short" => "d/m/Y",
-    ];
-
     public function __construct()
     {
         parent::__construct();

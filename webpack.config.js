@@ -13,9 +13,12 @@ const LiveReloadPlugin     = require("webpack-livereload-plugin")
 const BrowserSyncPlugin    = require("browser-sync-webpack-plugin")
 const TerserPlugin         = require("terser-webpack-plugin");
 const CssMinimizerPlugin   = require("css-minimizer-webpack-plugin")
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 
 module.exports = {
+    cache: false,
+    stats: "errors-only",
 
     // IN
     entry: {
@@ -68,7 +71,7 @@ module.exports = {
                 use: [
                     MiniCssExtractPlugin.loader,
                     { loader: "css-loader", options: { url: false }, },
-                    { loader: "postcss-loader", options: { postcssOptions: { plugins: [require("autoprefixer")({"overrideBrowserslist": ["> 1%", "last 20 versions"]})] }}},
+                    { loader: "postcss-loader", options: { postcssOptions: { plugins: [require("autoprefixer")({"overrideBrowserslist": ["> 1%", "last 10 versions"]})] }}},
                     "sass-loader"
                 ],
             },
@@ -108,5 +111,6 @@ module.exports = {
             ]
         }, {reload: false}),
 
+        new FriendlyErrorsWebpackPlugin(),
     ]
 }

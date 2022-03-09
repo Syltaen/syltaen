@@ -225,7 +225,8 @@ abstract class Files
             "app/Helpers",
             "app/Helpers/shop",
             "Controllers",
-            "Controllers/processors",
+            "Controllers/layout",
+            "Controllers/forms",
             "Models",
             "Models/API",
             "Models/Core",
@@ -244,10 +245,10 @@ abstract class Files
     /**
      * Find a file in one off the provided folders
      *
-     * @param  string $file      The name of the file
-     * @param  array  $folders   A list of folder's paths (from the theme root)
-     * @param  bool   $returnAll Return all matches instead of only the first one
-     * @return string The file path
+     * @param  string       $file      The name of the file
+     * @param  array        $folders   A list of folder's paths (from the theme root)
+     * @param  bool         $returnAll Return all matches instead of only the first one
+     * @return string|array The file path
      */
     public static function findIn($file, $folders, $depth = 2, $returnAll = false)
     {
@@ -322,11 +323,16 @@ abstract class Files
         foreach ($pugs as $pug) {
             preg_match_all('/_.\(\"([^"]+)\",\s?\"syltaen\"\)/', file_get_contents($pug), $match);
 
-            if (!empty($match[0])) {
+            preg_match_all('/_n\(\"([^"]+)\",\s?\"([^"]+)\"/', file_get_contents($pug), $match_n);
+            $match_n[0] = array_map(function ($full, $singular, $plurial) {
+                return "_n(\"{$singular}\", \"{$plurial}\", 1, \"syltaen\")";
+            }, $match_n[0], $match_n[1], $match_n[2]);
+
+            if (!empty($match[0]) || !empty($match_n[0])) {
                 $matches[] = "\n\n//> " . basename($pug);
             }
 
-            $matches = array_merge($matches, $match[0]);
+            $matches = array_merge($matches, $match[0], $match_n[0]);
         }
 
         // Get view-strings.php
@@ -358,6 +364,9 @@ abstract class Files
         require_once ABSPATH . "wp-admin/includes/image.php";
 
         return array_map(function ($file) use ($parent_post_id) {
+            if (!empty($file["error"])) {
+                return $file;
+            }
             // Generate an attachement
             $file["ID"] = wp_insert_attachment([
                 "post_mime_type" => $file["type"],
@@ -470,14 +479,15 @@ abstract class Files
     /**
      * Upload a media and create an attachement for it
      *
-     * @param  string $url
-     * @return array  The attachement information
+     * @param  string       $url
+     * @return array|object The attachement information
      */
     public static function uploadFromUrl($url, $generateAttachement = false, $parent_post_id = 0, $directory = null)
     {
         // Gives us access to the download_url(), wp_handle_sideload() and wp_generate_attachment_metadata()
         require_once ABSPATH . "wp-admin/includes/file.php";
         require_once ABSPATH . "wp-admin/includes/image.php";
+        require_once ABSPATH . "wp-admin/includes/media.php";
 
         // Download file to temp dir
         $temp_file = download_url($url);

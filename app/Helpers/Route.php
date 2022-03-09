@@ -68,18 +68,18 @@ abstract class Route
     /**
      * Custom route defined in app/config/route.php
      *
-     * @param  string $key  The key set for the route
-     * @param  mix    $resp The response to use
-     * @param  array  $args Arguments for the response
+     * @param  string|array $routename The key set for the route
+     * @param  mix          $resp      The response to use
+     * @param  array        $args      Arguments for the response
      * @return void
      */
-    public static function custom($key, $resp, $args = [])
+    public static function custom($routename, $resp, $args = [])
     {
         if (!static::qVar("custompage")) {
             return false;
         }
 
-        if (static::qVar("custompage") != $key) {
+        if (!in_array(static::qVar("custompage"), (array) $routename)) {
             return false;
         }
 
@@ -226,40 +226,81 @@ abstract class Route
      */
     public static function add($patterns, $match = false)
     {
-        $auto_query_vars = [];
+        global $syltaen_custom_routes;
+        $auto_query_vars       = [];
+        $syltaen_custom_routes = $syltaen_custom_routes ?? [];
 
         foreach ($patterns as $key => $pattern) {
+            // Custom page url : normalize format
+            if (is_string($key)) {
+                $query   = "index.php?(custompage)={$key}";
+                $pattern = array_values((array) $pattern);
+
+                if (preg_match_all('/\([^\(\)]*\)/', $pattern[0], $args)) {
+                    foreach ($args[0] as $i => $arg) {
+                        $query .= "&(arg$i)=" . '$matches[' . ($i + 1) . ']';
+                    }
+                }
+
+                $syltaen_custom_routes[$key] = $pattern;
+                $pattern                     = [$pattern, $query];
+            }
+
+            // Matches should always be an array
+            $pattern[0] = static::autoTranslateRoute($pattern[0]);
+
             // Auto-register query vars that are inside parenthesis
-            if (
-                is_array($pattern) &&
-                preg_match_all('/\(([^\(\)]*)\)/', $pattern[1], $pattern_query_vars)
-            ) {
+            if (preg_match_all('/\(([^\(\)]*)\)/', $pattern[1], $pattern_query_vars)) {
                 // Add query vars to the auto register
                 $auto_query_vars = array_merge($auto_query_vars, $pattern_query_vars[1]);
-
                 // remove parenthesis from the match
                 $pattern[1] = str_replace(["(", ")"], "", $pattern[1]);
             }
 
-            // Custom page url
-            if (is_string($key)) {
-                $match             = "index.php?custompage=$key";
-                $auto_query_vars[] = "custompage";
-
-                if (preg_match_all('/\([^\(\)]*\)/', $pattern, $args)) {
-                    foreach ($args[0] as $i => $arg) {
-                        $match .= "&arg$i=" . '$matches[' . ($i + 1) . ']';
-                        $auto_query_vars[] = "arg$i";
-                    }
-                }
-
-                $pattern = [$pattern, $match];
+            foreach ($pattern[0] as $match) {
+                add_rewrite_rule($match, $pattern[1], "top");
             }
-
-            add_rewrite_rule($pattern[0], $pattern[1], "top");
         }
 
         static::qVar($auto_query_vars);
+    }
+
+    /**
+     * Get a custom route's URL
+     *
+     * @return string
+     */
+    public static function getCustom($key)
+    {
+        global $syltaen_custom_routes;
+
+        $lang_index = array_search(Lang::getCurrent(), Lang::getList());
+
+        $path = $syltaen_custom_routes[$key][$lang_index] ?? ($syltaen_custom_routes[$key][0] ?? false);
+
+        return site_url(trim($path, "$?^"));
+    }
+
+    /**
+     * Add lang prefixes for routes that have not been translated
+     *
+     * @param  array   $route
+     * @return array
+     */
+    public static function autoTranslateRoute($route)
+    {
+        $langs = Lang::getList();
+        $route = (array) $route;
+
+        // All translations provided
+        if (count($langs) == count($route)) {return $route;}
+
+        foreach ($langs as $i => $lang) {
+            if (!empty($route[$i])) {continue;}
+            $route[$i] = "$lang/{$route[0]}";
+        }
+
+        return $route;
     }
 
     // ==================================================

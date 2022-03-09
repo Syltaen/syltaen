@@ -176,8 +176,8 @@ class TaxonomyModel extends Model
      * 'id=>parent' Returns an associative array of parent term IDs, keyed by term ID (`int[]`).
      * 'id=>name' Returns an associative array of term names, keyed by term ID (`string[]`).
      * 'id=>slug' Returns an associative array of term slugs, keyed by term ID (`string[]`).
-     * @param  string   $fields Term fields to query for. Accepts:
-     * @return array
+     * @param  string  $fields Term fields to query for. Accepts:
+     * @return self
      */
     public function fields($fields)
     {
@@ -213,21 +213,29 @@ class TaxonomyModel extends Model
      *
      * @return Set
      */
-    public function getLinks()
+    public function getLinks($class = "")
     {
-        return $this->fields("all")->map(function ($term) {
-            return "<a class='null' href='{$term->url}'>$term->name</a>";
+        return $this->fields("all")->map(function ($term) use ($class) {
+            $class = is_array($class) ? implode(" ", $class) : $class;
+            return "<a class='$class' href='{$term->url}'>$term->name</a>";
         });
     }
 
     /**
      * Return all terms as an associative array of slug=>name
      *
+     * @param bool $all_option Add a "All" option
      * @return Set
      */
-    public function getAsOptions()
+    public function getAsOptions($all_option = false)
     {
-        return $this->get()->index("slug", "name");
+        $options = $this->get()->index("slug", "name");
+
+        if ($all_option) {
+            $options = $options->insert(["*" => __("Tout", "syltaen")], 0);
+        }
+
+        return $options;
     }
 
     /* Update parent method */
@@ -251,7 +259,7 @@ class TaxonomyModel extends Model
     /**
      * Embed children terms in their parents.
      *
-     * @return void
+     * @return array
      */
     public function getHierarchy()
     {
@@ -648,6 +656,17 @@ class TaxonomyModel extends Model
     }
 
     /**
+     * Get this taxonomy name, allow for translation
+     *
+     * @param  bool     $singular
+     * @return string
+     */
+    public static function getName($singular = false)
+    {
+        return static::NAME;
+    }
+
+    /**
      * Get an object instance
      *
      * @return WP_Term
@@ -688,7 +707,7 @@ class TaxonomyModel extends Model
      * @param  string|array $name   A single string, or an assoc list of translations
      * @param  array        $attrs  See args here https://developer.wordpress.org/reference/functions/wp_insert_term/
      * @param  array        $fields Meta data
-     * @return int|array    of term IDs
+     * @return ModelItem    of term IDs
      */
     public static function add($name, $attrs = [], $fields = [])
     {
@@ -702,7 +721,7 @@ class TaxonomyModel extends Model
 
         // Set fields if any
         if (!empty($fields)) {
-            $term::setFields($fields);
+            $term->setFields($fields);
         }
 
         return $term;

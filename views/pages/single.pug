@@ -1,0 +1,16 @@
+extends _base
+
+//- ==================================================
+//- > SECTIONS
+//- ==================================================
+block sections
+    section.bg-white.md-padding-vertical: .container
+
+        +singlenav($singlenav).single__nav.single__nav--top
+
+        article.single__content
+            time.single__date= $_date("d/m/Y", $post->post_date)
+            h1.h1.no-margin-top.font-medium.color-primary.single__title= $post->post_title
+            != $post->post_content
+
+        +singlenav($singlenav).single__nav.single__nav--bottom

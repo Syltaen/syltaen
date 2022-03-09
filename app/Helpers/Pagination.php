@@ -7,7 +7,7 @@ class Pagination
     /**
      * The model to paginate
      *
-     * @var \Syltaen\Model
+     * @var PostsModel
      */
     public $model;
 
@@ -49,8 +49,8 @@ class Pagination
     /**
      * Generate the pagination and update the model to query for posts on the current page number
      *
-     * @param Syltaen\Posts $model    The model used to generate the pagination
-     * @param int           $per_page The number of posts to display on a page
+     * @param PostsModel $model    The model used to generate the pagination
+     * @param int        $per_page The number of posts to display on a page
      */
     public function __construct($model, $per_page, $force_page = false)
     {
@@ -114,7 +114,8 @@ class Pagination
     {
         $this->setPositionLabel(
             sprintf(
-                __("%s-%s de %s articles", "syltaen"),
+                __("%s %s à %s sur %s", "syltaen"),
+                $this->model::getLabel(),
                 ($this->page - 1) * $this->perPage + 1,
                 $this->page * $this->perPage > $this->totalPosts ? ($this->page - 1) * $this->perPage + ($this->totalPosts % $this->perPage) : $this->page * $this->perPage,
                 $this->totalPosts

@@ -2,16 +2,15 @@
 // > UTILITIES - ALIGNMENTS
 // =============================================================================
 
-@each $bp, $bp_data in $responsive
-    +screen($bp)
-        .aligncenter#{screen_suffix($bp)}
-            margin: 0 auto
-            display: block
++screen-suffixes() using ($suffix, $bp)
+    .aligncenter#{$suffix}
+        margin: 0 auto
+        display: block
 
-        .alignright#{screen_suffix($bp)}
-            float: right
-            margin-right: 10px
+    .alignright#{$suffix}
+        float: right
+        margin-left: .5em
 
-        .alignleft#{screen_suffix($bp)}
-            float: left
-            margin-left: 10px
+    .alignleft#{$suffix}
+        float: left
+        margin-right: .5em

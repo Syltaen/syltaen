@@ -1,0 +1,16 @@
+//- =============================================================================
+//- > MIXIN : FORM
+//- =============================================================================
+
+mixin form($form)
+
+    if !empty($form["success"])
+        .form__success
+            != $form["success"]
+
+    else
+        form(method="post")&attributes($attributes)
+            if !empty($form["errors"]["global"])
+                p.color-error.font-bold.text-align-center!= $form["errors"]["global"]
+
+            block

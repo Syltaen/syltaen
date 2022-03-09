@@ -22,8 +22,8 @@ readers do not read off random characters that represent icons */
 //   @include fa-icon;
 // }
 
-@each $icon, $content in $fa-icons {
-    .fa-#{$icon}:before {
-        content: fa-content($icon);
-    }
-}
+// @each $icon, $content in $fa-icons {
+//     .fa-#{$icon}:before {
+//         content: fa-content($icon);
+//     }
+// }

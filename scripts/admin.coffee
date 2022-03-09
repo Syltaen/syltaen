@@ -38,9 +38,9 @@ class ACFSection
         # Update bg and text color of the handle
         @$handle.attr("class", "acf-page-sections__handle acf-row-handle order ui-sortable-handle bg-#{@bg} color-#{@text}")
         if @bg == "custom"
-            @$handle.css("background-color", @customBg)
+            @$handle.css("background", @customBg)
         else
-            @$handle.css("background-color", false)
+            @$handle.css("background", false)
 
         # Add bg image if any
         if @image
@@ -81,6 +81,30 @@ class ColumnWidthWatcher
             .children(".acf-fc-layout-handle").find(".no-thumbnail").text "Colonne [" + $(@).val() + "/" + total + "]"
 
 
+class AutoLayoutWatcher
+    constructor: (@wrap, @addAction) ->
+        @check()
+
+        # Direct adding by clicking a button
+        if @addAction
+            $(document).on "click", @addAction, => @check()
+
+        # Ajax adding
+        else
+            $(document).ajaxSuccess () => @check()
+
+
+    check: ->
+        $(@wrap).filter(":visible").each (i, el) =>
+            $emptyLayout = $(el).children(".acf-input").children(".acf-flexible-content.-empty")
+            if $emptyLayout.length
+                @autoAdd $emptyLayout
+
+    autoAdd: ($el) ->
+        $el.children(".acf-actions").find("[data-name='add-layout']").click()
+
+
+
 $ ->
     # Skip if not a page builder
     unless $(".acf-page-sections, .acf-light-repeater").length then return
@@ -106,6 +130,10 @@ $ ->
 
     # Columns width
     new ColumnWidthWatcher ".acf-input > .acf-flexible-content > .values > .layout > .acfe-modal.-settings input[type='number']"
+
+    # Auto-add rows and columns when empty
+    new AutoLayoutWatcher ".acf-sections-row", ".acf-page-sections > .acf-input > .acf-repeater > .acf-actions > [data-event='add-row']"
+    new AutoLayoutWatcher ".acf-sections-row__columns"
 
 
 

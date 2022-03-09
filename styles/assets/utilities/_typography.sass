@@ -6,49 +6,48 @@
 // > GLOBAL MODIFIER
 // ==================================================
 
-@each $bp, $bp_data in $responsive
-    +screen($bp)
++screen-suffixes() using ($suffix, $bp)
 
-        // ========== COLORS ========== //
-        // Ex: .color-primary
-        @each $color, $value in $colors
-            .color-#{"" + $color}#{screen_suffix($bp)}
-                &, *
-                    color: $value !important
+    // ========== COLORS ========== //
+    // Ex: .color-primary
+    @each $color, $value in $colors
+        .color-#{"" + $color}#{$suffix}
+            &, *
+                color: $value !important
 
-            .color-hover-#{"" + $color}#{screen_suffix($bp)}:hover
-                &, *
-                    color: $value !important
+        .color-hover-#{"" + $color}#{$suffix}:hover
+            &, *
+                color: $value !important
 
-        // ========== FONT FAMILIES ========== //
-        //: Ex:  .font-light
-        @each $slug, $stack in $fonts-stacks
-            .font-#{$slug}#{screen_suffix($bp)}
-                font-family: $stack !important
+    // ========== FONT FAMILIES ========== //
+    //: Ex:  .font-light
+    @each $slug, $stack in $fonts-stacks
+        .font-#{$slug}#{$suffix}
+            font-family: $stack !important
 
-        // ========== ALIGNMENTS ========== //
-        .text-align-center#{screen_suffix($bp)}
-            text-align: center
+    // ========== ALIGNMENTS ========== //
+    .text-align-center#{$suffix}
+        text-align: center !important
 
-        .text-align-left#{screen_suffix($bp)}
-            text-align: left
+    .text-align-left#{$suffix}
+        text-align: left !important
 
-        .text-align-right#{screen_suffix($bp)}
-            text-align: right
+    .text-align-right#{$suffix}
+        text-align: right !important
 
-        // ========== FONT SIZE ========== //
-        .text-small#{screen_suffix($bp)}
-            font-size: small
-        .text-x-small#{screen_suffix($bp)}
-            font-size: x-small
-        .text-xx-small#{screen_suffix($bp)}
-            font-size: xx-small
-        .text-large#{screen_suffix($bp)}
-            font-size: large
-        .text-x-large#{screen_suffix($bp)}
-            font-size: x-large
-        .text-xx-large#{screen_suffix($bp)}
-            font-size: xx-large
+    // ========== FONT SIZE ========== //
+    .text-small#{$suffix}
+        font-size: small
+    .text-x-small#{$suffix}
+        font-size: x-small
+    .text-xx-small#{$suffix}
+        font-size: xx-small
+    .text-large#{$suffix}
+        font-size: large
+    .text-x-large#{$suffix}
+        font-size: x-large
+    .text-xx-large#{$suffix}
+        font-size: xx-large
 
 
 // ==================================================
@@ -65,32 +64,3 @@ mark
     display: inline-block
     +font(bold)
     border-radius: 3px
-
-
-// ========== SIZES ========== //
-// .font-size-enormous
-//     +font(42px 1.2)
-//     +screen(sm)
-//         +font(32px)
-//     +screen(xs)
-//         +font(28px)
-
-// .font-size-huge
-//     +font(32px 1.2)
-//     +screen(sm)
-//         +font(28px)
-//     +screen(xs)
-//         +font(24px)
-
-// .font-size-big
-//     +font(24px 1.2)
-//     +screen(sm)
-//         +font(22px)
-//     +screen(xs)
-//         +font(20px)
-
-
-// .font-size-medium
-//     +font(18px)
-//     +screen(xs)
-//         +font(16px)
