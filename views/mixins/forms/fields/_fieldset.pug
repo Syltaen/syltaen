@@ -2,25 +2,24 @@
 //- > MIXIN : FORM FIELDSET
 //- =============================================================================
 
-mixin fieldset(form, label, name)
+mixin fieldset(form, name, label = false)
 
-    fieldset(class=in_array($name, $form["hidden"])?"is-hidden":"")&attributes($attributes)
+    fieldset(class=$form["hidden"]->hasValue($name)?"is-hidden":"" class=$form["errors"]->get($name)?"has-error":"")&attributes($attributes)
 
         if $label
             label(class=!empty($form["locks"][$name])?"is-locked":"")!= $label
 
-        if !empty($form["locks"][$name])
-            p.input.input--display.no-margin
-                if !empty($form["options"][$name][$form["locks"][$name]])
-                    != $form["options"][$name][$form["locks"][$name]]
-                    input(type="hidden" name=$name value=$form["locks"][$name])
+        if $form["locks"]->get($name)
+            p.input.input--lock.no-margin
+                input(type="hidden" name=$name value=$form["locks"]->get($name))
+
+                if $form["options"]->get($name)[$form["locks"]->get($name)]
+                    != $form["options"]->get($name)[$form["locks"]->get($name)]
                 else
-                    != $form["locks"][$name]
-                    input(type="hidden" name=$name value=$form["locks"][$name])
+                    != $form["locks"]->get($name)
 
         else
             block
                 //- The field
 
-            if !empty($form["errors"][$name])
-                p.form__error!= $form["errors"][$name]
+            p.form__error!= $form["errors"]->get($name)

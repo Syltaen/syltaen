@@ -277,7 +277,7 @@ abstract class UsersModel extends Model
                 "user_registered"     => "",
                 "user_activation_key" => "",
                 "user_status"         => "0",
-                "display_name"        => "<i>" . __("Utilisateur supprimé", "syltaen") . "</i>",
+                "display_name"        => "<i>-</i>",
             ],
             "first_name" => "",
             "last_name"  => "",
@@ -313,7 +313,9 @@ abstract class UsersModel extends Model
             return $user_id;
         }
 
-        return static::getItem($user_id)->update(false, $fields, $roles);
+        $user = static::getItem($user_id)->update(false, $fields, $roles);
+
+        return $user;
     }
 
     /**

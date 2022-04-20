@@ -107,7 +107,7 @@ class TaxonomyModel extends Model
     /**
      * Get terms by slug
      *
-     * @return void
+     * @return self
      */
     public function bySlug($slugs)
     {
@@ -142,7 +142,7 @@ class TaxonomyModel extends Model
     /**
      * Only show terms that have at least one post
      *
-     * @return void
+     * @return self
      */
     public function hideEmpty()
     {
@@ -224,7 +224,7 @@ class TaxonomyModel extends Model
     /**
      * Return all terms as an associative array of slug=>name
      *
-     * @param bool $all_option Add a "All" option
+     * @param  bool  $all_option Add a "All" option
      * @return Set
      */
     public function getAsOptions($all_option = false)
@@ -232,10 +232,10 @@ class TaxonomyModel extends Model
         $options = $this->get()->index("slug", "name");
 
         if ($all_option) {
-            $options = $options->insert(["*" => __("Tout", "syltaen")], 0);
+            $options = $options->insert(["*" => __("All", "syltaen")], 0);
         }
 
-        return $options;
+        return (array) $options;
     }
 
     /* Update parent method */
@@ -322,7 +322,7 @@ class TaxonomyModel extends Model
     /**
      * Get the hierarchy in a flat format
      *
-     * @return void
+     * @return array
      */
     public function getFlatHierarchy()
     {
@@ -397,7 +397,7 @@ class TaxonomyModel extends Model
     /**
      * Add all the translations possible for the matching terms
      *
-     * @return void
+     * @return Set
      */
     public static function addAllTermsTranslations($terms)
     {
@@ -611,7 +611,7 @@ class TaxonomyModel extends Model
     /**
      * Clear all cached data, forcing new data fetching
      *
-     * @return void
+     * @return self
      */
     public function clearCache()
     {
@@ -648,7 +648,7 @@ class TaxonomyModel extends Model
     /**
      * Get this taxonomy SLUG
      *
-     * @return void
+     * @return string
      */
     public static function getSlug()
     {

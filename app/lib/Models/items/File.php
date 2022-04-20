@@ -41,24 +41,35 @@ class File
      */
     public function getData()
     {
+        $exists = file_exists($this->path);
         return (object) [
             "ID"   => false,
             "name" => basename($this->path),
             "path" => $this->path,
             "url"  => $this->url,
-            "size" => filesize($this->path),
-            "mime" => mime_content_type($this->path),
+            "size" => $exists ? filesize($this->path) : 0,
+            "mime" => $exists ? mime_content_type($this->path) : false,
         ];
     }
 
     /**
-     * Get an attachment image URL with a spcific size
+     * Get this file's url
      *
      * @return string
      */
     public function url()
     {
         return $this->url;
+    }
+
+    /**
+     * Get this file's path
+     *
+     * @return string
+     */
+    public function path()
+    {
+        return $this->path;
     }
 
     // =============================================================================
@@ -85,6 +96,16 @@ class File
         return "<img src='" . $this->url() . "' class='{$class} image--{$size}'>";
     }
 
+    /**
+     * Check if the file is an image
+     *
+     * @return boolean
+     */
+    public function isImage()
+    {
+        $mime = !empty($this->path) ? mime_content_type($this->path) : "";
+        return strpos($mime, "image") !== false;
+    }
 
     // =============================================================================
     // > VIDEOS
@@ -99,6 +120,7 @@ class File
     {
         return "<video src='" . $this->url() . "' $attributes></video>";
     }
+
     /**
      * Check that the attachment is a video
      *

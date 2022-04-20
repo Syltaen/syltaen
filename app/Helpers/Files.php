@@ -630,4 +630,17 @@ abstract class Files
                 return implode(", ", $list);
         }
     }
+
+    /**
+     * Convert a number of bytes into a human readable format
+     *
+     * @param  int      $bytes
+     * @return string
+     */
+    public static function displaySize($bytes, $decimals = 2)
+    {
+        $size   = ["B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+        $factor = floor((strlen($bytes) - 1) / 3);
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
+    }
 }

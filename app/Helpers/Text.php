@@ -118,4 +118,16 @@ abstract class Text
 
         return "\\Syltaen\\$class";
     }
+
+    /**
+     * Return the FA unicode of an icon
+     *
+     * @return string
+     */
+    public static function fa($icon)
+    {
+        $list = file_get_contents(Files::path("styles/assets/vendors/fontawesome/_fa-icons.scss"));
+        preg_match("/{$icon}\: .(f[0-9a-z]+)/", $list, $matches);
+        return !empty($matches[1]) ? "&#x" . $matches[1] . ";" : "";
+    }
 }

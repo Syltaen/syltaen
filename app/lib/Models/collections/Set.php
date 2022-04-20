@@ -8,29 +8,9 @@ namespace Syltaen;
 
 class Set extends \ArrayObject implements \JsonSerializable
 {
-    // =============================================================================
-    // > ITEMS MANIPULATIONS
-    // =============================================================================
-
     // ==================================================
     // > FINDING ITEMS
     // ==================================================
-    /**
-     * @param  $key_path. Example : config.mail.from
-     * @return mixed
-     */
-    public function get($key_path)
-    {
-        $parts = explode(".", $key_path);
-        $value = $this;
-
-        foreach ($parts as $part) {
-            $value = $value[$part];
-        }
-
-        return $value;
-    }
-
     /**
      * Implementation of the "array_search" function
      *
@@ -146,6 +126,8 @@ class Set extends \ArrayObject implements \JsonSerializable
             // Default to the end of the set
              : $this->count());
 
+        // /* #LOG# */\Syltaen\Log::json($index);
+
         $this->exchangeArray(array_merge(
             array_slice((array) $this, 0, $index, true),
             (array) $array,
@@ -205,8 +187,8 @@ class Set extends \ArrayObject implements \JsonSerializable
         $fields = Data::normalizeFieldsKeys($fields);
 
         foreach ($fields as $key => $value) {
-            $data                 = Data::getAdvanced($key, $value, $data_source, $this);
-            $this->{$data["key"]} = $data["value"];
+            $data               = Data::getAdvanced($key, $value, $data_source, $this);
+            $this[$data["key"]] = $data["value"];
         }
 
         return $this;
@@ -586,6 +568,20 @@ class Set extends \ArrayObject implements \JsonSerializable
     }
 
     /**
+     * Sum all values in the set, or a specific column of sub-elements if specified
+     *
+     * @param  string|bool $column
+     * @return int|float
+     */
+    public function sum($column = false)
+    {
+        $items = $column ? $this->column($column) : $this;
+        return $items->reduce(function ($sum, $item) {
+            return $sum + $item;
+        }, 0);
+    }
+
+    /**
      * Check if a value is present in the set
      *
      * @return boolean
@@ -677,23 +673,54 @@ class Set extends \ArrayObject implements \JsonSerializable
     /**
      * Set a key in the array using object notation
      *
-     * @param string $name
+     * @param string $key
      * @param mixed  $val
      */
-    public function __set($name, $val)
+    public function set($key, $val)
     {
-        $this[$name] = $val;
+        $parts = static::getKeyParts($key);
+        $array = $this->getArrayCopy();
+        $pos   = &$array;
+
+        foreach ($parts as $part) {
+            $pos[$part] = $pos[$part] ?? [];
+            $pos        = &$pos[$part];
+        }
+
+        $pos = $val;
+        $this->exchangeArray($array);
     }
 
     /**
      * Get a key from the array using object notation
      *
-     * @param  string $name
-     * @return void
+     * @param  string  $key
+     * @return mixed
      */
-    public function __get($name)
+    public function get($key)
     {
-        return $this[$name];
+        $parts = static::getKeyParts($key);
+        $value = $this->getArrayCopy();
+
+        foreach ($parts as $part) {
+            $value = $value[$part] ?? null;
+            if (is_null($value)) {return $value;}
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get the parts for a complexe key
+     *
+     * @param  string  $key
+     * @return array
+     */
+    public static function getKeyParts($key)
+    {
+        $key = trim($key, "[]");
+        $key = str_replace(["][", "[", "]"], ".", $key);
+        return explode(".", $key);
     }
 
     // ==================================================

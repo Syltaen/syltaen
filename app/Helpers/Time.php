@@ -133,6 +133,18 @@ class Time
     }
 
     /**
+     * Return the human time diff from a date to another one
+     *
+     * @param  mixed    $to
+     * @param  mixed    $from
+     * @return string
+     */
+    public static function diff($from, $to = false)
+    {
+        return human_time_diff(Time::normalize($from), $to ?: time());
+    }
+
+    /**
      * Get the offset of the theme's timezone at a certain date
      */
     public static function getTimezoneOffset($date = "now")

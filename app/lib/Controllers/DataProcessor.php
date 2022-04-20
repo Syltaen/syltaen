@@ -7,7 +7,7 @@ abstract class DataProcessor
     /**
      * A reference to the controller using the processor
      *
-     * @var Controller
+     * @var PageController
      */
     protected $controller;
 
@@ -23,10 +23,22 @@ abstract class DataProcessor
      *
      * @param boolean $controller
      */
-    public function __construct($data, &$controller = false)
+    public function __construct($data = [], &$controller = false)
     {
         $this->controller = $controller;
         $this->data       = set($data);
+    }
+
+    /**
+     * Set the controller after initialization
+     *
+     * @param  Controller $controller
+     * @return self
+     */
+    public function setController(&$controller)
+    {
+        $this->controller = $controller;
+        return $this;
     }
 
     /**

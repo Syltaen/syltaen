@@ -1,0 +1,22 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELD - UPLOAD
+//- =============================================================================
+
+mixin field-upload(form, name, label = false, field_attributes = [])
+
+    -
+        $fields_field_attributes = array_merge([
+            "maxupload" => 8,
+            "attachment" => false,
+            "limit" => 1,
+        ], $field_attributes)
+
+
+    //- folder, message, attachment=1, maxupload=8, limit = 1, accept = null
+
+    +fieldset($form, $name, $label)&attributes($attributes)
+        input(
+            type="file"
+            name=$name
+            data-value=$form["prefill"]->get($name)
+        )&attributes($field_attributes)

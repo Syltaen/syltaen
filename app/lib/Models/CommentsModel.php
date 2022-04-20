@@ -37,15 +37,22 @@ abstract class CommentsModel extends Model
             /*
              * The comment author
              */
-            "@author" => function ($comment) {
+            "@author"    => function ($comment) {
                 return Users::getItem($comment->user_id);
             },
 
             /**
              * The permalink
              */
-            "@url"    => function ($comment) {
+            "@url"       => function ($comment) {
                 return get_comment_link($comment->getID());
+            },
+
+            /**
+             * Time diff in human readable format
+             */
+            "@time_diff" => function ($comment) {
+                return sprintf("%s ago", Time::diff($comment->date));
             },
         ]);
     }
@@ -56,9 +63,9 @@ abstract class CommentsModel extends Model
     /**
      * Filter comments from a specific post
      *
-     * @return void
+     * @return self
      */
-    public function of($post)
+    public function on($post)
     {
         $this->filters["post__in"] = (array) $post;
         return $this;

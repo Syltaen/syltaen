@@ -19,7 +19,7 @@ abstract class LightModel
      *
      * @var array
      */
-    public $filters = [1 => 1];
+    public $where = [1 => ["=", 1]];
 
     /**
      * Results of a GET, cached for multiple runs
@@ -45,10 +45,10 @@ abstract class LightModel
      * @param  mixed  $value
      * @return self
      */
-    public function setFilter($column, $value)
+    public function where($column, $value, $operator = "=")
     {
-        $this->cachedResults    = false;
-        $this->filters[$column] = $value;
+        $this->cachedResults  = false;
+        $this->where[$column] = [$operator, $value];
         return $this;
     }
 
@@ -60,7 +60,7 @@ abstract class LightModel
      */
     public function is($id)
     {
-        return $this->setFilter("id", $id);
+        return $this->where("id", $id);
     }
 
     /**
@@ -97,7 +97,11 @@ abstract class LightModel
      */
     public function get()
     {
-        return $this->cachedResults = ($this->cachedResults ?: Database::get_results("SELECT * FROM " . static::TABLE . " WHERE " . static::getArrayAsSQL($this->filters) . " " . $this->order)->map([$this, "processResult"]));
+        return $this->cachedResults = ($this->cachedResults ?: Database::get_results("SELECT * FROM " . static::TABLE . " WHERE " . static::getArrayAsSQL($this->where) . " " . $this->order)
+                ->map(function ($row) {
+                    return (object) array_map("maybe_unserialize", (array) $row);
+                })
+                ->map([$this, "processResult"]));
     }
 
     /**
@@ -107,7 +111,7 @@ abstract class LightModel
     public function update($updates)
     {
         $this->cachedResults = false;
-        return Database::get_results("UPDATE " . static::TABLE . " SET " . static::getArrayAsSQL($updates) . " WHERE " . static::getArrayAsSQL($this->filters));
+        return Database::get_results("UPDATE " . static::TABLE . " SET " . static::getArrayAsSQL($updates) . " WHERE " . static::getArrayAsSQL($this->where));
     }
 
     /**
@@ -117,7 +121,7 @@ abstract class LightModel
      */
     public function delete()
     {
-        return Database::get_results("DELETE FROM " . static::TABLE . " WHERE " . static::getArrayAsSQL($this->filters));
+        return Database::get_results("DELETE FROM " . static::TABLE . " WHERE " . static::getArrayAsSQL($this->where));
     }
 
     /**
@@ -128,7 +132,7 @@ abstract class LightModel
      */
     public static function add($columns)
     {
-        Database::insert(static::TABLE, $columns);
+        Database::insert(static::TABLE, array_map("maybe_serialize", $columns));
     }
 
     // =============================================================================
@@ -144,7 +148,16 @@ abstract class LightModel
     public static function getArrayAsSQL($array, $join = " AND ")
     {
         return set($array)->mapWithKey(function ($value, $key) {
-            return "$key = $value";
+            $operator = is_array($value) ? $value[0] : "=";
+            $value    = is_array($value) ? $value[1] : $value;
+
+            if (in_array($operator, ["IN", "NOT IN"])) {
+                $value = Database::inArray((array) $value);
+            } else {
+                $value = "\"$value\"";
+            }
+
+            return "$key $operator $value";
         })->join($join);
     }
 }

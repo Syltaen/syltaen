@@ -290,7 +290,7 @@ class Post extends ModelItem
      */
     public function addComment($message, $author_name = "", $author_email = "", $author_url = "", $parent_comment = 0)
     {
-        return CommentsModel::add([
+        return Comments::add([
             "comment_post_ID"      => $this->getID(),
             "comment_author"       => $author_name,
             "comment_author_email" => $author_email,

@@ -653,6 +653,15 @@ abstract class Model implements \Iterator
         return $this;
     }
 
+    /**
+     * Return a clone of the current model to avoid modifying the original
+     *
+     * @return self
+     */
+    function clone () {
+        return clone $this;
+    }
+
     // ==================================================
     // > SQL QUERY MODIFIER
     // ==================================================
@@ -815,7 +824,7 @@ abstract class Model implements \Iterator
             "post_date"             => "",
             "post_date_gmt"         => "",
             "post_content"          => "",
-            "post_title"            => "<i>" . __("Contenu supprimé", "syltaen") . "</i>",
+            "post_title"            => "<i>-</i>",
             "post_excerpt"          => "",
             "post_status"           => "nonexistant",
             "comment_status"        => "",
@@ -1153,7 +1162,7 @@ abstract class Model implements \Iterator
         }
         // Disable all fields fetching
         if ($fields === false) {
-            $this->forceFetchFields = true;
+            $this->forceFetchFields = false;
             return $this;
         }
         // Limit fetching to specific fields, add to the list
@@ -1169,7 +1178,7 @@ abstract class Model implements \Iterator
     /**
      * Clear all cached data, forcing new data fetching
      *
-     * @return void
+     * @return self
      */
     public function clearCache()
     {
@@ -1252,7 +1261,7 @@ abstract class Model implements \Iterator
     /**
      * Update the postmeta directrly (does not create a duplicate metakey for ACF)
      *
-     * @return void
+     * @return self
      */
     public function setMetas($meta)
     {
@@ -1296,7 +1305,7 @@ abstract class Model implements \Iterator
      * Delete all items matching the query
      *
      * @param  boolean $force Whether to bypass Trash and force deletion.
-     * @return void
+     * @return self
      */
     public function delete($force = false)
     {
@@ -1324,7 +1333,7 @@ abstract class Model implements \Iterator
     /**
      * Get the meta values of all the posts for a specific key
      *
-     * @return void
+     * @return Set
      */
     public static function getMassMeta($meta_keys, $object_ids = false, $groupby_value = false, $index_key = "object_id", $value_key = "meta_value")
     {

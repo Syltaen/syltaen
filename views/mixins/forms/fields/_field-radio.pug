@@ -1,0 +1,17 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELD - RADIO
+//- =============================================================================
+
+mixin field-radio(form, name, label = false, layout = "column")
+
+    +fieldset($form, $name, $label)&attributes($attributes)
+
+        if !empty($form["options"]->get($name))
+            ul(class=$layout)
+
+                - $no_keys = !array_keys($form["options"]->get($name))[0]
+                each $label, $value in $form["options"]->get($name)
+                    li.gr-none: label.choice-label
+                        - $value = $no_keys ? $label : $value
+                        input(type="radio" name=$name value=$value checked=$form["prefill"]->get($name)==$value)
+                        != $label

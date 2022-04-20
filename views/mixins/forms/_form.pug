@@ -10,6 +10,8 @@ mixin form($form)
 
     else
         form(method="post")&attributes($attributes)
+            input(type="hidden" name="honeypot")
+
             if !empty($form["errors"]["global"])
                 p.color-error.font-bold.text-align-center!= $form["errors"]["global"]
 

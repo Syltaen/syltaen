@@ -33,6 +33,7 @@ class Attachment extends Post
             "path" => $upload_dir["basedir"] . "/" . $file,
             "url"  => $this->url("thumbnail"),
             "size" => filesize($upload_dir["basedir"] . "/" . $file),
+            "mime" => mime_content_type($upload_dir["basedir"] . "/" . $file),
         ];
     }
 
@@ -49,6 +50,16 @@ class Attachment extends Post
         }
 
         return wp_get_attachment_image_url($this->getID(), $size) ?: wp_get_attachment_url($this->getID());
+    }
+
+    /**
+     * Get the filepath for this attachment
+     *
+     * @return string
+     */
+    public function path()
+    {
+        return get_attached_file($this->getID());
     }
 
     // =============================================================================
@@ -90,6 +101,16 @@ class Attachment extends Post
         return $tag;
     }
 
+    /**
+     * Check if the file is an image
+     *
+     * @return boolean
+     */
+    public function isImage()
+    {
+        return wp_attachment_is("image", $this->ID);
+    }
+
     // =============================================================================
     // > VIDEOS
     // =============================================================================
@@ -112,7 +133,68 @@ class Attachment extends Post
      */
     public function isVideo()
     {
-        $mime = isset($this->post_mime_type) ? $this->post_mime_type : get_post_mime_type($this->getID());
-        return strpos($mime, "video") !== false;
+        return wp_attachment_is("video", $this->ID);
+    }
+
+    // =============================================================================
+    // > GLOBAL CHECKS
+    // =============================================================================
+    /**
+     * Get all the uses of this attachment
+     *
+     * @return array
+     */
+    public function getUses()
+    {
+        $id                = $this->getID();
+        $filename          = pathinfo($this->path(), PATHINFO_FILENAME);
+        $excluded_metakeys = ["_wp_attached_file", "_wp_attachment_metadata", "amazonS3_cache"];
+
+        // Query different tables to check for uses of this attachment
+        $uses = [
+
+            // In posts
+            "posts"             => Database::get_results("SELECT ID, post_content, post_excerpt FROM posts WHERE post_content LIKE '%$filename%' OR post_excerpt LIKE '%$filename%'"),
+
+            // In postmeta
+            "postmeta"          => Database::get_results(
+                "SELECT post_id, meta_key, meta_value FROM postmeta
+                WHERE (meta_value LIKE \"%$filename%\" OR meta_value = $id) AND meta_key NOT IN " . Database::inArray($excluded_metakeys)
+            ),
+
+            // In term descriptions
+            "term_descriptions" => Database::get_results("SELECT term_id, taxonomy, description FROM term_taxonomy WHERE description LIKE \"%$filename%\""),
+
+            // In termmeta
+            "termmeta"          => Database::get_results(
+                "SELECT tm.term_id term_id, tm.meta_key meta_key, tm.meta_value meta_value, tt.taxonomy taxonomy FROM termmeta tm
+                 JOIN term_taxonomy tt ON tt.term_id = tm.term_id
+                WHERE (meta_value LIKE \"%$filename%\" OR meta_value = $id)"
+            ),
+
+            // In options
+            "options"           => Database::get_results("SELECT option_name, option_value FROM options WHERE option_value LIKE \"%$filename%\""),
+        ];
+
+        // Merge all into a readable list
+        return array_merge(
+            (array) $uses["posts"]->map(function ($row) {
+                return ["[$row->ID] " . get_the_title($row->ID), "Contenu", get_edit_post_link($row->ID)];
+            }),
+            (array) $uses["postmeta"]->map(function ($row) {
+                return ["[$row->post_id] " . get_the_title($row->post_id), "Meta : $row->meta_key", get_edit_post_link($row->post_id)];
+            }),
+            (array) $uses["term_descriptions"]->map(function ($row) {
+                $term = get_term((int) $row->term_id, $row->taxonomy);
+                return ["[$term->term_id] $term->name ($term->taxonomy)", "Description", get_edit_term_link($term->term_id, $term->taxonomy)];
+            }),
+            (array) $uses["termmeta"]->map(function ($row) {
+                $term = get_term((int) $row->term_id, $row->taxonomy);
+                return ["[$term->term_id] $term->name ($term->taxonomy)", "Meta : $row->meta_key", get_edit_term_link($term->term_id, $term->taxonomy)];
+            }),
+            (array) $uses["options"]->map(function ($row) {
+                return ["Option", "$row->option_name", false];
+            }),
+        );
     }
 }

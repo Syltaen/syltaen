@@ -293,11 +293,13 @@ class Pagination
     /**
      * Get the current URL without pagination or parameters
      *
+     * @param  array    $query_args
+     * @param  bool     $merge        Merge query args with existing query
      * @return string
      */
-    public static function getBaseURL()
+    public static function getBaseURL($query_args = [], $merge = false)
     {
-        $url = Route::getFullUrl([], false);
+        $url = Route::getFullUrl($query_args, $merge);
         $url = preg_replace("/\/$/", "", $url);
         $url = preg_replace("/\/[0-9]*$/", "", $url);
         return $url;

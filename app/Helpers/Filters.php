@@ -24,9 +24,8 @@ class Filters
         $this->data    = [];
 
         // Register the form action page
-        $this->data["action"] = Pagination::getBaseURL() . $this->archive->getAnchor();
+        $this->data["action"] = Pagination::getBaseURL() . ($this->archive ? $this->archive->getAnchor() : "");
     }
-
 
     // =============================================================================
     // > FIELDS
@@ -59,12 +58,13 @@ class Filters
      *
      * @param $name
      */
-    public function addSearch($name = "s")
+    public function addSearch($label = null, $placeholder = "", $name = "s")
     {
         return $this->addField([
-            "type"  => "text",
-            "name"  => $name,
-            "label" => __("Rechercher", "syltaen"),
+            "placeholder" => $placeholder,
+            "type"        => "search",
+            "name"        => $name,
+            "label"       => $label ?: __("Search", "syltaen"),
         ], "search");
     }
 

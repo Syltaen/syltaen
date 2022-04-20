@@ -192,8 +192,8 @@ class View
         $context = new RecursiveSet($context, true);
 
         // Add messages
-        $context->error_message   = Data::currentPage("error_message");
-        $context->success_message = Data::currentPage("success_message");
+        $context["error_message"]   = Data::currentPage("error_message");
+        $context["success_message"] = Data::currentPage("success_message");
 
         // Empty sections if requested
         if (Data::currentPage("empty_content")) {
@@ -267,6 +267,16 @@ class View
             // Get a custom route
             "_route"     => function ($key) {
                 return Route::getCustom($key);
+            },
+
+            // FA unicode
+            "_fa"        => function ($icon) {
+                return Text::fa($icon);
+            },
+
+            // Sets' methods
+            "_set"       => function ($array) {
+                return set($array);
             },
         ]);
     }

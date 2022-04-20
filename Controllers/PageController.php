@@ -33,7 +33,7 @@ class PageController extends BaseController
      */
     public function processSections($acf_key = "sections")
     {
-        return set(Data::get($acf_key))->mapWithKey(function ($section, $i) {
+        return set(Data::get($acf_key, null, []))->mapWithKey(function ($section, $i) {
             return (new SectionProcessor($section, $this, $i))->getData();
         });
     }

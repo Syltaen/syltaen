@@ -1,0 +1,25 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELD - SELECT
+//- =============================================================================
+
+mixin field-select(form, name, label = false, field_attributes = false)
+
+    +fieldset($form, $name, $label)&attributes($attributes)
+        select(name=$name min-input-length="0" value=$form["prefill"]->get($name))&attributes($field_attributes)
+
+            //- source="source"
+            //- clearable="1"
+            //- multiple="1"
+            //- tags="1"
+
+            block
+
+            if !empty($form["options"]->get($name))
+                - $no_keys = !array_keys($form["options"]->get($name))[0]
+                each $label, $value in $form["options"]->get($name)
+                    - $value = $no_keys ? $label : $value
+                    option(value=$value)!= $label
+
+            else if !empty($form["prefill"]->get($name))
+                option(value=$form["prefill"]->get($name))
+                    != get_the_title($form["prefill"]->get($name))

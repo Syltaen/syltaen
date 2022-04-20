@@ -5,28 +5,6 @@ namespace Syltaen;
 abstract class Hooks
 {
     /**
-     * Register a new ajax hook
-     *
-     * @param  string   $name       The hook name
-     * @param  callable $callback   The function to run
-     * @param  boolean  $private
-     * @return void
-     */
-    public static function ajax($name, $callback = false, $private = false)
-    {
-        // No callback : execute ajax
-        if (!$callback) {
-            return self::exec("wp_ajax_" . $name);
-        }
-
-        // Else : Register hook
-        add_action("wp_ajax_" . $name, $callback);
-        if (!$private) {
-            add_action("wp_ajax_nopriv_" . $name, $callback);
-        }
-    }
-
-    /**
      * Register a hook
      *
      * @param  string|array $hooks
@@ -84,8 +62,83 @@ abstract class Hooks
      *
      * @return void
      */
-    public static function list($hook) {
+    function list($hook) {
         global $wp_filter;
         return $wp_filter[$hook];
+    }
+
+    // =============================================================================
+    // > AJAX
+    // =============================================================================
+    /**
+     * Register a new ajax hook
+     *
+     * @param  string   $name       The hook name
+     * @param  callable $callback   The function to run
+     * @param  boolean  $private
+     * @return void
+     */
+    public static function ajax($name, $callback = false, $private = false)
+    {
+        // No callback : execute ajax
+        if (!$callback) {
+            return self::exec("wp_ajax_" . $name);
+        }
+
+        // Else : Register hook
+        add_action("wp_ajax_" . $name, $callback);
+        if (!$private) {
+            add_action("wp_ajax_nopriv_" . $name, $callback);
+        }
+    }
+
+    /**
+     * Add the different hooks used to generate AJAX select options
+     *
+     * @param  string   $name
+     * @param  callable $model
+     * @param  callable $result_format
+     * @return void
+     */
+    public static function addSelectOptions($name, $model, $result_format, $add_label = false)
+    {
+        add_filter("syltaen_select_{$name}_model", $model);
+        add_filter("syltaen_select_{$name}_format", $result_format);
+
+        add_filter("syltaen_select_{$name}_options", function () use ($name, $add_label) {
+            $model = apply_filters("syltaen_select_{$name}_model", false);
+
+            $results = (array) $model->map(function ($item) use ($name) {
+                return apply_filters("syltaen_select_{$name}_format", $item);
+            });
+
+            if ($add_label) {
+                $results[] = [
+                    "modifier"  => "add",
+                    "id"        => "new",
+                    "selection" => $add_label,
+                    "result"    => $add_label,
+                ];
+            }
+
+            return $results;
+        });
+
+        static::ajax("options_{$name}", function () use ($name) {
+            wp_send_json([
+                "results" => apply_filters("syltaen_select_{$name}_options", [])
+            ]);
+        });
+    }
+
+    /**
+     * Get the AJAX options for specific field
+     *
+     * @param  string $name
+     * @return array  of options
+     */
+    public static function getSelectOptions($name)
+    {
+        return apply_filters("syltaen_select_{$name}_options", []);
     }
 }

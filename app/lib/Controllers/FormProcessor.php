@@ -5,67 +5,75 @@ namespace Syltaen;
 abstract class FormProcessor extends DataProcessor
 {
     /**
-     * Fields that will be auto-validated
-     */
-    public $required_fields = [];
-
-    /**
      * List of errors encountered during processing
      *
-     * @var array
+     * @var Set
      */
     public $errors = [];
 
     /**
      * List of prefilled-fields
      *
-     * @var array
+     * @var Set
      */
     public $prefill = [];
 
     /**
      * List of locked-fields
      *
-     * @var array
+     * @var Set
      */
     public $locks = [];
 
     /**
      * List of fields to hide
-     * @var array
+     * @var Set
      */
     public $hidden = [];
 
     /**
      * List of choice options for select/radio/checkbox fields
      *
-     * @var array
+     * @var Set
      */
     public $options = [];
 
     /**
      * Submited data
      *
-     * @var array
+     * @var Set
      */
     public $payload = [];
+
+    /**
+     * The form validator
+     *
+     * @var FormValidator
+     */
+    private $validator = null;
 
     /**
      * The message to display globaly, if any
      *
      * @var string
      */
-    public $global_error_message = "Certaines champs ne sont pas corrects, merci de les corriger.";
+    public $global_error_message = "There were some errors with your submission.<br>Please review the form and submit it again.";
 
     /**
      * Processing the rendering context
      */
     public function process()
     {
-        $this->payload = $_POST;
+        $this->payload   = set($_POST);
+        $this->errors    = set();
+        $this->prefill   = set();
+        $this->locks     = set();
+        $this->hidden    = set();
+        $this->options   = set();
+        $this->validator = new FormValidator($this);
 
         // Get data that needed at any time
-        $this->fetchRequirements();
+        $this->init();
 
         // Check permission
         $this->checkPermissions();
@@ -74,27 +82,27 @@ abstract class FormProcessor extends DataProcessor
         $this->setup();
 
         // Get data that are needed at any time
-        $this->addPrefill($this->payload);
+        $this->addPrefill((array) $this->payload);
 
         // Extra config from hook
         do_action("syltaen_form_init", $this);
 
         // If data is posted, process it
-        if (!empty($this->payload)) {
+        if (!$this->payload->empty()) {
             // Check for errors
             $this->validatePayload();
 
             // If there is none, process the data
-            if (empty($this->errors)) {
+            if ($this->errors->empty()) {
                 $this->post();
             }
 
-            if (!empty($this->errors) && $this->global_error_message) {
+            if (!$this->errors->empty() && $this->global_error_message) {
                 $this->controller->error($this->global_error_message);
             }
 
             // If eveyting is good, continue
-            if (empty($this->errors)) {
+            if ($this->errors->empty()) {
                 do_action("syltaen_form_success", $this);
                 $this->continueToNextPage();
             } else {
@@ -114,6 +122,7 @@ abstract class FormProcessor extends DataProcessor
         $this->data["locks"]   = $this->locks;
         $this->data["hidden"]  = $this->hidden;
         $this->data["errors"]  = $this->errors;
+
         $this->get();
 
         return $this->data;
@@ -177,10 +186,7 @@ abstract class FormProcessor extends DataProcessor
      */
     public function addOptions($options)
     {
-        $this->options = array_merge(
-            $this->options,
-            $options,
-        );
+        $this->options->insert((array) $options);
         return $this;
     }
 
@@ -189,29 +195,53 @@ abstract class FormProcessor extends DataProcessor
      */
     public function addPrefill($prefill)
     {
-        $this->prefill = array_merge(
-            $this->prefill,
-            $prefill
-        );
+        $this->prefill->insert($prefill);
         return $this;
     }
 
     /**
-     * @return mixed
+     * Prepare and prefill data for upload fields
+     *
+     * @param  string $field The field name
+     * @param  array  $value List of File or Attachment
+     * @return void
      */
-    public function addUploadPrefill($field, $attachment)
+    public function addUploadPrefill($field, $values = [])
     {
-        // Add prefilled data
-        if ($attachment && empty($this->payload[$field])) {
-            $this->addPrefill([
-                $field => [$attachment->getData()],
-            ]);
-        }
+        // Add prefilled data : attachment or basic file
+        $this->prefill->set($field, array_map(function ($file) {
+            return $file->getData();
+        }, $values));
 
         // Process payload data
-        if (!empty($this->payload[$field])) {
-            $this->payload[$field] = json_decode(stripslashes($this->payload[$field]));
+        if ($this->payload->get($field)) {
+            $this->payload->set($field, array_map(function ($file) {
+                $file = !empty($file->ID) ? new Attachment((int) $file->ID) : new File($file->file ?? $file->path);
+                return $file->getData();
+            }, json_decode(stripslashes($this->payload->get($field)))));
         }
+    }
+
+    /**
+     * Prefill ajax select option with selected value, allows for embeded fields
+     *
+     * @return void
+     */
+    public function addAjaxSelectPrefill($field, $optionsname = false, $value = false)
+    {
+        $value = $this->payload->get($field) ?: $value;
+        if (!$value) {return false;}
+
+        $options = set(Hooks::getSelectOptions($optionsname ?: $field))->index("id");
+        $prefill = [];
+
+        foreach ((array) $value as $val) {
+            if (isset($options[$val]["selection"])) {
+                $prefill[$val] = $options[$val]["selection"];
+            }
+        }
+
+        $this->options->set($field, $prefill);
     }
 
     /**
@@ -223,10 +253,7 @@ abstract class FormProcessor extends DataProcessor
      */
     public function addLocks($locks, $hidden_locks = false)
     {
-        $this->locks = array_merge(
-            $this->locks,
-            $locks
-        );
+        $this->locks->insert($locks);
 
         if ($hidden_locks) {
             $this->addHidden(array_keys($locks));
@@ -243,9 +270,7 @@ abstract class FormProcessor extends DataProcessor
      */
     public function addHidden($hidden_keys)
     {
-        $this->hidden = array_merge(
-            $this->hidden,
-            $hidden_keys);
+        $this->hidden->insert($hidden_keys);
         return $this;
     }
 
@@ -257,22 +282,35 @@ abstract class FormProcessor extends DataProcessor
 
     public function validatePayload()
     {
-        $this->validateRequired($this->required_fields);
+        // Should be extended by children
     }
 
     /**
-     * Check that these fields are filled in.
+     * Validate one or several fields
      *
-     * @return void
+     * @param string|array $fields
+     * @param string|array $rules
      */
-    public function validateRequired($fields, $error_message = "Ce champs est requis.")
+    public function validate($fields, $rules = false, $custom_error_message = false)
     {
-        $fields = apply_filters(static::class . "/required_fields", $fields, $this);
-        /* #LOG# */\Syltaen\Log::debug(static::class . "/required_fields");
+        // Validated several fields/rules in one go
+        if (is_array($fields) && !$rules) {
+            foreach ($fields as $subfields => $subrules) {
+                $this->validate($subfields, $subrules, $custom_error_message);
+            }
+            return;
+        }
 
-        foreach ((array) $fields as $req) {
-            if (empty($this->payload[$req]) && !isset($this->locks[$req])) {
-                $this->errors[$req] = $error_message;
+        $fields = is_string($fields) ? array_map("trim", explode("|", $fields)) : (array) $fields;
+        $rules  = is_string($rules) ? array_map("trim", explode("|", $rules)) : (array) $rules;
+
+        // Send each field/rule throught the FormValidator
+        foreach ($fields as $field) {
+            foreach ($rules as $rule) {
+                $rule  = explode(":", $rule);
+                $error = $this->validator->{$rule[0]}($field, $rule[1] ?? null, $custom_error_message);
+                // Skip other validation for this field in case of error
+                if ($error) {break;}
             }
         }
     }
@@ -291,7 +329,7 @@ abstract class FormProcessor extends DataProcessor
      *
      * @return void
      */
-    public function fetchRequirements()
+    public function init()
     {
     }
 }
