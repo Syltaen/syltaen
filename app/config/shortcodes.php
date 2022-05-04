@@ -21,12 +21,3 @@ add_shortcode("menu", function ($atts, $content = null) {
 add_shortcode("year", function () {
     return Time::current("Y");
 });
-
-// =============================================================================
-// > FORMS
-// =============================================================================
-
-// NINJA FORMS
-add_shortcode("ninja_form", function ($atts) {
-    return "<div class='nf-form-loader' data-id='" . $atts["id"] . "'></div>";
-});

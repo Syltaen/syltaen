@@ -126,25 +126,6 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Pre-load all the ninja forms so that they can be used with barba.js
-     *
-     * @return array of forms
-     */
-    protected function forms()
-    {
-        if (!function_exists("Ninja_Forms")) {
-            return [];
-        }
-
-        return array_map(function ($formModel) {
-            return [
-                "id"   => $formModel->get_id(),
-                "html" => do_shortcode("[ninja_forms id={$formModel->get_id()}]"),
-            ];
-        }, Ninja_Forms()->form()->get_forms());
-    }
-
-    /**
      * Generated the classes used on the body tag
      *
      * @return array of string
@@ -218,7 +199,6 @@ abstract class BaseController extends Controller
             "menus"        => $this->menus(),
             "header"       => $this->header(),
             "footer"       => $this->footer(),
-            "forms"        => $this->forms(),
 
             "name"         => get_bloginfo("name"),
             "url"          => get_bloginfo("url") . "/",

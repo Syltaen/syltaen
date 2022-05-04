@@ -26,7 +26,6 @@
     "webpack-livereload-plugin": "^3.0.2"
   },
   "dependencies": {
-    "barba.js": "^1.0.0",
     "dropzone": "^5.7.0",
     "jquery-hammerjs": "^2.0.0",
     "jquery-sticky": "^1.0.4",

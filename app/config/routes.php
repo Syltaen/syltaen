@@ -48,9 +48,9 @@ Route::add([[
 // ==================================================
 // > CUSTOM TERM LINK
 // ==================================================
-add_filter("term_link", function ($termlink, $term, $taxonomy) {
-    if ($taxonomy == NewsTaxonomy::SLUG) {
-        return News::getArchiveURL("?type={$term->slug}");
-    }
-    return $term;
-}, 10, 3);
+// add_filter("term_link", function ($termlink, $term, $taxonomy) {
+//     if ($taxonomy == NewsTaxonomy::SLUG) {
+//         return News::getArchiveURL("?type={$term->slug}");
+//     }
+//     return $term;
+// }, 10, 3);

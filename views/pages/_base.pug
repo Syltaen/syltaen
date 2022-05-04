@@ -49,7 +49,7 @@ html(lang=$site["language"])
                 //- > CONTENT
                 //- ==================================================
                 block main
-                    main.site-main#site-views(role="main"): .site-view(data-namespace="page")
+                    main.site-main(role="main")
 
                         //- ========== INTRO ========== -//
                         block intro
@@ -111,9 +111,5 @@ html(lang=$site["language"])
         //- > OVERLAYS
         //- ==================================================
         #scroll-top
-
-        each $form in $site["forms"]
-            .nf-form-loaded(data-id=$form["id"])
-                != $form["html"]
 
         = wp_footer()

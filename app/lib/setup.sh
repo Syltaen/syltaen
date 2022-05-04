@@ -6,14 +6,14 @@ wp core download --locale=fr_FR
 
 
 # Create wp-config.php with given db info
-wp core config --dbuser=root --dbpass=root --dbhost=127.0.0.1 --prompt=dbprefix,dbname
+wp core config --dbuser=root --dbpass=root --dbhost=localhost --prompt=dbprefix,dbname
 
 
 # Install WordPress, try and guess config based on current user
 URL=$(pwd)
 
 if [ $(whoami) = "stanley.lambot" ]; then
-    URL=http://${URL/\/Users\/stanley.lambot\//}
+    URL=http://localhost/${URL/\/opt\/www\//}
     wp core install --url=${URL} --admin_user=Syltaen --admin_email=stanley.lambot@hungryminds.be --prompt=title
 elif [ $(whoami) == "jerome.renders" ]; then
     URL=http://${URL/\/Users\/jerome.renders\//}
@@ -22,23 +22,23 @@ else
     wp core install --prompt=title,url,admin_user,admin_email
 fi
 
+# Install composer vendors
+cd ./syltaen/app/vendors
+composer install
+
+
+# Install npm modules
+cd ./../../
+npm install
+
 
 # Remove all themes, create a symlink to this one and activate it
+cd ./../
 rm -rd wp-content/themes
 mkdir wp-content/themes
 cd wp-content/themes
 ln -s ../../syltaen
 wp theme activate syltaen
-
-
-# Install composer vendors
-cd ../../syltaen
-composer install -d=app/vendors
-
-
-# Install npm modules
-npm install
-
 
 # Remove unused plugins and install suggested ones
 wp plugin delete $(wp plugin list --status=inactive --field=name)
@@ -53,11 +53,13 @@ wp plugin install duplicate-post --activate
 wp plugin install wp-fastest-cache --activate
 wp plugin install wordpress-seo --activate
 wp plugin install ga-in --activate
-wp plugin install https://github.com/Hungry-Minds/hungryminds-cookies --activate
-
+wp plugin install cookie-law-info --activate
+wp plugin install acf-extended --activate
+wp plugin install wp-mail-catcher --activate
+wp plugin install simple-custom-post-order --activate
 
 # Create a symlink to the theme plugin
-cd ../wp-content/plugins
+cd ../plugins
 ln -s ../../syltaen/app/lib/plugin syltaen-plugin
 wp plugin activate syltaen-plugin
 

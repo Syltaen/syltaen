@@ -14,7 +14,7 @@ import "./../tools/jquery.scrollnav.coffee"
 import "./../tools/jquery.incrementor.coffee"
 import "./../tools/jquery.siteMessage.coffee"
 
-export default in: ->
+$ ->
 
     # =============================================================================
     # > ANIMATIONS
