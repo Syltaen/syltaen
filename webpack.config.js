@@ -17,7 +17,7 @@ const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 
 module.exports = {
-    cache: false,
+    cache: true,
     stats: "errors-only",
 
     // IN

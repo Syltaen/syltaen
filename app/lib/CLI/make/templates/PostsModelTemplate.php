@@ -20,10 +20,6 @@ class ClassName extends PostsModel
     //     "old_postsmodeltemplate"  => ["PostsModelTemplate dépassé", "PostsModelTemplate dépassés"]
     // ];
 
-    // protected $dateFormats = [
-    //     "short"   => "d/m/Y"
-    // ];
-
     public function __construct()
     {
         parent::__construct();

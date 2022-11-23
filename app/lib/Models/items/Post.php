@@ -39,6 +39,17 @@ class Post extends ModelItem
     }
 
     /**
+     * Get the date of the post
+     *
+     * @param  string   $format
+     * @return string
+     */
+    public function getDate($format = "d/m/Y")
+    {
+        return date_i18n($format, strtotime($this->post_date));
+    }
+
+    /**
      * Get a specific meta data
      *
      * @param  string

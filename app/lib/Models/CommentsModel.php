@@ -130,26 +130,6 @@ abstract class CommentsModel extends Model
     }
 
     /**
-     * Add all date formats specified in the model to a post object
-     *
-     * @param  WP_Post $post
-     * @return void
-     */
-    protected function populateDateFormats(&$comment)
-    {
-        if (!$this->hasAttr("date")) {
-            return false;
-        }
-
-        $comment->date = [];
-        foreach ($this->dateFormats as $name => $format) {
-            if ($format) {
-                $comment->date[$name] = get_comment_date($format, $comment->ID);
-            }
-        }
-    }
-
-    /**
      * Set a default filter because runing WP_User_Query without any argument return no result
      *
      * @param  boolean $filter_keys

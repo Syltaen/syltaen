@@ -15,11 +15,4 @@ class News extends PostsModel
     const TAXONOMIES = [
         NewsTaxonomy::class,
     ];
-
-    /**
-     * @var array
-     */
-    public $dateFormats = [
-        "short" => "d/m/Y",
-    ];
 }

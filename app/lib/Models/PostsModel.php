@@ -451,22 +451,6 @@ abstract class PostsModel extends Model
     }
 
     // ==================================================
-    // > DATA HANDLING FOR EACH POST
-    // ==================================================
-    /**
-     * Add new date formats to the list
-     *
-     * @param  string $name
-     * @param  string $format
-     * @return self
-     */
-    public function addDateFormats($formats)
-    {
-        $this->dateFormats = array_merge($this->dateFormats, $formats);
-        return $this;
-    }
-
-    // ==================================================
     // > POST TYPE REGISTRATION
     // ==================================================
     /**
