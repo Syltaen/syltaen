@@ -151,11 +151,15 @@ class View
                 "upToDateCheck"      => WP_DEBUG, // Alaws serve cached versions in production
 
                 // Options
-                "strict"             => true,
+                "strict" => true,
                 "basedir"            => Files::path("/"),
 
                 "debug"              => WP_DEBUG,
+                "enable_profiler"    => false,
             ]);
+
+            // Auto-includes all mixins
+            // static::$renderer->setOption("includes", Files::findIn("*.pug", ["views/mixins/"], 3, true));
         }
 
         return static::$renderer;

@@ -5,6 +5,11 @@ namespace Syltaen;
 abstract class FormProcessor extends DataProcessor
 {
     /**
+     * The form method to use
+     */
+    const METHOD = "POST";
+
+    /**
      * List of errors encountered during processing
      *
      * @var Set
@@ -57,44 +62,71 @@ abstract class FormProcessor extends DataProcessor
      *
      * @var string
      */
-    public $global_error_message = "There were some errors with your submission.<br>Please review the form and submit it again.";
+    protected $global_error_message = "There were some errors with your submission.<br>Please review the form and submit it again.";
+
+    /**
+     * Initialization
+     *
+     * @param boolean $controller
+     */
+    public function __construct($data = [], &$controller = false)
+    {
+        parent::__construct($data, $controller);
+
+        $this->payload   = set(static::METHOD == "POST" ? $_POST : $_GET);
+        $this->errors    = set();
+        $this->prefill   = set();
+        $this->options   = set();
+        $this->locks     = set();
+        $this->hidden    = set();
+        $this->validator = new FormValidator($this);
+    }
+
+    // =============================================================================
+    // > LIFE CYCLE
+    // =============================================================================
 
     /**
      * Processing the rendering context
      */
     public function process()
     {
-        $this->payload   = set($_POST);
-        $this->errors    = set();
-        $this->prefill   = set();
-        $this->locks     = set();
-        $this->hidden    = set();
-        $this->options   = set();
-        $this->validator = new FormValidator($this);
-
         // Get data that needed at any time
         $this->init();
 
         // Check permission
         $this->checkPermissions();
 
-        // Get fields options
-        $this->setup();
-
-        // Get data that are needed at any time
+        // Provide prefilled data for the form
+        $this->prefill();
         $this->addPrefill((array) $this->payload);
+
+        // Setup fields : options, locks, hidden values, ...
+        $this->setup();
 
         // Extra config from hook
         do_action("syltaen_form_init", $this);
 
         // If data is posted, process it
         if (!$this->payload->empty()) {
+            // Process the submited payload before anything else
+            $this->processPayload();
+
+            // Merge the payload with prefilled and locked data
+            $this->payload = set(array_merge(
+                (array) $this->prefill,
+                (array) $this->payload,
+                (array) $this->locks,
+            ));
+
             // Check for errors
             $this->validatePayload();
 
             // If there is none, process the data
             if ($this->errors->empty()) {
+                do_action("syltaen_form_before_post", $this);
                 $this->post();
+                do_action("syltaen_form_after_post", $this);
             }
 
             if (!$this->errors->empty() && $this->global_error_message) {
@@ -129,12 +161,59 @@ abstract class FormProcessor extends DataProcessor
     }
 
     /**
-     * Process get requests
+     * Fetch data that is required for GET and POST
      *
      * @return void
      */
-    public function get()
+    public function init()
     {
+    }
+
+    /**
+     * Check the user access to this form
+     *
+     * @return void
+     */
+    public function checkPermissions()
+    {
+    }
+
+    /**
+     * Base prefill of the form : stored value, payload, processed data...
+     *
+     * @return void
+     */
+    public function prefill()
+    {
+        // No prefill by default (except the payload)
+    }
+
+    /**
+     * Define the different available options for each fields
+     *
+     * @return void
+     */
+    public function setup()
+    {
+        // No custom options by default
+    }
+
+    /**
+     * Allow to transform the submited payload before anything else is done with it
+     */
+    public function processPayload()
+    {
+    }
+
+    /**
+     * Validate that the payload can be processed
+     *
+     * @return void
+     */
+
+    public function validatePayload()
+    {
+        // Should be extended by children
     }
 
     /**
@@ -169,27 +248,17 @@ abstract class FormProcessor extends DataProcessor
     }
 
     /**
-     * Setup the form : prefill data, add options, add locks
+     * Process get requests
      *
      * @return void
      */
-    public function setup()
+    public function get()
     {
-        // No custom prefill/options/locks by default
     }
 
-    /**
-     * Add new options to the list
-     *
-     * @param  array  $options
-     * @return self
-     */
-    public function addOptions($options)
-    {
-        $this->options->insert((array) $options);
-        return $this;
-    }
-
+    // =============================================================================
+    // > SETUP
+    // =============================================================================
     /**
      * @return mixed
      */
@@ -197,51 +266,6 @@ abstract class FormProcessor extends DataProcessor
     {
         $this->prefill->insert($prefill);
         return $this;
-    }
-
-    /**
-     * Prepare and prefill data for upload fields
-     *
-     * @param  string $field The field name
-     * @param  array  $value List of File or Attachment
-     * @return void
-     */
-    public function addUploadPrefill($field, $values = [])
-    {
-        // Add prefilled data : attachment or basic file
-        $this->prefill->set($field, array_map(function ($file) {
-            return $file->getData();
-        }, $values));
-
-        // Process payload data
-        if ($this->payload->get($field)) {
-            $this->payload->set($field, array_map(function ($file) {
-                $file = !empty($file->ID) ? new Attachment((int) $file->ID) : new File($file->file ?? $file->path);
-                return $file->getData();
-            }, json_decode(stripslashes($this->payload->get($field)))));
-        }
-    }
-
-    /**
-     * Prefill ajax select option with selected value, allows for embeded fields
-     *
-     * @return void
-     */
-    public function addAjaxSelectPrefill($field, $optionsname = false, $value = false)
-    {
-        $value = $this->payload->get($field) ?: $value;
-        if (!$value) {return false;}
-
-        $options = set(Hooks::getSelectOptions($optionsname ?: $field))->index("id");
-        $prefill = [];
-
-        foreach ((array) $value as $val) {
-            if (isset($options[$val]["selection"])) {
-                $prefill[$val] = $options[$val]["selection"];
-            }
-        }
-
-        $this->options->set($field, $prefill);
     }
 
     /**
@@ -254,6 +278,11 @@ abstract class FormProcessor extends DataProcessor
     public function addLocks($locks, $hidden_locks = false)
     {
         $this->locks->insert($locks);
+        $this->prefill->insert($locks);
+
+        if (!$this->payload->empty()) {
+            $this->payload->insert((array) $locks);
+        }
 
         if ($hidden_locks) {
             $this->addHidden(array_keys($locks));
@@ -275,14 +304,159 @@ abstract class FormProcessor extends DataProcessor
     }
 
     /**
-     * Validate that the payload can be processed
+     * Add new options to the list
+     *
+     * @param  array  $options
+     * @return self
+     */
+    public function addOptions($fields)
+    {
+        $this->options->insert((array) $fields);
+        return $this;
+    }
+
+    /**
+     * Get list of options from the settings
+     *
+     * @param  string  $field_name
+     * @param  boolean $add_other
+     * @param  boolean $map_callback
+     * @return array
+     */
+    public static function getOptionsFromSettings($field_name, $add_other = false, $map_callback = false)
+    {
+        $options = set(Data::option("fields_{$field_name}"));
+
+        // Apply optional callback / filter
+        if ($map_callback) {
+            $options = $options->map($map_callback)->filter();
+        }
+
+        // Add other
+        if ($add_other) {
+            $options->insert([["name" => "Other"]]);
+        }
+
+        // Transform intro array of values
+        return $options->mapAssoc(function ($i, $option) {
+            if (!empty($option["subs"])) {
+                return [
+                    $option["name"] => [$option["name"], (array) set($option["subs"])->index("value", "label")],
+                ];
+            }
+
+            return [$option["name"] => $option["name"]];
+        });
+    }
+
+    /**
+     * Add options for each subfields of a repeater
+     *
+     * @param  string $field
+     * @param  string $subfield
+     * @param  array  $options
+     * @return void
+     */
+    public function addOptionsRepeater($field, $subfield, $options)
+    {
+        foreach (($this->prefill->get($field) ?? [0]) as $i => $row) {
+            $this->options->set("{$field}.$i.{$subfield}", $options);
+        }
+    }
+
+    /**
+     * Prefill ajax select option with selected value, allows for embeded fields
      *
      * @return void
      */
-
-    public function validatePayload()
+    public function addOptionsAjax($field, $optionsname = false)
     {
-        // Should be extended by children
+        $value = $this->prefill->get($field);
+        if (!$value) {return false;}
+
+        $options = set(Hooks::getSelectOptions($optionsname ?: $field, $value))->index("id");
+        $prefill = [];
+
+        foreach ((array) $value as $val) {
+            if (isset($options[$val]["text"])) {
+                $prefill[$val] = $options[$val]["text"];
+            }
+        }
+
+        $this->options->set($field, $prefill);
+    }
+
+    /**
+     * Prepare and prefill data for uploaded fields
+     *
+     * @param  string $field The field name
+     * @return void
+     */
+    public function setupFiles($fields)
+    {
+        foreach ((array) $fields as $field) {
+            $files = $this->prefill->get($field);
+            $files = is_object($files) ? [$files] : (array) Text::maybeJsonDecode($files);
+
+            // Normalize into a list of Files/Attachments
+            $files = array_filter(array_map(function ($file) {
+                // Already a File or Attachement
+                if (is_object($file) && method_exists($file, "getData")) {
+                    return $file;
+                }
+
+                if (is_object($file)) {
+                    return !empty($file->ID) ? new Attachment((int) $file->ID) : new File($file->file ?? ($file->path ?? ($file->url ?? false)));
+                }
+
+                // Attachement ID
+                if (is_int($file)) {
+                    return new Attachment($file);
+                }
+
+                // File path or url
+                if (is_string($file)) {
+                    return new File($file);
+                }
+
+                return false;
+            }, $files));
+
+            // Set prefill data
+            $this->prefill->set($field, array_map(function ($file) {
+                return $file->getData();
+            }, $files));
+
+            // Set payload data
+            if ($this->payload->get($field)) {
+                $this->payload->set($field, $files);
+            }
+        }
+    }
+
+    /**
+     * Set the default upload directory for all files
+     *
+     * @param  string $directory
+     * @return self
+     */
+    public function setUploadDirectory($directory)
+    {
+        $this->data["upload_directory"] = $directory;
+        return $this;
+    }
+
+    // =============================================================================
+    // > TOOLS / ACTIONS
+    // =============================================================================
+    /**
+     * FIll the payload with data form the prefill to trigger submit actions
+     *
+     * @return void
+     */
+    public function submit()
+    {
+        $this->payload = $this->prefill;
     }
 
     /**
@@ -313,23 +487,5 @@ abstract class FormProcessor extends DataProcessor
                 if ($error) {break;}
             }
         }
-    }
-
-    /**
-     * Check the user access to this form
-     *
-     * @return void
-     */
-    public function checkPermissions()
-    {
-    }
-
-    /**
-     * Fetch data that is required for GET and POST
-     *
-     * @return void
-     */
-    public function init()
-    {
     }
 }

@@ -21,7 +21,7 @@ class Attachment extends Post
     /**
      * Get the file info
      *
-     * @return array
+     * @return object
      */
     public function getData()
     {
@@ -60,6 +60,29 @@ class Attachment extends Post
     public function path()
     {
         return get_attached_file($this->getID());
+    }
+
+    /**
+     * Send the file as a download
+     *
+     * @return void
+     */
+    public function download()
+    {
+        $data = $this->getData();
+
+        header("Content-Description: File Transfer");
+        header("Content-Type: application/octet-stream");
+        header("Content-Disposition: attachment; filename=" . $data->name);
+        header("Content-Transfer-Encoding: binary");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Pragma: public");
+        header("Content-Length: " . $data->size);
+        ob_clean();
+        flush();
+        readfile($data->path);
+        exit;
     }
 
     // =============================================================================

@@ -2,29 +2,45 @@
 
 namespace Syltaen;
 
-class Filters
+class Filters extends FormProcessor
 {
-    /**
-     * The model to filter
-     *
-     * @var \Syltaen\Model
-     */
-    public $model;
+    const METHOD = "GET";
 
     /**
-     * Generate a new filter form and update the model based on the selected values
+     * Common rendering context
      *
-     * @param Posts            $model   The model to filter
-     * @param ContentProcessor $archive A reference to the content layout processor
+     * @return void
      */
-    public function __construct($model, $archive)
+    public function get()
     {
-        $this->model   = $model;
-        $this->archive = $archive;
-        $this->data    = [];
-
         // Register the form action page
-        $this->data["action"] = Pagination::getBaseURL() . ($this->archive ? $this->archive->getAnchor() : "");
+        $this->data["action"] = Pagination::getBaseURL() . (isset($this->controller->content) && $this->controller->content->getAnchor() ? $this->controller->content->getAnchor() : "#filters");
+    }
+
+    /**
+     * Empty the payload to skip all form validation/processing
+     *
+     * @return void
+     */
+    public function setup()
+    {
+        $this->addPrefill((array) $this->payload);
+        $this->payload = set();
+    }
+
+    /**
+     * Keep parameters in the form as hidden fields
+     *
+     * @param  array  $keys
+     * @return self
+     */
+    public function keepParameters($keys)
+    {
+        foreach ($keys as $key) {
+            $this->addHiddenField($key);
+        }
+
+        return $this;
     }
 
     // =============================================================================
@@ -37,20 +53,49 @@ class Filters
      * @param  $filter_callback
      * @return self
      */
-    public function addField($options, $filter_callback, $default_value = false)
+    private function addField($type, $name, $label = "", $attrs = [], $filter_callback = false, $default_value = false)
     {
         // Init the list if not defined
         $this->data["fields"] = $this->data["fields"] ?? [];
 
-        // Get the field value from the parameters
-        $options["value"] = $_GET[$options["name"]] ?? $default_value;
-
         // Register the field
-        $this->data["fields"][] = $options;
+        $this->data["fields"][$name] = [
+            "type"  => $type,
+            "label" => $label,
+            "attrs" => $attrs,
+        ];
+
+        // Set default value is the is none
+        if (empty($this->payload[$name])) {
+            $this->payload[$name] = $default_value;
+        }
 
         // Apply the callback if filter has value
-        $this->applyFilter($filter_callback, $options["name"], $options["value"]);
+        $this->applyFilter($filter_callback, $name);
         return $this;
+    }
+
+    /**
+     * Shortcut to add a choice field : select, radio, checkbox, ...
+     *
+     * @param  string $name            The field name
+     * @param  string $label           The field label
+     * @param  array  $options         The field options
+     * @param  mixed  $filter_callback The callback to use to filter the model
+     * @param  mixed  $default_value   The default value
+     * @return self
+     */
+    private function addChoiceField($type, $name, $label, $options, $attrs = [], $filter_callback = "meta", $default_value = false)
+    {
+        if (empty($options)) {
+            return $this;
+        }
+
+        // Register options
+        $this->addOptions([$name => $options]);
+
+        // Register field
+        return $this->addField($type, $name, $label, array_merge($attrs, ["autosubmit" => true]), $filter_callback, $default_value);
     }
 
     /**
@@ -60,36 +105,41 @@ class Filters
      */
     public function addSearch($label = null, $placeholder = "", $name = "s")
     {
-        return $this->addField([
+        return $this->addField("search", $name, $label !== null ? $label : __("Search", "syltaen"), [
             "placeholder" => $placeholder,
-            "type"        => "search",
-            "name"        => $name,
-            "label"       => $label ?: __("Search", "syltaen"),
         ], "search");
     }
 
     /**
-     * Shortcut to add a select field
+     * Shortcut to add a search field
      *
-     * @param  string $name            The field name
-     * @param  string $label           The field label
-     * @param  array  $options         The field options
-     * @param  mixed  $filter_callback The callback to use to filter the model
-     * @param  mixed  $default_value   The default value
+     * @param $name
+     */
+    public function addHiddenField($name)
+    {
+        return $this->addField("hidden", $name, false);
+    }
+
+    /**
+     * Shortcut to add a select field
+     * @see static::addChoiceField
+     *
      * @return self
      */
     public function addSelect($name, $label, $options, $filter_callback = "meta", $default_value = false)
     {
-        if (empty($options)) {
-            return;
-        }
+        return $this->addChoiceField("select", $name, $label, $options, ["append" => true], $filter_callback, $default_value);
+    }
 
-        return $this->addField([
-            "type"    => "select",
-            "name"    => $name,
-            "label"   => $label,
-            "options" => $options,
-        ], $filter_callback, $default_value);
+    /**
+     * Shortcut to add a select field
+     * @see static::addChoiceField
+     *
+     * @return self
+     */
+    public function addRadio($name, $label, $options, $filter_callback = "meta", $default_value = false)
+    {
+        return $this->addChoiceField("radio", $name, $label, $options, [], $filter_callback, $default_value);
     }
 
     /**
@@ -97,38 +147,65 @@ class Filters
      *
      * @return self
      */
-    public function addSelectTaxonomy($taxonomy)
+    public function addSelectTaxonomy($taxonomy, $all_option = true, $default_value = "*", $show_label = true)
     {
         return $this->addSelect(
             $taxonomy::SLUG,
-            $taxonomy::getName(true),
-            $taxonomy->getAsOptions(true),
+            $show_label ? $taxonomy::getName(true) : false,
+            $taxonomy->getAsOptions($all_option),
             "tax",
-            "*"
+            $default_value
         );
     }
 
     /**
+     * Shortcut to add a radio field for a taxonomy
+     *
+     * @return self
+     */
+    public function addRadioTaxonomy($taxonomy, $all_option = true, $default_value = "*", $show_label = true)
+    {
+        return $this->addRadio(
+            $taxonomy::SLUG,
+            $show_label ? $taxonomy::getName(true) : false,
+            $taxonomy->getAsOptions($all_option),
+            "tax",
+            $default_value
+        );
+    }
+
+    // =============================================================================
+    // > FILTERS
+    // =============================================================================
+    /**
      * @param $filter_callback
      * @param $value
      */
-    public function applyFilter($filter_callback, $name, $value)
+    public function applyFilter($filter_callback, $name)
     {
+        $value = $this->payload[$name] ?? false;
+
+        if (!$filter_callback) {
+            return false;
+        }
+
         // Custom filter with callback function
         if (!is_string($filter_callback) && is_callable($filter_callback)) {
-            return $filter_callback($this->model, $value);
+            return $filter_callback($this->controller->model, $value);
         }
 
         // Generic filter
         switch ($filter_callback) {
             case "tax":
-                return $value == "*" ? $this->model : $this->model->tax($name, $value);
+                return $value == "*" ? $this->controller->model : $this->controller->model->tax($name, $value);
             case "meta":
-                return $this->model->meta($value);
+                return $this->controller->model->meta($name, $value);
             case "search":
-                return $this->model->search($value);
+                return $this->controller->model->search($value);
+            case "status":
+                return $this->controller->model->status($value);
             case "order":
-                return $this->model->order($value, "DESC");
+                return $this->controller->model->order($value, "DESC");
         }
     }
 }

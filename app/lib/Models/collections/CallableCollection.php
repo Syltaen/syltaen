@@ -31,7 +31,7 @@ class CallableCollection
             // If it's a collection of ModelItem, index each result by the item's ID
             $key = $item instanceof ModelItem ? $item->getID() : $key;
             // Return the key and the result
-            return [$key, $result];
+            return [$key => $result];
         });
     }
 

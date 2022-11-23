@@ -22,13 +22,12 @@ class Time
     /**
      * Add a cron task if it does not already exists
      */
-    public static function addCron($hook, $recurrence, $start = false)
+    public static function addCron($hook, $recurrence, $start = false, $args = [])
     {
-        $start = $start ?: Time::current();
-        $start = is_int($start) ? $start : Time::fromString($start);
-
-        if (!wp_next_scheduled($hook)) {
-            wp_schedule_event($start, $recurrence, $hook);
+        if (!wp_next_scheduled($hook, $args)) {
+            $start = $start ?: Time::current();
+            $start = is_int($start) ? $start : Time::fromString($start);
+            wp_schedule_event($start, $recurrence, $hook, $args);
         }
     }
 
@@ -141,7 +140,7 @@ class Time
      */
     public static function diff($from, $to = false)
     {
-        return human_time_diff(Time::normalize($from), $to ?: time());
+        return human_time_diff(Time::normalize($from), $to ?: static::current());
     }
 
     /**

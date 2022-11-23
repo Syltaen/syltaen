@@ -46,6 +46,17 @@ class Comment extends ModelItem
     }
 
     /**
+     * Get the date of the comment
+     *
+     * @param  string   $format
+     * @return string
+     */
+    public function getDate($format = "d/m/Y")
+    {
+        return date_i18n($format, strtotime($this->date));
+    }
+
+    /**
      * Set the attributes of an item
      *
      * @param  int          $id

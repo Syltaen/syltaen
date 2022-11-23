@@ -2,24 +2,28 @@
 //- > MIXIN : FORM FIELD - SELECT
 //- =============================================================================
 
-mixin field-select(form, name, label = false, field_attributes = false)
+mixin field-select(form, name, label = false, field_attributes = false, $html_options = false)
 
     +fieldset($form, $name, $label)&attributes($attributes)
-        select(name=$name min-input-length="0" value=$form["prefill"]->get($name))&attributes($field_attributes)
+        select(
+            name=$name
+            min-input-length="0"
+            data-options=$html_options?$form["options"]->get($name):false
+            value=$html_options?$form["prefill"]->get($name):false
+        )&attributes($field_attributes)
 
-            //- source="source"
             //- clearable="1"
+            //- source="source"
             //- multiple="1"
             //- tags="1"
 
-            block
+            unless $html_options
+                block
 
-            if !empty($form["options"]->get($name))
-                - $no_keys = !array_keys($form["options"]->get($name))[0]
-                each $label, $value in $form["options"]->get($name)
-                    - $value = $no_keys ? $label : $value
-                    option(value=$value)!= $label
+                if !empty($form["options"]->get($name))
+                    each $label, $value in $form["options"]->get($name)
+                        option(title=$label value=$value selected=in_array($value, (array) $form["prefill"]->get($name)))!= $label
 
-            else if !empty($form["prefill"]->get($name))
-                option(value=$form["prefill"]->get($name))
-                    != get_the_title($form["prefill"]->get($name))
+                else if !empty($form["prefill"]->get($name))
+                    option(value=$form["prefill"]->get($name))
+                        != get_the_title($form["prefill"]->get($name))

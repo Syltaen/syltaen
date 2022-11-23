@@ -140,6 +140,28 @@ abstract class Files
     }
 
     /**
+     * Enqueue a remote script
+     *
+     * @param  string $name
+     * @param  string $url
+     * @param  array  $requirements
+     * @param  string $action
+     * @return void
+     */
+    public static function addRemoteScript($name, $url, $requirements = [], $action = "wp_enqueue_scripts")
+    {
+        add_action($action, function () use ($name, $url, $requirements) {
+            wp_enqueue_script(
+                $name,
+                $url,
+                $requirements,
+                false,
+                true
+            );
+        });
+    }
+
+    /**
      * De-register a script by its name
      *
      * @param  string $name
@@ -169,6 +191,21 @@ abstract class Files
                 $requirements,
                 self::time("build/css/{$file}")
             );
+        });
+    }
+
+    /**
+     * Dequeue a style stored in the css folder
+     *
+     * @param  string $file
+     * @param  array  $requirements
+     * @param  string $action
+     * @return void
+     */
+    public static function removeStyle($file, $action = "wp_enqueue_scripts")
+    {
+        add_action($action, function () use ($file) {
+            wp_dequeue_style($file);
         });
     }
 
@@ -306,6 +343,7 @@ abstract class Files
             $files[] = $file;
         }
 
+        sort($files, SORT_NATURAL | SORT_FLAG_CASE);
         return $files;
     }
 
@@ -448,7 +486,8 @@ abstract class Files
                 "test_form" => false,
             ], false);
 
-            $uploaded_files[] = $uploaded_file;
+            $uploaded_file["origin"] = $file;
+            $uploaded_files[]        = $uploaded_file;
         }
 
         // Create an attachement if requested

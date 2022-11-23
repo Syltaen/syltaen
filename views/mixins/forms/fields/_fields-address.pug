@@ -2,20 +2,18 @@
 //- > MIXIN : FORM FIELDS - ADDRESS
 //- =============================================================================
 
-mixin fields-address(form, field_attributes = false)
+mixin fields-address(form, name = "address", label = false, field_attributes = [])
 
-    +fieldset($form, "address_street", "Address")&attributes($attributes)
-        input(type="text" placeholder="Rue et numéro" name="address_street" value=$form["prefill"]["address_street"]??"")&attributes($field_attributes)
+    if $label
+            label(class=!empty($form["locks"][$name])?"is-locked":"")!= $label
+
+    +field-text($form, $name."[street]", false, array_merge($field_attributes, ["placeholder" => "Street name and number"]))&attributes($attributes)
 
     .row
+        .gr: +field-text($form, $name."[zip]", false, array_merge($field_attributes, ["placeholder" => "Postcode"]))&attributes($attributes)
 
-        +fieldset($form, "address_zip")&attributes($attributes).gr
-            input(type="text" placeholder="Code postal" name="address_zip" value=$form["prefill"]["address_zip"]??"")&attributes($field_attributes)
+        .gr: +field-text($form, $name."[city]", false, array_merge($field_attributes, ["placeholder" => "City"]))&attributes($attributes)
 
-        +fieldset($form, "address_city")&attributes($attributes).gr-2
-            input(type="text" placeholder="Ville" name="address_city" value=$form["prefill"]["address_city"]??"")&attributes($field_attributes)
-
-    +fieldset($form, "address_country")&attributes($attributes)
-        input(type="text" placeholder="Pays" name="address_country" value=$form["prefill"]["address_country"]??"")&attributes($field_attributes)
+    +field-text($form, $name."[country]", false, array_merge($field_attributes, ["placeholder" => "Country"]))&attributes($attributes)
 
     block

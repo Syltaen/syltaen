@@ -31,6 +31,17 @@ abstract class AbstractUser extends ModelItem
     }
 
     /**
+     * Get the date of the post
+     *
+     * @param  string   $format
+     * @return string
+     */
+    public function getDate($format = "d/m/Y")
+    {
+        return date_i18n($format, strtotime($this->registered));
+    }
+
+    /**
      * Get the slug of the post
      *
      * @return string
@@ -152,7 +163,7 @@ abstract class AbstractUser extends ModelItem
         $item = (object) [
             "ID"         => $user->ID,
             "roles"      => set($user->roles)->mapAssoc(function ($i, $role) use ($wp_roles) {
-                return [$role, $wp_roles->roles[$role]];
+                return [$role => $wp_roles->roles[$role]];
             }),
             "caps"       => $user->allcaps,
             "first_name" => $user->first_name,

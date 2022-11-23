@@ -44,11 +44,11 @@ class File
         $exists = file_exists($this->path);
         return (object) [
             "ID"   => false,
-            "name" => basename($this->path),
+            "name" => $this->name ?? basename($this->path),
             "path" => $this->path,
             "url"  => $this->url,
             "size" => $exists ? filesize($this->path) : 0,
-            "mime" => $exists ? mime_content_type($this->path) : false,
+            "mime" => $this->mime ?? ($exists ? mime_content_type($this->path) : false),
         ];
     }
 
@@ -70,6 +70,31 @@ class File
     public function path()
     {
         return $this->path;
+    }
+
+    // =============================================================================
+    // > SETTERS
+    // =============================================================================
+    /**
+     * Set a custom name for this file
+     * @param  string $name
+     * @return self
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Set a custom mime for this file
+     * @param  string $mime
+     * @return self
+     */
+    public function setMime($mime)
+    {
+        $this->mime = $mime;
+        return $this;
     }
 
     // =============================================================================

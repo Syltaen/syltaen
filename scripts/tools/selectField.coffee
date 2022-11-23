@@ -5,7 +5,6 @@ import fr from "select2/src/js/select2/i18n/fr"
 export default class SelectField
 
     constructor: (@$el, @done = false) ->
-
         @group()
 
         @$el.click()
@@ -18,46 +17,45 @@ export default class SelectField
     # Transform the select with select2
     ###
     select2: () ->
-        if (@$el.data("value") || @$el.data("value") is 0) then @$el.val @$el.data "value"
+        if (@$el.attr("value") || @$el.attr("value") is 0)
+            value = @$el.attr("value")
+            value = if value[0] == "[" then JSON.parse(value) else value
+            @$el.val value
 
-        disabled       = @$el.data "disabled"
-        allowClear     = @$el.data "clearable"
-        appendDropdown = @$el.data "append"
-        noSearch       = @$el.data "nosearch"
-        autoSubmit     = @$el.data "autosubmit"
-        source         = if @$el.data("source") then ajaxurl + "?action=" + @$el.data("source") else null
+        disabled       = @$el.attr "disabled"
+        allowClear     = @$el.attr "clearable"
+        appendDropdown = @$el.attr "append"
+        noSearch       = @$el.attr "nosearch"
+        autoSubmit     = @$el.attr "autosubmit"
+        tags           = @$el.attr "tags"
+        source         = if @$el.attr("source") then ajaxurl + "?action=options_" + @$el.attr("source") else null
 
         # Create the field
         @select2 = @$el.select2
             language: fr
+            data: @getHTMLOptions()
             minimumResultsForSearch: if noSearch then Infinity else 8
-            placeholder: @$el.attr("placeholder") || "Cliquez pour choisir"
+            placeholder: @$el.attr("placeholder") || "Click here to make a choice"
             disabled: disabled
             allowClear: allowClear
+            tags: tags
             dropdownParent: if appendDropdown then @$el.parent() else null
-            theme: @$el.data("theme") || false
+            theme: @$el.attr("theme") || false
 
             # Ajax
-            minimumInputLength: if source then 3 else 0
+            minimumInputLength: @$el.attr("min-input-length") || 0
             ajax: unless source then null else
                 url: source
                 dataType: "json"
+                data: (params) =>
+                    params.form = @$el.closest("form").serializeArray()
+                    return params
 
-            # Templating
-            templateResult: (d) ->
-                optionClass = $(d.element).data("class") || d.class
-                text = d.result || d.text
-                unless optionClass then return text
-                return $("<span class='#{optionClass}'>" + text.replace(/<%/g, "<") + "</span>")
-
-            templateSelection: (d) ->
-                optionClass = $(d.element).data("class") || d.class
-                text = d.selection || d.text
-                unless optionClass then return text
-                return $("<span class='#{optionClass}'>" + text.replace(/<%/g, "<") + "</span>")
-
-        # Autosubmit
-        if autoSubmit then @$el.change -> $(@).closest("form").submit()
+            ###
+            Allow the use of HTML in options
+            ###
+            escapeMarkup: (markup) ->
+                return markup
 
         # appendDropdown
         if appendDropdown
@@ -99,3 +97,15 @@ export default class SelectField
         # reset the value
         @$el.val(defaultValue)
 
+    ###
+    # Get the field's options
+    ###
+    getHTMLOptions: ->
+        data = []
+
+        for id, text of @$el.data("options") || {}
+            data.push
+                id: id
+                text: text
+
+        return data

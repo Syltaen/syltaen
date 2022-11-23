@@ -27,6 +27,18 @@ abstract class Text
     }
 
     /**
+     * Convert camel case to snake case
+     *
+     * @return string
+     */
+    public static function camelToSnake($string)
+    {
+        return preg_replace_callback("/[A-Z]/", function ($letter) {
+            return "_" . strtolower($letter[0]);
+        }, $string);
+    }
+
+    /**
      * Get a random string
      *
      * @param  integer  $length
@@ -50,7 +62,11 @@ abstract class Text
      */
     public static function maybeJsonDecode($string, $assoc_array = false)
     {
-        $json = json_decode($string, $assoc_array);
+        if (!is_string($string)) {
+            return $string;
+        }
+
+        $json = json_decode(stripslashes($string), $assoc_array);
         if ($json !== null) {
             return $json;
         }
@@ -129,5 +145,20 @@ abstract class Text
         $list = file_get_contents(Files::path("styles/assets/vendors/fontawesome/_fa-icons.scss"));
         preg_match("/{$icon}\: .(f[0-9a-z]+)/", $list, $matches);
         return !empty($matches[1]) ? "&#x" . $matches[1] . ";" : "";
+    }
+
+    /**
+     * Return a formated address from its parts
+     *
+     * @param  array    $parts
+     * @return string
+     */
+    public static function address($parts)
+    {
+        return implode("<br>", [
+            ($parts["street"] ?? false),
+            implode(" - ", [($parts["zip"] ?? false), ($parts["city"] ?? false)]),
+            ($parts["country"] ?? false),
+        ]);
     }
 }

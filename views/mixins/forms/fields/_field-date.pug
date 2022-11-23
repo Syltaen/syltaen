@@ -1,0 +1,9 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELD - DATE
+//- =============================================================================
+
+mixin field-date(form, name, label = false, field_attributes = false)
+
+    +fieldset($form, $name, $label, [], "syltaen_form_display_date")&attributes($attributes)
+        input(type="date" name=$name placeholder=$placeholder value=$form["prefill"]->get($name))&attributes($field_attributes)
+        block

@@ -508,6 +508,7 @@ abstract class ModelItem
      */
     public function getTranslationsIDs()
     {
+        return [];
     }
 
     /**

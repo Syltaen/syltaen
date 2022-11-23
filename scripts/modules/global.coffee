@@ -2,7 +2,7 @@ import $ from "jquery"
 import "slick-carousel"
 
 import parallax from "./../tools/parallax.coffee"
-import UploadField from "./../tools/UploadField.coffee"
+import { UploadField, AutoUploadField } from "./../tools/UploadField.coffee"
 import SelectField from "./../tools/SelectField.coffee"
 import PasswordBox from "./../tools/PasswordBox.coffee"
 import ConfirmationModal from "./../tools/ConfirmationModal.coffee"

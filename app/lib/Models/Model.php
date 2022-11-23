@@ -3,6 +3,7 @@
 namespace Syltaen;
 
 abstract class Model implements \Iterator
+
 {
     /**
      * The slug that define what this model is used for
@@ -1053,12 +1054,12 @@ abstract class Model implements \Iterator
      * @param  callable $process_function
      * @return void
      */
-    public function processInGroups($groupSize = 100, $process_function)
+    public function processInGroups($groupSize, $process_function)
     {
         $this
         // Make sure we always target the inital posts
-        ->applyFilters()->status("all")
-        // Fetch X posts at a time
+            ->applyFilters()->status("all")
+            // Fetch X posts at a time
             ->limit($groupSize);
 
         // Process one group at a time

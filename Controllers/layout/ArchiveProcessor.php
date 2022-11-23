@@ -11,20 +11,19 @@ class ArchiveProcessor extends DataProcessor
      */
     public function news()
     {
-        $model = new News;
+        $this->model = new News;
 
         // Add filters
-        $this->filter($model)
-        ->addSelectTaxonomy(new NewsTaxonomy)
-        ->addSelect("ordre", __("Trier par", "syltaen"), array_merge(
-            ["date" => __("Chronologique", "syltaen"), "title" => __("Alphabétique", "syltaen")],
-        ), "order", "date")
-        ->addSearch();
+        $this->filter()
+            ->addSelectTaxonomy(new NewsTaxonomy)
+            ->addSelect("ordre", __("Trier par", "syltaen"), array_merge(
+                ["date" => __("Chronologique", "syltaen"), "title" => __("Alphabétique", "syltaen")],
+            ), "order", "date")
+            ->addSearch();
 
         // Add pagination
-        $this->paginate($model, 6, $this->content->getAnchor());
+        $this->paginate(6);
     }
-
 
     // =============================================================================
     // > TOOLS
@@ -37,26 +36,22 @@ class ArchiveProcessor extends DataProcessor
      * @param  int            $perpage
      * @return void
      */
-    public function paginate($model, $perpage = 6, $anchor = "")
+    public function paginate($perpage = 6, $anchor = "")
     {
-        $pagination           = new Pagination($model, $perpage);
-        $this->data["walker"] = $pagination->walker($anchor, "pagination--simple")->data;
+        $pagination           = new Pagination($this->model, $perpage);
+        $this->data["walker"] = $pagination->walker($anchor ?: (!empty($this->content) ? $this->content->getAnchor() : ""), "pagination--simple")->data;
         $this->data["posts"]  = $pagination->posts();
     }
 
     /**
-     * Create a pagination from a model
+     * Create a filter form for this controller's model
      *
-     * @param  array          $c          Local context
-     * @param  \Syltaen\Model $model
-     * @param  int            $perpage
      * @return Filters
      */
-    public function filter($model)
+    public function filter()
     {
-        $filters               = new Filters($model, $this->content);
-        $this->data["filters"] = &$filters->data;
-        return $filters;
+        $this->data["filters"] = new Filters([], $this);
+        return $this->data["filters"];
     }
 
     /**

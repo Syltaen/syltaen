@@ -39,17 +39,6 @@ class Post extends ModelItem
     }
 
     /**
-     * Get the date of the post
-     *
-     * @param  string   $format
-     * @return string
-     */
-    public function getDate($format = "d/m/Y")
-    {
-        return date_i18n($format, strtotime($this->post_date));
-    }
-
-    /**
      * Get a specific meta data
      *
      * @param  string
@@ -58,6 +47,17 @@ class Post extends ModelItem
     public function getMeta($meta_key = "", $multiple = false)
     {
         return get_post_meta($this->getID(), $meta_key, !$multiple);
+    }
+
+    /**
+     * Get the date of the post
+     *
+     * @param  string   $format
+     * @return string
+     */
+    public function getDate($format = "d/m/Y")
+    {
+        return date_i18n($format, strtotime($this->post_date));
     }
 
     /**
@@ -184,7 +184,7 @@ class Post extends ModelItem
                 return $translation->getID();
             }, $terms);
 
-            return [$tax, $terms];
+            return [$tax => $terms];
         });
 
         $this->setTaxonomies((array) $terms);
@@ -250,12 +250,10 @@ class Post extends ModelItem
     /**
      * Create a clone of the post
      *
-     * @return Post
+     * @return self
      */
     public function duplicate()
     {
-        remove_all_filters("wp_insert_post");
-
         // Create the new post
         $duplicate = $this->model::add([
             "post_title"   => $this->post_title,
@@ -275,7 +273,9 @@ class Post extends ModelItem
         }
 
         // Same lang as source, to prevent some default switching
-        pll_set_post_language($duplicate->getID(), $this->getLang());
+        if (function_exists("pll_set_post_language")) {
+            pll_set_post_language($duplicate->getID(), $this->getLang());
+        }
 
         // Duplicate all terms
         $duplicate->setTaxonomies(array_diff_key(
@@ -292,12 +292,12 @@ class Post extends ModelItem
     /**
      * Add a comment to this post
      *
-     * @param  string  $message
-     * @param  string  $author_name
-     * @param  string  $author_email
-     * @param  string  $author_url
-     * @param  integer $parent_comment
-     * @return void
+     * @param  string    $message
+     * @param  string    $author_name
+     * @param  string    $author_email
+     * @param  string    $author_url
+     * @param  integer   $parent_comment
+     * @return Comment
      */
     public function addComment($message, $author_name = "", $author_email = "", $author_url = "", $parent_comment = 0)
     {

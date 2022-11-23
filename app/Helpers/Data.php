@@ -48,6 +48,8 @@ abstract class Data
                 return static::extractIds($value)[0];
             case "ids":
                 return static::extractIds($value);
+            case "address":
+                return Text::address($value);
             case "img:tag":
             case "img":
                 return wp_get_attachment_image(static::extractIds($value)[0], "full");
@@ -173,10 +175,10 @@ abstract class Data
     {
         return (set($fields))->mapAssoc(function ($key, $value) {
             if (is_int($key)) {
-                return [$value, null];
+                return [$value => null];
             }
 
-            return [$key, $value];
+            return [$key => $value];
         });
     }
 
@@ -190,7 +192,7 @@ abstract class Data
     {
         return $fields->mapAssoc(function ($key, $value) {
             $parts = static::parseDataKey($key);
-            return [$parts["store"], $key];
+            return [$parts["store"] => $key];
         });
     }
 

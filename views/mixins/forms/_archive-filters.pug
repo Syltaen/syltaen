@@ -4,34 +4,43 @@
 
 mixin archive-filters(filters)
 
-    form.archive-filters(method="GET" action=$filters["action"])&attributes($attributes)
+    - $filters = $filters->process()
 
-        for $field in $filters["fields"]
+    form.archive-filters(method="GET" action=$filters["action"] id="filters")&attributes($attributes)
 
-            fieldset.archive-filters__set
+        for $field, $name in $filters["fields"]
 
-                if $field["label"]
-                    label.archive-filters__label!= $field["label"]
+            case $field["type"]
 
-                case $field["type"]
+                //- ==================================================
+                //- > TEXT
+                //- ==================================================
+                when "text"
+                    +field-text($filters, $name, $field["label"], $field["attrs"]).archive-filters__set
 
-                    //- ==================================================
-                    //- > TEXT
-                    //- ==================================================
-                    when "text"
-                        input(name=$field["name"] value=$field["value"] type="text")
+                //- ==================================================
+                //- > SEARCH
+                //- ==================================================
+                when "search"
+                    .archive-filters__set: +field-text($filters, $name, $field["label"], $field["attrs"]).form__input--search
 
-                    //- ==================================================
-                    //- > SEARCH
-                    //- ==================================================
-                    when "search"
-                        .form__input--search
-                            input(name=$field["name"] value=$field["value"] type="search" placeholder=$field["placeholder"])
+                //- ==================================================
+                //- > SELECT
+                //- ==================================================
+                when "select"
+                    +field-select($filters, $name, $field["label"], $field["attrs"]).archive-filters__set
+                    //- select(name=$field["name"] value=$field["value"] append autosubmit)
+                    //-     each $l, $v in $field["options"]
+                    //-         option(value=$v)!= $l
 
-                    //- ==================================================
-                    //- > SELECT
-                    //- ==================================================
-                    when "select"
-                        select(name=$field["name"] value=$field["value"] append autosubmit)
-                            each $l, $v in $field["options"]
-                                option(value=$v)!= $l
+                //- ==================================================
+                //- > RADIO
+                //- ==================================================
+                when "radio"
+                    +field-radio($filters, $name, $field["label"], "row", $field["attrs"]).archive-filters__set
+
+                //- ==================================================
+                //- > HIDDEN
+                //- ==================================================
+                when "hidden"
+                    +field-hidden($filters, $name)

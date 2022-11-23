@@ -7,6 +7,7 @@
 namespace Syltaen;
 
 class Set extends \ArrayObject implements \JsonSerializable
+
 {
     // ==================================================
     // > FINDING ITEMS
@@ -100,6 +101,17 @@ class Set extends \ArrayObject implements \JsonSerializable
     }
 
     /**
+     * Sort keys of the set
+     *
+     * @return self
+     */
+    public function sortKeys()
+    {
+        $this->ksort();
+        return $this;
+    }
+
+    /**
      * Implementation of the "array_reverse" function
      *
      * @return Set
@@ -120,13 +132,13 @@ class Set extends \ArrayObject implements \JsonSerializable
     public function insert($array, $position = null)
     {
         // Get the numerical index where the set should be split
-        $index = is_int($position) ? $position
-        // If a string/key is given : try to get its position
-         : (($index = $this->keys()->search($position)) !== false ? $index + 1
-            // Default to the end of the set
-             : $this->count());
-
-        // /* #LOG# */\Syltaen\Log::json($index);
+        $index = is_null($position) ? $this->count() : (
+            is_int($position) ? $position
+            // If a string/key is given : try to get its position
+                : (($index = $this->keys()->search($position)) !== false ? $index + 1
+                // Default to the end of the set
+                    : $this->count())
+        );
 
         $this->exchangeArray(array_merge(
             array_slice((array) $this, 0, $index, true),
@@ -273,6 +285,20 @@ class Set extends \ArrayObject implements \JsonSerializable
     }
 
     /**
+     * Get all items that apear more than once
+     * @param  int   $limit Minimum number of occurance
+     * @return Set
+     */
+    public function duplicates($limit = 2)
+    {
+        return $this->groupBy(function ($item) {
+            return $item;
+        })->filter(function ($item) use ($limit) {
+            return count($item) >= $limit;
+        })->keys();
+    }
+
+    /**
      * Implementation of the "array_diff" function
      *
      * @param  array $array
@@ -385,7 +411,9 @@ class Set extends \ArrayObject implements \JsonSerializable
      */
     public function mapAssoc($callback)
     {
-        return new static(array_column(array_map($callback, (array) $this->keys(), (array) $this->values()), 1, 0));
+        return new static(array_reduce(array_map($callback, (array) $this->keys(), (array) $this->values()), function ($total, $subarray) {
+            return $total + $subarray;
+        }, []));
     }
 
     /**
@@ -409,6 +437,18 @@ class Set extends \ArrayObject implements \JsonSerializable
     }
 
     /**
+     * Use the values as keys
+     *
+     * @return Set
+     */
+    public function valuesAsOptions()
+    {
+        return $this->mapAssoc(function ($i, $value) {
+            return [$value => $value];
+        });
+    }
+
+    /**
      * Implementation of the "array_flip" function
      *
      * @return Set
@@ -419,6 +459,21 @@ class Set extends \ArrayObject implements \JsonSerializable
     }
 
     /**
+     * Flatten a multi-dimensional array into a single level
+     *
+     * @return Set
+     */
+    public function flatten()
+    {
+        $return = [];
+        $array  = (array) $this->getArrayCopy();
+        array_walk_recursive($array, function ($a, $k) use (&$return) {
+            $return[] = $k;
+        });
+        return new static($return);
+    }
+
+    /**
      * Keep only a specific column of each child array/set
      *
      * @param  string $name
@@ -426,12 +481,13 @@ class Set extends \ArrayObject implements \JsonSerializable
      */
     public function column($name)
     {
-        $array = [];
+        $columns = [];
+
         foreach ($this as $i => $row) {
-            $array[$i] = (array) $row;
+            $columns[$i] = (new static($row))->get($name);
         }
 
-        return new static(array_combine(array_keys($array), array_column($array, $name)));
+        return new static($columns);
     }
 
     /**
@@ -466,13 +522,24 @@ class Set extends \ArrayObject implements \JsonSerializable
     public function groupBy($key, $value_key = false)
     {
         return $this->reduce(function ($groups, $item) use ($key, $value_key) {
-            $item = (array) $item;
-            // Init a new group if it does not exist
-            $groups[$item[$key]] = $groups[$item[$key]] ?? [];
-            // Add value to the group
-            $groups[$item[$key]][] = is_callable($value_key) ? $value_key($item)
+            // Get group key
+            if (is_callable($key)) {
+                $key = $key($item);
+            } else {
+                $item = (array) $item;
+                $key  = ((array) $item)[$key];
+            }
+
+            // Get value
+            $value = is_callable($value_key) ? $value_key($item)
                 : (is_string($value_key) ? ((array) $item)[$value_key]
                     : $item);
+
+            // Init a new group if it does not exist
+            $groups[$key] = $groups[$key] ?? [];
+
+            // Add value to the group
+            $groups[$key][] = $value;
             return $groups;
         });
     }
@@ -517,9 +584,15 @@ class Set extends \ArrayObject implements \JsonSerializable
      *
      * @return CallableCollection
      */
-    public function callEach()
+    public function callEach($deepness = 1)
     {
-        return new CallableCollection($this);
+        $cc = new CallableCollection($this);
+
+        if ($deepness == 1) {
+            return $cc;
+        }
+
+        return $cc->callEach($deepness - 1)->callEach();
     }
 
     // ==================================================
@@ -576,9 +649,22 @@ class Set extends \ArrayObject implements \JsonSerializable
     public function sum($column = false)
     {
         $items = $column ? $this->column($column) : $this;
+
         return $items->reduce(function ($sum, $item) {
             return $sum + $item;
         }, 0);
+    }
+
+    /**
+     * Get the count for each unique value
+     *
+     * @return Set
+     */
+    public function valueCounts()
+    {
+        return $this->filter()->groupBy(function ($value) {
+            return $value;
+        })->map("count");
     }
 
     /**
@@ -586,9 +672,26 @@ class Set extends \ArrayObject implements \JsonSerializable
      *
      * @return boolean
      */
-    public function hasValue($value)
+    public function hasValue($value, $recursive = false)
     {
-        return in_array($value, (array) $this);
+        if (in_array($value, (array) $this)) {
+            return true;
+        }
+
+        if ($recursive) {
+            foreach ($this as $item) {
+                if (is_array($item)) {
+                    $item = new static($item);
+                }
+
+                if ($item instanceof Set && $item->hasValue($value, true)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        return false;
     }
 
     /**
@@ -596,9 +699,26 @@ class Set extends \ArrayObject implements \JsonSerializable
      *
      * @return boolean
      */
-    public function hasKey($key)
+    public function hasKey($key, $recursive = false)
     {
-        return array_key_exists($key, (array) $this);
+        if (array_key_exists($key, (array) $this)) {
+            return true;
+        }
+
+        if ($recursive) {
+            foreach ($this as $item) {
+                if (is_array($item)) {
+                    $item = new static($item);
+                }
+
+                if ($item instanceof Set && $item->hasKey($key, true)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        return false;
     }
 
     /**
@@ -608,6 +728,22 @@ class Set extends \ArrayObject implements \JsonSerializable
      */
     function empty() {
         return !$this->count();
+    }
+
+    // ==================================================
+    // > DISPLAYING ITEMS
+    // ==================================================
+    /**
+     * Return the items as an html list
+     *
+     * @param  string   $tag
+     * @return string
+     */
+    public function htmlList($tag = "ul", $class = false)
+    {
+        return "<$tag" . ($class ? " class='$class'" : "") . ">" . $this->reduce(function ($html, $item) {
+            return $html . "<li>$item</li>";
+        }, "") . "</$tag>";
     }
 
     // ==================================================

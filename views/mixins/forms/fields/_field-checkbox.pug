@@ -2,15 +2,37 @@
 //- > MIXIN : FORM FIELD - CHECKBOX
 //- =============================================================================
 
-mixin field-checkbox(form, name, label = false, layout = "column")
+mixin field-checkbox-options($options, $form, $name, $field_attributes, $options_attributes, $parent_value = false)
+    ul(data-if=$parent_value?"{{$name}}.indexOf('$parent_value') > -1":false)&attributes($attributes)
+        each $label, $value in $options
+
+            li.gr-none&attributes((array) ($_set($options_attributes)->get($value) ?: []))
+
+                label.choice-label
+
+                    input(
+                        type="checkbox"
+                        name=$name
+                        value=$value
+                        checked=in_array($value, (array) $form["prefill"]->get($name))
+
+                        data-if=$parent_value?"{{$name}}.indexOf('$parent_value') == -1":false
+                        data-if-action="uncheck"
+
+                    )&attributes($field_attributes)
+
+                    //- Label
+                    != is_array($label) ? $label[0] : $label
+
+                //- Has children
+                if is_array($label) && !empty($label[1])
+                    +field-checkbox-options($label[1], $form, $name, $field_attributes, $options_attributes, $value)&attributes($attributes).list--sub
+
+
+mixin field-checkbox($form, $name, $label = false, $layout = "column", $field_attributes = [], $options_attributes = [])
 
     +fieldset($form, $name, $label)&attributes($attributes)
         if !empty($form["options"]->get($name))
-            ul(class=$layout)
+            +field-checkbox-options($form["options"]->get($name), $form, $name, $field_attributes, $options_attributes)(class=$layout)
 
-                - $no_keys = !array_keys($form["options"]->get($name))[0]
-                each $label, $value in $form["options"]->get($name)
-                    li.gr-none: label.choice-label
-                        - $value = $no_keys ? $label : $value
-                        input(type="checkbox" name=$name value=$value checked=in_array($value, (array) $form["prefill"]->get($name)))
-                        != $label
+        block

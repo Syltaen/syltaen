@@ -105,8 +105,13 @@ abstract class Hooks
         add_filter("syltaen_select_{$name}_model", $model);
         add_filter("syltaen_select_{$name}_format", $result_format);
 
-        add_filter("syltaen_select_{$name}_options", function () use ($name, $add_label) {
+        add_filter("syltaen_select_{$name}_options", function ($value = false) use ($name, $add_label) {
             $model = apply_filters("syltaen_select_{$name}_model", false);
+
+            // Restrict model to a specific value to limit memory usage
+            if ($value) {
+                $model->is($value);
+            }
 
             $results = (array) $model->map(function ($item) use ($name) {
                 return apply_filters("syltaen_select_{$name}_format", $item);
@@ -114,12 +119,20 @@ abstract class Hooks
 
             if ($add_label) {
                 $results[] = [
-                    "modifier"  => "add",
-                    "id"        => "new",
-                    "selection" => $add_label,
-                    "result"    => $add_label,
+                    "wrap" => "add",
+                    "id"   => "new",
+                    "text" => $add_label,
                 ];
             }
+
+            // Wrap text
+            $results = array_map(function ($item) {
+                return [
+                    "id"    => $item["id"],
+                    "title" => strip_tags(str_replace("<br>", "\n", $item["text"])),
+                    "text"  => !empty($item["wrap"]) ? "<div class='select2-advancedoption--{$item['wrap']}'>" . $item["text"] . "</div>" : $item["text"],
+                ];
+            }, $results);
 
             return $results;
         });
@@ -137,8 +150,8 @@ abstract class Hooks
      * @param  string $name
      * @return array  of options
      */
-    public static function getSelectOptions($name)
+    public static function getSelectOptions($name, $value = false)
     {
-        return apply_filters("syltaen_select_{$name}_options", []);
+        return apply_filters("syltaen_select_{$name}_options", [$value]);
     }
 }

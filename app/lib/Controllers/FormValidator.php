@@ -14,7 +14,7 @@ class FormValidator
      */
     private function _required()
     {
-        if (!$this->value) {
+        if (!$this->value && $this->value !== "0" && $this->value !== 0) {
             return "This field is required.";
         }
     }
@@ -25,12 +25,11 @@ class FormValidator
     private function _required_if($params)
     {
         $params = static::multipleParameters($params);
-        $field  = $params[0];
-        $value  = $params[1] ?? null;
 
-        $other_field_match = !empty($value)
-            ? $this->form->payload->get($field) == $value
-            : $this->form->payload->get($field);
+        $value  = (array) $this->form->payload->get($params[0]);
+        $target = array_slice($params, 1);
+
+        $other_field_match = empty($target) ? $value : array_intersect($value, $target);
 
         if ($other_field_match && !$this->value) {
             return "This field is required.";
@@ -70,20 +69,43 @@ class FormValidator
     /**
      * Unused email address (except by the current user)
      */
-    private function _new_email()
+    private function _new_email($exception)
     {
-        if (wp_get_current_user()->email != $this->value && email_exists($this->value)) {
+        // Allow to skip this check if the user is editing his own profile
+        if ($exception == "self" && wp_get_current_user()->user_email == $this->value) {
+            return;
+        }
+
+        // Allow an exception
+        if (!empty($exception) && $exception == $this->value) {
+            return;
+        }
+
+        if (email_exists($this->value)) {
             return "This e-mail address is already used.";
+        }
+    }
+
+    /**
+     * Is a valid login (username or email address)
+     */
+    private function _login_exists()
+    {
+        if (!get_user_by("email", trim(wp_unslash($this->value))) && !get_user_by("login", trim($this->value))) {
+            return "There is no account with that username or email address.";
         }
     }
 
     /**
      * Same value than another field
      */
-    private function _confirmed($field)
+    private function _same_as($field)
     {
         if ($this->value != $this->form->payload->get($field)) {
-            return "The values must be the same.";
+            return [
+                $this->field => "The values must be the same.",
+                $field       => "The values must be the same.",
+            ];
         }
     }
 
@@ -92,6 +114,7 @@ class FormValidator
      */
     private function _gt($num)
     {
+        $num = $this->getNumericalValue($num);
         if ($this->value <= $num) {
             return "This value must be greater than {$num}.";
         }
@@ -102,6 +125,7 @@ class FormValidator
      */
     private function _gte($num)
     {
+        $num = $this->getNumericalValue($num);
         if ($this->value < $num) {
             return "This value must be greater than or equal to {$num}.";
         }
@@ -112,6 +136,7 @@ class FormValidator
      */
     private function _lt($num)
     {
+        $num = $this->getNumericalValue($num);
         if ($this->value >= $num) {
             return "This value must be less than {$num}.";
         }
@@ -122,6 +147,7 @@ class FormValidator
      */
     private function _lte($num)
     {
+        $num = $this->getNumericalValue($num);
         if ($this->value > $num) {
             return "This value must be less than or equal to {$num}.";
         }
@@ -180,13 +206,28 @@ class FormValidator
     /**
      * Value is in the field provided options
      */
-    private function _options()
+    private function _in_options()
     {
-        $options = $this->form->options->get($this->field);
-        $allowed = !array_keys($options)[0] ? array_values($options) : array_keys($options);
+        $options = set($this->form->options->get($this->field));
 
-        if (!in_array($this->value, $allowed)) {
-            return "This value is not allowed.";
+        foreach ((array) $this->value as $value) {
+            if (!$options->hasKey($value, true)) {
+                return "This value is not allowed.";
+            }
+        }
+    }
+
+    /**
+     * Value must be all the available options
+     */
+    private function _all_options()
+    {
+        $values    = (array) $this->value;
+        $options   = $this->form->options->get($this->field);
+        $mandatory = !array_keys($options)[0] ? array_values($options) : array_keys($options);
+
+        if (!empty(array_diff($mandatory, $values))) {
+            return "You must select all options.";
         }
     }
 
@@ -197,6 +238,47 @@ class FormValidator
     {
         if (!is_numeric($this->value)) {
             return "This value is not valid.";
+        }
+    }
+
+    /**
+     * Value is not already used as a post meta
+     */
+    private function _unique_post_meta($params)
+    {
+        $params    = static::multipleParameters($params);
+        $post_type = $params[0] ?? "post";
+        $meta_key  = $params[1] ?? $this->field;
+
+        if ((new Posts)->addFilters(["post_type" => $post_type])->meta($meta_key, $this->value)->found()) {
+            return "This value is already used.";
+        }
+    }
+
+    /**
+     * Validate a group of address fields
+     */
+    private function _address()
+    {
+        $subfields = ["street", "zip", "city", "country"];
+        $errors    = [];
+
+        foreach ($subfields as $subfield) {
+            if (empty($this->value[$subfield])) {
+                $errors[$this->field . "." . $subfield] = "This field is required.";
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Validate a readable date
+     */
+    private function _date()
+    {
+        if (!strtotime($this->value)) {
+            return "This date is not valid.";
         }
     }
 
@@ -232,7 +314,13 @@ class FormValidator
 
         // If has error, add it to the form errors (allow custom error message as third parameter)
         if ($error) {
-            $this->form->errors->set($this->field, $error);
+            if (is_array($error)) {
+                foreach ($error as $field => $message) {
+                    $this->form->errors->set($field, $message);
+                }
+            } else {
+                $this->form->errors->set($this->field, $error);
+            }
         }
 
         return $error;
@@ -247,5 +335,18 @@ class FormValidator
     public static function multipleParameters($parameters)
     {
         return array_filter(array_map("trim", explode(",", $parameters ?? "")));
+    }
+
+    /**
+     * Return the numerical value of a string
+     *
+     * @param  [type] $num
+     * @return void
+     */
+    public function getNumericalValue($num)
+    {
+        return is_numeric($num) ? $num : (
+            $this->form->payload->get($num) ?: (float) $num
+        );
     }
 }

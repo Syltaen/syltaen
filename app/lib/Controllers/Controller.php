@@ -146,47 +146,46 @@ class Controller
     /**
      * Make and send an excel file form an array of data
      *
-     * @param  array  $table
+     * @param  array  $table Associative array of data with header as keys
      * @return void
      */
-    public static function excel($table, $filename = "export")
+    public static function excel($table, $filename = false, $fillColor = false)
     {
-        header("Content-Type: application/xlsx");
-        header("Content-Disposition: attachment; filename={$filename}.xlsx;");
-
         error_reporting(null);
         ini_set("display_errors", 0);
 
-        $writer = new \XLSXWriter();
+        $writer   = new \XLSXWriter();
+        $filename = ($filename ?: ($table instanceof Model ? $table::TYPE : "export")) . "_" . date("Y-m-d_H-i-s");
+        $table    = $table instanceof Model ? $table->getAsTable() : (array) $table;
 
         $writer->setAuthor(config("project"));
         $writer->setCompany(config("client"));
 
         // Add sytled header
-        if (!empty($table["header"])) {
-            $writer->writeSheetRow("Export", $table["header"], [
-                "font-style" => "bold",
-                "fill"       => config("color.primary"),
-                "color"      => "#fff",
-                "font-size"  => 9,
-                "border"     => "bottom",
-                "halign"     => "left",
-                "valign"     => "center",
-                "height"     => 20,
-            ]);
-        }
+        $writer->writeSheetRow("Export", array_keys($table[0]), [
+            "font-style" => "bold",
+            "fill"       => $fillColor ?: config("color.primary"),
+            "color"      => "#fff",
+            "font-size"  => 10,
+            "border"     => "bottom",
+            "halign"     => "left",
+            "valign"     => "center",
+            "height"     => 20,
+        ]);
 
         // Add each rows
-        foreach ($table["rows"] as $row) {
+        foreach ($table as $row) {
             $writer->writeSheetRow("Export", $row, [
                 "height"    => 15,
-                "font-size" => 8,
+                "font-size" => 10,
                 "halign"    => "left",
                 "valign"    => "center",
             ]);
         }
 
         // Send file
+        header("Content-Type: application/xlsx");
+        header("Content-Disposition: attachment; filename={$filename}.xlsx;");
         $f = fopen("php://output", "w");
         fwrite($f, $writer->writeToString());
         exit;
