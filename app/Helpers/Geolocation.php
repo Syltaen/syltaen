@@ -102,7 +102,7 @@ abstract class Geolocation
      */
     public static function geocode($search)
     {
-        return (new Request("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?" . implode("&", [
+        return (new Request("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?" . implode("&", [
             "f=json",
             "countryCode=BE",
             "langCode=FR",
@@ -121,7 +121,7 @@ abstract class Geolocation
     public static function getSuggestions($search, $limit = 10, $extent = false)
     {
         // Generate an endpoint
-        $endpoint = "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest";
+        $endpoint = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest";
         $query    = [
             "f=json",
             "maxSuggestions=$limit",
@@ -148,7 +148,7 @@ abstract class Geolocation
     public static function getSuggestionInfo($magicKey)
     {
         $info = (new Request(
-            "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&maxLocations=1&outFields=*&SingleLine=Li%C3%A8ge,%20BEL&outSR=%7b%22wkid%22:102100,%22latestWkid%22:3857%7d&magicKey=$magicKey"
+            "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&maxLocations=1&outFields=*&SingleLine=Li%C3%A8ge,%20BEL&outSR=%7b%22wkid%22:102100,%22latestWkid%22:3857%7d&magicKey=$magicKey"
         ))->get()->body;
 
         if (empty($info->candidates[0])) {
@@ -167,7 +167,7 @@ abstract class Geolocation
     public static function reverseGeocoding($coord)
     {
         return (new Request(
-            "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location=$coord[lng],$coord[lat]&f=json&langCode=FR"
+            "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location=$coord[lng],$coord[lat]&f=json&langCode=FR"
         ))->get()->body;
     }
 }

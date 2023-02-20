@@ -2,9 +2,9 @@
 
 namespace Syltaen;
 
-// ==================================================
-// > UPLOAD A FILE WITH AJAX
-// ==================================================
+// =============================================================================
+// > UPLOAD
+// =============================================================================
 Hooks::ajax("syltaen_ajax_upload", function () {
     wp_send_json(
         Files::upload(
@@ -13,14 +13,13 @@ Hooks::ajax("syltaen_ajax_upload", function () {
             $_FILES,
 
             // Generate an attachment
-            !empty($_POST["attachement"]) ? true : false,
+            !empty($_GET["attachment"]) ? true : false,
 
             // Parent ID
             false,
 
             // Custom folder
-            !empty($_POST["folder"]) ? str_replace("[uniqid]", uniqid(), $_POST["folder"]) : false
-
+            !empty($_GET["folder"]) ? str_replace("[uniqid]", uniqid(), $_GET["folder"]) : false
         )
     );
 

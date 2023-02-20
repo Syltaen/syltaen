@@ -6,7 +6,7 @@ namespace Syltaen;
 // > MAIL HEADER FILTERS
 // ==================================================
 add_filter("wp_mail", function ($attrs) {
-    if (App::config("mail_debug")) {
+    if (config("mail.debug")) {
         $attrs["subject"] = "[TEST] " . $attrs["subject"];
     }
 
