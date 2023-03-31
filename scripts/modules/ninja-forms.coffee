@@ -5,7 +5,7 @@
 
 import $ from "jquery"
 import SelectField from "./../tools/SelectField.coffee"
-import UploadField from "./../tools/UploadField.coffee"
+import { UploadField, AutoUploadField } from "./../tools/UploadField.coffee"
 import RangeField from "./../tools/RangeField.coffee"
 import FormSteps from "./../tools/FormSteps.coffee"
 import PasswordBox from "./../tools/PasswordBox.coffee"
