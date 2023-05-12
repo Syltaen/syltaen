@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
-    "browser-sync": "^2.27.5",
+    "browser-sync": "^2.29.1",
     "browser-sync-webpack-plugin": "^2.3.0",
     "coffee-loader": "^3.0.0",
     "coffeescript": "^2.6.1",
