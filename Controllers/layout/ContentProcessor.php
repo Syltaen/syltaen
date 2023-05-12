@@ -25,6 +25,15 @@ class ContentProcessor extends LayoutProcessor
             ->{$this->data["list"]}();
     }
 
+    /**
+     * Handle data for intro content type
+     *
+     * @return void
+     */
+    private function intro()
+    {
+        $this->section->addClass("site-intro");
+    }
 
     // =============================================================================
     // > METHOD ROUTING
@@ -38,6 +47,10 @@ class ContentProcessor extends LayoutProcessor
     public function process()
     {
         $this->setAttributesFromSettings($this->data["layout_settings"]);
+
+        $this->section = $this->parent->parent->parent;
+        $this->row     = $this->parent->parent;
+        $this->column  = $this->parent;
 
         // Run the correct mehtod by looking at the acf_fc_layout
         switch ($this->data["acf_fc_layout"]) {

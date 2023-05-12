@@ -39,10 +39,10 @@ $files: (
 // > CLASSES
 // =============================================================================
 .fa,
-.fas, .fass,
-.far, .fasr,
-.fal, .fasl,
-.fat,
+.fas, .fass, .fa-solid, .fa-sharp-solid,
+.far, .fasr, .fa-regular, .fa-sharp-regular,
+.fal, .fasl, .fa-light, .fa-sharp-light,
+.fat, .fa-thin,
 .fab {
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
@@ -50,7 +50,7 @@ $files: (
     font-style: normal;
     font-variant: normal;
     text-rendering: auto;
-    line-height: 1;
+    // line-height: 1;
 }
 
 // =============================================================================
@@ -65,7 +65,9 @@ $files: (
         content: fa-content($icon_var);
     }
 }
-.fa, .fas {
+.fa,
+.fas,
+.fa-solid {
     @include fa();
 }
 
@@ -76,7 +78,8 @@ $files: (
         content: fa-content($icon_var);
     }
 }
-.fass {
+.fass,
+.fa-sharp-solid {
     @include fass();
 }
 
@@ -88,7 +91,8 @@ $files: (
         content: fa-content($icon_var);
     }
 }
-.far {
+.far,
+.fa-regular {
     @include far();
 }
 
@@ -99,7 +103,8 @@ $files: (
         content: fa-content($icon_var);
     }
 }
-.fasr {
+.fasr,
+.fa-sharp-regular {
     @include fasr();
 }
 
@@ -111,7 +116,8 @@ $files: (
         content: fa-content($icon_var);
     }
 }
-.fal {
+.fal,
+.fa-light {
     @include fal();
 }
 
@@ -122,7 +128,8 @@ $files: (
         content: fa-content($icon_var);
     }
 }
-.fasl {
+.fasl,
+.fa-sharp-light {
     @include fasl();
 }
 
@@ -134,7 +141,8 @@ $files: (
         content: fa-content($icon_var);
     }
 }
-.fat {
+.fat,
+.fa-thin {
     @include fat();
 }
 
@@ -146,7 +154,8 @@ $files: (
         content: fa-content($icon_var);
     }
 }
-.fab {
+.fab,
+.fa-brands {
     @include fab();
 }
 

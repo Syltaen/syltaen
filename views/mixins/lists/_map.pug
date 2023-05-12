@@ -1,0 +1,16 @@
+//- =============================================================================
+//- > VIEW MIXIN - PRESENCE MAP
+//- =============================================================================
+
+mixin map(markers, content)
+
+    .map&attributes($c["attrs"])
+
+        .map__wrap(data-icons=$_img("map/"))
+            each $marker in $markers
+                .map__marker(
+                    data-lng=$marker["lng"]
+                    data-lat=$marker["lat"]
+                )
+
+        .map__content!= $content

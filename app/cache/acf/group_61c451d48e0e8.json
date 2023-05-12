@@ -1,11 +1,12 @@
 {
     "key": "group_61c451d48e0e8",
-    "title": "Colonne - Options",
+    "title": "Paramètres - 2 - Colonne",
     "fields": [
         {
             "key": "field_61c451ea0470c",
             "label": "Largeur",
             "name": "width",
+            "aria-label": "",
             "type": "number",
             "instructions": "",
             "required": 0,
@@ -15,13 +16,14 @@
                 "class": "",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "default_value": 1,
-            "placeholder": "",
-            "prepend": "",
-            "append": "",
             "min": "",
             "max": "",
-            "step": ""
+            "placeholder": "",
+            "step": "",
+            "prepend": "",
+            "append": ""
         }
     ],
     "location": [
@@ -54,5 +56,8 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1640256004
+    "modified": 1683892766,
+    "acfe_categories": {
+        "layout": "Layout"
+    }
 }

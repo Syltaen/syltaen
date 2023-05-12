@@ -3,113 +3,10 @@
     "title": "Header & Footer",
     "fields": [
         {
-            "key": "field_5922f7db792ad",
-            "label": "Header",
-            "name": "",
-            "type": "tab",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "placement": "top",
-            "endpoint": 0
-        },
-        {
-            "key": "field_5922f7e7792af",
-            "label": "Logo",
-            "name": "logo",
-            "type": "image",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "uploader": "",
-            "acfe_thumbnail": 0,
-            "return_format": "id",
-            "preview_size": "medium",
-            "min_width": "",
-            "min_height": "",
-            "min_size": "",
-            "max_width": "",
-            "max_height": "",
-            "max_size": "",
-            "mime_types": "",
-            "library": "all"
-        },
-        {
-            "key": "field_5922f891792b0",
-            "label": "Réseaux sociaux",
-            "name": "social",
-            "type": "repeater",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "collapsed": "",
-            "min": 0,
-            "max": 0,
-            "layout": "table",
-            "button_label": "Ajouter un réseau",
-            "sub_fields": [
-                {
-                    "key": "field_5922f8aa792b1",
-                    "label": "Icône",
-                    "name": "icon",
-                    "type": "font-awesome",
-                    "instructions": "",
-                    "required": 1,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "icon_sets": [
-                        "far"
-                    ],
-                    "custom_icon_set": "",
-                    "default_label": "",
-                    "default_value": "",
-                    "save_format": "object",
-                    "allow_null": 0,
-                    "show_preview": 1,
-                    "enqueue_fa": 0,
-                    "fa_live_preview": "",
-                    "choices": []
-                },
-                {
-                    "key": "field_5a0e9e48e01f5",
-                    "label": "Lien",
-                    "name": "link",
-                    "type": "link",
-                    "instructions": "",
-                    "required": 1,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "return_format": "array"
-                }
-            ]
-        },
-        {
-            "key": "field_5922f7e2792ae",
+            "key": "field_642c2aa8b1208",
             "label": "Footer",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -119,53 +16,35 @@
                 "class": "",
                 "id": ""
             },
-            "placement": "top",
+            "placement": "left",
             "endpoint": 0
         },
         {
-            "key": "field_61954cb7e5044",
-            "label": "Colonnes",
-            "name": "footer_cols",
-            "type": "repeater",
+            "key": "field_645cb1e5626a6",
+            "label": "Contenu",
+            "name": "footer_content",
+            "aria-label": "",
+            "type": "wysiwyg",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
-                "class": "acf-light-repeater acf-horizontal-repeater acf-sections-row__columns",
+                "class": "",
                 "id": ""
             },
-            "collapsed": "",
-            "min": 0,
-            "max": 0,
-            "layout": "block",
-            "button_label": "",
-            "sub_fields": [
-                {
-                    "key": "field_61954cc9e5045",
-                    "label": "",
-                    "name": "txt",
-                    "type": "wysiwyg",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "tabs": "all",
-                    "toolbar": "full",
-                    "media_upload": 1,
-                    "delay": 0
-                }
-            ]
+            "acfe_save_meta": 0,
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
         },
         {
             "key": "field_5b14f1221bed5",
             "label": "Copyright",
             "name": "copyright",
+            "aria-label": "",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -175,11 +54,12 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "© [year] Hungry Minds",
+            "acfe_save_meta": 0,
+            "default_value": "",
+            "maxlength": "",
             "placeholder": "",
             "prepend": "",
-            "append": "",
-            "maxlength": ""
+            "append": ""
         }
     ],
     "location": [
@@ -207,7 +87,7 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1650440918,
+    "modified": 1683892840,
     "acfe_categories": {
         "layout": "Layout"
     }

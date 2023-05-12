@@ -4,11 +4,35 @@
 
 .archive-filters
     +flex(row nowrap, center, flex-end)
+    margin-bottom: 20px
 
     &__set
         flex: 1
         padding: .75em
-        max-width: 250px
+        max-width: 350px
+        // margin: 0
+        &--submit
+            flex: 0
+            margin-bottom: 1.5em
+            .button
+                height: 48px
+                padding: 0 2em
+                width: 100%
+                justify-content: center
+
+    .form__input--search
+        input
+            border: 0
+            border-bottom: 1px solid color(secondary)
+            border-radius: 0
+            outline: 0 !important
+            box-shadow: none !important
+            +font(20px bold)
+            padding-left: 2em
+
+        &::before
+            +font(22px secondary)
+            left: 0
 
     // =============================================================================
     // > RESPONSIVE

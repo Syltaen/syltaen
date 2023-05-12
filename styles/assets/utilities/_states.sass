@@ -33,8 +33,10 @@
 .is-locked
     pointer-events: none
 
-.is-scroll-locked
+.is-scroll-locked,
+.is-overflow-hidden
     overflow: hidden
+
 
 
 // ==================================================
@@ -46,6 +48,6 @@
 
     +screen($bp)
         .show#{$suffix}
-            display: auto
+            display: inherit
         .hide#{$suffix}
             display: none

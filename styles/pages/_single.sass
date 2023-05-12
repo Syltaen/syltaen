@@ -5,28 +5,45 @@
 .single
 
     // ==================================================
+    // > LAYOUT
+    // ==================================================
+    &__aside
+        flex: 2
+    &__main
+        flex: 3
+
+    // ==================================================
     // > NAV
     // ==================================================
-    &__nav
-        &--top
-            border-bottom: 2px solid color(light-grey)
-        &--bottom
-            border-top: 2px solid color(light-grey)
+    &__category
+        +font(22px bold primary)
+        &:hover
+            +font(secondary)
 
+    &__date
+        +font(22px regular)
+        &::before
+            content: " – "
 
     // ==================================================
-    // > CONTENT
+    // > SHARE
     // ==================================================
-    &__content
-        padding: 40px 300px 40px 0
-        +screen(md)
-            padding-right: 150px
-        +screen(sm)
-            padding-right: 0
+    &__share
+        +flex(row nowrap, space-between, center)
+        margin-top: 1em
+        &__title
+            +font(20px)
+        &__icons
+            justify-content: flex-start
+        &__icons .icons__link
+            +font(20px secondary)
+            &:hover
+                background: none
+                +font(ternary)
 
     // =============================================================================
-    // > TYPES
+    // > CONTENT TYPE
     // =============================================================================
-
-    /* NEWS */
     // &-news &
+    //     &__aside
+    //         flex: 1

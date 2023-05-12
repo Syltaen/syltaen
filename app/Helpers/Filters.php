@@ -103,7 +103,7 @@ class Filters extends FormProcessor
      *
      * @param $name
      */
-    public function addSearch($label = null, $placeholder = "", $name = "s")
+    public function addSearch($label = null, $placeholder = "", $name = "search")
     {
         return $this->addField("search", $name, $label !== null ? $label : __("Search", "syltaen"), [
             "placeholder" => $placeholder,

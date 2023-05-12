@@ -5,5 +5,61 @@
 .site-section
     position: relative
 
+    // ==================================================
+    // > IMAGES
+    // ==================================================
     &__image
-        @extend %cover
+        &, &_left, &_right
+            @extend %cover
+        &_left, &_right
+            width: 50%
+
+        &_right
+            left: auto
+            right: 0
+        &--third
+            width: 33%
+        &--fixed
+            width: 500px
+
+    &--img-left
+        &-half
+            padding-left: 50%
+        &-third
+            padding-left: 33%
+        &-fixed
+            padding-left: 500px
+
+    &--img-right
+        &-half
+            padding-right: 50%
+        &-third
+            padding-right: 33%
+        &-fixed
+            padding-right: 500px
+
+    &--img-left-half,
+    &--img-left-thid,
+    &--img-left-fixed,
+    &--img-right-half,
+    &--img-right-thid,
+    &--img-right-fixed
+        .container
+            width: calc(100% - 100px)
+
+    +screen(sm)
+        &__image_left,
+        &__image_right
+            +size(100%, 300px)
+        &__image_left,
+        &__image_right
+            top: -300px
+        &--img-left-half,
+        &--img-left-thid,
+        &--img-left-fixed,
+        &--img-right-half,
+        &--img-right-thid,
+        &--img-right-fixed
+            padding-left: 0
+            padding-right: 0
+            margin-top: 300px

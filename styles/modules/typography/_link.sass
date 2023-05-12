@@ -2,34 +2,17 @@
 // > MODULES: TYPOGRAPHY - LINKS
 // =============================================================================
 
-a,
-.link
-    +font(primary)
+a
     text-decoration: none
+    color: inherit
+
+a:not([class]),
+.link
     position: relative
     cursor: pointer
+    text-decoration: underline
+    text-underline-offset: 3px
 
-    &:not([class]),
-    &.link
-        white-space: nowrap
-        display: inline-block
-        &::after
-            content: ""
-            +absolute(bottom .1em left 0)
-            +size(100%, 1px)
-            background: color(primary)
-            transition: width .35s ease
-
-        &:hover::after
-            width: 0
-            left: 100%
-            transition: all .35s ease
-
-        @each $color, $value in $colors
-            .color-#{"" + $color} &,
-            &.color-#{"" + $color},
-                &::after
-                    background: $value
-
-            &.link--#{"" + $color}::after
-                background: $value !important
+    +font(primary)
+    &:hover
+        +font(secondary)

@@ -115,6 +115,51 @@ abstract class Files
         return rmdir($file);
     }
 
+    /**
+     * Write content to a file
+     *
+     * @param  string $file
+     * @param  string $content
+     * @return void
+     */
+    public static function write($filepath, $content)
+    {
+        $filepath = Files::path($filepath);
+        $filename = basename($filepath);
+        $dir      = str_replace($filename, "", $filepath);
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        $file = fopen($filepath, "w");
+        fwrite($file, $content);
+        fclose($file);
+    }
+
+    /**
+     * Read content of a file
+     *
+     * @param  string   $file
+     * @return string
+     */
+    public static function read($filepath)
+    {
+        $filepath = Files::path($filepath);
+        return file_get_contents($filepath);
+    }
+
+    /**
+     * Check that a file exist
+     *
+     * @param  string $filepath
+     * @return bool
+     */
+    public static function exists($filepath)
+    {
+        return file_exists(Files::path($filepath));
+    }
+
     // ==================================================
     // > ENQUEUING
     // ==================================================

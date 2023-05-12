@@ -3,6 +3,9 @@
 // =============================================================================
 
 .site-intro
-    padding: spacing(md) 0
-    +font(white center)
-    background: color(secondary) center center / cover no-repeat
+    position: relative
+    &::before
+        content: ""
+        @extend %cover
+        background: color(black, .25)
+        z-index: 5

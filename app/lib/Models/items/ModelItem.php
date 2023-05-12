@@ -363,8 +363,8 @@ abstract class ModelItem
     /**
      * Get a specific term translation
      *
-     * @param  string $lang
-     * @return int    ID of the translated post
+     * @param  string    $lang
+     * @return ModelItem ID of the translated post
      */
     public function getTranslation($lang = false)
     {

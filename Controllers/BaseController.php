@@ -91,8 +91,8 @@ abstract class BaseController extends Controller
     protected function footer()
     {
         return (new Set([]))->store([
-            "footer_cols" => [],
-            "copyright"   => "",
+            "footer_content" => [],
+            "copyright"      => "",
         ], "headerfooter");
     }
 

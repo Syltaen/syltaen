@@ -51,6 +51,10 @@ abstract class Model implements \Iterator
      * @var array
      */
     public $queryModifiers = [];
+    /**
+     * @var array
+     */
+    public $resultFilters = [];
 
     /**
      * Internal key used for any iteration on the model
@@ -72,7 +76,7 @@ abstract class Model implements \Iterator
     public $fieldsIndex = null;
 
     /**
-     * @var array
+     * @var bool|array
      */
     public $forceFetchFields = false;
 
@@ -84,7 +88,7 @@ abstract class Model implements \Iterator
     public $globals = [];
 
     /**
-     * @var array
+     * @var Set
      */
     public $globalsIndex = [];
 
@@ -325,7 +329,13 @@ abstract class Model implements \Iterator
      */
     public function isnt($list, $mode = "replace")
     {
-        $ids = Data::filter($list, "ids");
+        $ids = Data::filter((array) $list, "ids");
+
+        // Already have an "IS" filter : intersect with the new list
+        if (!empty($this->filters[static::QUERY_IS])) {
+            $this->filters[static::QUERY_IS] = array_diff($this->filters[static::QUERY_IS], $ids);
+        }
+
         return $this->updateExistingFilter(static::QUERY_ISNT, $ids, $mode);
     }
 
@@ -336,7 +346,7 @@ abstract class Model implements \Iterator
      */
     public function none()
     {
-        $this->is(0);
+        $this->is(-1);
         return $this;
     }
 
@@ -344,10 +354,13 @@ abstract class Model implements \Iterator
      * Execute the is method, only if ids are specified
      *
      * @param  array|int $list
+     * @param  string    $mode   Define what to do if there is already a list of ID to filter. Either replace, merge or intersect
      * @return self
      */
-    public function isMaybe($list)
+    public function isMaybe($list, $mode = "replace")
     {
+        $list = array_diff($list ?: [], $this->filters[static::QUERY_ISNT] ?? []);
+
         if (!$list || empty($list)) {
             return $this;
         }
@@ -380,7 +393,7 @@ abstract class Model implements \Iterator
             return $this;
         }
 
-        return $this->isnt($list);
+        return static::isnt($list);
     }
 
     /**
@@ -499,26 +512,18 @@ abstract class Model implements \Iterator
      * @param  string       $compare  Operator to test. Possible values are : '=', '!=', '>', '>=', '<', '<=', 'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN', 'EXISTS' and 'NOT EXISTS'.
      * @param  string       $type     Custom field type. Possible values are : 'NUMERIC', 'BINARY', 'CHAR', 'DATE', 'DATETIME', 'DECIMAL', 'SIGNED', 'TIME', 'UNSIGNED'. Default value is 'CHAR'.
      * @param  string       $relation Erase the current relation between each meta_query. Either "OR", "AND" (default) or false to keep the current one.
-     * @param  boolean      $replace  Specify if the filter should replace any existing one on the same meta_key
      * @return self
      */
-    public function meta($key, $value = null, $compare = "=", $type = null, $relation = false, $replace = false)
+    public function meta($key, $value = null, $compare = "=", $type = null, $relation = false)
     {
-        // Create the meta_query if it doesn't exist
-        $this->filters["meta_query"] = isset($this->filters["meta_query"]) ? $this->filters["meta_query"] : [
-            "relation" => "AND",
-        ];
-
         // Update the relation if specified
-        $this->filters["meta_query"]["relation"] = $relation ?: $this->filters["meta_query"]["relation"];
+        $this->setMetaRelation($relation);
 
-        // If $replace, remove all filters made on that specific meta_key
-        if ($replace) {
-            foreach ($this->filters["meta_query"] as $filter_key => $filter) {
-                if (isset($filter["key"]) && $filter["key"] == $key) {
-                    unset($this->filters["meta_query"][$filter_key]);
-                }
-            }
+        // Key is a filter array, add as-is
+        if (is_array($key)) {
+            $filter                        = $key;
+            $this->filters["meta_query"][] = $filter;
+            return $this;
         }
 
         // Add the filter
@@ -529,15 +534,30 @@ abstract class Model implements \Iterator
             "type"    => $type,
         ];
 
-        if (is_null($value)) {
-            unset($filter["value"]);
-        }
-
-        if (is_null($type)) {
-            unset($filter["type"]);
-        }
+        if (is_null($value)) {unset($filter["value"]);}
+        if (is_null($type)) {unset($filter["type"]);}
+        if ($compare == "IN" && empty((array) $value)) $filter["value"] = [-1];
 
         $this->filters["meta_query"][] = $filter;
+
+        return $this;
+    }
+
+    /**
+     * Set the relation between each meta query
+     *
+     * @param  string $relation AND|OR
+     * @return self
+     */
+    public function setMetaRelation($relation)
+    {
+        // Create the meta_query if it doesn't exist
+        $this->filters["meta_query"]??=["relation" => "AND"];
+
+        // Update the relation if specified
+        if ($relation) {
+            $this->filters["meta_query"]["relation"] = $relation;
+        }
 
         return $this;
     }
@@ -551,7 +571,7 @@ abstract class Model implements \Iterator
      */
     public function withMeta($keys, $relation = "AND")
     {
-        $this->filters["meta_query"] = array_map(function ($key) {
+        $filter = array_map(function ($key) {
             return [
                 "relation" => "AND",
                 [
@@ -569,10 +589,57 @@ abstract class Model implements \Iterator
                     "value"   => null,
                 ],
             ];
-        }, $keys);
+        }, (array) $keys);
 
-        $this->filters["meta_query"]["relation"] = $relation;
-        return $this;
+        $filter["relation"] = $relation;
+
+        return $this->meta($filter);
+    }
+
+    /**
+     * Filter items that don't have specific meta defined/set
+     *
+     * @param  array  $keys     List of keys that should exist
+     * @param  string $relation AND|OR - Specify if all keys should exist or at least one
+     * @return self
+     */
+    public function withoutMeta($keys, $relation = "AND")
+    {
+        $filter = array_map(function ($key) {
+            return [
+                "relation" => "OR",
+                [
+                    "key"     => $key,
+                    "compare" => "NOT EXISTS",
+                ],
+                [
+                    "key"     => $key,
+                    "compare" => "=",
+                    "value"   => "",
+                ],
+            ];
+        }, (array) $keys);
+
+        $filter["relation"] = $relation;
+
+        return $this->meta($filter);
+    }
+
+    /**
+     * Query by relation
+     *
+     * @param  string  $metakey The meta key
+     * @param  int     $post_id The post ID to relate to
+     * @param  boolean $loose   Include posts that have no relation defined
+     * @return self
+     */
+    public function relatedTo($metakey, $post_id)
+    {
+        return $this->meta([
+            "key"     => $metakey,
+            "compare" => "LIKE",
+            "value"   => "\"{$post_id}\"",
+        ]);
     }
 
     /**
@@ -774,7 +841,7 @@ abstract class Model implements \Iterator
      */
     protected function getResultsFromQuery($query)
     {
-        return set(array_map(function ($item) {
+        $results = set(array_map(function ($item) {
             // Anything else than ITEM_CLASS : return as is
             if (!is_object($item) || get_class($item) !== static::OBJECT_CLASS) {
                 return $item;
@@ -789,6 +856,24 @@ abstract class Model implements \Iterator
             $class = static::ITEM_CLASS;
             return new $class($item, $this);
         }, $query->{static::OBJECT_KEY} ?: []));
+
+        foreach ($this->resultFilters as $callback) {
+            $results = $results->filter($callback);
+        }
+
+        return $results;
+    }
+
+    /**
+     * Add a callback to further filter the results after the query
+     *
+     * @param callback $callback
+     * @return self
+     */
+    protected function addResultFilter($callback)
+    {
+        $this->resultFilters[] = $callback;
+        return $this;
     }
 
     /**
@@ -1417,17 +1502,19 @@ abstract class Model implements \Iterator
      */
     public static function setMassMeta($meta_keys, $meta_values, $object_ids = false, $only_update = false)
     {
+        // Nothing to update
+        if (empty($meta_values) && empty($object_ids)) {return;}
         // Apply updates to ALL the objects of this model
         if (!$object_ids) {$object_ids = (array) static::getAllIDs();}
 
-        $index = static::getMassMeta($meta_keys, $object_ids, false, function ($row) {
+        // Get a list of all existing meta, indexing the first match as object_id:meta_key
+        $index = static::getMassMeta($meta_keys, $object_ids, false, "meta_id", false)->reverse()->index(function ($row) {
             return "{$row->object_id}:{$row->meta_key}";
-        }, false);
+        });
 
         // Uniformize into an array of update
         $max_updates = max(count((array) $meta_keys), count((array) $meta_values), count((array) $object_ids));
-
-        $updates = [];
+        $updates     = [];
         for ($i = 0; $i < $max_updates; $i++) {
             $update = [
                 "object_id"  => ($object_id = is_array($object_ids) ? $object_ids[$i] : $object_ids),
@@ -1453,5 +1540,32 @@ abstract class Model implements \Iterator
         $query .= " ON DUPLICATE KEY UPDATE " . static::META_VALUE . "=VALUES(" . static::META_VALUE . ")";
 
         return Database::query($query);
+    }
+
+    /**
+     * Keep only one occurance of a specific meta_key for each object.
+     * Used only before setMassMeta() to avoid duplicates.
+     *
+     * @param  string $meta_key
+     * @param  array  $object_ids
+     * @return void
+     */
+    public static function removeDuplicateMeta($meta_key, $object_ids)
+    {
+        // Nothing to update
+        if (empty($object_ids)) {return;}
+
+        // Get a list of all existing meta and keep only duplicates meta_ids
+        $duplicates = static::getMassMeta($meta_key, $object_ids, false, "meta_id", false)->groupBy("object_id", "meta_id")->map(function ($meta_ids) {
+            array_shift($meta_ids);
+            return $meta_ids;
+        })->merge();
+
+        if ($duplicates->empty()) {
+            return false;
+        }
+
+        // Remove all the duplicates
+        Database::get_results("DELETE FROM postmeta WHERE meta_id IN " . Database::inArray($duplicates));
     }
 }

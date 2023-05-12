@@ -73,6 +73,11 @@ abstract class PostsModel extends Model
     const CUSTOM_STATUS = false;
 
     /**
+     * Slug for an ACF options page
+     */
+    const OPTIONS_PAGE = false;
+
+    /**
      * A list of other post models joined to this one with $this->join().
      * Used for applying $this->populateData() differently for each post type.
      * @var array
@@ -94,7 +99,8 @@ abstract class PostsModel extends Model
              * The URL of the post
              */
             "@url"   => function ($post) {
-                return static::HAS_PAGE && $post->ID ? get_post_permalink($post->ID) : false;
+                if (!static::HAS_PAGE || empty($post->ID)) return false;
+                return get_permalink($post->ID);
             },
 
             /**
@@ -450,6 +456,17 @@ abstract class PostsModel extends Model
         return $posts;
     }
 
+    /**
+     * Check that this post type is translated
+     *
+     * @return boolean
+     */
+    public static function isTranslated()
+    {
+        if (!function_exists("pll_is_translated_post_type")) return false;
+        return pll_is_translated_post_type(static::TYPE);
+    }
+
     // ==================================================
     // > POST TYPE REGISTRATION
     // ==================================================
@@ -505,6 +522,9 @@ abstract class PostsModel extends Model
             }
         }
 
+        if (static::OPTIONS_PAGE) {
+            static::registerOptionsPage();
+        }
     }
 
     /**
@@ -592,7 +612,42 @@ abstract class PostsModel extends Model
      */
     public static function getArchiveURL($path = "")
     {
-        return site_url(static::getCustomSlug() . "/" . $path);
+        return Lang::addURLPrefix(site_url(static::getCustomSlug() . "/" . $path));
+    }
+
+    // ==================================================
+    // > OPTIONS PAGE
+    // ==================================================
+    /**
+     * Register an options page for this post type
+     *
+     * @return void
+     */
+    public static function registerOptionsPage()
+    {
+        if (static::OPTIONS_PAGE && function_exists("acf_add_options_page")) {
+            // ========== HEADER & FOOTER ========== //
+            acf_add_options_page([
+                "page_title" => static::LABEL . " - Options",
+                "menu_title" => static::LABEL . " - Options",
+                "menu_slug"  => static::OPTIONS_PAGE,
+                "post_id"    => static::OPTIONS_PAGE,
+                "capability" => "edit_posts",
+                "redirect"   => false,
+                "autoload"   => true,
+            ]);
+        }
+    }
+
+    /**
+     * Return an option from the options page
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public static function option($key)
+    {
+        return Data::get($key, static::OPTIONS_PAGE);
     }
 
     // ==================================================

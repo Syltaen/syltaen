@@ -16,16 +16,6 @@ class PageController extends BaseController
     }
 
     /**
-     * Handle context & rendering for homepage
-     *
-     * @return void
-     */
-    public function home()
-    {
-        $this->render("home");
-    }
-
-    /**
      * Store section passed through section processor
      *
      * @param  string $acf_key
@@ -33,8 +23,13 @@ class PageController extends BaseController
      */
     public function processSections($acf_key = "sections")
     {
-        return set(Data::get($acf_key, null, []))->mapWithKey(function ($section, $i) {
-            return (new SectionProcessor($section, $this, $i))->getData();
+        return set(Data::get($acf_key, null, []))->mapAssoc(function ($i, $section) {
+            $section = (new SectionProcessor($section, $this, $i))->getData();
+            if (isset($section["sections"])) {
+                return (array) $section["sections"];
+            }
+
+            return [uniqid() => $section];
         });
     }
 

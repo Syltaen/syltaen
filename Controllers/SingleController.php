@@ -10,6 +10,11 @@ class SingleController extends PageController
     public $view = "single";
 
     /**
+     * @var PostModel
+     */
+    public $model;
+
+    /**
      * Populate $this->data
      */
     public function __construct($args = [])
@@ -36,7 +41,9 @@ class SingleController extends PageController
     private function news()
     {
         $this->model = new News;
-        $this->addSingleNav("Retour à la liste des news");
+        $this->addSingleNav();
+        $this->data["share"] = SEO::share(["Facebook", "Twitter", "LinkedIn", "Mail"], get_the_permalink(), get_the_title());
+        $this->view          = "single";
     }
 
     /**
@@ -58,25 +65,23 @@ class SingleController extends PageController
     /**
      * Add data for the navigation between posts
      *
-     * @param  string $archive_link_text Text to use for the archive link
-     * @param  string $archive_path      The slug to the archive, default to post TYPE/REWRITE
      * @return void
      */
-    private function addSingleNav($archive_link_text = false)
+    private function addSingleNav()
     {
         $this->addData([
             "@singlenav" => [
                 "archive"  => [
                     "url"  => $this->model::getArchiveURL(),
-                    "text" => $archive_link_text ?: __("Retour", "syltaen"),
+                    "text" => $this->model::getLabel(),
                 ],
                 "previous" => [
                     "url"  => get_previous_post() ? get_the_permalink(get_previous_post()->ID) : "",
-                    "text" => __("Précédent", "syltaen"),
+                    "text" => __("Previous", "syltaen"),
                 ],
                 "next"     => [
                     "url"  => get_next_post() ? get_the_permalink(get_next_post()->ID) : "",
-                    "text" => __("Suivant", "syltaen"),
+                    "text" => __("Next", "syltaen"),
                 ],
             ],
         ]);

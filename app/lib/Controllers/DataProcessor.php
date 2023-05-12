@@ -2,6 +2,9 @@
 
 namespace Syltaen;
 
+use AllowDynamicProperties;
+
+#[AllowDynamicProperties]//;
 abstract class DataProcessor
 {
     /**

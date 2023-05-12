@@ -17,7 +17,7 @@ if (function_exists("acf_add_options_page")) {
         "autoload"   => true,
     ]);
 
-    // // ========== OPTIONS ========== //
+    // ========== GLOBAL OPTIONS ========== //
     // acf_add_options_page([
     //     "page_title" => "Paramètres",
     //     "menu_title" => "Paramètres",
@@ -48,4 +48,18 @@ add_filter("acf/settings/load_json", function ($paths) {
 // ==================================================
 add_action("acf/init", function () {
     acf_update_setting("google_api_key", "AIzaSyDf2ZP-hkzlrYHYezBIW8JDQYzCnYQGR0o"); // Should only be used in admin
+});
+
+// ==================================================
+// > CONTENT PREVIEW
+// ==================================================
+add_filter("acfe/flexible/render/template", function ($f, $field, $layout, $is_preview) {
+    if ($is_preview) {
+        return Files::path("app/lib/misc/admin-preview.php");
+    }
+    return $f;
+}, 10, 4);
+
+Hooks::ajax("syltaen_admin_preview", function () {
+    (new AdminPreviewController)->ajaxRender();
 });

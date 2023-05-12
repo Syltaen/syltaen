@@ -40,6 +40,19 @@ mixin sectionrow(row)
 
 
 //- ==================================================
+//- > SECTION IMAGE
+//- ==================================================
+mixin section-image($settings, $side = "")
+    if !empty($settings["bg_img{$side}"])
+        .bg-image(
+            style="".$_bg($settings["bg_img{$side}"]).""
+            class="site-section__image{$side}"
+            class="bg-image--".$settings["bg_img{$side}_size"]
+            class="bg-image--".$settings["bg_img{$side}_pos"]
+            class=isset($settings["bg_img{$side}_width"])?"site-section__image--".$settings["bg_img{$side}_width"]:""
+        )&attributes($attributes)
+
+//- ==================================================
 //- > SECTIONS
 //- ==================================================
 mixin sections(sections)
@@ -47,8 +60,9 @@ mixin sections(sections)
         each $s in $sections
             section&attributes(($s["attrs"]))
 
-                if !empty($s["image"])
-                    .site-section__image&attributes(($s["image"]))
+                +section-image($s["layout_settings"])
+                +section-image($s["layout_settings"], "_left")
+                +section-image($s["layout_settings"], "_right")
 
                 each $row in $s["rows"]
                     .container(class="container--".$row["layout_settings"]["width"]."")

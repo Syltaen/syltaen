@@ -2,11 +2,13 @@
 
 namespace Syltaen;
 
+use AllowDynamicProperties;
+
 /**
  * Form validation rules
  * Loosly based on https://laravel.com/docs/9.x/validation
  */
-
+#[AllowDynamicProperties]//;
 class FormValidator
 {
     /**
@@ -282,6 +284,21 @@ class FormValidator
         }
     }
 
+    /**
+     * Validate a recaptcha
+     */
+    private function _recaptcha()
+    {
+        $res = (new Request("https://www.google.com/recaptcha/api/siteverify"))->post([
+            "secret"   => config("recaptcha.secret_key"),
+            "response" => $this->value,
+        ]);
+
+        if (empty($res->body["success"])) {
+            return __("Please confirm you are not a robot.", "syltaen");
+        }
+    }
+
     // =============================================================================
     // > INTERNAL RULE ROUTING AND TOOLS
     // =============================================================================
@@ -307,7 +324,7 @@ class FormValidator
 
         // Call the validation method with custom parameters
         if (!method_exists($this, "_" . $method)) {
-            throw new \Exception("Validation method does not exist : _$method");
+            throw new \Exception ("Validation method does not exist : _$method");
         }
         $error = $this->{"_" . $method}($arguments[1] ?? null);
         $error = $error ? (!empty($arguments[2]) ? $arguments[2] : $error) : false;

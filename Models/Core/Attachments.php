@@ -120,6 +120,18 @@ class Attachments extends PostsModel
         return $this;
     }
 
+    /**
+     * Trigger the offloading of all attachments
+     *
+     * @return array
+     */
+    public function offload()
+    {
+        return $this->map(function ($attachment) {
+            $attachment->offload();
+        });
+    }
+
     // ==================================================
     // > MODEL UPDATES
     // ==================================================

@@ -38,7 +38,9 @@
         // ========== COMMON ICONS ========== //
         &[value="none"],
         &[value="never"],
-        &[value="image"]
+        &[value="image"],
+        &[value="gallery"],
+        &[value="testimony"]
             border-color: white !important
             &::after
                 +font(40px 40px center #666)
@@ -50,6 +52,10 @@
             +fa(times)
         &[value="image"]::after
             +fa(image)
+        &[value="gallery"]::after
+            +fa(images)
+        &[value="testimony"]::after
+            +fa(comment)
 
 // ==================================================
 // > COLORS

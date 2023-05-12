@@ -5,82 +5,6 @@ import "jquery.transit"
 # > ACF PAGE BUILDER
 # =============================================================================
 
-###
-# Sections display preview
-###
-class ACFSection
-    constructor: (@$section) ->
-        @$section.attr "data-processed", true
-
-        @bg       = "white"
-        @customBg = "#fff"
-        @text     = "text"
-        @image    = false
-
-        @$bgPicker       = @$section.find(".acf-page-sections__bg input").change                 => @updateHandle()
-        @$customBgPicker = @$section.find(".acf-page-sections__custombg input").change           => @updateHandle()
-        @$textPicker     = @$section.find(".acf-page-sections__color input").change              => @updateHandle()
-        @$imagePicker    = jQuery(@$section.find(".acf-field[data-name='bg_img']")).find("input").change => @updateHandle()
-
-        @$handle = @$section.children(".acf-row-handle.order")
-
-        @updateHandle()
-
-    ###
-    # Update the section hanlde to preview colors
-    ###
-    updateHandle: ->
-        @bg       = @$bgPicker.filter(":checked").val()
-        @customBg = @$customBgPicker.val()
-        @text     = @$textPicker.filter(":checked").val()
-        @image    = @$imagePicker.next(".image-wrap").find("img").attr("src")
-
-        # Update bg and text color of the handle
-        @$handle.attr("class", "acf-page-sections__handle acf-row-handle order ui-sortable-handle bg-#{@bg} color-#{@text}")
-        if @bg == "custom"
-            @$handle.css("background", @customBg)
-        else
-            @$handle.css("background", false)
-
-        # Add bg image if any
-        if @image
-            @$handle.css("background-image", "url(" + @image + ")")
-        else
-            @$handle.css("background-image", "")
-
-###
-# Columns width preview
-###
-class ColumnWidthWatcher
-    constructor: (@input) ->
-
-        # On trigger : update row widths
-        $("body").on "update-column-width", ".acf-sections-row__columns", (e) => @updateRow $(e.target)
-
-        # Triger on input change
-        $("body").on "keyup", ".acf-sections-row__columns " + @input, ->
-            $(@).closest(".acf-sections-row__columns").trigger("update-column-width")
-
-        # Trigger on mouseup in row (add/remove columns...)
-        $("body").on "mouseup", ".acf-sections-row__columns", (e) ->
-            setTimeout =>
-                $(@).trigger("update-column-width")
-            , 100
-
-        # Trigger on page load
-        $(@input).trigger("keyup")
-
-    ###
-    # Update a row's columns' widths
-    ###
-    updateRow: ($row) ->
-        total = 0
-        $row.find(@input).each -> total += parseInt $(@).val()
-        $row.find(@input).each ->
-            $(@).closest(".layout").css "flex", $(@).val()
-            .children(".acf-fc-layout-handle").find(".no-thumbnail").text "Colonne [" + $(@).val() + "/" + total + "]"
-
-
 class AutoLayoutWatcher
     constructor: (@wrap, @addAction) ->
         @check()
@@ -100,6 +24,8 @@ class AutoLayoutWatcher
             if $emptyLayout.length
                 @autoAdd $emptyLayout
 
+            # $(@wrap).closest(".acfe-modal-content").stop().animate({ "scrollTop": 999999 }, 100)
+
     autoAdd: ($el) ->
         $el.children(".acf-actions").find("[data-name='add-layout']").click()
 
@@ -111,10 +37,10 @@ $ ->
 
     # Section display
     setInterval ->
-        $(".acf-page-sections__bg").map ->
-            $section = $(@).closest(".acf-row")
-            if $section.data("processed") || $section.is(".acf-clone") then return false
-            new ACFSection $section
+        # $(".acf-page-sections__bg").map ->
+        #     $section = $(@).closest(".acf-row")
+        #     if $section.data("processed") || $section.is(".acf-clone") then return false
+        #     new ACFSection $section
 
         # Choices tooltips
         $(".acf-choice .acf-input label:not(.acf-label-tooltip__parent)").each ->
@@ -127,9 +53,6 @@ $ ->
             $(@).html "<span class='acf-label-tooltip acf-label-tooltip--right'>" + text + "</span>"
             $(@).addClass "acf-label-tooltip__parent"
     , 1000
-
-    # Columns width
-    new ColumnWidthWatcher ".acf-input > .acf-flexible-content > .values > .layout > .acfe-modal.-settings input[type='number']"
 
     # Auto-add rows and columns when empty
     new AutoLayoutWatcher ".acf-sections-row", ".acf-page-sections > .acf-input > .acf-repeater > .acf-actions > [data-event='add-row']"

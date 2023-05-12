@@ -103,8 +103,12 @@ $easing: (
 // Usage : section_content_icon(txt)
 $section-content-icons: (
     txt: text,
+    intro: text-size,
     image: image,
-    insert: info-square,
-    archive: list,
     collapsable: compress-arrows-alt,
+    map: map-marker-alt,
+    icon: icons,
+    archive: list,
+    section: square,
+    include: clone,
 );

@@ -19,29 +19,35 @@ $ ->
 # ==================================================
 # > HASH SCROLL
 # ==================================================
-# $(window).on "hashchange", ->
-#     # No hash
-#     unless window.location.hash then return false
+$(window).on "hashchange", ->
+    # No hash
+    unless window.location.hash then return false
 
-#     # No element
-#     $el = $(window.location.hash)
-#     unless $el.length then return false
+    # No element
+    $el = $(window.location.hash)
+    unless $el.length then return false
 
-#     # Animation scroll
-#     $roots.stop().animate
-#         "scrollTop": $el.offset().top
-#     , 400
+    # Animation scroll
+    $roots.stop().animate
+        "scrollTop": $el.offset().top
+    , 400
 
 
-# # On anchor click
-# $("body").on "click.anchor", "a[href*='#']", -> setTimeout ->
-#         $(window).trigger "hashchange"
-#     , 100
+# On anchor click
+$("body").on "click.anchor", "a[href*='#']", (e) ->
+    # If on different page, do nothing
+    page = $(this).attr("href").split("#")[0]
+    unless (!page || page == window.location.href.split("#")[0]) then return
 
-# # On new page load
-# setTimeout ->
-#     $(window).trigger "hashchange"
-# , 350
+    # Else, change hash and trigger scroll
+    e.preventDefault()
+    history.pushState null, null, $(this).attr("href")
+    $(window).trigger "hashchange"
+
+# On new page load
+setTimeout ->
+    $(window).trigger "hashchange"
+, 350
 
 
 # ==================================================
@@ -50,7 +56,6 @@ $ ->
 class MobileMenu
     constructor: (@$trigger, @$menu, @openClass) ->
         @$trigger.click => @toggle()
-
         @$root = $("html")
 
         hammermenu = new Hammer @$menu[0]
@@ -68,5 +73,5 @@ class MobileMenu
         @$root.removeClass @openClass
 
 # ========== INIT ========== #
-$ ->
+$ -> if $(".site-mobilenav").length
     new MobileMenu $(".site-mobilenav__trigger"), $(".site-mobilenav"), "is-mobilenav-open"

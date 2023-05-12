@@ -43,7 +43,7 @@ class Attachment extends Post
      * @param  string|array $size
      * @return string
      */
-    public function url($size = "full")
+    public function url($size = "large")
     {
         if (!$this->found()) {
             return "";
@@ -85,6 +85,16 @@ class Attachment extends Post
         exit;
     }
 
+    /**
+     * Trigger the offload to S3
+     *
+     * @return void
+     */
+    public function offload()
+    {
+        return wp_update_attachment_metadata($this->ID, wp_get_attachment_metadata($this->ID));
+    }
+
     // =============================================================================
     // > IMAGES
     // =============================================================================
@@ -94,7 +104,7 @@ class Attachment extends Post
      *
      * @return void
      */
-    public function bg($size = "full")
+    public function bg($size = "large")
     {
         if (!$this->found()) {
             return "";
@@ -109,7 +119,7 @@ class Attachment extends Post
      * @param  string|array $size
      * @return string
      */
-    public function tag($size = "full", $class = false)
+    public function tag($size = "large", $class = false)
     {
         if (!$this->found()) {
             return "";

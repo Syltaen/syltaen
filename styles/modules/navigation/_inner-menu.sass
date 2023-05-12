@@ -1,0 +1,49 @@
+// =============================================================================
+// > MODULE - NAVIGATION : INNER-MENU
+// =============================================================================
+
+.inner-menu
+    +flex(row wrap, center, center)
+
+    &__item
+        padding: 10px
+
+    &__sub
+        display: none
+
+    &__link
+        background: color(primary)
+        +font(20px bold white)
+        padding: .65em 2em
+        +flex(row nowrap, center, center)
+        transition: all .35s ease
+        &:hover
+            background: color(secondary)
+            .icon
+                color: color(white) !important
+        .icon
+            margin-right: .5em
+            transition: all .35s ease
+
+    &__item.current_page_item &__link
+        background: color(primary)
+        +font(white)
+        .icon
+            color: color(white) !important
+
+    // =============================================================================
+    // > RESONSIVE
+    // =============================================================================
+    +screen(xs)
+
+        &__item
+            width: 50%
+            height: 100%
+
+        &__link
+            width: 100%
+            +font(16px 1.2)
+            padding: .75em
+        &__link
+            justify-content: flex-start
+            padding-inline: 1em

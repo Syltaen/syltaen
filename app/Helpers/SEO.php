@@ -32,51 +32,41 @@ class SEO
      * @param  boolean|string $content   The text to share
      * @return string
      */
-    public static function share($network, $url, $content = "", $link_array_target = "popup")
+    public static function share($networks, $url, $content = "", $link_array_target = "popup")
     {
-        if (is_array($network)) {
-            return array_filter(array_map(function ($network) use ($url, $content, $link_array_target) {
-                return static::share($network, $url, $content, $link_array_target);
-            }, $network));
-        }
-
-        $networks = [
+        return set([
             "Facebook"  => [
                 "url"  => "https://www.facebook.com/sharer/sharer.php?u=" . urlencode($url),
-                "icon" => "<i class='fab fa-facebook-f'></i>",
+                "icon" => ["fab", "&#xf39e;"], // facebook-f
             ],
             "Twitter"   => [
                 "url"  => "https://twitter.com/intent/tweet?text={$content}%0A" . urlencode($url),
-                "icon" => "<i class='fab fa-twitter'></i>",
+                "icon" => ["fab", "&#xf099;"], // twitter
             ],
             "Pinterest" => [
                 "url"  => "https://www.pinterest.com/pin/create/button/?url=" . urlencode($url) . "&media=&description={$content}",
-                "icon" => "<i class='fab fa-pinterest-p'></i>",
+                "icon" => ["fab", "&#xf231;"], // pinterest-p
+            ],
+            "LinkedIn"  => [
+                "url"  => "http://www.linkedin.com/shareArticle?mini=true&url=" . urlencode($url),
+                "icon" => ["fab", "&#xf0e1;"], // linkedin-in
             ],
             "Mail"      => [
                 "url"  => "mailto:?subject={$content}&body=" . urlencode($url),
-                "icon" => "<i class='far fa-envelope'></i>",
+                "icon" => ["far", "&#xf0e0;"], // envelope
             ],
-        ];
-
-        // Network not available
-        if (empty($networks[$network])) {
-            return false;
-        }
-
-        // Return only URL
-        if (!$link_array_target) {
-            return $networks[$network]["url"] ?? false;
-        }
-
-        // Return a complete array of title, url, target and icon
-        return [
-            "link" => [
-                "title"  => $network,
-                "url"    => $networks[$network]["url"],
-                "target" => $link_array_target,
-            ],
-            "icon" => $networks[$network]["icon"],
-        ];
+        ])->keepKeys((array) $networks)->mapAssoc(function ($name, $network) use ($link_array_target) {
+            return [$name => [
+                "link" => [
+                    "title"  => $name,
+                    "url"    => $network["url"],
+                    "target" => $link_array_target,
+                ],
+                "icon" => (object) [
+                    "prefix"  => $network["icon"][0],
+                    "unicode" => $network["icon"][1],
+                ],
+            ]];
+        });
     }
 }

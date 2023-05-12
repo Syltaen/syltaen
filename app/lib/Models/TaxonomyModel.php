@@ -147,6 +147,11 @@ class TaxonomyModel extends Model
     public function hideEmpty()
     {
         $this->filters["hide_empty"] = true;
+
+        $this->addResultFilter(function ($item) {
+            return !isset($item->count) || $item->count > 0;
+        });
+
         return $this;
     }
 
@@ -232,7 +237,7 @@ class TaxonomyModel extends Model
         $options = $this->get()->index("slug", "name");
 
         if ($all_option) {
-            $options = $options->insert(["*" => __("All", "syltaen")], 0);
+            $options = $options->insert(["*" => $all_option === true ? __("All", "syltaen") : $all_option], 0);
         }
 
         return (array) $options;
@@ -536,7 +541,7 @@ class TaxonomyModel extends Model
             }));
         }
 
-        // // Keep only the IDs
+        // Keep only the IDs
         $ids = $model->getIDs()->join(",");
 
         // No ID : set all count to 0 and skip fetching

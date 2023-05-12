@@ -17,11 +17,24 @@ mixin content(c)
                 != $c["txt"]
 
         //- ==================================================
+        //- > INTRO INSERT
+        //- ==================================================
+        when "intro"
+            .intro&attributes($c["attrs"])
+                != $c["txt"]
+
+        //- ==================================================
         //- > IMAGE
         //- ==================================================
         when "image"
             .image-block(class="image-block--justify-{$c['halign']} image-block--align-{$c['valign']} image-block--size-{$c['size']}")&attributes($c["attrs"])
-                != $_imgtag($c["image"])
+                != $_imgtag($c["image"], "large")
+
+        //- ==================================================
+        //- > VIDEO
+        //- ==================================================
+        when "video"
+            +video($c["video"], $c["poster"])&attributes($c["attrs"])
 
         //- ==================================================
         //- > ELEVATOR
@@ -32,6 +45,20 @@ mixin content(c)
                 .collapsable__content!= $c["content"]
 
         //- ==================================================
+        //- > ICON
+        //- ==================================================
+        when "icon"
+            +icon($c["icon"])(
+                class="icon--size-".$c['size']." icon--align-".$c['align']." color-".$c['color'].""
+            )&attributes($c["attrs"])
+
+        //- ==================================================
+        //- > MAP
+        //- ==================================================
+        when "map"
+            +map([$c["marker"]], $c["content"])&attributes($c["attrs"])
+
+        //- ==================================================
         //- > ARCHIVE
         //- ==================================================
         when "archive"
@@ -39,3 +66,4 @@ mixin content(c)
                 //- News
                 when "news"
                     +archive-news($c["posts"], $c["walker"], $c["filters"])&attributes($c["attrs"])
+

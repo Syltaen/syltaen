@@ -16,19 +16,39 @@ class SectionProcessor extends LayoutProcessor
      */
     public function process()
     {
-        // Hide the section on demand
-        if ($this->shouldHide()) {
-            return false;
+        if ($this->data["acf_fc_layout"] == "include") {
+            return $this->getInclude($this->data["include"]);
         }
 
         // Process attributes
         $this->processAttributes();
 
         // Process each rows
-        $this->data["rows"] = set($this->data["rows"])->mapWithKey(function ($row, $i) {
+        $this->data["rows"] = set($this->data["rows"] ?: [])->mapWithKey(function ($row, $i) {
             return (new RowProcessor($row, $this, $i))->getData();
         });
 
+        return $this;
+    }
+
+    /**
+     * Get included section(s) data
+     *
+     * @param  int    $id
+     * @return self
+     */
+    public function getInclude($id)
+    {
+        $this->data = [
+            "sections" => set(Data::get("sections", $id, []))->mapAssoc(function ($i, $section) {
+                $section = (new SectionProcessor($section, $this->controller, $i))->getData();
+                if (isset($section["sections"])) {
+                    return (array) $section["sections"];
+                }
+
+                return [uniqid() => $section];
+            })
+        ];
         return $this;
     }
 
@@ -41,69 +61,42 @@ class SectionProcessor extends LayoutProcessor
     {
         $this->addClass("site-section");
 
+        $settings = $this->data["layout_settings"];
+
         // Padding
         foreach (["top", "bottom", "left", "right"] as $side) {
-            $this->setSpacing("padding-{$side}", $this->data["padding_{$side}"]);
+            if ($settings["padding_{$side}"] != "no") {
+                $this->setSpacing("padding-{$side}", $settings["padding_{$side}"]);
+            }
         }
 
         // Background
         $this->setBackground(
-            $this->data["bg"],
-            $this->data["bg_custom"]
+            $settings["bg"],
+            $settings["bg_custom"]
         );
 
-        // Background image
-        if ($this->data["bg_img"]) {
-            $this->data["image"] = [
-                "style" => "background-image: url(" . $this->data["bg_img"] . ");",
-                "class" => ["bg-image", "bg-image--" . $this->data["bg_img_size"], "bg-image--" . $this->data["bg_img_pos"]],
-            ];
+        // Side images
+        if ($settings["bg_img_padding"]) {
+            if ($settings["bg_img_left"]) {
+                $this->addClass("site-section--img-left-" . $settings["bg_img_left_width"]);
+            }
+            if ($settings["bg_img_right"]) {
+                $this->addClass("site-section--img-right-" . $settings["bg_img_right_width"]);
+            }
         }
 
         // Text color
-        $this->setTextColor($this->data["text_color"]);
+        $this->setTextColor($settings["text_color"]);
 
         // ID / Anchor
-        if ($this->data["anchor"]) {
-            $this->addAttribute("id", sanitize_title($this->data["anchor"]));
-        }
-    }
-
-    /**
-     * Check if the section should be hidden
-     *
-     * @param  array   $s The section's data
-     * @return boolean : true if the section should be hidden
-     */
-    private function shouldHide()
-    {
-        if (empty($this->data["hide"])) {
-            return false;
+        if ($settings["anchor"]) {
+            $this->addAttribute("id", sanitize_title($settings["anchor"]));
         }
 
-        $time = current_time("timestamp");
-
-        // BETWEEN TWO DATES
-        if ($this->data["hide_start"] && $this->data["hide_end"]) {
-            // SHOW BETWEEN TWO DATES
-            if ($this->data["hide_start"] > $this->data["hide_end"]) {
-                return $time < $this->data["hide_end"] || $time > $this->data["hide_start"];
-                // HIDE BETWEEN TWO DATES
-            } else {
-                return $time < $this->data["hide_end"] && $time > $this->data["hide_start"];
-            }
-
-            // BEFORE A DATE
-        } elseif ($this->data["hide_end"]) {
-            return $time < $this->data["hide_end"];
-
-            // AFTER A DATE
-        } elseif ($this->data["hide_start"]) {
-            return $time > $this->data["hide_start"];
-
-            // ALWAYS HIDE
-        } else {
-            return true;
+        // Custom classes
+        if ($settings["classes"]) {
+            $this->addClass($settings["classes"]);
         }
     }
 }

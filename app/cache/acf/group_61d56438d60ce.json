@@ -1,11 +1,12 @@
 {
     "key": "group_61d56438d60ce",
-    "title": "Contenu - Options",
+    "title": "Paramètres - 3 - Contenu",
     "fields": [
         {
             "key": "field_61d56ad7e0d80",
             "label": "Attributs",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -22,6 +23,7 @@
             "key": "field_61d56447fb2d0",
             "label": "Attributs",
             "name": "attrs",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -31,17 +33,21 @@
                 "class": "",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "acfe_repeater_stylised_button": 0,
-            "collapsed": "",
+            "layout": "table",
+            "pagination": 0,
             "min": 0,
             "max": 0,
-            "layout": "table",
-            "button_label": "",
+            "collapsed": "",
+            "button_label": "Add item",
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_61d568801ead3",
                     "label": "Nom",
                     "name": "name",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -51,16 +57,19 @@
                         "class": "",
                         "id": ""
                     },
+                    "acfe_save_meta": 0,
                     "default_value": "",
+                    "maxlength": "",
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
-                    "maxlength": ""
+                    "parent_repeater": "field_61d56447fb2d0"
                 },
                 {
                     "key": "field_61d5688b1ead4",
                     "label": "Valeur",
                     "name": "value",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -70,11 +79,13 @@
                         "class": "",
                         "id": ""
                     },
+                    "acfe_save_meta": 0,
                     "default_value": "",
+                    "maxlength": "",
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
-                    "maxlength": ""
+                    "parent_repeater": "field_61d56447fb2d0"
                 }
             ]
         },
@@ -82,6 +93,7 @@
             "key": "field_61d56a01e7498",
             "label": "Couleur de fond",
             "name": "bg",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -91,6 +103,7 @@
                 "class": "acf-choice acf-choice--color",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "none": "Aucune",
                 "white": "Blanc",
@@ -99,25 +112,20 @@
                 "dark-grey": "Gris foncé",
                 "primary": "Couleur principale",
                 "secondary": "Couleur secondaire",
-                "ternary": "Couleur tertiaire",
-                "quartary": "Couleur quaternaire",
-                "grad-primary": "Dégradé principale",
-                "grad-secondary": "Dégradé secondaire",
-                "grad-ternary": "Dégradé tertiaire",
-                "grad-quartary": "Dégradé quaternaire",
                 "custom": "Couleur personnalisée"
             },
+            "default_value": "none",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "none",
             "layout": "horizontal",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61d56b55e0d81",
             "label": "Couleur de fond personnalisée",
             "name": "bg_custom",
+            "aria-label": "",
             "type": "color_picker",
             "instructions": "",
             "required": 0,
@@ -135,14 +143,16 @@
                 "class": "",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "default_value": "",
             "enable_opacity": 0,
             "return_format": "string"
         },
         {
             "key": "field_61d56a87e749a",
-            "label": "Couleur du texte",
+            "label": "Couleur de texte",
             "name": "text_color",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -152,28 +162,28 @@
                 "class": "acf-choice acf-choice--color",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
-                "none": "Par défaut",
+                "none": "Défaut",
                 "white": "Blanc",
                 "light-grey": "Gris clair",
                 "medium-grey": "Gris moyen",
                 "dark-grey": "Gris foncé",
                 "primary": "Couleur principale",
-                "secondary": "Couleur secondaire",
-                "ternary": "Couleur tertiaire",
-                "quartary": "Couleur quaternaire"
+                "secondary": "Couleur secondaire"
             },
+            "default_value": "none",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "none",
             "layout": "horizontal",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61d567f91ead1",
             "label": "Padding",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -190,6 +200,7 @@
             "key": "field_61d568201ead2",
             "label": "Top",
             "name": "padding_top",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -199,6 +210,7 @@
                 "class": "acf-choice acf-choice--spacing acf-choice",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "unset": "Par défaut",
                 "no": "Aucun",
@@ -211,17 +223,18 @@
                 "lg": "Grand",
                 "xl": "Très grand"
             },
+            "default_value": "unset",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "unset",
             "layout": "vertical",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61d569201ead5",
             "label": "Bottom",
             "name": "padding_bottom",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -231,6 +244,7 @@
                 "class": "acf-choice acf-choice--spacing acf-choice",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "unset": "Par défaut",
                 "no": "Aucun",
@@ -243,17 +257,18 @@
                 "lg": "Grand",
                 "xl": "Très grand"
             },
+            "default_value": "unset",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "unset",
             "layout": "vertical",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61d56976e7491",
             "label": "Left",
             "name": "padding_left",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -263,6 +278,7 @@
                 "class": "acf-choice acf-choice--spacing acf-choice",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "unset": "Par défaut",
                 "no": "Aucun",
@@ -275,17 +291,18 @@
                 "lg": "Grand",
                 "xl": "Très grand"
             },
+            "default_value": "unset",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "unset",
             "layout": "vertical",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61d5697de7492",
             "label": "Right",
             "name": "padding_right",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -295,6 +312,7 @@
                 "class": "acf-choice acf-choice--spacing acf-choice",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "unset": "Par défaut",
                 "no": "Aucun",
@@ -307,17 +325,18 @@
                 "lg": "Grand",
                 "xl": "Très grand"
             },
+            "default_value": "unset",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "unset",
             "layout": "vertical",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61d569281ead6",
             "label": "Margin",
             "name": "",
+            "aria-label": "",
             "type": "tab",
             "instructions": "",
             "required": 0,
@@ -334,6 +353,7 @@
             "key": "field_61d5692f1ead7",
             "label": "Top",
             "name": "margin_top",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -343,6 +363,7 @@
                 "class": "acf-choice acf-choice--spacing acf-choice",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "unset": "Par défaut",
                 "no": "Aucun",
@@ -355,17 +376,18 @@
                 "lg": "Grand",
                 "xl": "Très grand"
             },
+            "default_value": "unset",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "unset",
             "layout": "vertical",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61d569a3e7494",
             "label": "Bottom",
             "name": "margin_bottom",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -375,6 +397,7 @@
                 "class": "acf-choice acf-choice--spacing acf-choice",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "unset": "Par défaut",
                 "no": "Aucun",
@@ -387,17 +410,18 @@
                 "lg": "Grand",
                 "xl": "Très grand"
             },
+            "default_value": "unset",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "unset",
             "layout": "vertical",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61d569b1e7495",
             "label": "Left",
             "name": "margin_left",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -407,6 +431,7 @@
                 "class": "acf-choice acf-choice--spacing acf-choice",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "unset": "Par défaut",
                 "no": "Aucun",
@@ -419,17 +444,18 @@
                 "lg": "Grand",
                 "xl": "Très grand"
             },
+            "default_value": "unset",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "unset",
             "layout": "vertical",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61d569b7e7496",
             "label": "Right",
             "name": "margin_right",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -439,6 +465,7 @@
                 "class": "acf-choice acf-choice--spacing acf-choice",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "unset": "Par défaut",
                 "no": "Aucun",
@@ -451,11 +478,11 @@
                 "lg": "Grand",
                 "xl": "Très grand"
             },
+            "default_value": "unset",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "unset",
             "layout": "vertical",
-            "return_format": "value",
             "save_other_choice": 0
         }
     ],
@@ -489,7 +516,7 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1641387775,
+    "modified": 1683892784,
     "acfe_categories": {
         "layout": "Layout"
     }

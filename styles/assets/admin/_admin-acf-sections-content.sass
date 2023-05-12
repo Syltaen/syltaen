@@ -10,11 +10,12 @@
     // ==================================================
     & > .values > .layout
         border: 1px solid #CCC
+        margin: 10px 0 0
 
         & > .acf-fc-layout-handle
             background: #F5F5F5
             &::before
-                +fa(th-large)
+                +far(th-large)
                 +font(16px primary)
                 margin-right: .5em
 
@@ -29,12 +30,35 @@
     & > .acf-actions
         +flex(row nowrap, center, center)
 
+// ==================================================
+// > MODAL
+// ==================================================
+.acfe-modal-select-content .acfe-flex-container a
+    padding: 0 !important
+    display: flex !important
+    +flex(row nowrap)
+    &:before
+        +far(th-large)
+        +font(16px white)
+        margin-right: .5em
+        padding: .25em .5em
+        +flex(column, center)
+        background: color(primary)
+    span
+        padding: 10px
+
+    &:hover
+        background: color(primary) !important
+
+    @each $layout, $icon in $section-content-icons
+        &[data-layout="#{$layout}"]:before
+            content: fa-content($icon)
 
 // ==================================================
 // > DROPDOWN
 // ==================================================
 .acf-tooltip a[data-layout]::before
-    +fa(th-large)
+    +far(th-large)
     margin-right: .5em
     width: 1.5em
     display: inline-block

@@ -4,7 +4,7 @@ namespace Syltaen;
 
 class View
 {
-    const CACHE = true; //true; //!WP_DEBUG;
+    const CACHE = true;
 
     // ==================================================
     // > PUBLIC
@@ -110,18 +110,25 @@ class View
      *
      * @param  string   $path
      * @param  array    $args
+     * @param  array    $include_all Include all mixins
      * @return string
      */
-    public static function mixin($path, $args)
+    public static function mixin($path, $args, $include_all = false)
     {
         // Include the mixin
-        $include = "include /views/mixins/{$path}";
+        if ($include_all) {
+            $include = "include /views/mixins/_mixins";
+        } else {
+            $include = "include /views/mixins/{$path}";
+        }
         // Generate mixin call
         $mixin = explode("/_", $path);
         $mixin = end($mixin);
         $mixin = "+$mixin(" . implode(", ", array_map(function ($var) {return "\$$var";}, array_keys($args))) . ")";
         // Render both with arguments
-        return View::parsePug(implode("\n", [$include, $mixin]), $args);
+
+        $args = static::addHelpers($args);
+        return View::parsePug(implode("\n", [$include, $mixin]), (array) $args);
     }
 
     // ==================================================
@@ -142,7 +149,7 @@ class View
     private static function getRenderer()
     {
         if (is_null(static::$renderer)) {
-            static::$renderer = new \Pug\Pug([
+            static::$renderer = new \Pug\Pug ([
                 "extension"          => ".pug",
                 "expressionLanguage" => "php",
 
@@ -215,29 +222,26 @@ class View
      */
     public static function addHelpers($context)
     {
-        $_img = function ($image, $size = "full") {
-            // Image ID, from WordPress
-            if (is_int($image)) {
-                return wp_get_attachment_image_url($image, $size);
-            }
-
-            // Else image in asset
-            return Files::url("build/img/" . $image);
-        };
-
         return set($context)->merge([
 
             // Return an image url
-            "_img"       => $_img,
+            "_img"       => function ($image, $size = "large") {
+                // Image ID, from WordPress
+                if (is_int($image)) {
+                    return Attachments::getLightItem($image)->url($size);
+                }
+                // Else image in asset
+                return Files::url("build/img/" . $image);
+            },
 
             // Return an image
-            "_bg"        => function ($image, $size = "full") use ($_img) {
-                return "background-image: url(" . $_img($image, $size) . ");";
+            "_bg"        => function ($id, $size = "large") {
+                return Attachments::getLightItem($id)->bg($size);
             },
 
             // Image tag
-            "_imgtag"    => function ($id, $size = "full") {
-                return wp_get_attachment_image($id, $size);
+            "_imgtag"    => function ($id, $size = "large", $class = false) {
+                return Attachments::getLightItem($id)->tag($size, $class);
             },
 
             // Phone number link
@@ -266,6 +270,11 @@ class View
             // Option
             "_option"    => function ($key, $fallback = "") {
                 return Data::option($key, $fallback);
+            },
+
+            // Config
+            "_config"    => function ($key) {
+                return config($key);
             },
 
             // Get a custom route

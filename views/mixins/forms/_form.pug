@@ -5,12 +5,13 @@
 mixin form($form)
 
     if !empty($form["success"])
-        .form__success
+        .form__success(id="success-".$form["form_id"]."")
             != $form["success"]
 
     else
         form(method="post")&attributes($attributes)
             input(type="hidden" name="honeypot")
+            input(type="hidden" name="form_id" value=$form["form_id"])
 
             if !empty($form["errors"]["global"])
                 p.color-error.font-bold.text-align-center!= $form["errors"]["global"]

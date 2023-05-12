@@ -72,9 +72,7 @@ html(lang=$site["language"])
                 //- ==================================================
                 block footer
                     footer.site-footer(role="contentinfo")
-                        .site-footer__top: .container: .row.sm-gutters
-                            each $col in $site["footer"]["footer_cols"]
-                                .gr.gr-auto!= $col["txt"]
+                        .site-footer__top: .container!= $site["footer"]["footer_content"]
 
                         .site-footer__bottom: .container.row.flex-justify-space-between.flex-align-center.column-xs
                             != $site["menus"]["footer"]

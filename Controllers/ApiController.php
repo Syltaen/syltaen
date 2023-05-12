@@ -29,8 +29,7 @@ class ApiController extends Controller
      */
     private function lab($target = false)
     {
-        echo Mail::render("test", "test");
-        die();
+        wp_die();
     }
 
     /**

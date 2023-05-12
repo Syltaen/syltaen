@@ -16,6 +16,7 @@ class Performances
      */
     public function __construct($optimizations = [])
     {
+        if (wp_doing_ajax()) return;
         $defaults = [
             "block_external_HTTP"     => false,
             "defer_CSS"               => false,

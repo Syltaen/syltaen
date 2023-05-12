@@ -1,11 +1,12 @@
 {
     "key": "group_61c44d97ac890",
-    "title": "Rangée - Options",
+    "title": "Paramètres - 2 - Rangée",
     "fields": [
         {
             "key": "field_61c44d97b31db",
             "label": "Largeur",
             "name": "width",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -15,25 +16,26 @@
                 "class": "acf-choice acf-choice--spacing",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "xs": "Smartphone",
                 "sm": "Tablette",
                 "md": "Laptop",
                 "lg": "Desktop",
-                "xl": "Desktop (large)",
                 "full": "Toute la largeur"
             },
+            "default_value": "lg",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "lg",
             "layout": "horizontal",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61c44d97b31f7",
             "label": "Comportement responsive",
             "name": "responsive",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -43,26 +45,28 @@
                 "class": "acf-choice acf-choice--icons",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "none": "Aucun",
-                "column-xs": "En colonne sur smartphone",
-                "column-sm": "En colonne sur tablette et en dessous",
-                "column-md": "En colonne sur desktop et en dessous",
-                "column-reverse-xs": "En colonne inversée sur smartphone",
-                "column-reverse-sm": "En colonne inversée sur tablette et en dessous",
-                "column-reverse-md": "En colonne inversée sur desktop et en dessous"
+                "column-xs": "Colonnes sur smartphone",
+                "column-sm": "Colonnes sur tablette et en-dessous",
+                "column-md": "Colonnes sur desktop et en-dessous",
+                "column-reverse-xs": "Colonnes inversée sur smartphone",
+                "column-reverse-sm": "Colonnes inversée sur tablette et en-dessous",
+                "column-reverse-md": "Colonnes inversée sur desktop et en-dessous"
             },
+            "default_value": "column-sm",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "column-sm",
             "layout": "horizontal",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61c44d97b31e4",
-            "label": "Espacement entre les colonnes",
+            "label": "Espace entre les colonnes",
             "name": "spacing",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -72,6 +76,7 @@
                 "class": "acf-choice acf-choice--spacing",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "no": "Aucun",
                 "xxs": "Très très petit",
@@ -83,17 +88,18 @@
                 "lg": "Grand",
                 "xl": "Très grand"
             },
+            "default_value": "sm",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "sm",
             "layout": "horizontal",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61c44d97b31e9",
             "label": "Alignement vertical",
             "name": "valign",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -103,23 +109,25 @@
                 "class": "acf-choice acf-choice--icons",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "none": "Non spécifié",
                 "start": "Haut",
-                "center": "Centré",
+                "center": "Centre",
                 "end": "Bas"
             },
+            "default_value": "none",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "none",
             "layout": "horizontal",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61c44d97b31ee",
-            "label": "Espacement en haut",
+            "label": "Espace en haut",
             "name": "spacing_top",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -129,6 +137,7 @@
                 "class": "acf-choice acf-choice--spacing",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "no": "Aucun",
                 "xxs": "Très très petit",
@@ -140,17 +149,18 @@
                 "lg": "Grand",
                 "xl": "Très grand"
             },
+            "default_value": "no",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "no",
             "layout": "horizontal",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61c44d97b31f2",
-            "label": "Espacement en bas",
+            "label": "Espace en bas",
             "name": "spacing_bottom",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -160,6 +170,7 @@
                 "class": "acf-choice acf-choice--spacing",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "no": "Aucun",
                 "xxs": "Très très petit",
@@ -171,17 +182,18 @@
                 "lg": "Grand",
                 "xl": "Très grand"
             },
+            "default_value": "no",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "no",
             "layout": "horizontal",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61c44d97b31fb",
             "label": "Animation",
             "name": "animation",
+            "aria-label": "",
             "type": "radio",
             "instructions": "",
             "required": 0,
@@ -191,26 +203,28 @@
                 "class": "acf-choice acf-choice--icons",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "choices": {
                 "none": "Aucun",
                 "fadein": "Fade in",
                 "fadein-left": "Fade in depuis la gauche",
                 "fadein-right": "Fade in depuis la droite",
                 "fadein-top": "Fade in depuis le dessus",
-                "fadein-bottom": "Fade in depuis le bas",
+                "fadein-bottom": "Fade in depuis le dessous",
                 "fadein-sides": "Fade in depuis tous les côtés"
             },
+            "default_value": "none",
+            "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "none",
             "layout": "horizontal",
-            "return_format": "value",
             "save_other_choice": 0
         },
         {
             "key": "field_61c44d97b3200",
             "label": "Délai",
             "name": "delayed",
+            "aria-label": "",
             "type": "true_false",
             "instructions": "",
             "required": 0,
@@ -220,18 +234,20 @@
                 "class": "",
                 "id": ""
             },
-            "message": "Mettre un délai différent pour chaque colonne",
+            "acfe_save_meta": 0,
+            "message": "Ajoute un délai pour chaque colonne",
             "default_value": 0,
-            "ui": 1,
             "ui_on_text": "",
-            "ui_off_text": ""
+            "ui_off_text": "",
+            "ui": 1
         },
         {
             "key": "field_61c44d97b3204",
-            "label": "Ascenseur",
+            "label": "Ascenceur",
             "name": "collapsable",
+            "aria-label": "",
             "type": "text",
-            "instructions": "Renseigner un titre pour inclure ces colonnes dans une boite refermable",
+            "instructions": "Renseigner un titre pour transformer cette rangée en ascenceur",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -239,11 +255,12 @@
                 "class": "",
                 "id": ""
             },
+            "acfe_save_meta": 0,
             "default_value": "",
+            "maxlength": "",
             "placeholder": "",
             "prepend": "",
-            "append": "",
-            "maxlength": ""
+            "append": ""
         }
     ],
     "location": [
@@ -287,7 +304,7 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1641908720,
+    "modified": 1683892772,
     "acfe_categories": {
         "layout": "Layout"
     }

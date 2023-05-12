@@ -5,15 +5,13 @@
 mixin icons(icons)
 
     ul.icons&attributes($attributes)
-
-        each $icon in $icons
+        each $icon, $name in $icons
             li.icons__item
-
                 a.icons__link(
                     href=$icon["link"]["url"]
                     target=$icon["link"]["target"]
                     title=$icon["link"]["title"]
+                    rel="nofollow"
                     onclick=$icon["link"]["target"]=="popup"?"window.open('".$icon["link"]["url"]."','popup','width=600,height=600'); return false;":""
                 )
-                    i.icons__icon(class=$icon["icon"]->prefix)
-                        != $icon["icon"]->unicode
+                    +icon($icon["icon"]).icons__icon

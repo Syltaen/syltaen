@@ -80,6 +80,9 @@ abstract class FormProcessor extends DataProcessor
         $this->locks     = set();
         $this->hidden    = set();
         $this->validator = new FormValidator($this);
+
+        $GLOBALS["form_count"] = ($GLOBALS["form_count"] ?? 0) + 1;
+        $this->data["form_id"] = $GLOBALS["form_count"];
     }
 
     // =============================================================================
@@ -108,7 +111,7 @@ abstract class FormProcessor extends DataProcessor
         do_action("syltaen_form_init", $this);
 
         // If data is posted, process it
-        if (!$this->payload->empty()) {
+        if (!$this->payload->empty() && $this->payload["form_id"] == $this->data["form_id"]) {
             // Process the submited payload before anything else
             $this->processPayload();
 
@@ -143,7 +146,7 @@ abstract class FormProcessor extends DataProcessor
         }
 
         // Success page
-        if (!empty($_GET["success"])) {
+        if (!empty($_GET["success"]) && $_GET["success"] == $this->data["form_id"]) {
             $this->success();
             return $this->data;
         }
@@ -233,7 +236,7 @@ abstract class FormProcessor extends DataProcessor
     public function continueToNextPage()
     {
         Route::redirect(
-            Route::getFullUrl(["success" => 1])
+            Route::getFullUrl(["success" => $this->data["form_id"]]) . "#success-" . $this->data["form_id"]
         );
     }
 
@@ -244,7 +247,11 @@ abstract class FormProcessor extends DataProcessor
      */
     public function success()
     {
-        $this->data["success"] = "<h2>Merci !</h2><p>Le formulaire a bien été envoyé</p>";
+        $this->data["success"] = sprintf(
+            "<h2>%s</h2><p>%s</p>",
+            __("Merci!", "syltaen"),
+            __("Le formulaire a bien été envoyé.", "syltaen")
+        );
     }
 
     /**

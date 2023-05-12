@@ -2,6 +2,9 @@
 
 namespace Syltaen;
 
+use AllowDynamicProperties;
+
+#[AllowDynamicProperties]
 class Pagination
 {
     /**
@@ -321,7 +324,7 @@ class Pagination
             $this->perPage = $per_page;
         }
 
-        $this->page = $page;
+        $this->page = (int) $page;
 
         $this->model->limit($this->perPage)->page($this->page);
 

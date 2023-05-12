@@ -42,11 +42,13 @@ abstract class LayoutProcessor extends DataProcessor
     /**
      * Initialization
      *
-     * @param boolean $controller
+     * @param array|Set     $data
+     * @param DataProcessor $parent
+     * @param int           $index
      */
     public function __construct($data, $parent, $index = null)
     {
-        $this->controller    = is_subclass_of($parent, Controller::class) ? $parent : $parent->controller;
+        $this->controller    = is_a($parent, Controller::class) || is_subclass_of($parent, Controller::class) ? $parent : $parent->controller;
         $this->index         = $index;
         $this->data          = set($data);
         $this->data["attrs"] = [];
@@ -269,7 +271,7 @@ abstract class LayoutProcessor extends DataProcessor
     /**
      * @var mixed
      */
-    private $parent = false;
+    public $parent = false;
 
     /**
      * @var mixed

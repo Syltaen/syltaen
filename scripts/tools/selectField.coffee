@@ -1,6 +1,6 @@
 import $ from "jquery"
 import "select2"
-import fr from "select2/src/js/select2/i18n/fr"
+import en from "select2/src/js/select2/i18n/en"
 
 export default class SelectField
 
@@ -32,7 +32,7 @@ export default class SelectField
 
         # Create the field
         @select2 = @$el.select2
-            language: fr
+            language: en
             data: @getHTMLOptions()
             minimumResultsForSearch: if noSearch then Infinity else 8
             placeholder: @$el.attr("placeholder") || "Click here to make a choice"

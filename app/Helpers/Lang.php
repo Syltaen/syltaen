@@ -72,6 +72,16 @@ class Lang
     }
 
     /**
+     * Check that the website is translated
+     *
+     * @return boolean
+     */
+    public static function isTranslated()
+    {
+        return function_exists("pll_current_language");
+    }
+
+    /**
      * Get the current lang
      *
      * @return string
@@ -191,6 +201,21 @@ class Lang
     public static function is($langs)
     {
         return in_array(static::getCurrent(), (array) $langs);
+    }
+
+    /**
+     * Add a prefix to an unlocalized URL
+     *
+     * @param string $url
+     * @return string
+     */
+    public static function addURLPrefix($url)
+    {
+        if (Lang::getCurrent() == Lang::getDefault()) {
+            return $url;
+        }
+
+        return str_replace(site_url(), site_url(Lang::getCurrent()), $url);
     }
 
     // =============================================================================

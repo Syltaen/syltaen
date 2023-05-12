@@ -4,13 +4,28 @@ extends _base
 //- > SECTIONS
 //- ==================================================
 block sections
-    section.bg-white.md-padding-vertical: .container
+    section.site-section.bg-white.md-padding-vertical
 
-        +singlenav($singlenav).single__nav.single__nav--top
+        .container: .row.ms-gutters.column-sm
 
-        article.single__content
-            time.single__date= $_date("d/m/Y", $post->post_date)
-            h1.h1.no-margin-top.font-medium.color-primary.single__title= $post->post_title
-            != $post->post_content
+            aside.gr.single__aside
+                != $post->thumb->tag("large", "img--shadow")
 
-        +singlenav($singlenav).single__nav.single__nav--bottom
+                .single__share
+                    p.single__share__title!= __("Partager", "syltaen")
+                    +icons($share).single__share__icons
+
+            .gr.single__main
+                .row.flex-align-center.flex-justify-space-between.sm-margin-bottom.column-reverse-sm
+                    .gr
+                        a.single__category.link(href=$singlenav["archive"]["url"])!= $singlenav["archive"]["text"]
+                        time.single__date= $_date("d/m/Y", $post->post_date)
+
+                    .gr: +singlenav($singlenav).sm-margin-bottom-sm
+
+                h1.h1.no-margin-top.sm-margin-bottom
+                    span.underline-secondary!= $post->post_title
+
+                block extra
+
+                != the_content()

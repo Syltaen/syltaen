@@ -22,7 +22,7 @@ mixin archive-filters(filters)
                 //- > SEARCH
                 //- ==================================================
                 when "search"
-                    .archive-filters__set: +field-text($filters, $name, $field["label"], $field["attrs"]).form__input--search
+                    +field-text($filters, $name, $field["label"], $field["attrs"]).archive-filters__set
 
                 //- ==================================================
                 //- > SELECT
@@ -44,3 +44,7 @@ mixin archive-filters(filters)
                 //- ==================================================
                 when "hidden"
                     +field-hidden($filters, $name)
+
+        .archive-filters__set.archive-filters__set--submit: button.archive-filters__submit.button
+            i.fal.xs-margin-right &#xf002;
+            != __("Recherche", "syltaen")

@@ -2,6 +2,9 @@
 
 namespace Syltaen;
 
+use AllowDynamicProperties;
+
+#[AllowDynamicProperties]
 class Controller
 {
     /**
@@ -154,7 +157,7 @@ class Controller
         error_reporting(null);
         ini_set("display_errors", 0);
 
-        $writer   = new \XLSXWriter();
+        $writer   = new \XLSXWriter ();
         $filename = ($filename ?: ($table instanceof Model ? $table::TYPE : "export")) . "_" . date("Y-m-d_H-i-s");
         $table    = $table instanceof Model ? $table->getAsTable() : (array) $table;
 

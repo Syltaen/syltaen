@@ -14,7 +14,7 @@ add_shortcode("page_title", function () {
 // MENUS
 add_shortcode("menu", function ($atts, $content = null) {
     extract(shortcode_atts(["id" => null], $atts));
-    return View::menu($id);
+    return View::menu($id, "inner-menu");
 });
 
 // YEAR

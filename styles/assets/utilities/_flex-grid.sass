@@ -7,7 +7,7 @@
 // ==================================================
 .container
     position: relative
-    z-index: 1
+    z-index: 10
     width: calc(100% - 20px)
     max-width: container(lg)
     margin: 0 auto
@@ -25,6 +25,10 @@
         @if breakpoint($slug)
             +screen($slug)
                 max-width: container($slug)
+
+            &--full
+                width: 100%
+                max-width: 100%
 
 // ==================================================
 // > ROW / COLUMNS
@@ -81,14 +85,23 @@
         padding-right: spacing(xs)
 
 +screen-spacing using ($sp, $value, $ratio, $suffix, $bp)
-    .#{$sp}-gutters#{$suffix}
-        margin-left: -1 * $value
-        margin-right: -1 * $value
+    @if (breakpoint($bp) == null or $ratio != 1) and (breakpoint($bp) == null or $value != 0px)
+        .#{$sp}-gutters
+            margin-left: -1 * $value
+            margin-right: -1 * $value
 
-    .#{$sp}-gutters#{$suffix} > [class^="gr"]
-        padding-left: $value
-        padding-right: $value
+        .#{$sp}-gutters > [class^="gr"]
+            padding-left: $value
+            padding-right: $value
 
+    @if breakpoint($bp)
+        .#{$sp}-gutters#{$suffix}
+            margin-left: -1 * $value
+            margin-right: -1 * $value
+
+        .#{$sp}-gutters#{$suffix} > [class^="gr"]
+            padding-left: $value
+            padding-right: $value
 
 
 // // ==================================================
@@ -105,18 +118,25 @@
 // > Exemple : .flex-justify-center
 // ==================================================
 // Justify content
-@each $jc in start end center space-between space-around
-    .flex-justify-#{$jc}
-        @if $jc == start or $jc == end
-            $jc: flex-#{$jc}
-        justify-content: $jc
++screen-suffixes() using ($suffix, $bp)
+    @each $jc in start end center space-between space-around none
+        .flex-justify-#{$jc}#{$suffix}
+            @if $jc == start or $jc == end
+                $jc: flex-#{$jc}
+            @if $jc == none
+                $jc: unset
+            justify-content: $jc
+
 
 // Align items
-@each $ai in start end center baseline stretch
-    .flex-align-#{$ai}
-        @if $ai == start or $ai == end
-            $ai: flex-#{$ai}
-        align-items: $ai
++screen-suffixes() using ($suffix, $bp)
+    @each $ai in start end center baseline stretch none
+        .flex-align-#{$ai}#{$suffix}
+            @if $ai == start or $ai == end
+                $ai: flex-#{$ai}
+            @if $ai == none
+                $ai: unset
+            align-items: $ai
 
 .flex
     &-pos-left-top
