@@ -315,7 +315,7 @@ class Set extends \ArrayObject implements \JsonSerializable
     }
 
     /**
-     * Implementation of the "array_diff" function
+     * Implementation of the "array_intersect" function
      *
      * @param  array $array
      * @return Set
@@ -434,18 +434,6 @@ class Set extends \ArrayObject implements \JsonSerializable
     public function values()
     {
         return new static(array_values((array) $this));
-    }
-
-    /**
-     * Use the values as keys
-     *
-     * @return Set
-     */
-    public function valuesAsOptions()
-    {
-        return $this->mapAssoc(function ($i, $value) {
-            return [$value => $value];
-        });
     }
 
     /**
@@ -816,11 +804,11 @@ class Set extends \ArrayObject implements \JsonSerializable
     {
         $parts = static::getKeyParts($key);
         $array = $this->getArrayCopy();
-        $pos   = &$array;
+        $pos   =  &$array;
 
         foreach ($parts as $part) {
             $pos[$part] = $pos[$part] ?? [];
-            $pos        = &$pos[$part];
+            $pos        =  &$pos[$part];
         }
 
         $pos = $val;

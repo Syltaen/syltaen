@@ -38,8 +38,8 @@ export default class AttributeWatcher
         string = @stringCondition
 
         for name, $field of @watchList
-            name = name.replace "[", "\\["
-            name = name.replace "]", "\\]"
+            name = name.replaceAll "[", "\\["
+            name = name.replaceAll "]", "\\]"
             string = string.replace new RegExp("{" + name + "}", "g"), @getFieldStringValue($field)
 
         return string

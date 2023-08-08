@@ -5,9 +5,28 @@ namespace Syltaen;
 /**
  * API to manage file like attachments
  */
-
 class File
 {
+    /**
+     * @var string
+     */
+    public $url;
+
+    /**
+     * @var string
+     */
+    public $path;
+
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $mime;
+
     /**
      * Create a new file instances
      *

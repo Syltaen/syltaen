@@ -111,7 +111,7 @@ abstract class FormProcessor extends DataProcessor
         do_action("syltaen_form_init", $this);
 
         // If data is posted, process it
-        if (!$this->payload->empty() && $this->payload["form_id"] == $this->data["form_id"]) {
+        if (!$this->payload->empty() && ($this->payload["form_id"] ?? null) == $this->data["form_id"]) {
             // Process the submited payload before anything else
             $this->processPayload();
 
@@ -320,6 +320,19 @@ abstract class FormProcessor extends DataProcessor
     {
         $this->options->insert((array) $fields);
         return $this;
+    }
+
+    /**
+     * Make an option array with values as keys and values
+     *
+     * @param  array   $values
+     * @return array
+     */
+    public static function makeOptions($values)
+    {
+        return set($values)->mapAssoc(function ($i, $value) {
+            return [$value => $value];
+        });
     }
 
     /**

@@ -399,23 +399,22 @@ abstract class Files
      */
     public static function scanPugTranslations()
     {
-        $pugs    = static::findIn("*.pug", ["views"], 5, true);
-        $matches = [];
+        $pugs  = static::findIn("*.pug", ["views"], 5, true);
+        $lines = [];
 
         // Scan the files for stings
         foreach ($pugs as $pug) {
-            preg_match_all('/_.\(\"([^"]+)\",\s?\"syltaen\"\)/', file_get_contents($pug), $match);
+            $fn = implode("|", ["__", "_e", "_x", "_n", "_ex", "_nx"]);
+            preg_match_all(
+                '/(?:' . $fn . ')\(.*\"syltaen\"\)/',
+                file_get_contents($pug),
+                $match
+            );
 
-            preg_match_all('/_n\(\"([^"]+)\",\s?\"([^"]+)\"/', file_get_contents($pug), $match_n);
-            $match_n[0] = array_map(function ($full, $singular, $plurial) {
-                return "_n(\"{$singular}\", \"{$plurial}\", 1, \"syltaen\")";
-            }, $match_n[0], $match_n[1], $match_n[2]);
+            if (empty($match[0])) {continue;}
 
-            if (!empty($match[0]) || !empty($match_n[0])) {
-                $matches[] = "\n\n//> " . basename($pug);
-            }
-
-            $matches = array_merge($matches, $match[0], $match_n[0]);
+            $lines[] = "\n\n//> " . basename($pug);
+            $lines   = array_merge($lines, $match[0]);
         }
 
         // Get view-strings.php
@@ -424,7 +423,7 @@ abstract class Files
         // Keep only the header
         $content = array_slice($content, 0, 7);
         // Add each line
-        foreach ($matches as $line) {
+        foreach ($lines as $line) {
             $content[] = $line . ";";
         }
 

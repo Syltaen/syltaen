@@ -8,14 +8,15 @@ global $admin_preview;
 $admin_preview = $admin_preview ?? new \Syltaen\AdminPreviewController;
 
 try {
-    // Hot edition : render the content directly in an HTML file and display it in an iframe
     if (wp_doing_ajax()) {
+        // Hot edition : render the content directly in an HTML file and display it in an iframe
         $admin_preview->directRender();
 
-    // First page loading : display using an iframe that will handle the rendering
     } else {
+        // First page loading : display using an iframe that will handle the rendering
         $admin_preview->offloadRender();
     }
-} catch (\Throwable$e) {
-    echo $e->getMessage();
+} catch (\Throwable $e) {
+    echo "<p class='error-message'>" . $e->getMessage() . "</p>";
+    echo "<p class='error-message'>" . $e->getTraceAsString() . "</p>";
 }

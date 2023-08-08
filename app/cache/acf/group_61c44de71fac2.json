@@ -168,7 +168,7 @@
             },
             "min": 1,
             "max": "",
-            "button_label": "Add row",
+            "button_label": "Ajouter une rangée",
             "acfe_flexible_hide_empty_message": false,
             "acfe_flexible_empty_message": "",
             "acfe_flexible_layouts_previews": false

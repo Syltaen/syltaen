@@ -536,7 +536,9 @@ abstract class Model implements \Iterator
 
         if (is_null($value)) {unset($filter["value"]);}
         if (is_null($type)) {unset($filter["type"]);}
-        if ($compare == "IN" && empty((array) $value)) $filter["value"] = [-1];
+        if ($compare == "IN" && empty((array) $value)) {
+            $filter["value"] = [-1];
+        }
 
         $this->filters["meta_query"][] = $filter;
 
@@ -552,7 +554,7 @@ abstract class Model implements \Iterator
     public function setMetaRelation($relation)
     {
         // Create the meta_query if it doesn't exist
-        $this->filters["meta_query"]??=["relation" => "AND"];
+        $this->filters["meta_query"] ??= ["relation" => "AND"];
 
         // Update the relation if specified
         if ($relation) {
@@ -867,7 +869,7 @@ abstract class Model implements \Iterator
     /**
      * Add a callback to further filter the results after the query
      *
-     * @param callback $callback
+     * @param  callback $callback
      * @return self
      */
     protected function addResultFilter($callback)
@@ -1142,9 +1144,7 @@ abstract class Model implements \Iterator
     public function processInGroups($groupSize, $process_function)
     {
         $this
-        // Make sure we always target the inital posts
             ->applyFilters()->status("all")
-            // Fetch X posts at a time
             ->limit($groupSize);
 
         // Process one group at a time
@@ -1500,12 +1500,12 @@ abstract class Model implements \Iterator
      * @param  bool         $only_update Only update the existing data, do not create new metadata
      * @return void
      */
-    public static function setMassMeta($meta_keys, $meta_values, $object_ids = false, $only_update = false)
+    public static function setMassMeta($meta_keys, $meta_values, $object_ids = "all", $only_update = false)
     {
         // Nothing to update
         if (empty($meta_values) && empty($object_ids)) {return;}
         // Apply updates to ALL the objects of this model
-        if (!$object_ids) {$object_ids = (array) static::getAllIDs();}
+        if ($object_ids === "all") {$object_ids = (array) static::getAllIDs();}
 
         // Get a list of all existing meta, indexing the first match as object_id:meta_key
         $index = static::getMassMeta($meta_keys, $object_ids, false, "meta_id", false)->reverse()->index(function ($row) {

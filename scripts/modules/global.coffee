@@ -8,7 +8,7 @@ import PasswordBox from "./../tools/PasswordBox.coffee"
 import ConfirmationModal from "./../tools/ConfirmationModal.coffee"
 import Shadowbox from "./../tools/Shadowbox.coffee"
 
-import "./../tools/jquery.showif.coffee"
+import "./../tools/jquery.if.coffee"
 import "./../tools/jquery.collapsable.coffee"
 import "./../tools/jquery.scrollnav.coffee"
 import "./../tools/jquery.incrementor.coffee"
@@ -101,4 +101,4 @@ $ ->
         $(@).val val
 
     # CONDITIONAL DISPLAY
-    $("[data-showif]").each -> $(@).showif $(@).data("showif")
+    $("[data-if]").each -> $(@).if $(@).data("if"), $(@).data("if-action")
