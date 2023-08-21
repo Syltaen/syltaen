@@ -21,9 +21,9 @@ class RowProcessor extends LayoutProcessor
         // Classes
         $this->addClasses([
             "flex-align-" . $this->settings["valign"],
-            $this->settings["spacing"] . "-gutters",
-            $this->settings["spacing_top"] . "-margin-top",
-            $this->settings["spacing_bottom"] . "-margin-bottom",
+            "gutters-" . $this->settings["spacing"],
+            "mt-" . $this->settings["spacing_top"],
+            "mb-" . $this->settings["spacing_bottom"],
             $this->settings["responsive"] != "none" ? $this->settings["responsive"] : "",
         ]);
 
