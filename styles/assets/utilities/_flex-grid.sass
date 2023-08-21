@@ -78,28 +78,28 @@
 // > Exemple : .row.sm-gutters.xs-gutters-sm
 // ==================================================
 [class^="row"]
-    margin-left: -1 * spacing(xs)
-    margin-right: -1 * spacing(xs)
+    margin-left: -1 * spacing(2)
+    margin-right: -1 * spacing(2)
     & > [class^="gr"]
-        padding-left: spacing(xs)
-        padding-right: spacing(xs)
+        padding-left: spacing(2)
+        padding-right: spacing(2)
 
 +screen-spacing using ($sp, $value, $ratio, $suffix, $bp)
     @if (breakpoint($bp) == null or $ratio != 1) and (breakpoint($bp) == null or $value != 0px)
-        .#{$sp}-gutters
+        .gutters-#{$sp}
             margin-left: -1 * $value
             margin-right: -1 * $value
 
-        .#{$sp}-gutters > [class^="gr"]
+        .gutters-#{$sp} > [class^="gr"]
             padding-left: $value
             padding-right: $value
 
     @if breakpoint($bp)
-        .#{$sp}-gutters#{$suffix}
+        .gutters-#{$sp}#{$suffix}
             margin-left: -1 * $value
             margin-right: -1 * $value
 
-        .#{$sp}-gutters#{$suffix} > [class^="gr"]
+        .gutters-#{$sp}#{$suffix} > [class^="gr"]
             padding-left: $value
             padding-right: $value
 

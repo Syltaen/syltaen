@@ -6,47 +6,45 @@
     +screen-suffixes() using ($suffix, $bp)
         $ratio: spacingratio($bp)
         @each $sp, $value in $spacing
-            $value: $value * $ratio
-            @content($sp, $value, $ratio, $suffix, $bp)
+            @content($sp, $value * $ratio, $ratio, $suffix, $bp)
 
-=spacing-list($spacing_class, $spacing_property, $sp, $value, $suffix: "")
-    .#{$sp}-#{$spacing_class}#{$suffix}
-        #{$spacing_property}: $value !important
+=spacing-list($letter, $number, $spacing_property, $spacing_value, $suffix: "")
+    .#{$letter}-#{$number}#{$suffix}
+        #{$spacing_property}: $spacing_value !important
 
-    .#{$sp}-#{$spacing_class}-top#{$suffix}
-        #{$spacing_property}-top: $value !important
+    .#{$letter}t-#{$number}#{$suffix}
+        #{$spacing_property}-top: $spacing_value !important
 
-    .#{$sp}-#{$spacing_class}-bottom#{$suffix}
-        #{$spacing_property}-bottom: $value !important
+    .#{$letter}b-#{$number}#{$suffix}
+        #{$spacing_property}-bottom: $spacing_value !important
 
-    .#{$sp}-#{$spacing_class}-left#{$suffix}
-        #{$spacing_property}-left: $value !important
+    .#{$letter}r-#{$number}#{$suffix}
+        #{$spacing_property}-right: $spacing_value !important
 
-    .#{$sp}-#{$spacing_class}-right#{$suffix}
-        #{$spacing_property}-right: $value !important
+    .#{$letter}l-#{$number}#{$suffix}
+        #{$spacing_property}-left: $spacing_value !important
 
-    .#{$sp}-#{$spacing_class}-vertical#{$suffix}
-        #{$spacing_property}-top: $value !important
-        #{$spacing_property}-bottom: $value !important
+    .#{$letter}x-#{$number}#{$suffix}
+        #{$spacing_property}-left: $spacing_value !important
+        #{$spacing_property}-right: $spacing_value !important
 
-    .#{$sp}-#{$spacing_class}-horizontal#{$suffix}
-        #{$spacing_property}-left: $value !important
-        #{$spacing_property}-right: $value !important
+    .#{$letter}y-#{$number}#{$suffix}
+        #{$spacing_property}-top: $spacing_value !important
+        #{$spacing_property}-bottom: $spacing_value !important
 
-
-// Each spacing, with a ratio for each media query.
-// Does not output items that would have the same result of an earlier query.
-// Ex: .sm-margin-top
-+screen-spacing using ($sp, $value, $ratio, $suffix, $bp)
-    @if (breakpoint($bp) == null or $ratio != 1) and (breakpoint($bp) == null or $value != 0px)
-        +spacing-list("padding", "padding", $sp, $value)
-        +spacing-list("margin", "margin", $sp, $value)
-        +spacing-list("offset", "margin", $sp, $value * -1)
+// Each spacing, with a base value for each media query.
+// Ex: .mt1
++screen-spacing using ($number, $spacing, $ratio, $suffix, $bp)
+    // Avoid duplicates spacing : .mt1 is the same on lg and md, .mt0 is the same on all breakpoints
+    @if (breakpoint($bp) == null or $ratio != 1) and (breakpoint($bp) == null or $spacing != 0px)
+        +spacing-list("p", $number, "padding", $spacing)
+        +spacing-list("m", $number, "margin", $spacing)
+        // +spacing-list("o", $number, "margin", $spacing * -1)
 
 // Force a different spacing for each breakpoints
-// Ex: .lg-padding-vertical-sm
-+screen-spacing using ($sp, $value, $ratio, $suffix, $bp)
+// Ex: .mt3-sm
++screen-spacing using ($number, $spacing, $ratio, $suffix, $bp)
     @if breakpoint($bp)
-        +spacing-list("padding", "padding", $sp, $value, $suffix)
-        +spacing-list("margin", "margin", $sp, $value, $suffix)
-        +spacing-list("offset", "margin", $sp, $value * -1, $suffix)
+        +spacing-list("p", $number, "padding", $spacing, $suffix)
+        +spacing-list("m", $number, "margin", $spacing, $suffix)
+        // +spacing-list("o", $number, "margin", $spacing * -1, $suffix)

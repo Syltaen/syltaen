@@ -4,7 +4,7 @@ extends _base
 //- > SECTIONS
 //- ==================================================
 block sections
-    section.site-section.bg-white.md-padding-vertical
+    section.site-section.bg-white.py-5
 
         .container: .row.ms-gutters.column-sm
 
@@ -16,14 +16,14 @@ block sections
                     +icons($share).single__share__icons
 
             .gr.single__main
-                .row.flex-align-center.flex-justify-space-between.sm-margin-bottom.column-reverse-sm
+                .row.flex-align-center.flex-justify-space-between.mb-3.column-reverse-sm
                     .gr
                         a.single__category.link(href=$singlenav["archive"]["url"])!= $singlenav["archive"]["text"]
                         time.single__date= $_date("d/m/Y", $post->post_date)
 
-                    .gr: +singlenav($singlenav).sm-margin-bottom-sm
+                    .gr: +singlenav($singlenav).mb-3-sm
 
-                h1.h1.no-margin-top.sm-margin-bottom
+                h1.h1.mt-0.mb-3
                     span.underline-secondary!= $post->post_title
 
                 block extra

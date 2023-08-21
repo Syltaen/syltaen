@@ -566,18 +566,19 @@
                 "id": ""
             },
             "acfe_save_meta": 0,
-            "choices": {
-                "no": "Aucun",
-                "xxs": "Très très petit",
-                "xs": "Très petit",
-                "sm": "Petit",
-                "ms": "Moyen petit",
-                "md": "Moyen",
-                "ml": "Moyen grand",
-                "lg": "Grand",
-                "xl": "Très grand"
-            },
-            "default_value": "ml",
+            "choices": [
+                "0 - 0",
+                "1 - 6px",
+                "2 - 12px",
+                "3 - 16px",
+                "4 - 24px",
+                "5 - 32px",
+                "6 - 48px",
+                "7 - 64px",
+                "8 - 96px",
+                "9 - 140px"
+            ],
+            "default_value": 7,
             "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
@@ -599,18 +600,19 @@
                 "id": ""
             },
             "acfe_save_meta": 0,
-            "choices": {
-                "no": "Aucun",
-                "xxs": "Très très petit",
-                "xs": "Très petit",
-                "sm": "Petit",
-                "ms": "Moyen petit",
-                "md": "Moyen",
-                "ml": "Moyen grand",
-                "lg": "Grand",
-                "xl": "Très grand"
-            },
-            "default_value": "ml",
+            "choices": [
+                "0 - 0",
+                "1 - 6px",
+                "2 - 12px",
+                "3 - 16px",
+                "4 - 24px",
+                "5 - 32px",
+                "6 - 48px",
+                "7 - 64px",
+                "8 - 96px",
+                "9 - 140px"
+            ],
+            "default_value": 7,
             "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
@@ -632,18 +634,19 @@
                 "id": ""
             },
             "acfe_save_meta": 0,
-            "choices": {
-                "no": "Aucun",
-                "xxs": "Très très petit",
-                "xs": "Très petit",
-                "sm": "Petit",
-                "ms": "Moyen petit",
-                "md": "Moyen",
-                "ml": "Moyen grand",
-                "lg": "Grand",
-                "xl": "Très grand"
-            },
-            "default_value": "no",
+            "choices": [
+                "0 - 0",
+                "1 - 6px",
+                "2 - 12px",
+                "3 - 16px",
+                "4 - 24px",
+                "5 - 32px",
+                "6 - 48px",
+                "7 - 64px",
+                "8 - 96px",
+                "9 - 140px"
+            ],
+            "default_value": 0,
             "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
@@ -665,18 +668,19 @@
                 "id": ""
             },
             "acfe_save_meta": 0,
-            "choices": {
-                "no": "Aucun",
-                "xxs": "Très très petit",
-                "xs": "Très petit",
-                "sm": "Petit",
-                "ms": "Moyen petit",
-                "md": "Moyen",
-                "ml": "Moyen grand",
-                "lg": "Grand",
-                "xl": "Très grand"
-            },
-            "default_value": "no",
+            "choices": [
+                "0 - 0",
+                "1 - 6px",
+                "2 - 12px",
+                "3 - 16px",
+                "4 - 24px",
+                "5 - 32px",
+                "6 - 48px",
+                "7 - 64px",
+                "8 - 96px",
+                "9 - 140px"
+            ],
+            "default_value": 0,
             "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
@@ -767,7 +771,7 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1683895545,
+    "modified": 1692608037,
     "acfe_categories": {
         "layout": "Layout"
     }

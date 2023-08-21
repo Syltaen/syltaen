@@ -85,9 +85,9 @@ class ContentProcessor extends LayoutProcessor
         }
 
         // Padding and margin
-        foreach (["padding", "margin"] as $spacing) {
-            foreach (["top", "bottom", "left", "right"] as $direction) {
-                $this->setSpacing("{$spacing}-{$direction}", $settings["{$spacing}_{$direction}"]);
+        foreach (["padding" => "p", "margin" => "m"] as $spacing => $l) {
+            foreach (["top" => "t", "bottom" => "b", "left" => "l", "right" => "r"] as $direction => $i) {
+                $this->setSpacing("{$l}{$i}", $settings["{$spacing}_{$direction}"]);
             }
         }
 

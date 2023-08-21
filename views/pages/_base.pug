@@ -36,7 +36,7 @@ html(lang=$site["language"])
                             a.site-header__brand(href=$site["url"] rel="home")= $site["name"]
 
                             .row.flex-justify-space-between.flex-justify-align-center.no-gutters
-                                form.site-header__search.ms-margin-right(action=$site["url"])
+                                form.site-header__search.mr-3(action=$site["url"])
                                     input.site-header__search__field(name="s" value=\Syltaen\Route::query("s") placeholder=__("Recherche", "syltaen"))
                                     button.site-header__search__submit!= __("Rechercher", "syltaen")
 

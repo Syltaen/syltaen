@@ -105,7 +105,7 @@ abstract class LayoutProcessor extends DataProcessor
         foreach ($this->spacings as $breakpoint => $spacings) {
             foreach ($spacings as $spacing => $value) {
                 if ($value) {
-                    $this->addClass("{$value}-{$spacing}" . ($breakpoint ? "-{$breakpoint}" : ""));
+                    $this->addClass("{$spacing}-{$value}" . ($breakpoint ? "-{$breakpoint}" : ""));
                 }
             }
         }
@@ -149,7 +149,7 @@ abstract class LayoutProcessor extends DataProcessor
      */
     public function setSpacing($spacing, $value, $breakpoint = "")
     {
-        $this->spacings[$breakpoint][$spacing] = empty($value) || in_array($value, ["none", "unset"]) ? false : $value;
+        $this->spacings[$breakpoint][$spacing] = empty($value) || $value == "unset" ? false : $value;
     }
 
     // =============================================================================

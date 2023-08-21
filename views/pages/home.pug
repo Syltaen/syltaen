@@ -15,11 +15,11 @@ block intro
 //- > SECTIONS
 //- ==================================================
 block sections
-    section.site-section.md-padding-vertical.bg-white: .container.clearfix
+    section.site-section.py-5.bg-white: .container.clearfix
 
 
         p.color-medium-grey.font-bold TITRES & TEXTS
-        hr.no-margin-top
+        hr.mt-0
         h1 Titre de niveau 1
         p Lorem ipsum dolor sit amet consectetur <strong>adipisicing elit</strong>. Aspernatur ad, id corrupti numquam <span class="color-primary">ipsam voluptatibus architecto</span> enim accusamus impedit veniam soluta, natus distinctio iusto magni commodi, <span class="font-light">inventore amet voluptas</span> officia!
         h2 Titre de niveau 2
@@ -34,11 +34,11 @@ block sections
         p Lorem ipsum dolor sit amet consectetur <strong>adipisicing elit</strong>. Aspernatur ad, id corrupti numquam <span class="color-primary">ipsam voluptatibus architecto</span> enim accusamus impedit veniam soluta, natus distinctio iusto magni commodi, <span class="font-light">inventore amet voluptas</span> officia!
 
 
-        p.bg-light-grey.sm-padding.sm-margin-vertical.bg-white-md.lg-padding-md.text-align-center-md Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat dolores neque animi tempora magnam, ad saepe, praesentium dignissimos dolor nam quam et temporibus! Libero nulla provident eos exercitationem aut minima.
+        p.bg-light-grey.sm-padding.py-4.p-6-md.bg-white-md.text-align-center-md Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat dolores neque animi tempora magnam, ad saepe, praesentium dignissimos dolor nam quam et temporibus! Libero nulla provident eos exercitationem aut minima.
 
 
-        p.color-medium-grey.font-bold.md-margin-top BOUTONS, LIENS & TOOLTIPS
-        hr.no-margin-top
+        p.color-medium-grey.font-bold.mt-4 BOUTONS, LIENS & TOOLTIPS
+        hr.mt-0
         .row
             p.gr: a Un lien normal
             p.gr Une bulle d'info <span class="tooltip tooltip--info"><span class="tooltip__message">Un message</span></>
@@ -64,8 +64,8 @@ block sections
                 p: a.button.button--big Bouton big
 
 
-        p.color-medium-grey.font-bold.md-margin-top LISTES
-        hr.no-margin-top
+        p.color-medium-grey.font-bold.mt-4 LISTES
+        hr.mt-0
         .row
             .gr: ul
                 li
@@ -108,8 +108,8 @@ block sections
 
 
 
-        p.color-medium-grey.font-bold.md-margin-top ASCENCEURS
-        hr.no-margin-top
+        p.color-medium-grey.font-bold.mt-4 ASCENCEURS
+        hr.mt-0
         .collapsable(data-link)
             header.collapsable__header Ascenceur 1
             .collapsable__content
@@ -133,8 +133,8 @@ block sections
                 p Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores pariatur explicabo ab corrupti ipsam fugit commodi similique at voluptatum itaque animi, deserunt reiciendis magni eveniet totam iste veniam reprehenderit odio!
 
 
-        p.color-medium-grey.font-bold.md-margin-top TABLEAUX
-        hr.no-margin-top
+        p.color-medium-grey.font-bold.mt-4 TABLEAUX
+        hr.mt-0
         table
             tr: th(colspan="3") Tableau
             tr
@@ -150,10 +150,10 @@ block sections
                 td -
                 td -
 
-        p.color-medium-grey.font-bold.md-margin-top FORMULAIRES
-        hr.no-margin-top
+        p.color-medium-grey.font-bold.mt-4 FORMULAIRES
+        hr.mt-0
         form
-            .row.row--spacing-sm
+            .row.gutters-3
                 fieldset.gr
                     label Texte
                     input(type="text")
@@ -161,7 +161,7 @@ block sections
                     label Mot de passe
                     input(type="password")
 
-            .row.row--spacing-sm
+            .row.gutters-3
                 fieldset.gr
                     label Vertical
                     ul.column
@@ -199,7 +199,7 @@ block sections
                             input.list__bullet(type="radio" name="radio")
                             |Bouton radio
 
-            .row.row--spacing-sm
+            .row.gutters-3
                 .gr
                     p: label.text-xx-small.choice-label
                         input(type="checkbox" checked)
@@ -222,7 +222,7 @@ block sections
                         | Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero illum eveniet magnam.
 
 
-            .row.row--spacing-sm
+            .row.gutters-3
                 fieldset.gr
                     label Select
                     select

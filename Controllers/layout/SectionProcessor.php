@@ -64,9 +64,9 @@ class SectionProcessor extends LayoutProcessor
         $settings = $this->data["layout_settings"];
 
         // Padding
-        foreach (["top", "bottom", "left", "right"] as $side) {
-            if ($settings["padding_{$side}"] != "no") {
-                $this->setSpacing("padding-{$side}", $settings["padding_{$side}"]);
+        foreach (["top" => "pt", "bottom" => "pb", "left" => "pl", "right" => "pr"] as $side => $class) {
+            if ($settings["padding_{$side}"]) {
+                $this->setSpacing($class, $settings["padding_{$side}"]);
             }
         }
 

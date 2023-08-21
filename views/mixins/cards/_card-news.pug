@@ -6,12 +6,12 @@ mixin card-news(news)
 
     .card-news.button__parent
 
-        .card-news__visual(href=$news->url style=$news->thumb->bg())
+        .card-news__visual(href=$news->url style=$news->thumb->bg()."")
             != $news->thumb->tag()
 
         .card-news__content
             p.text-small
-                i.fa.fa-folder.xs-margin-right
+                i.fa.fa-folder.mr-2
                 != $news->news_type->getLinks()->join(", ")
 
             time= $_date("d/m/Y", $news->post_date)
