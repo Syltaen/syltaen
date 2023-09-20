@@ -235,7 +235,7 @@ abstract class AbstractUser extends ModelItem
      * @param  string  $redirecton URL to which redirect when logged in successfully
      * @return boolean Success of the login
      */
-    public function login($redirection = "profil")
+    public function login($redirection = false)
     {
         wp_set_current_user($this->ID, $this->login);
         wp_set_auth_cookie($this->ID);

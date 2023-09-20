@@ -266,6 +266,42 @@ abstract class Route
     }
 
     /**
+     * Return URL regex matching for CRUD actions
+     *
+     * @param  string  $post_type
+     * @param  string  $archive
+     * @return array
+     */
+    public static function crud($post_type, $archive = false)
+    {
+        $archive = $archive ?: $post_type;
+
+        return [
+            $archive . '/([^\/]+)/([0-9a-z-]+)?/?$',
+            'index.php?name=$matches[1]&post_type=' . $post_type . '&(route)=$matches[2]',
+        ];
+    }
+
+    /**
+     * Return URL regex matching for CRUD actions
+     *
+     * @return array
+     */
+    public static function userCrud($archive)
+    {
+        return [
+            [
+                $archive . '([^\/]+)/?$',
+                'index.php?author_name=$matches[1]&(route)=display',
+            ],
+            [
+                $archive . '([^\/]+)/([0-9a-z-]+)?/?$',
+                'index.php?author_name=$matches[1]&(route)=$matches[2]',
+            ],
+        ];
+    }
+
+    /**
      * Get a custom route's URL
      *
      * @return string

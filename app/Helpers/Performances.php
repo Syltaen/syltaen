@@ -2,6 +2,9 @@
 
 namespace Syltaen;
 
+use AllowDynamicProperties;
+
+#[AllowDynamicProperties]
 class Performances
 {
     /**
@@ -16,7 +19,10 @@ class Performances
      */
     public function __construct($optimizations = [])
     {
-        if (wp_doing_ajax()) return;
+        if (wp_doing_ajax()) {
+            return;
+        }
+
         $defaults = [
             "block_external_HTTP"     => false,
             "defer_CSS"               => false,
@@ -27,7 +33,7 @@ class Performances
             "disable_emoji"           => true,
             "disable_feeds"           => true,
             "disable_heartbeat"       => false,
-            "disable_jquery"          => false, // /!\ Necessary for WooCommerce
+            "disable_jquery"          => false,
             "disable_jquery_migrate"  => true,
             "disable_rest_api"        => true,
             "disable_RSD"             => true,

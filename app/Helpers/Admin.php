@@ -4,7 +4,9 @@ namespace Syltaen;
 
 class Admin
 {
-
+    // =============================================================================
+    // > FILTERS
+    // =============================================================================
     /**
      * Add a list of filters above a list of posts
      *
@@ -112,6 +114,9 @@ class Admin
         });
     }
 
+    // =============================================================================
+    // > CUSTOM MENU ITEMS
+    // =============================================================================
     /**
      * Add a custom menu category/item
      *
@@ -170,5 +175,40 @@ class Admin
                 return str_replace("<a>$name</a>", $render_callback($items), $items);
             }, 10, 2);
         }
+    }
+
+    // =============================================================================
+    // > ALERTS & METABOXES
+    // =============================================================================
+    /**
+     * Add a custom message to a post admin screen
+     *
+     * @return void
+     */
+    public static function addPostAlert($post_types, $message_callback)
+    {
+        add_action("edit_form_after_title", function ($post) use ($post_types, $message_callback) {
+            if (!in_array($post->post_type, (array) $post_types)) {return;}
+
+            $html = $message_callback($post);
+            if (!$html) {return;}
+
+            echo "<div class='notice notice-warning'>$html</div>";
+        });
+    }
+
+    // =============================================================================
+    // > ACTIONS
+    // =============================================================================
+    /**
+     * Send a mail template to the admin address(s) defined in the parameters
+     *
+     * @return void
+     */
+    public static function sendMailTemplate($template, $tags = [])
+    {
+        Mail::sendTemplate($template, array_merge((array) $tags, [
+            "to" => Data::option("mails_config_admin_to"),
+        ]));
     }
 }

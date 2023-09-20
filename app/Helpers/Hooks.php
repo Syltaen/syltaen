@@ -130,7 +130,7 @@ abstract class Hooks
                 return [
                     "id"    => $item["id"],
                     "title" => strip_tags(str_replace("<br>", "\n", $item["text"])),
-                    "text"  => !empty($item["wrap"]) ? "<div class='select2-advancedoption--{$item['wrap']}'>" . $item["text"] . "</div>" : $item["text"],
+                    "text"  => !empty($item["wrap"]) ? "<div class='select2-advancedoption--" . $item['wrap'] . "'>" . $item["text"] . "</div>" : $item["text"],
                 ];
             }, $results);
 

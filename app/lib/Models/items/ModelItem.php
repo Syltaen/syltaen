@@ -2,10 +2,12 @@
 
 namespace Syltaen;
 
+use AllowDynamicProperties;
+
 /**
  * Wrap each result of a model in a class that is used to retrieve dynamic fields defined by the model
  */
-
+#[AllowDynamicProperties]
 abstract class ModelItem
 {
     /**
@@ -78,6 +80,16 @@ abstract class ModelItem
     {
         $this->model = $model;
         return $this;
+    }
+
+    /**
+     * Get the model for this item
+     *
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
     }
 
     // ==================================================

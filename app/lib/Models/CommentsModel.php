@@ -38,7 +38,7 @@ abstract class CommentsModel extends Model
              * The comment author
              */
             "@author"    => function ($comment) {
-                return Users::getItem($comment->user_id);
+                return Users::getItem((int) $comment->user_id);
             },
 
             /**

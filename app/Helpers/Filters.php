@@ -24,7 +24,6 @@ class Filters extends FormProcessor
      */
     public function setup()
     {
-        $this->addPrefill((array) $this->payload);
         $this->payload = set();
     }
 
@@ -105,7 +104,7 @@ class Filters extends FormProcessor
      */
     public function addSearch($label = null, $placeholder = "", $name = "search")
     {
-        return $this->addField("search", $name, $label !== null ? $label : __("Search", "syltaen"), [
+        return $this->addField("search", $name, $label !== null ? $label : __("Recherche", "syltaen"), [
             "placeholder" => $placeholder,
         ], "search");
     }
@@ -132,7 +131,7 @@ class Filters extends FormProcessor
     }
 
     /**
-     * Shortcut to add a select field
+     * Shortcut to add radio fields
      * @see static::addChoiceField
      *
      * @return self
@@ -143,32 +142,28 @@ class Filters extends FormProcessor
     }
 
     /**
-     * Shortcut to add a select field for a taxonomy
+     * Shortcut to add checkbox fields
+     * @see static::addChoiceField
      *
      * @return self
      */
-    public function addSelectTaxonomy($taxonomy, $all_option = true, $default_value = "*", $show_label = true)
+    public function addCheckbox($name, $label, $options, $filter_callback = "meta", $default_value = false)
     {
-        return $this->addSelect(
-            $taxonomy::SLUG,
-            $show_label ? $taxonomy::getName(true) : false,
-            $taxonomy->getAsOptions($all_option),
-            "tax",
-            $default_value
-        );
+        return $this->addChoiceField("checkbox", $name, $label, $options, [], $filter_callback, $default_value);
     }
 
     /**
-     * Shortcut to add a radio field for a taxonomy
+     * Shortcut to add a field for a taxonomy selection
+     * select, radio, checkbox
      *
      * @return self
      */
-    public function addRadioTaxonomy($taxonomy, $all_option = true, $default_value = "*", $show_label = true)
+    public function addTaxonomy($taxonomy, $fieldtype = "select", $all_option = true, $default_value = "*", $show_label = true)
     {
-        return $this->addRadio(
+        return $this->{"add" . ucfirst($fieldtype)}(
             $taxonomy::SLUG,
             $show_label ? $taxonomy::getName(true) : false,
-            $taxonomy->getAsOptions($all_option),
+            $taxonomy->getAsOptions($fieldtype == "checkbox" ? false : $all_option, true),
             "tax",
             $default_value
         );
@@ -205,7 +200,7 @@ class Filters extends FormProcessor
             case "status":
                 return $this->controller->model->status($value);
             case "order":
-                return $this->controller->model->order($value, "DESC");
+                return $this->controller->model->order($value, $value == "title" ? "ASC" : "DESC");
         }
     }
 }

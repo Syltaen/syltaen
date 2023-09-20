@@ -2,6 +2,9 @@
 
 namespace Syltaen;
 
+use AllowDynamicProperties;
+
+#[AllowDynamicProperties]
 abstract class Model implements \Iterator
 
 {
@@ -493,13 +496,17 @@ abstract class Model implements \Iterator
      * @param  string $meta_key When $orderby is "meta_value", specify the meta_key.
      * @return self
      */
-    public function order($orderby = false, $order = "ASC", $meta_key = false)
+    public function order($orderby = false, $order = "ASC")
     {
-        $this->filters["orderby"] = $orderby;
+        $orderby = is_array($orderby) ? $orderby : explode(":", $orderby);
+
+        $this->filters["orderby"] = $orderby[0];
         $this->filters["order"]   = $order;
-        if ($orderby == "meta_value" || $orderby == "meta_value_num") {
-            $this->filters["meta_key"] = $meta_key;
+
+        if ($orderby[0] == "meta_value" || $orderby[0] == "meta_value_num") {
+            $this->filters["meta_key"] = implode(":", array_slice($orderby, 1));
         }
+
         return $this;
     }
 
@@ -728,7 +735,8 @@ abstract class Model implements \Iterator
      *
      * @return self
      */
-    function clone () {
+    public function clone ()
+    {
         return clone $this;
     }
 
@@ -1465,7 +1473,7 @@ abstract class Model implements \Iterator
             . "WHERE " . implode(" AND ", array_filter([
                 static::META_KEY . " = '{$meta_key}'",
                 static::META_VALUE . " IN " . Database::inArray((array) $meta_values),
-                $object_ids ? static::META_OBJECT . " IN " . Database::inArray($object_ids) : "",
+                $object_ids?static::META_OBJECT . " IN " . Database::inArray($object_ids) : "",
             ]))
         );
 

@@ -264,8 +264,7 @@ class Pagination
      */
     public static function getPage()
     {
-        $page = get_query_var("paged");
-        $page = $page == 0 ? 1 : $page;
+        $page = get_query_var("paged") ?: 1;
         return $page;
     }
 

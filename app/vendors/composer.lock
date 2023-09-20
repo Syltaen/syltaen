@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a78b26c5e8b4b9455de9df1b2666279",
+    "content-hash": "7dda6408317399536e10b6c4645fb398",
     "packages": [
         {
             "name": "filp/whoops",
@@ -245,16 +245,16 @@
         },
         {
             "name": "mk-j/php_xlsxwriter",
-            "version": "0.37",
+            "version": "0.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mk-j/PHP_XLSXWriter.git",
-                "reference": "c4ba6023fcd49578062e35ed6af3e205dd50a903"
+                "reference": "67541cff96eab25563aa7fcecba33e03368fa464"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mk-j/PHP_XLSXWriter/zipball/c4ba6023fcd49578062e35ed6af3e205dd50a903",
-                "reference": "c4ba6023fcd49578062e35ed6af3e205dd50a903",
+                "url": "https://api.github.com/repos/mk-j/PHP_XLSXWriter/zipball/67541cff96eab25563aa7fcecba33e03368fa464",
+                "reference": "67541cff96eab25563aa7fcecba33e03368fa464",
                 "shasum": ""
             },
             "require": {
@@ -285,9 +285,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mk-j/PHP_XLSXWriter/issues",
-                "source": "https://github.com/mk-j/PHP_XLSXWriter/tree/0.37"
+                "source": "https://github.com/mk-j/PHP_XLSXWriter/tree/0.39"
             },
-            "time": "2018-01-11T08:03:56+00:00"
+            "time": "2023-05-31T22:17:46+00:00"
         },
         {
             "name": "nodejs-php-fallback/nodejs-php-fallback",
@@ -1004,5 +1004,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.2.0"
 }

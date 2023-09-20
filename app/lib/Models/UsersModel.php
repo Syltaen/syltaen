@@ -35,8 +35,15 @@ abstract class UsersModel extends Model
             /**
              * Unique profile URL
              */
-            "@url" => function ($user) {
+            "@url"       => function ($user) {
                 return get_author_posts_url($user->getID());
+            },
+
+            /**
+             * URL to edit the user in the admin
+             */
+            "@admin_url" => function ($user) {
+                return site_url("/wp-admin/user-edit.php?user_id={$user->ID}");
             },
         ]);
 
@@ -61,6 +68,29 @@ abstract class UsersModel extends Model
         }
 
         return $this;
+    }
+
+    /**
+     * Update parent to add common ordering parameters
+     * @return self
+     */
+    public function order($orderby = false, $order = "ASC")
+    {
+        $orderby = explode(":", $orderby);
+
+        switch ($orderby[0]) {
+            case "relation_title":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    global $wpdb;
+                    $query->query_from .= " LEFT JOIN {$wpdb->usermeta} rel ON rel.meta_key = '{$orderby[1]}' AND rel.user_id = {$wpdb->users}.ID";
+                    $query->query_from .= " LEFT JOIN {$wpdb->posts} rel_post ON rel_post.ID = rel.meta_value";
+                    $query->query_orderby = "ORDER BY rel_post.post_title $order";
+                    return $query;
+                });
+
+            default:
+                return parent::order($orderby, $order);
+        }
     }
 
     /**

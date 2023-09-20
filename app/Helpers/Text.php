@@ -161,4 +161,14 @@ abstract class Text
             ($parts["country"] ?? false),
         ]);
     }
+
+    /**
+     * Create an HTML link
+     *
+     * @return string
+     */
+    public static function link($url, $text = false, $blank = false)
+    {
+        return "<a href='$url'" . ($blank ? " target='_blank'" : "") . ">" . ($text ?: $url) . "</a>";
+    }
 }

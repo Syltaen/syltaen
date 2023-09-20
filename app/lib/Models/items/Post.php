@@ -224,7 +224,7 @@ class Post extends ModelItem
         $taxonomies = Database::get_results("SELECT t.term_id, tt.taxonomy FROM terms t
             JOIN term_taxonomy tt ON tt.term_id = t.term_id
             JOIN term_relationships tr ON tr.term_taxonomy_id = tt.term_taxonomy_id
-            WHERE tr.object_id = {$this->getID()}
+            WHERE tr.object_id = " . $this->getID() . "
         ")->groupBy("taxonomy", "term_id")
             ->callEach()->map("intval")
             ->callEach()->getArrayCopy();
@@ -301,7 +301,7 @@ class Post extends ModelItem
      */
     public function addComment($message, $author_name = "", $author_email = "", $author_url = "", $parent_comment = 0)
     {
-        return Comments::add([
+        return CommentsModel::add([
             "comment_post_ID"      => $this->getID(),
             "comment_author"       => $author_name,
             "comment_author_email" => $author_email,

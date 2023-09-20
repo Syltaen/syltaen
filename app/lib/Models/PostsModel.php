@@ -98,15 +98,32 @@ abstract class PostsModel extends Model
             /**
              * The URL of the post
              */
-            "@url"   => function ($post) {
-                if (!static::HAS_PAGE || empty($post->ID)) return false;
+            "@url"       => function ($post) {
+                if (!static::HAS_PAGE || empty($post->ID)) {
+                    return false;
+                }
+
                 return get_permalink($post->ID);
+            },
+
+            /**
+             * URL to edit the post in the admin
+             */
+            "@admin_url" => function ($post) {
+                return site_url("/wp-admin/post.php?post={$post->ID}&action=edit");
+            },
+
+            /**
+             * Author of the post
+             */
+            "@author"    => function ($p) {
+                return Users::getItem($p->post_author);
             },
 
             /**
              * Instance of an Attachment allowing to get the image url/tag easily
              */
-            "@thumb" => function ($post) {
+            "@thumb"     => function ($post) {
                 if (!static::HAS_THUMBNAIL) {
                     return false;
                 }
@@ -255,7 +272,7 @@ abstract class PostsModel extends Model
      * Add a post type to the query
      *
      * @param  Syltaen\ $post_model
-     * @return void
+     * @return self
      */
     public function join($post_model)
     {
@@ -351,19 +368,19 @@ abstract class PostsModel extends Model
         ], $identifiers);
 
         // Add postmeta to the searchable data if not already in it
-        $query["join"] .= " LEFT JOIN {$identifiers['meta_column']} {$identifiers['meta_alias']} ON {$identifiers['object_column']}.ID = {$identifiers['meta_alias']}.post_id";
+        $query["join"] .= " LEFT JOIN " . $identifiers["meta_column"] . " " . $identifiers["meta_alias"] . " ON " . $identifiers["object_column"] . ".ID = " . $identifiers["meta_alias"] . ".post_id";
 
         // Restirct metadata to specific keys to speed up the search
         if (is_array($meta_keys)) {
             foreach ($meta_keys as $key) {
-                $query["join"] .= " AND {$identifiers['meta_alias']}.meta_key IN (" . implode(",", array_map(function ($key) {return "'$key'";}, $meta_keys)) . ")";
+                $query["join"] .= " AND " . $identifiers["meta_alias"] . ".meta_key IN (" . implode(",", array_map(function ($key) {return "'$key'";}, $meta_keys)) . ")";
             }
         }
 
         // Extend search to metadata
         $query["where"] = preg_replace(
             "/\(\s*{$wpdb->posts}.post_title\s+LIKE\s*(\'[^\']+\')\s*\)/",
-            "({$wpdb->posts}.post_title LIKE $1) OR ({$identifiers['meta_alias']}.meta_value LIKE $1)",
+            "({$wpdb->posts}.post_title LIKE $1) OR (" . $identifiers["meta_alias"] . ".meta_value LIKE $1)",
             $query["where"]
         );
 
@@ -435,6 +452,121 @@ abstract class PostsModel extends Model
         }, "search");
     }
 
+    /**
+     * Update parent to add common ordering parameters
+     * @return self
+     */
+    public function order($orderby = false, $order = "ASC")
+    {
+        $orderby = explode(":", $orderby);
+
+        switch ($orderby[0]) {
+            case "post_status":
+            case "status":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    $query["orderby"] = "post_status $order, post_date $order";
+                    return $query;
+                });
+            case "users_count":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    global $wpdb;
+                    $query["join"] .= " LEFT JOIN {$wpdb->usermeta} um ON um.meta_key = '{$orderby[1]}' AND um.meta_value = {$wpdb->posts}.ID";
+                    $query["fields"] .= ", count(um.user_id) umc";
+                    $query["orderby"] = "umc {$order}";
+                    $query["groupby"] = "{$wpdb->posts}.ID";
+                    return $query;
+                });
+
+            case "author":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    global $wpdb;
+                    $query["join"] .= " LEFT JOIN {$wpdb->users} author ON author.ID = {$wpdb->posts}.post_author";
+                    $query["orderby"] = "author.display_name $order";
+                    return $query;
+                });
+
+            case "terms_name":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    global $wpdb;
+                    $query["join"] .= " JOIN {$wpdb->term_relationships} o_tr ON o_tr.object_id = {$wpdb->posts}.ID";
+                    $query["join"] .= " JOIN {$wpdb->terms} o_t ON o_t.term_id = o_tr.term_taxonomy_id";
+                    $query["join"] .= " JOIN {$wpdb->term_taxonomy} o_tt ON o_tt.term_taxonomy_id = o_tr.term_taxonomy_id AND o_tt.taxonomy = '{$orderby[1]}'";
+                    $query["orderby"] = "o_t.name $order";
+                    return $query;
+                });
+
+            case "meta_count":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    global $wpdb;
+                    $query["join"] .= " LEFT JOIN {$wpdb->postmeta} o_mc ON o_mc.meta_key = '{$orderby[1]}' AND o_mc.post_id = {$wpdb->posts}.ID";
+                    $query["fields"] .= ", count(o_mc.meta_value) o_mc_count";
+                    $query["orderby"] = "o_mc_count {$order}";
+                    $query["groupby"] = "{$wpdb->posts}.ID";
+                    return $query;
+                });
+
+            case "comments_count":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    global $wpdb;
+                    $query["join"] .= " LEFT JOIN {$wpdb->comments} o_coms ON o_coms.comment_post_ID = {$wpdb->posts}.ID";
+                    $query["fields"] .= ", count(o_coms.comment_ID) o_coms_count";
+                    $query["orderby"] = "o_coms_count {$order}";
+                    $query["groupby"] = "{$wpdb->posts}.ID";
+                    return $query;
+                });
+
+            // ========== RELATIONS ========== //
+            case "relation_title":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    global $wpdb;
+                    $query["join"] .= " LEFT JOIN {$wpdb->postmeta} rel ON rel.meta_key = '{$orderby[1]}' AND rel.post_id = {$wpdb->posts}.ID";
+                    $query["join"] .= " LEFT JOIN {$wpdb->posts} rel_post ON rel.meta_value = rel_post.ID";
+                    $query["orderby"] = "rel_post.post_title $order";
+                    return $query;
+                });
+
+            case "relations_count":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    global $wpdb;
+                    $query["join"] .= " LEFT JOIN {$wpdb->postmeta} rm ON rm.meta_key = '{$orderby[2]}' AND rm.meta_value = {$wpdb->posts}.ID";
+                    $query["join"] .= " LEFT JOIN {$wpdb->posts} rp ON rp.ID = rm.post_id AND rp.post_type = '{$orderby[1]}'";
+                    $query["fields"] .= ", count(rp.ID) rc";
+                    $query["orderby"] = "rc {$order}";
+                    $query["groupby"] = "{$wpdb->posts}.ID";
+                    return $query;
+                });
+            case "relation_username":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    global $wpdb;
+                    $query["join"] .= " LEFT JOIN {$wpdb->postmeta} rel ON rel.meta_key = '{$orderby[1]}' AND rel.post_id = {$wpdb->posts}.ID";
+                    $query["join"] .= " LEFT JOIN {$wpdb->users} rel_user ON rel.meta_value = rel_user.ID";
+                    $query["orderby"] = "rel_user.display_name $order";
+                    return $query;
+                });
+            case "relation_terms_name":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    global $wpdb;
+                    $query["join"] .= " LEFT JOIN {$wpdb->postmeta} rel ON rel.meta_key = '{$orderby[1]}' AND rel.post_id = {$wpdb->posts}.ID";
+                    $query["join"] .= " JOIN {$wpdb->term_relationships} o_tr ON o_tr.object_id = rel.meta_value";
+                    $query["join"] .= " JOIN {$wpdb->terms} o_t ON o_t.term_id = o_tr.term_taxonomy_id";
+                    $query["join"] .= " JOIN {$wpdb->term_taxonomy} o_tt ON o_tt.term_taxonomy_id = o_tr.term_taxonomy_id AND o_tt.taxonomy = '{$orderby[2]}'";
+                    $query["orderby"] = "o_t.name $order";
+                    return $query;
+                });
+            case "relation_meta_value":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    global $wpdb;
+                    $orderby[2] = implode(":", array_slice($orderby, 2));
+                    $query["join"] .= " LEFT JOIN {$wpdb->postmeta} rel ON rel.meta_key = '{$orderby[1]}' AND rel.post_id = {$wpdb->posts}.ID";
+                    $query["join"] .= " JOIN {$wpdb->postmeta} rel_meta ON rel_meta.meta_key = '{$orderby[2]}' AND rel_meta.post_id = rel.meta_value";
+                    $query["orderby"] = "rel_meta.meta_value $order";
+                    return $query;
+                });
+            default:
+                return parent::order($orderby, $order);
+        }
+    }
+
     // ==================================================
     // > TRANSLATIONS
     // ==================================================
@@ -463,7 +595,10 @@ abstract class PostsModel extends Model
      */
     public static function isTranslated()
     {
-        if (!function_exists("pll_is_translated_post_type")) return false;
+        if (!function_exists("pll_is_translated_post_type")) {
+            return false;
+        }
+
         return pll_is_translated_post_type(static::TYPE);
     }
 
@@ -491,7 +626,7 @@ abstract class PostsModel extends Model
             "post-formats"    => static::HAS_POSTFORMATS,
         ]));
 
-        $rewrite = static::CUSTOMPATH ? ["slug" => static::CUSTOMPATH] : static::HAS_PAGE;
+        $rewrite = static::CUSTOMPATH ? ["slug" => static::CUSTOMPATH]: static::HAS_PAGE;
 
         register_post_type(static::TYPE, [
             "label"               => static::LABEL,

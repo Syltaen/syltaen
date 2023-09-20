@@ -34,6 +34,17 @@ class Comment extends ModelItem
     }
 
     /**
+     * Add a new meta value to a multi-value meta
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function addMeta($key, $value)
+    {
+        return add_comment_meta($this->getID(), $key, $value);
+    }
+
+    /**
      * Remove a post meta
      *
      * @param  string $key    The meta key to remove

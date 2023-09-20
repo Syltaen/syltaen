@@ -149,7 +149,7 @@ class View
     private static function getRenderer()
     {
         if (is_null(static::$renderer)) {
-            static::$renderer = new \Pug\Pug ([
+            static::$renderer = new \Pug\Pug([
                 "extension"          => ".pug",
                 "expressionLanguage" => "php",
 
@@ -257,6 +257,11 @@ class View
             // Localized date format
             "_date"      => function ($format, $date) {
                 return date_i18n($format, strtotime($date));
+            },
+
+            // Excerpt with custom size
+            "_excerpt"   => function ($post, $length = 30, $more = " [&hellip;]") {
+                return $post->post_excerpt ?: wp_trim_words($post->post_content, $length, $more);
             },
 
             // Class modifier(s)

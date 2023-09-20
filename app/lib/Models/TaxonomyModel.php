@@ -11,6 +11,7 @@ class TaxonomyModel extends Model
     const ADMIN_COLS   = true;
     const HIERARCHICAL = true;
     const HAS_PAGE     = false;
+    const IS_UNIQUE    = false;
 
     /**
      * Query arguments used by the model's methods
@@ -120,7 +121,8 @@ class TaxonomyModel extends Model
      *
      * @param int $post_id The post ID
      */
-    function for ($ids) {
+    public function for($ids)
+    {
         $this->filters["object_ids"] = (array) $ids;
         return $this;
     }
@@ -232,15 +234,32 @@ class TaxonomyModel extends Model
      * @param  bool  $all_option Add a "All" option
      * @return Set
      */
-    public function getAsOptions($all_option = false)
+    public function getAsOptions($all_option = false, $hierarchical = false)
     {
         $options = $this->get()->index("slug", "name");
 
-        if ($all_option) {
-            $options = $options->insert(["*" => $all_option === true ? __("All", "syltaen") : $all_option], 0);
+        if ($hierarchical) {
+            $options = $this->getHierarchy()->mapAssoc(fn($i, $option) => static::hierachicalOption($option));
         }
 
         return (array) $options;
+    }
+
+    /**
+     * Return an option with its children, recursively
+     *
+     * @param  Term  $option
+     * @return Set
+     */
+    public static function hierachicalOption($option)
+    {
+        if (empty($option->children)) {
+            return [$option->slug => $option->name];
+        }
+        return [$option->slug => [
+            $option->name,
+            set($option->children)->mapAssoc(fn($i, $suboption) => static::hierachicalOption($suboption)),
+        ]];
     }
 
     /* Update parent method */
@@ -264,7 +283,7 @@ class TaxonomyModel extends Model
     /**
      * Embed children terms in their parents.
      *
-     * @return array
+     * @return Set
      */
     public function getHierarchy()
     {
@@ -272,15 +291,14 @@ class TaxonomyModel extends Model
             return $this->hierarchy;
         }
 
-        $hierarchy = [];
-        $parents   = [];
-        $terms     = $this->get();
-
-        // Index by term_id
-        $terms = $terms->index("term_id");
+        $terms = $this->get();
         if ($terms->empty()) {
-            return [];
+            return set([]);
         }
+
+        $hierarchy = set();
+        $parents   = [];
+        $terms     = $terms->index("term_id");
 
         // Parents index
         foreach ($terms as $term) {
@@ -304,7 +322,8 @@ class TaxonomyModel extends Model
      *
      * @param  WP_Term $term
      * @param  array   $parents
-     * @param  array   $terms
+     * @param  Set     $terms     The currated terms we want
+     * @param  Set     $all_terms All the possible terms, in case some parents are missing
      * @return void
      */
     private static function hierarchyAddTermChildren(&$term, $parents, $terms)
@@ -526,10 +545,11 @@ class TaxonomyModel extends Model
     /**
      * Use a specific post model to recalculate term counts
      *
-     * @param  PostsModel $model
+     * @param  PostsModel $model        The post model to use
+     * @param  bool       $add_children Should the children terms be included in the count
      * @return self
      */
-    public function withCountsFor($model)
+    public function withCountsFor($model, $add_children = true)
     {
         // Clone the model and clean it
         $model = (clone $model)->limit(-1)->page(0)->order("date")->clearQueryModifiers("order");
@@ -541,7 +561,7 @@ class TaxonomyModel extends Model
             }));
         }
 
-        // Keep only the IDs
+        // Keep only the IDs of the posts
         $ids = $model->getIDs()->join(",");
 
         // No ID : set all count to 0 and skip fetching
@@ -553,20 +573,44 @@ class TaxonomyModel extends Model
         $results = Database::get_results(
             "SELECT count(*) as count, tt.term_id as term_id
            FROM term_relationships tr
-           JOIN term_taxonomy tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = '" . static::getSlug() . "'
+           LEFT JOIN term_taxonomy tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = '" . static::getSlug() . "'
            WHERE tr.object_id IN ({$ids}) GROUP BY tr.term_taxonomy_id
         ")->index("term_id", "count");
 
-        // Register count modifier based on index
+        // Update count field, take children terms into account
         return $this->addFields([
-            "@count" => function ($term) use ($results) {
-                if (empty($results[$term->term_id])) {
-                    return 0;
+            "@count" => function ($term) use ($results, $add_children) {
+                $count = (int) ($results[$term->term_id] ?? 0);
+
+                if ($add_children) {
+                    $children = $term->getModel()->getChildrenList();
+                    foreach ($children[$term->term_id] ?? [] as $child) {
+                        $count += (int) ($results[$child] ?? 0);
+                    }
                 }
 
-                return (int) $results[$term->term_id];
+                return $count;
             },
         ])->fetchFields("count");
+    }
+
+    /**
+     * Make a list of all the parents and their children,
+     *
+     * @return array
+     */
+    public function getChildrenList()
+    {
+        if (isset($this->parentsList)) {
+            return $this->parentsList;
+        }
+
+        $this->parentsList = [];
+        foreach ($this->cachedQuery->terms as $term) {
+            $this->parentsList[$term->parent][] = $term->term_id;
+        }
+
+        return $this->parentsList;
     }
 
     // ==================================================
@@ -645,6 +689,11 @@ class TaxonomyModel extends Model
             "hierarchical"       => static::HIERARCHICAL,
             "description"        => static::DESC,
             "rewrite"            => static::HAS_PAGE,
+            "meta_box_cb"        => static::IS_UNIQUE ? function () {
+                $args    = func_get_args();
+                $filters = Text::output(fn() => post_categories_meta_box(...$args));
+                echo str_replace('type="checkbox"', 'type="radio"', $filters);
+            } : null,
         ]);
 
         return static::class;
@@ -718,7 +767,7 @@ class TaxonomyModel extends Model
     {
         $term = wp_insert_term($name, static::getSlug(), $attrs);
 
-        if ($term instanceof \WP_Error || empty($term["term_id"])) {
+        if ($term instanceof \WP_Error  || empty($term["term_id"])) {
             return $term;
         }
 

@@ -72,6 +72,19 @@ class File
     }
 
     /**
+     * Get the background-image preview of a file
+     *
+     * @return void
+     */
+    public function getPreview()
+    {
+        if ($this->isImage()) {
+            return $this->bg();
+        }
+        return "";
+    }
+
+    /**
      * Get this file's url
      *
      * @return string

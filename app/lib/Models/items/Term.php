@@ -188,6 +188,17 @@ class Term extends ModelItem
         return $model->clearFilters()->isMaybe($parents);
     }
 
+    // /**
+    //  * Get the full path of a hierarchical term
+    //  *
+    //  * @param  string   $join
+    //  * @return string
+    //  */
+    // public function getPath($join = " > ")
+    // {
+    //     return $this->getAncestors()->getNames()->join($join);
+    // }
+
     /**
      * Delete a single user
      *
