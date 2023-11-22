@@ -35,6 +35,15 @@
         @media #{$query}
             @content
 
+
+=breakpoints
+    @each $bp, $bp_data in $responsive
+        $suffix: ""
+        @if breakpoint($bp) != null
+            $suffix: "-#{$bp}"
+        @content($suffix, $bp)
+
+
 =screen-suffixes
     @each $bp, $bp_data in $responsive
         +screen($bp)

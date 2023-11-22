@@ -5,7 +5,7 @@ namespace Syltaen;
 class ArchiveProcessor extends DataProcessor
 {
     /**
-     * Défis - Liste complète avec filtres
+     * Archive of news
      *
      * @return void
      */
@@ -15,7 +15,7 @@ class ArchiveProcessor extends DataProcessor
 
         // Add filters
         $this->filter()
-            ->addSelectTaxonomy(new NewsTaxonomy)
+            ->addTaxonomy(new NewsTaxonomy)
             ->addSelect("ordre", __("Trier par", "syltaen"), array_merge(
                 ["date" => __("Chronologique", "syltaen"), "title" => __("Alphabétique", "syltaen")],
             ), "order", "date")

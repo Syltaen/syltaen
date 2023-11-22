@@ -78,9 +78,14 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
         # Disable requirement if the field is hidden
         if shouldHide
             nfRadio.channel("fields").request("remove:error", field.id, "required-error")
+            nfRadio.channel("fields").request("remove:error", field.id, "email-error")
             field.attributes.required = 0
+            field.attributes.cached_value = field.attributes.value
+            field.attributes.value = if field.attributes.type == "email" then "" else "N/A"
         else
             field.attributes.required = field.attributes.required_base
+            if field.attributes.value == "N/A"
+                field.attributes.value = field.attributes.cached_value || null
 
         return shouldHide
 
@@ -93,6 +98,8 @@ if typeof Marionette isnt "undefined" then new (Marionette.Object.extend(
             when "!=="
                 if a isnt b then return true
             when "in"
+                unless a then return false
+                if a == "N/A" then return false
                 if a.indexOf(b) > -1 then return true
             else
                 if a + "" == b + "" then return true

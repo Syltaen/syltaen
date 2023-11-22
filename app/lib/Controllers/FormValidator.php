@@ -39,6 +39,44 @@ class FormValidator
     }
 
     /**
+     * Make subchoice mandatory
+     *
+     * @return void
+     */
+    private function _subchoice_required()
+    {
+        if (!function_exists("validate_recursive_subchoice")) {
+            /**
+             * @param $options
+             * @param $field
+             */
+            function validate_recursive_subchoice($options, $field)
+            {
+                foreach ($options as $option) {
+                    // If option has sub-options and was selected...
+                    if (is_array($option) && in_array($option[0], $field->value)) {
+                        // Check that at least one sub-option was selected
+                        if (empty(array_intersect(array_keys($option[1]), $field->value))) {
+                            return true;
+                        }
+
+                        // Then check deeper suboptions
+                        if (validate_recursive_subchoice($option[1], $field)) {
+                            return true;
+                        }
+
+                    }
+                }
+                return false;
+            }
+        }
+
+        if (validate_recursive_subchoice($this->form->options[$this->field], $this)) {
+            return "Veulliez faire un choix parmi les sous-options.";
+        }
+    }
+
+    /**
      * Minimum field length
      */
     private function _min($min)

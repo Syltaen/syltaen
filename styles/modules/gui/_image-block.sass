@@ -4,9 +4,31 @@
 
 .image-block
     position: relative
-    padding: spacing(xxs) 0
-    +size(100%)
-    +flex(row)
+    padding: spacing(2) 0
+
+    &--justify-left,
+    &--justify-center,
+    &--justify-right,
+    &--align-start,
+    &--align-center,
+    &--align-end
+        +flex(row)
+
+    &--justify-left,
+    &--justify-center,
+    &--justify-right,
+    &--size-contain,
+    &--size-cover,
+    &--size-fullwidth
+        width: 100%
+
+    &--align-start,
+    &--align-center,
+    &--align-end,
+    &--size-contain,
+    &--size-cover,
+    &--size-fullheight
+        height: 100%
 
     // ==================================================
     // > HALIGN
@@ -36,9 +58,21 @@
     &--size-fullheight img
         +size(auto, 100%)
         max-width: none
-    &--size-contain img
-        +size(100%)
-        object-fit: contain
-    &--size-cover img
-        +size(100%)
-        object-fit: cover
+    &--size-contain
+        img
+            @extend %cover
+            object-fit: contain
+    &--size-cover
+        position: relative
+        img
+            @extend %cover
+            object-fit: cover
+
+    // =============================================================================
+    // > RESPONSIVE
+    // =============================================================================
+    +screen(sm)
+        &--size-contain,
+        &--size-cover
+            img
+                position: static

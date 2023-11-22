@@ -52,7 +52,7 @@ wp plugin install advanced-custom-fields-font-awesome --activate
 wp plugin install duplicate-post --activate
 wp plugin install wp-fastest-cache --activate
 wp plugin install wordpress-seo --activate
-wp plugin install ga-in --activate
+wp plugin install analytics-insights --activate
 wp plugin install cookie-law-info --activate
 wp plugin install acf-extended --activate
 wp plugin install wp-mail-catcher --activate

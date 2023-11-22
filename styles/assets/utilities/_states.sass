@@ -42,12 +42,13 @@
 // ==================================================
 // > RESPONSIVE SHOW/HIDE
 // ==================================================
-+screen-suffixes() using ($suffix, $bp)
-    .show#{$suffix}
-        display: none
-
-    +screen($bp)
++breakpoints() using ($suffix, $bp)
+    @if $suffix != ""
         .show#{$suffix}
-            display: inherit
-        .hide#{$suffix}
             display: none
+
+        +screen($bp)
+            .show#{$suffix}
+                display: inherit
+            .hide#{$suffix}
+                display: none
