@@ -1,26 +1,20 @@
-/*!**************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[2]!./node_modules/sass-loader/dist/cjs.js!./styles/admin.sass ***!
-  \**************************************************************************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./styles/admin.sass ***!
+  \******************************************************************************************************************************************************************************************************************************************/
 @font-face {
   font-family: "Roboto-Light";
-  src: url("../fonts/Roboto-Light.eot");
-  /* IE9 Compat Modes */
-  src: url("../fonts/Roboto-Light.eot?#iefix") format("embedded-opentype"), url("../fonts/Roboto-Light.woff2") format("woff2"), url("../fonts/Roboto-Light.woff") format("woff"), url("../fonts/Roboto-Light.ttf") format("truetype"), url("../fonts/Roboto-Light.svg#svgFontName") format("svg");
-  /* Legacy iOS */
+  src: url("../fonts/Roboto-Light.eot"); /* IE9 Compat Modes */
+  src: url("../fonts/Roboto-Light.eot?#iefix") format("embedded-opentype"), url("../fonts/Roboto-Light.woff2") format("woff2"), url("../fonts/Roboto-Light.woff") format("woff"), url("../fonts/Roboto-Light.ttf") format("truetype"), url("../fonts/Roboto-Light.svg#svgFontName") format("svg"); /* Legacy iOS */
 }
 @font-face {
   font-family: "Roboto-Regular";
-  src: url("../fonts/Roboto-Regular.eot");
-  /* IE9 Compat Modes */
-  src: url("../fonts/Roboto-Regular.eot?#iefix") format("embedded-opentype"), url("../fonts/Roboto-Regular.woff2") format("woff2"), url("../fonts/Roboto-Regular.woff") format("woff"), url("../fonts/Roboto-Regular.ttf") format("truetype"), url("../fonts/Roboto-Regular.svg#svgFontName") format("svg");
-  /* Legacy iOS */
+  src: url("../fonts/Roboto-Regular.eot"); /* IE9 Compat Modes */
+  src: url("../fonts/Roboto-Regular.eot?#iefix") format("embedded-opentype"), url("../fonts/Roboto-Regular.woff2") format("woff2"), url("../fonts/Roboto-Regular.woff") format("woff"), url("../fonts/Roboto-Regular.ttf") format("truetype"), url("../fonts/Roboto-Regular.svg#svgFontName") format("svg"); /* Legacy iOS */
 }
 @font-face {
   font-family: "Roboto-Bold";
-  src: url("../fonts/Roboto-Bold.eot");
-  /* IE9 Compat Modes */
-  src: url("../fonts/Roboto-Bold.eot?#iefix") format("embedded-opentype"), url("../fonts/Roboto-Bold.woff2") format("woff2"), url("../fonts/Roboto-Bold.woff") format("woff"), url("../fonts/Roboto-Bold.ttf") format("truetype"), url("../fonts/Roboto-Bold.svg#svgFontName") format("svg");
-  /* Legacy iOS */
+  src: url("../fonts/Roboto-Bold.eot"); /* IE9 Compat Modes */
+  src: url("../fonts/Roboto-Bold.eot?#iefix") format("embedded-opentype"), url("../fonts/Roboto-Bold.woff2") format("woff2"), url("../fonts/Roboto-Bold.woff") format("woff"), url("../fonts/Roboto-Bold.ttf") format("truetype"), url("../fonts/Roboto-Bold.svg#svgFontName") format("svg"); /* Legacy iOS */
 }
 @-webkit-keyframes spin {
   from {
@@ -989,7 +983,6 @@ body.login #wp-submit {
   font-family: "Roboto-Bold", "Roboto-Regular", "Helvetica", "Arial", sans-serif;
   text-transform: uppercase;
   -webkit-transition: all 0.34s ease;
-  -o-transition: all 0.34s ease;
   transition: all 0.34s ease;
 }
 body.login #wp-submit:hover, body.login #wp-submit:focus {
@@ -1139,7 +1132,6 @@ body.login select:focus {
   width: 300%;
   height: 100%;
   background-image: -webkit-gradient(linear, left top, right top, color-stop(50%, #F8F8F8), color-stop(50%, #FFFFFF));
-  background-image: -o-linear-gradient(left, #F8F8F8 50%, #FFFFFF 50%);
   background-image: linear-gradient(to right, #F8F8F8 50%, #FFFFFF 50%);
   background-size: 10px 100%;
   background-position: 0% 0%;
@@ -1616,7 +1608,6 @@ body.login select:focus {
   opacity: 0;
   visibility: hidden;
   -webkit-transition: all 0.15s ease;
-  -o-transition: all 0.15s ease;
   transition: all 0.15s ease;
 }
 .acf-label-tooltip::before {
@@ -1692,7 +1683,6 @@ body.login select:focus {
   height: 40px;
   opacity: 0.8;
   -webkit-transition: all 0.25s ease;
-  -o-transition: all 0.25s ease;
   transition: all 0.25s ease;
   outline: 0 !important;
   -webkit-box-shadow: none !important;
@@ -1782,7 +1772,6 @@ body.login select:focus {
   background: #111 !important;
 }
 .acf-choice--color .acf-input input[value=section] {
-  background-image: -o-linear-gradient(45deg, #808080 25%, transparent 25%), -o-linear-gradient(135deg, #808080 25%, transparent 25%), -o-linear-gradient(45deg, transparent 75%, #808080 75%), -o-linear-gradient(135deg, transparent 75%, #808080 75%);
   background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%);
   background-size: 20px 20px;
 }
@@ -1920,7 +1909,6 @@ body.login select:focus {
   bottom: -2em;
   z-index: 10;
   -webkit-transition: all 0.35s ease;
-  -o-transition: all 0.35s ease;
   transition: all 0.35s ease;
 }
 .acf-choice--icons .acf-input input[value=column-md]:checked::before, .acf-choice--icons .acf-input input[value=column-reverse-md]:checked::before, .acf-choice--icons .acf-input input[value=column-sm]:checked::before, .acf-choice--icons .acf-input input[value=column-reverse-sm]:checked::before, .acf-choice--icons .acf-input input[value=column-xs]:checked::before, .acf-choice--icons .acf-input input[value=column-reverse-xs]:checked::before {

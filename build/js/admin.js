@@ -63,7 +63,7 @@ module.exports = jQuery;
 /******/ 		        // webpack-livereload-plugin
 /******/ 		        (function() {
 /******/ 		          if (typeof window === "undefined") { return };
-/******/ 		          var id = "webpack-livereload-plugin-script-a396982ba2996ba8";
+/******/ 		          var id = "webpack-livereload-plugin-script-1444225ebfef4065";
 /******/ 		          if (document.getElementById(id)) { return; }
 /******/ 		          var el = document.createElement("script");
 /******/ 		          el.id = id;
