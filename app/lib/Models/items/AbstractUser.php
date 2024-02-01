@@ -102,7 +102,7 @@ abstract class AbstractUser extends ModelItem
     }
 
     /**
-     * Alias for updateRoles()
+     * Alias for setRoles()
      *
      * @param  [type]  $tax
      * @param  boolean $merge
@@ -128,7 +128,7 @@ abstract class AbstractUser extends ModelItem
     }
 
     /**
-     * Alias for updateTaxonomies()
+     * Alias for setTaxonomies()
      *
      * @return void
      */

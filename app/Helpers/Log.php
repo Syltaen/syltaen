@@ -93,7 +93,7 @@ class Log
 
         $connector = \PhpConsole\Connector::getInstance();
         $connector->setDebugDispatcher(new \PhpConsole\Dispatcher\Debug($connector, $dumper));
-        $connector->getDebugDispatcher()->dispatchDebug(static::prepareData(func_get_args()));
+        $connector->getDebugDispatcher()->dispatchDebug(static::prepareData(func_get_args()), static::getBacktrace() . "\n");
     }
 
     /**

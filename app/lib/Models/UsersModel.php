@@ -349,13 +349,13 @@ abstract class UsersModel extends Model
     }
 
     /**
-     * Alias for the updateTaxonomy method
+     * Alias for the setTaxonomy method
      *
      * @param  array  $roles Roles to set
      * @param  bool   $merge Wether to merge or set the values
      * @return self
      */
-    public function updateRoles($roles, $merge = false)
+    public function seteRoles($roles, $merge = false)
     {
         return $this->updateTaxonomies($roles, $merge);
     }

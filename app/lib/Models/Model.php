@@ -226,7 +226,7 @@ abstract class Model implements \Iterator
      *
      * @return mixed
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->cachedResults[$this->iteration_key];
     }
@@ -236,7 +236,7 @@ abstract class Model implements \Iterator
      *
      * @return int
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->iteration_key;
     }

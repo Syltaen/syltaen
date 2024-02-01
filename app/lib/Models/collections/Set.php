@@ -133,11 +133,13 @@ class Set extends \ArrayObject implements \JsonSerializable
     {
         // Get the numerical index where the set should be split
         $index = is_null($position) ? $this->count() : (
-            is_int($position) ? $position
-            // If a string/key is given : try to get its position
-                : (($index = $this->keys()->search($position)) !== false ? $index + 1
-                // Default to the end of the set
-                    : $this->count())
+            is_int($position) ? $position : (
+                // If a string/key is given : try to get its position
+                ($index = $this->keys()->search($position)) !== false ? $index + 1 : (
+                    // Default to the end of the set
+                    $this->count()
+                )
+            )
         );
 
         $this->exchangeArray(array_merge(
@@ -714,7 +716,8 @@ class Set extends \ArrayObject implements \JsonSerializable
      *
      * @return bool
      */
-    function empty() {
+    public function empty()
+    {
         return !$this->count();
     }
 
@@ -804,11 +807,11 @@ class Set extends \ArrayObject implements \JsonSerializable
     {
         $parts = static::getKeyParts($key);
         $array = $this->getArrayCopy();
-        $pos   =  &$array;
+        $pos   = &$array;
 
         foreach ($parts as $part) {
             $pos[$part] = $pos[$part] ?? [];
-            $pos        =  &$pos[$part];
+            $pos        = &$pos[$part];
         }
 
         $pos = $val;

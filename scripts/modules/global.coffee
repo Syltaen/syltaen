@@ -82,6 +82,9 @@ $ ->
     # PASSWORDBOX
     $("input[type='password']").not(".ninja-forms-field, .passwordbox__field").each -> new PasswordBox $(@)
 
+    # AUTO-SUBMIT
+    $("[autosubmit]").change -> $(@).closest("form").submit()
+
     # DOUBLE-SUBMIT PREVENTION
     $(".site-main form").submit (e) ->
         if ($(@).hasClass("is-sending")) then e.preventDefault()

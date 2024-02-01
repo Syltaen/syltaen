@@ -34,6 +34,7 @@ abstract class PostsModel extends Model
     const HAS_REVISIONS      = false;
     const HAS_PAGEATTRIBUTES = false;
     const HAS_POSTFORMATS    = false;
+    const HAS_OWN_RIGHTS     = false;
 
     /**
      * Define if the page should be public or completely hidden
@@ -421,7 +422,10 @@ abstract class PostsModel extends Model
      */
     public function search($search, $include_meta = true, $include_children = false)
     {
-        $search             = trim($search);
+        $search = trim($search);
+        if (empty($search)) {
+            return $this;
+        }
         $this->filters["s"] = $search;
 
         // Clear previous query modifiers tagged with search
@@ -637,6 +641,10 @@ abstract class PostsModel extends Model
             "supports"            => $supports,
             "rewrite"             => $rewrite,
             "has_archive"         => false,
+
+            // Needs to create "edit_posttype" manually
+            // "capability_type"     => static::HAS_OWN_RIGHTS?static::TYPE : "post",
+            // "map_meta_cap"        => static::HAS_OWN_RIGHTS ? true : false,
         ]);
 
         if (!empty(static::TAXONOMIES)) {

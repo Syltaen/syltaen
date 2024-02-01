@@ -19,10 +19,6 @@ class Performances
      */
     public function __construct($optimizations = [])
     {
-        if (wp_doing_ajax()) {
-            return;
-        }
-
         $defaults = [
             "block_external_HTTP"     => false,
             "defer_CSS"               => false,
@@ -50,6 +46,15 @@ class Performances
             "slow_heartbeat"          => true,
             "template_to_index"       => true,
         ];
+
+        // Run only some optimizations when doing ajax
+        if (wp_doing_ajax()) {
+            foreach ($defaults as $method => $value) {
+                if (!in_array($method, ["disable_emoji"])) {
+                    $defaults[$method] = false;
+                }
+            }
+        }
 
         $this->optimize = wp_parse_args($optimizations, $defaults);
         $this->optimize();
