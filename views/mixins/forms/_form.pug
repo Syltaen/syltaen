@@ -2,14 +2,14 @@
 //- > MIXIN : FORM
 //- =============================================================================
 
-mixin form($form)
+mixin form($form, $reactive = false)
 
     if !empty($form["success"])
         .form__success(id="success-".$form["form_id"]."")
             != $form["success"]
 
     else
-        form(method="post")&attributes($attributes)
+        form(method="post" x-data=$reactive?"{}":false x-init=$reactive?"Alpine.\$form(\$data, \$el)":"")&attributes($attributes)
             input(type="hidden" name="honeypot")
             input(type="hidden" name="form_id" value=$form["form_id"])
 

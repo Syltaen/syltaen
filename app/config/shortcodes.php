@@ -21,3 +21,10 @@ add_shortcode("menu", function ($atts, $content = null) {
 add_shortcode("year", function () {
     return Time::current("Y");
 });
+
+// ==================================================
+// > COOKIES
+// ==================================================
+add_shortcode("cookie_table", function () {
+    return do_shortcode("[cky_outside_audit_table]") . '<p><span class="button manage-cookies">' . __("Gérer les cookies", "syltaen") . '</span></p>';
+});

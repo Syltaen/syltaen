@@ -84,7 +84,7 @@ class Admin
         add_filter("posts_clauses", function ($query) use ($screens, $name, $slug, $filters, $filter_callback, $is_multiple) {
             global $wpdb, $current_screen;
             if (empty($current_screen) || !in_array($current_screen->id, (array) $screens)) {
-                return;
+                return $query;
             }
 
             $query["distinct"] = "DISTINCT";

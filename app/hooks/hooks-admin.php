@@ -15,3 +15,6 @@ add_filter("auth_cookie_expiration", function ($duration, $user_id, $remember_me
 
 // Enable infinite scrolling in media library
 add_filter("media_library_infinite_scrolling", "__return_true");
+
+// Remove the admin email verification
+add_filter("admin_email_check_interval", "__return_false");
