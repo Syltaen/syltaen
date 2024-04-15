@@ -115,6 +115,38 @@ class Admin
     }
 
     // =============================================================================
+    // > CUSTOM ADMIN BUTTONS
+    // =============================================================================
+    /**
+     * Add custom buttons to CPT list
+     *
+     * @param  string $cpt_type The CPT slug type
+     * @param  array  $buttons  The list of buttons, with label as key and URL as values
+     * @return void
+     */
+    public static function addCPTButtons($cpt_type, $buttons)
+    {
+        add_action("admin_footer", function () use ($cpt_type, $buttons) {
+            $screen = get_current_screen();
+            if (($screen->id ?? null) != "edit-{$cpt_type}") {
+                return;
+            }
+
+            $buttons = set($buttons)->mapWithKey(function ($url, $label) {
+                return "<a class='page-title-action' href='$url'>$label</a>";
+            })->join("");
+
+            ?>
+                <script type="text/javascript">
+                    jQuery(function ($) {$(".page-title-action").after(
+                        "<?=$buttons?>"
+                    );});
+                </script>
+            <?php
+});
+    }
+
+    // =============================================================================
     // > CUSTOM MENU ITEMS
     // =============================================================================
     /**

@@ -244,6 +244,11 @@ class View
                 return Attachments::getLightItem($id)->tag($size, $class);
             },
 
+            // Include file/image (ex: SVG)
+            "_include"   => function ($file) {
+                include Files::path("build/img/{$file}");
+            },
+
             // Phone number link
             "_tel"       => function ($tel) {
                 return "tel:" . preg_replace("/[^0-9]/", "", $tel);

@@ -62,7 +62,8 @@ abstract class FormProcessor extends DataProcessor
      *
      * @var string
      */
-    protected $global_error_message = "There were some errors with your submission.<br>Please review the form and submit it again.";
+    // protected $global_error_message = "There were some errors with your submission.<br>Please review the form and submit it again.";
+    protected $global_error_message = "Votre soumission comporte des erreurs.<br>Merci de vérifier tous les champs.";
 
     /**
      * Initialization

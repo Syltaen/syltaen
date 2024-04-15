@@ -45,7 +45,7 @@ label,
     cursor: pointer
     margin-bottom: .35em
     display: inline-block
-    &.is-required::after
+    .is-required > &::after
         content: " *"
         +font(error)
     [data-collapsable] > &

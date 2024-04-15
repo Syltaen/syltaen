@@ -1120,7 +1120,7 @@ abstract class Model implements \Iterator
      */
     public function getAsTable($getColumnsData = false)
     {
-        $getColumnsData = $getColumnsData ?: function ($item) {
+        return $this->map($getColumnsData ?: function ($item) {
             return [
                 "ID"     => $item->getID(),
                 "Langue" => $item->getLang(),
@@ -1128,18 +1128,7 @@ abstract class Model implements \Iterator
                 "slug"   => $item->getSlug(),
                 "URL"    => $item->url,
             ];
-        };
-
-        // Map rows
-        $rows = $this->map(function ($result) use ($getColumnsData) {
-            return $getColumnsData($result);
         });
-
-        // Return header and rows
-        return [
-            "header" => array_keys($rows[0]),
-            "rows"   => $rows->map("array_values"),
-        ];
     }
 
     /**
