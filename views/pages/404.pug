@@ -1,0 +1,23 @@
+//- =============================================================================
+//- > VIEW : 404
+//- =============================================================================
+extends _base
+
+//- ==================================================
+//- > INTRO
+//- ==================================================
+block intro_content
+    h1!= __("Erreur 404", "syltaen")
+
+//- ==================================================
+//- > SECTIONS
+//- ==================================================
+block sections
+    section.site-section.bg-white: .container.error404__main
+
+        i.fa.fa-times-circle.error404__icon
+
+        p!= __("Désolé, cette page n'existe pas ou plus.", "syltaen")
+
+        p: a.button(href=$site["url"])
+            != __("Retour à l'accueil", "syltaen")

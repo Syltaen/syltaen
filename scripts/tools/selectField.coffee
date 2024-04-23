@@ -1,10 +1,10 @@
 import $ from "jquery"
 import "select2"
+import en from "select2/src/js/select2/i18n/en"
 
 export default class SelectField
 
     constructor: (@$el, @done = false) ->
-
         @group()
 
         @$el.click()
@@ -17,20 +17,49 @@ export default class SelectField
     # Transform the select with select2
     ###
     select2: () ->
-        if (@$el.data("value") || @$el.data("value") is 0) then @$el.val @$el.data "value"
+        if (@$el.attr("value") || @$el.attr("value") is 0)
+            value = @$el.attr("value")
+            value = if value[0] == "[" then JSON.parse(value) else value
+            @$el.val value
 
-        disabled       = @$el.data "disabled"
-        allowClear     = @$el.data "clearable"
-        appendDropdown = @$el.data "append"
-        noSearch       = @$el.data "nosearch"
+        disabled       = @$el.attr "disabled"
+        allowClear     = @$el.attr "clearable"
+        appendDropdown = @$el.attr "append"
+        noSearch       = @$el.attr "nosearch"
+        autoSubmit     = @$el.attr "autosubmit"
+        tags           = @$el.attr "tags"
+        source         = if @$el.attr("source") then ajaxurl + "?action=options_" + @$el.attr("source") else null
 
-        @$el.select2
+        # Create the field
+        @select2 = @$el.select2
+            language: en
+            data: @getHTMLOptions()
             minimumResultsForSearch: if noSearch then Infinity else 8
-            placeholder: @$el.attr("placeholder") || "Cliquez pour choisir"
+            placeholder: @$el.attr("placeholder") || "Click here to make a choice"
             disabled: disabled
             allowClear: allowClear
+            tags: tags
             dropdownParent: if appendDropdown then @$el.parent() else null
-            theme: false
+            theme: @$el.attr("theme") || false
+
+            # Ajax
+            minimumInputLength: @$el.attr("min-input-length") || 0
+            ajax: unless source then null else
+                url: source
+                dataType: "json"
+                data: (params) =>
+                    params.form = @$el.closest("form").serializeArray()
+                    return params
+
+            ###
+            Allow the use of HTML in options
+            ###
+            escapeMarkup: (markup) ->
+                return markup
+
+        # appendDropdown
+        if appendDropdown
+            @$el.parent().css("position", "relative")
 
 
     ###
@@ -68,3 +97,15 @@ export default class SelectField
         # reset the value
         @$el.val(defaultValue)
 
+    ###
+    # Get the field's options
+    ###
+    getHTMLOptions: ->
+        data = []
+
+        for id, text of @$el.data("options") || {}
+            data.push
+                id: id
+                text: text
+
+        return data

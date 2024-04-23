@@ -1,23 +1,25 @@
 import $ from "jquery"
+import "slick-carousel"
 
 import parallax from "./../tools/parallax.coffee"
-import UploadField from "./../tools/UploadField.coffee"
+import { UploadField, AutoUploadField } from "./../tools/UploadField.coffee"
 import SelectField from "./../tools/SelectField.coffee"
 import PasswordBox from "./../tools/PasswordBox.coffee"
 import ConfirmationModal from "./../tools/ConfirmationModal.coffee"
 import Shadowbox from "./../tools/Shadowbox.coffee"
 
-import "./../tools/jquery.showif.coffee"
+import "./../tools/jquery.if.coffee"
 import "./../tools/jquery.collapsable.coffee"
 import "./../tools/jquery.scrollnav.coffee"
 import "./../tools/jquery.incrementor.coffee"
+import "./../tools/jquery.map.coffee"
+import "./../tools/jquery.siteMessage.coffee"
 
-export default in: ->
+$ ->
 
     # =============================================================================
     # > ANIMATIONS
     # =============================================================================
-
     # INCREMENTOR
     $(".incrementor").each (i, el) -> $(el).incrementor()
 
@@ -25,12 +27,6 @@ export default in: ->
     setTimeout ->
         if parallax then parallax.refresh()
     , 500
-
-    # CONTAINERS DELAY
-    $(".site-main .container").each (i, el) -> if i then $(el).addClass "delay-" + i
-
-    # ANIMATION CLASSES
-    $("p > img, .wp-caption > p").parent("p, .wp-caption").addClass("animation-image image-wrapper")
 
 
     # =============================================================================
@@ -53,6 +49,23 @@ export default in: ->
     # CONFIRM POPUP
     $("[data-confirm]").each -> new ConfirmationModal $(@)
 
+    # SITE MESSAGE
+    $(".site-message").siteMessage()
+
+    # IMAGE SHADOWBOX
+    $("a[href$='.jpg'], a[href$='.png'], a[href$='.gif']").click (e) ->
+        unless $(@).attr("download")
+            e.preventDefault()
+            sb = new Shadowbox().image($(@).attr("href"))
+
+    # MAP
+    $(".map__wrap").each -> $(@).addMap()
+
+    # VIDEO
+    $(".video__play").click ->
+        $(@).closest(".video").addClass("is-started")
+        .find("video").attr("controls", "controls")[0].play()
+
 
     # =============================================================================
     # > FORMS
@@ -69,10 +82,16 @@ export default in: ->
     # PASSWORDBOX
     $("input[type='password']").not(".ninja-forms-field, .passwordbox__field").each -> new PasswordBox $(@)
 
+    # AUTO-SUBMIT
+    $("[autosubmit]").change -> $(@).closest("form").submit()
+
     # DOUBLE-SUBMIT PREVENTION
-    $("form").submit ->
-        $(@).find("button, input[type='submit']").addClass "is-disabled"
-        $(@).submit (e) -> e.preventDefault()
+    $(".site-main form").submit (e) ->
+        if ($(@).hasClass("is-sending")) then e.preventDefault()
+        $(@).addClass "is-sending"
+
+    $("form").change ->
+        $(@).removeClass "is-sending"
 
     # PATTERN
     $("html").on "keyup", "input[data-pattern]", ->
@@ -83,3 +102,6 @@ export default in: ->
             val = val.substr(0, val.length - 1)
 
         $(@).val val
+
+    # CONDITIONAL DISPLAY
+    $("[data-if]").each -> $(@).if $(@).data("if"), $(@).data("if-action")

@@ -1,0 +1,17 @@
+//- =============================================================================
+//- > VIEW MIXIN - ICONS
+//- =============================================================================
+
+mixin icons(icons)
+
+    ul.icons&attributes($attributes)
+        each $icon, $name in $icons
+            li.icons__item
+                a.icons__link(
+                    href=$icon["link"]["url"]
+                    target=$icon["link"]["target"]
+                    title=$icon["link"]["title"]
+                    rel="nofollow"
+                    onclick=$icon["link"]["target"]=="popup"?"window.open('".$icon["link"]["url"]."','popup','width=600,height=600'); return false;":""
+                )
+                    +icon($icon["icon"]).icons__icon

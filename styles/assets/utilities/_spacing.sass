@@ -1,0 +1,50 @@
+// =============================================================================
+// > SPACING
+// =============================================================================
+
+=screen-spacing
+    +screen-suffixes() using ($suffix, $bp)
+        $ratio: spacingratio($bp)
+        @each $sp, $value in $spacing
+            @content($sp, $value * $ratio, $ratio, $suffix, $bp)
+
+=spacing-list($letter, $number, $spacing_property, $spacing_value, $suffix: "")
+    .#{$letter}-#{$number}#{$suffix}
+        #{$spacing_property}: $spacing_value !important
+
+    .#{$letter}t-#{$number}#{$suffix}
+        #{$spacing_property}-top: $spacing_value !important
+
+    .#{$letter}b-#{$number}#{$suffix}
+        #{$spacing_property}-bottom: $spacing_value !important
+
+    .#{$letter}r-#{$number}#{$suffix}
+        #{$spacing_property}-right: $spacing_value !important
+
+    .#{$letter}l-#{$number}#{$suffix}
+        #{$spacing_property}-left: $spacing_value !important
+
+    .#{$letter}x-#{$number}#{$suffix}
+        #{$spacing_property}-left: $spacing_value !important
+        #{$spacing_property}-right: $spacing_value !important
+
+    .#{$letter}y-#{$number}#{$suffix}
+        #{$spacing_property}-top: $spacing_value !important
+        #{$spacing_property}-bottom: $spacing_value !important
+
+// Each spacing, with a base value for each media query.
+// Ex: .mt1
++screen-spacing using ($number, $spacing, $ratio, $suffix, $bp)
+    // Avoid duplicates spacing : .mt1 is the same on lg and md, .mt0 is the same on all breakpoints
+    @if (breakpoint($bp) == null or $ratio != 1) and (breakpoint($bp) == null or $spacing != 0px)
+        +spacing-list("p", $number, "padding", $spacing)
+        +spacing-list("m", $number, "margin", $spacing)
+        // +spacing-list("o", $number, "margin", $spacing * -1)
+
+// Force a different spacing for each breakpoints
+// Ex: .mt3-sm
++screen-spacing using ($number, $spacing, $ratio, $suffix, $bp)
+    @if breakpoint($bp)
+        +spacing-list("p", $number, "padding", $spacing, $suffix)
+        +spacing-list("m", $number, "margin", $spacing, $suffix)
+        // +spacing-list("o", $number, "margin", $spacing * -1, $suffix)

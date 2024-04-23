@@ -1,0 +1,167 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Syltaen\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-29 10:28+0000\n"
+"PO-Revision-Date: 2019-07-29 10:28+0000\n"
+"Last-Translator: Syltaen <stanley.lambot@hungryminds.be>\n"
+"Language-Team: English (UK)\n"
+"Language: en_GB\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.3.0; wp-5.2.2"
+
+#: Controllers/SingleController.php:59
+msgid "Retour"
+msgstr "Back"
+
+#: Controllers/SingleController.php:63
+msgid "Précédent"
+msgstr "Previous"
+
+#: Controllers/SingleController.php:67
+msgid "Suivant"
+msgstr "Next"
+
+#: Controllers/PageController.php:125
+msgid "Recherche pour : "
+msgstr "Search for:"
+
+#: app/Forms/_syltaen_ninjaforms_autoload.php:136
+msgid "Valeurs requises"
+msgstr "Required fields"
+
+#: app/config/shortcodes.php:39
+msgid "Adresse e-mail"
+msgstr "E-mail address"
+
+#: app/config/shortcodes.php:40
+msgid "Mot de passe #reset#"
+msgstr "Password #reset#"
+
+#. > 404.pug;
+#: app/lang/view-strings.php:11
+#: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:476
+msgid "Erreur 404"
+msgstr "Error 404"
+
+#: app/lang/view-strings.php:12
+#: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:488
+msgid "Cette page n'existe pas"
+msgstr "This page does not exist"
+
+#: app/lang/view-strings.php:13
+#: app/cache/pug-php/MYwP8D7z78IhSJwOFb2vgqzM3bjBJ9RFW5ttLEgei_o.php:500
+msgid "Retour à l'accueil"
+msgstr "Back to the homepage"
+
+#. > _card-news.pug;
+#: app/lang/view-strings.php:17
+#: app/cache/pug-php/iRSob5JvPI4qG-xzGMZecd4ZaHfbTa5SOLk4Q47N8vw.php:440
+#: app/cache/pug-php/axcrJjKVZshFGNNpT5Uva2CU5jXAPvP-EMuuKd3qyUE.php:745
+msgid "Lire plus"
+msgstr "Read more"
+
+#. > search.pug;
+#. > _base.pug;
+#: app/lang/view-strings.php:21
+msgid "Recherche"
+msgstr "Search"
+
+#: app/lang/view-strings.php:22
+msgid "Modifier votre recherche"
+msgstr "Update your search"
+
+#: app/Helpers/Pagination.php:137
+msgid "Première page"
+msgstr "First page"
+
+#: app/Helpers/Pagination.php:142
+msgid "Page précédente"
+msgstr "Previous page"
+
+#: app/Helpers/Pagination.php:147
+msgid "Page suivante"
+msgstr "Next page"
+
+#: app/Helpers/Pagination.php:152
+msgid "Dernière page"
+msgstr "Last page"
+
+#: app/Helpers/Pagination.php:155
+#, php-format
+msgid "Page %s sur %s"
+msgstr "Page %s of %s"
+
+#: app/Forms/MergeTags/MergeTagsUser.php:21
+msgid "Utilisateur site"
+msgstr "Website user"
+
+#: app/Forms/Actions/ActionRegisterUser.php:34
+msgid "Inscription utilisateur"
+msgstr "User registration"
+
+#: app/Forms/Fields/FieldAdvancedListSelect.php:13
+msgid "Choisir (avancé)"
+msgstr "Choice (advanced)"
+
+#: app/Forms/Fields/FieldFileUpload.php:40
+msgid "Types de fichiers authorisés"
+msgstr ""
+
+#: app/Forms/Fields/FieldFileUpload.php:44
+msgid "Une liste d\\'extensions de fichiers, séparées par des virgules."
+msgstr ""
+
+#: app/Forms/Fields/FieldFileUpload.php:66
+msgid "Renseigner un nombre très grand pour ne pas mettre de limite"
+msgstr ""
+
+#: app/Forms/Fields/FieldFileUpload.php:75
+msgid "Données sauvées"
+msgstr ""
+
+#: app/Forms/Fields/FieldFileUpload.php:100
+msgid "Ne cocher que si c'est nécéssaire"
+msgstr ""
+
+#: app/hooks/actions/_actions-users.php:12
+msgid "Votre adresse e-mail ou votre mot de passe est incorrect."
+msgstr "Your email address or your password is incorrect."
+
+#: app/hooks/actions/_actions-users.php:13
+msgid "Mot de passe perdu ?"
+msgstr "Lost password?"
+
+#: app/hooks/actions/_actions-users.php:13
+msgid "Demander un nouveau mot de passe"
+msgstr "Ask for a new password"
+
+#: app/hooks/actions/_actions-users.php:32
+msgid "Votre compte doit être validé pour pouvoir vous connecter."
+msgstr "Your account must be activated before you can log in."
+
+#. Name of the theme
+msgid "Syltaen"
+msgstr "Syltaen"
+
+#. Description of the theme
+msgid ""
+"MVC framework and boilerplate for every Hungry Mind's WordPress projects"
+msgstr ""
+"MVC framework and boilerplate for every Hungry Mind's WordPress projects"
+
+#. URI of the theme
+msgid "https://github.com/Syltaen/syltaen"
+msgstr "https://github.com/Syltaen/syltaen"
+
+#. Author of the theme
+msgid "Stanley Lambot (Hunrgy Minds)"
+msgstr "Stanley Lambot (Hunrgy Minds)"
+
+#. Author URI of the theme
+msgid "http://www.stanleylambot.be"
+msgstr "http://www.stanleylambot.be"

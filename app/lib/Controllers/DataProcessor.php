@@ -2,59 +2,70 @@
 
 namespace Syltaen;
 
+use AllowDynamicProperties;
+
+#[AllowDynamicProperties]//;
 abstract class DataProcessor
 {
     /**
      * A reference to the controller using the processor
      *
-     * @var boolean
+     * @var PageController
      */
-    protected $controller = false;
+    protected $controller;
+
+    /**
+     * Store the local data that needs processing
+     *
+     * @var Set
+     */
+    public $data;
 
     /**
      * Initialization
      *
      * @param boolean $controller
      */
-    public function __construct(&$controller = false) {
+    public function __construct($data = [], &$controller = false)
+    {
         $this->controller = $controller;
+        $this->data       = set($data);
     }
 
-
     /**
-     * Process a set of data and return the result
+     * Set the controller after initialization
      *
-     * @param mixed $data
-     * @return mixed
+     * @param  Controller $controller
+     * @return self
      */
-    public function process($raw)
+    public function setController(&$controller)
     {
-        throw new \Exception("This " . __CLASS__ . " does not implement process()", 1);
-        return false;
+        $this->controller = $controller;
+        return $this;
     }
 
+    /**
+     * Add data to the context
+     *
+     * @return array of data
+     */
+    public function addData($array, $post_id = null)
+    {
+        return $this->data->store((array) $array, $post_id);
+    }
 
     /**
-     * Process each item of an array and return the result array
+     * Get the context
      *
-     * @param mixed $item
+     * @param  string  $key
      * @return mixed
      */
-    public function processEach($raw)
+    public function getData($key = false)
     {
-        $proccessed = [];
-
-        if (empty($raw)) return [];
-
-        foreach ($raw as $rawItem) {
-            $item = $this->process($rawItem);
-
-            // Only include the result if it is valid
-            if ($item) {
-                $proccessed[] = $item;
-            }
+        if ($key) {
+            return $this->data[$key];
         }
 
-        return $proccessed;
+        return $this->data;
     }
 }

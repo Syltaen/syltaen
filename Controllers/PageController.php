@@ -4,7 +4,6 @@ namespace Syltaen;
 
 class PageController extends BaseController
 {
-
     /**
      * Handle context & rendering for content pages
      *
@@ -12,37 +11,47 @@ class PageController extends BaseController
      */
     public function page()
     {
-        $this->addData([
-            "intro_content",
-            "(img:url) intro_bg",
-
-            "@sections" => (new SectionsProcessor($this))->processEach(Data::get("sections")),
-        ]);
-
-
+        $this->data["sections"] = $this->processSections();
         $this->render();
     }
 
-
     /**
-     * Handle context & rendering for the homepage
+     * Store section passed through section processor
      *
-     * @return void
+     * @param  string $acf_key
+     * @return Set
      */
-    public function home()
+    public function processSections($acf_key = "sections")
     {
-        $this->addData([
+        return set(Data::get($acf_key, null, []))->mapAssoc(function ($i, $section) {
+            $section = (new SectionProcessor($section, $this, $i))->getData();
+            if (isset($section["sections"])) {
+                return (array) $section["sections"];
+            }
 
-        ]);
-
-        $this->render("home");
+            return [uniqid() => $section];
+        });
     }
-
-
 
     // ==================================================
     // > SPECIAL PAGES
     // ==================================================
+    /**
+     * Display a really simple page with a custom text
+     *
+     * @param  [type] $content
+     * @return void
+     */
+    public function simplePage($content)
+    {
+        $this->data["content"] = [[
+            "acf_fc_layout" => "txt",
+            "txt"           => do_shortcode($content),
+            "attrs"         => false,
+        ]];
+
+        $this->render("simple");
+    }
 
     /**
      * Error 404 page display
@@ -53,15 +62,8 @@ class PageController extends BaseController
     {
         global $pagename;
 
-        $this->addData([
-            "@lookfor" => $pagename
-        ]);
-
         // Make sure the error404 is set on the body
-        $this->addBodyClass("page404");
-
-        // Remove the breadcrumb
-        // $this->data["site"]["breadcrumb"] = "";
+        $this->addBodyClass("error404");
 
         // Make sure the correcet header is set
         status_header("404");
@@ -71,32 +73,18 @@ class PageController extends BaseController
     /**
      * Display a form
      *
-     * @param int $form_id The ID of the form to display
+     * @param  int    $form_id The ID of the form to display
      * @return void
      */
     public function ninjaFormPreview()
     {
-        $this->addData([
-            "@sections"      => [[
-                "classes" => "lg-padding-vertical",
-                "attr"    => "",
-                "content" => [[
-                    "acf_fc_layout" => "columns",
-                    "columns"       => [[
-                        "txt" => "[ninja_form id=".$this->args[0]."]"
-
-                    ]]
-                ]]
-            ]],
-        ]);
-
-        $this->render();
+        $this->simplePage("[ninja_form id=" . $this->args[0] . "]");
     }
 
     /**
      * Search results page
      *
-     * @param string $search Terms to search for
+     * @param  string $search Terms to search for
      * @return output HTML
      */
     public function search($search = false)
@@ -104,30 +92,34 @@ class PageController extends BaseController
         $search = $search ?: $this->args["search"];
 
         $models_to_search = [
-            new Pages
+            new Pages,
+            new News,
         ];
 
         $this->data["results"] = [];
         $total_results_count   = 0;
 
         foreach ($models_to_search as $model) {
+            $posts = $model->search($search)->get();
+            $count = $model->count();
+            if (!$count) {
+                continue;
+            }
+
             $this->data["results"][$model::TYPE] = [
-                "posts" => $model->search($search)->get(),
-                "count" => $model->count(),
-                "label" => $model::LABEL
+                "posts" => $posts,
+                "count" => sprintf(_n("1 résultat", "%s résultats", $count, "syltaen"), $count),
+                "label" => $model::LABEL,
             ];
-            $total_results_count += $model->count();
+            $total_results_count += $count;
         }
 
-        $total_results_count = $total_results_count > 1 ? $total_results_count." résultats" : ($total_results_count < 1 ? "Pas de résultat" : "Un seul résultat");
-
         $this->addData([
-            "@title"       => __("Recherche pour : ", "syltaen")." <span class='search-page__title__words'>$search</span><br><small>$total_results_count</small>",
-            "@search"      => $search
+            "@title"  => __("Recherche pour : ", "syltaen") . " <strong'>$search</strong>",
+            "@search" => $search,
         ]);
 
         $this->addBodyClass("search-page");
         $this->render("search");
     }
-
 }

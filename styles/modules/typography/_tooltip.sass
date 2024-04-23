@@ -11,44 +11,66 @@
     &__message
         +absolute(top 100% left 50%)
         text-transform: none
-        +font(14px text)
-        background: white
+        +font(16px 1.25 white regular center)
+        background: color(primary)
         transform: translate(-50%, 20px)
-        border: 2px dashed color(primary)
-        padding: 20px
+        border-radius: 5px
+        padding: 1em
         z-index: 1000
         opacity: 0
         visibility: hidden
         transition: all .35s ease
         pointer-events: none
-        width: 320px
-        &::after
+        min-width: 380px
+        box-shadow: 0 3px 15px rgba(black, .1)
+        margin: 0
+        &--autowidth
+            min-width: auto
+            white-space: nowrap
+
+        &::before // Safe zone
             content: ""
-            border-bottom: 12px solid color(primary)
-            border-left: 8px solid transparent
-            border-right: 8px solid transparent
+            +size(100%)
+            box-sizing: content-box
+            padding: 20px
+            +absolute(top -20px left -20px)
+            z-index: -1
+        &::after // Arrow
+            content: ""
+            border-bottom: 10px solid color(primary)
+            border-left: 6px solid transparent
+            border-right: 6px solid transparent
             +absolute(bottom 100% left 50%)
             margin-left: -6px
 
     &:hover &__message
         opacity: 1
         visibility: visible
-        transform: translate(-50%, 10px)
+        transform: translate(-50%, 5px)
+        pointer-events: inherit
 
 
     // ==================================================
     // > INFO
     // ==================================================
     &--info
-        background: color(primary)
-        +size(15px)
+        +size(2em)
+        border: 2px solid color(primary)
         border-radius: 50%
-        font-size: 10px
-        line-height: 15px
-        +font(white center)
+        +font(.5 primary center)
         display: inline-block
+        margin-left: 1em
+        vertical-align: middle
+
         &::after
-            +fa(info)
+            +fa(question)
+
+        // &--white
+        //     border-color: white
+        //     +font(white)
+        // &--small
+        //     +size(1.5em)
+        //     +font(.35 1.25em)
 
     // ==================================================
     // > INLINE
@@ -70,9 +92,9 @@
         left: auto
         right: 100%
         &::after
-            border-top: 8px solid transparent
-            border-left: 12px solid color(primary)
-            border-bottom: 8px solid transparent
+            border-top: 4px solid transparent
+            border-left: 6px solid color(primary)
+            border-bottom: 4px solid transparent
             border-right: 0
             bottom: auto
             left: 100%
@@ -89,9 +111,9 @@
         +font(left)
         left: 100%
         &::after
-            border-top: 8px solid transparent
-            border-right: 12px solid color(primary)
-            border-bottom: 8px solid transparent
+            border-top: 4px solid transparent
+            border-right: 6px solid color(primary)
+            border-bottom: 4px solid transparent
             border-left: 0
             bottom: auto
             left: auto
@@ -110,7 +132,7 @@
         bottom: 100%
         &::after
             border-bottom: 0
-            border-top: 12px solid color(primary)
+            border-top: 6px solid color(primary)
             +absolute(top 100% left 50%)
             bottom: auto
 
@@ -122,18 +144,18 @@
     // > COLORS
     // =============================================================================
     @each $color, $value in $colors
-        &--#{$color} &
+        &--#{"" + $color} &
             &__message
-                border-color: $value
+                background: $value
                 &::after
                     border-bottom-color: $value
-        &--#{$color}.tooltip--onleft &__message::after
+        &--#{"" + $color}.tooltip--onleft &__message::after
             border-left-color: $value
             border-bottom-color: transparent
-        &--#{$color}.tooltip--onright &__message::after
+        &--#{"" + $color}.tooltip--onright &__message::after
             border-right-color: $value
             border-bottom-color: transparent
-        &--#{$color}.tooltip--ontop &__message::after
+        &--#{"" + $color}.tooltip--ontop &__message::after
             border-top-color: $value
 
 
@@ -143,16 +165,5 @@
     &--solid &__message
         border-style: solid
     @each $color, $value in $colors
-        &--#{$color}.tooltip--solid &__message
+        &--#{"" + $color}.tooltip--solid &__message
             background: $value
-
-
-
-    // =============================================================================
-    // > SIZES
-    // =============================================================================
-    &--small &__message
-        padding: 5px
-        +font(13px)
-        width: auto
-        white-space: nowrap

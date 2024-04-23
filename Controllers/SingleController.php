@@ -2,11 +2,17 @@
 
 namespace Syltaen;
 
-class SingleController extends BaseController
+class SingleController extends PageController
 {
-
+    /**
+     * @var string
+     */
     public $view = "single";
 
+    /**
+     * @var PostModel
+     */
+    public $model;
 
     /**
      * Populate $this->data
@@ -16,13 +22,13 @@ class SingleController extends BaseController
         parent::__construct($args);
 
         // Use the post type as a method
-        $this->{$this->post->post_type}();
-
-        // Populate & add the post to the context
-        $this->model->populateResultData($this->post);
-        $this->data["post"] = $this->post;
+        if (method_exists($this, $this->post->post_type)) {
+            $this->{$this->post->post_type}();
+            // Populate & add the post to the context
+            $this->post         = new Post($this->post, $this->model);
+            $this->data["post"] = $this->post;
+        }
     }
-
 
     // ==================================================
     // > POST TYPES
@@ -35,10 +41,23 @@ class SingleController extends BaseController
     private function news()
     {
         $this->model = new News;
-        $this->view  = "single-news";
-        $this->addSingleNav("Retour à la liste des news", "/");
+        $this->addSingleNav();
+        $this->data["share"] = SEO::share(["Facebook", "Twitter", "LinkedIn", "Mail"], get_the_permalink(), get_the_title());
+        $this->view          = "single";
     }
 
+    /**
+     * Data and view handling for News
+     *
+     * @return void
+     */
+    private function attachment()
+    {
+        $this->simplePage(
+            "<h2>{$this->post->post_title}</h2>" .
+            wp_get_attachment_image($this->post->ID, "full")
+        );
+    }
 
     // ==================================================
     // > PARTS
@@ -46,28 +65,25 @@ class SingleController extends BaseController
     /**
      * Add data for the navigation between posts
      *
-     * @param string $archive_link_text Text to use for the archive link
-     * @param string $archive_path The slug to the archive, default to post TYPE/REWRITE
      * @return void
      */
-    private function addSingleNav($archive_link_text = false, $archive_path = false)
+    private function addSingleNav()
     {
         $this->addData([
-            "@singlenav"  => [
+            "@singlenav" => [
                 "archive"  => [
-                    "url"  => site_url($archive_path ? $archive_path : ($this->model::CUSTOMPATH ? $this->model::CUSTOMPATH : $this->model::TYPE)),
-                    "text" => $archive_link_text ?: __("Retour", "syltaen")
+                    "url"  => $this->model::getArchiveURL(),
+                    "text" => $this->model::getLabel(),
                 ],
                 "previous" => [
-                    "url"  => get_previous_post() ? get_the_permalink(get_previous_post()->ID): "",
-                    "text" => __("Précédent", "syltaen")
+                    "url"  => get_previous_post() ? get_the_permalink(get_previous_post()->ID) : "",
+                    "text" => __("Previous", "syltaen"),
                 ],
-                "next" => [
-                    "url"  => get_next_post() ? get_the_permalink(get_next_post()->ID): "",
-                    "text" => __("Suivant", "syltaen")
-                ]
-            ]
+                "next"     => [
+                    "url"  => get_next_post() ? get_the_permalink(get_next_post()->ID) : "",
+                    "text" => __("Next", "syltaen"),
+                ],
+            ],
         ]);
     }
-
 }

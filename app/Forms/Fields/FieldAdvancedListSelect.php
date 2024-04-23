@@ -4,6 +4,9 @@ namespace Syltaen;
 
 class FieldAdvancedListSelect extends \NF_Fields_ListSelect
 {
+    /**
+     * @var string
+     */
     protected $_name = "fieldadvancedlistselect";
 
     public function __construct()
@@ -19,12 +22,16 @@ class FieldAdvancedListSelect extends \NF_Fields_ListSelect
             "width"          => "full",
             "group"          => "advanced",
             "value"          => "",
-            "use_merge_tags" => true
+            "use_merge_tags" => true,
         ];
 
-        add_filter("ninja_forms_render_options_". $this->_name, [$this, "filter_options"], 10, 2);
+        add_filter("ninja_forms_render_options_" . $this->_name, [$this, "filter_options"], 10, 2);
     }
 
+    /**
+     * @param $string
+     * @return mixed
+     */
     protected static function applyMergeTag($string)
     {
         return preg_replace_callback('/{([^:{}]*):([^:{}]*)}/', function ($parts) {
@@ -35,7 +42,6 @@ class FieldAdvancedListSelect extends \NF_Fields_ListSelect
                 default:
                     return $parts[0];
             }
-
 
             if ($mt->init()) {
                 return $mt->{$parts[2]}();
@@ -48,7 +54,7 @@ class FieldAdvancedListSelect extends \NF_Fields_ListSelect
     /**
      * Apply merge tags to a value
      *
-     * @param [type] $settings
+     * @param  [type] $settings
      * @return void
      */
     protected static function getDefault($settings)
@@ -62,22 +68,23 @@ class FieldAdvancedListSelect extends \NF_Fields_ListSelect
     /**
      * Add all commune to the options
      *
-     * @param [type] $options
-     * @param [type] $settings
+     * @param  [type] $options
+     * @param  [type] $settings
      * @return void
      */
     public function filter_options($options, $settings)
     {
-
         // ========== DEFAULT VALUE WITH MERGE TAGS ========== //
         $default_value = static::getDefault($settings);
 
         // ========== POPULATE OPTIONS ========== //
         foreach ($options as &$option) {
-            if ($option["value"] == $default_value) $option["selected"] = true;
+            if ($option["value"] == $default_value) {
+                $option["selected"] = true;
+            }
+
         }
 
         return $options;
     }
-
 }

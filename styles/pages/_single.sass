@@ -5,53 +5,45 @@
 .single
 
     // ==================================================
+    // > LAYOUT
+    // ==================================================
+    &__aside
+        flex: 2
+    &__main
+        flex: 3
+
+    // ==================================================
     // > NAV
     // ==================================================
-    &__nav
-        padding: 10px 0
+    &__category
+        +font(22px bold primary)
+        &:hover
+            +font(secondary)
 
-        &--top
-            border-bottom: 1px solid color(medium-grey)
-        &--bottom
-            border-top: 1px solid color(medium-grey)
+    &__date
+        +font(22px regular)
+        &::before
+            content: " – "
 
-        &__archive
-            +font(16px)
-
-        &__prev,
-        &__next
-            float: right
-            +font(20px 44px medium black)
-            transition: all .25s ease
-            &::before
-                +fa(angle-right)
-                +font(20px 30px center primary)
-                +size(30px)
-                border: 1px solid color(primary)
-                border-radius: 50%
-                margin: 3px 5px
-                float: left
-                transition: all .25s ease
+    // ==================================================
+    // > SHARE
+    // ==================================================
+    &__share
+        +flex(row nowrap, space-between, center)
+        margin-top: 1em
+        &__title
+            +font(20px)
+        &__icons
+            justify-content: flex-start
+        &__icons .icons__link
+            +font(20px secondary)
             &:hover
-                +font(primary)
-                &::before
-                    background: color(primary)
-                    color: color(white)
-
-        &__prev::before
-            +fa(angle-left)
-            float: right
-
-
-    // ==================================================
-    // > CONTENT
-    // ==================================================
-    &__content
-        padding: 40px 0
+                background: none
+                +font(ternary)
 
     // =============================================================================
-    // > TYPES
+    // > CONTENT TYPE
     // =============================================================================
-
-    /* NEWS */
     // &-news &
+    //     &__aside
+    //         flex: 1

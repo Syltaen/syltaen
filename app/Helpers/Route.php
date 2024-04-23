@@ -7,8 +7,8 @@ abstract class Route
     /**
      * Launch a controller method or a function with some arguments
      *
-     * @param [type] $resp
-     * @param boolean $args
+     * @param  [type]  $resp
+     * @param  boolean $args
      * @return void
      */
     public static function respond($resp, $args = false, $same_session_page = false)
@@ -23,11 +23,10 @@ abstract class Route
 
         // Class method call
         if (is_string($resp)) {
-
             // Extracts method
             $method = false;
             if (preg_match('/(.*)::(.*)/', $resp, $keys)) {
-                $resp = $keys[1];
+                $resp   = $keys[1];
                 $method = $keys[2];
             }
 
@@ -54,6 +53,10 @@ abstract class Route
     // ==================================================
     // > RULES
     // ==================================================
+    /**
+     * @param $resp
+     * @param array   $args
+     */
     public static function any($resp, $args = [])
     {
         if ($resp) {
@@ -65,30 +68,35 @@ abstract class Route
     /**
      * Custom route defined in app/config/route.php
      *
-     * @param string $key The key set for the route
-     * @param mix $resp The response to use
-     * @param array $args Arguments for the response
+     * @param  string|array $routename The key set for the route
+     * @param  mix          $resp      The response to use
+     * @param  array        $args      Arguments for the response
      * @return void
      */
-    public static function custom($key, $resp, $args = [])
+    public static function custom($routename, $resp, $args = [])
     {
-        if (!static::qVar("custompage")) return false;
-        if (static::qVar("custompage") != $key) return false;
+        if (!static::qVar("custompage")) {
+            return false;
+        }
+
+        if (!in_array(static::qVar("custompage"), (array) $routename)) {
+            return false;
+        }
 
         // Process arguments
         $clean_args = [];
         $i          = 0;
-        foreach ($args as $key=>$arg) {
-
+        foreach ($args as $key => $arg) {
             // Default values
             if (is_string($key) && !static::qVar("arg$i")) {
                 $clean_args[$key] = $arg;
 
             } else {
-
                 // Default value set, but not used.
                 // So fallback to get the query var
-                if (is_string($key)) $arg = $key;
+                if (is_string($key)) {
+                    $arg = $key;
+                }
 
                 // Should be now
                 $clean_args[$arg] = static::qVar("arg$i");
@@ -107,25 +115,30 @@ abstract class Route
     /**
      * Check is one or several queryStrings are defined and trigger a response
      *
-     * @param string|$query $query_strings
-     * @param boolean|string|callable $resp
-     * @param array $args
+     * @param  string|$query           $query_strings
+     * @param  boolean|string|callable $resp
+     * @param  array                   $args
      * @return void
      */
     public static function query($query_strings, $resp = false, $args = [])
     {
-        $query_values  = [];
+        $query_values = [];
 
         if (is_array($query_strings)) {
             foreach ($query_strings as $query_string) {
-                if (!isset($_GET[$query_string])) return false;
+                if (!isset($_GET[$query_string])) {
+                    return false;
+                }
+
                 $query_values[] = $_GET[$query_string];
             }
         } else {
-            if (!isset($_GET[$query_strings])) return false;
+            if (!isset($_GET[$query_strings])) {
+                return false;
+            }
+
             $query_values = $_GET[$query_strings];
         }
-
 
         if ($resp) {
             static::respond($resp, array_merge((array) $query_values, $args));
@@ -134,13 +147,12 @@ abstract class Route
         return $query_values;
     }
 
-
     /**
      * Test one of WordPress own rooting condition and trigger a response
      *
-     * @param string $condition
-     * @param boolean $resp
-     * @param array $args
+     * @param  string    $condition
+     * @param  boolean   $resp
+     * @param  array     $args
      * @return boolean
      */
     public static function is($condition, $resp = false, $args = null)
@@ -155,8 +167,8 @@ abstract class Route
                 $argument  = $parts[2];
             }
 
-            $condition = "is_".$condition;
-            if ($condition($argument)) {
+            $condition = "is_" . $condition;
+            if (function_exists($condition) && $condition($argument)) {
                 if ($resp) {
                     static::respond($resp, $args);
                 }
@@ -166,6 +178,18 @@ abstract class Route
         return false;
     }
 
+    /**
+     * Website is in maintenance mode
+     *
+     * @param  boolean $resp
+     * @return void
+     */
+    public static function maintenance($resp = false)
+    {
+        if (Data::get("maintenance_mode", "option") && !current_user_can("administrator")) {
+            static::respond($resp);
+        }
+    }
 
     // ==================================================
     // > CUSTOM ROUTES
@@ -173,7 +197,7 @@ abstract class Route
     /**
      * Register a new query_var or get its value
      *
-     * @param string|array $keys
+     * @param  string|array $keys
      * @return void
      */
     public static function qVar($keys)
@@ -185,7 +209,6 @@ abstract class Route
 
         // Register
         if (is_array($keys)) {
-
             add_filter("query_vars", function ($query_vars) use ($keys) {
                 return array_unique(array_merge($query_vars, $keys));
             });
@@ -194,52 +217,126 @@ abstract class Route
         return false;
     }
 
-
     /**
      * Register new custom routes
      *
-     * @param string $pattern
-     * @param string $match
+     * @param  string $pattern
+     * @param  string $match
      * @return void
      */
     public static function add($patterns, $match = false)
     {
+        global $syltaen_custom_routes;
+        $auto_query_vars       = [];
+        $syltaen_custom_routes = $syltaen_custom_routes ?? [];
 
-        $auto_query_vars = [];
+        foreach ($patterns as $key => $pattern) {
+            // Custom page url : normalize format
+            if (is_string($key)) {
+                $query   = "index.php?(custompage)={$key}";
+                $pattern = array_values((array) $pattern);
 
-        foreach ($patterns as $key=>$pattern) {
+                if (preg_match_all('/\([^\(\)]*\)/', $pattern[0], $args)) {
+                    foreach ($args[0] as $i => $arg) {
+                        $query .= "&(arg$i)=" . '$matches[' . ($i + 1) . ']';
+                    }
+                }
+
+                $syltaen_custom_routes[$key] = $pattern;
+                $pattern                     = [$pattern, $query];
+            }
+
+            // Matches should always be an array
+            $pattern[0] = static::autoTranslateRoute($pattern[0]);
 
             // Auto-register query vars that are inside parenthesis
-            if (
-                is_array($pattern) &&
-                preg_match_all('/\(([^\(\)]*)\)/', $pattern[1], $pattern_query_vars)
-            ) {
+            if (preg_match_all('/\(([^\(\)]*)\)/', $pattern[1], $pattern_query_vars)) {
                 // Add query vars to the auto register
                 $auto_query_vars = array_merge($auto_query_vars, $pattern_query_vars[1]);
-
                 // remove parenthesis from the match
                 $pattern[1] = str_replace(["(", ")"], "", $pattern[1]);
             }
 
-            // Custom page url
-            if (is_string($key)) {
-                $match  = "index.php?custompage=$key";
-                $auto_query_vars[] = "custompage";
-
-                if (preg_match_all('/\([^\(\)]*\)/', $pattern, $args)) {
-                    foreach ($args[0] as $i=>$arg) {
-                        $match            .= "&arg$i=" . '$matches[' . ($i+1) . ']';
-                        $auto_query_vars[] = "arg$i";
-                    }
-                }
-
-                $pattern = [$pattern, $match];
+            foreach ($pattern[0] as $match) {
+                add_rewrite_rule($match, $pattern[1], "top");
             }
-
-            add_rewrite_rule($pattern[0], $pattern[1], "top");
         }
 
         static::qVar($auto_query_vars);
+    }
+
+    /**
+     * Return URL regex matching for CRUD actions
+     *
+     * @param  string  $post_type
+     * @param  string  $archive
+     * @return array
+     */
+    public static function crud($post_type, $archive = false)
+    {
+        $archive = $archive ?: $post_type;
+
+        return [
+            $archive . '/([^\/]+)/([0-9a-z-]+)?/?$',
+            'index.php?name=$matches[1]&post_type=' . $post_type . '&(route)=$matches[2]',
+        ];
+    }
+
+    /**
+     * Return URL regex matching for CRUD actions
+     *
+     * @return array
+     */
+    public static function userCrud($archive)
+    {
+        return [
+            [
+                $archive . '([^\/]+)/?$',
+                'index.php?author_name=$matches[1]&(route)=display',
+            ],
+            [
+                $archive . '([^\/]+)/([0-9a-z-]+)?/?$',
+                'index.php?author_name=$matches[1]&(route)=$matches[2]',
+            ],
+        ];
+    }
+
+    /**
+     * Get a custom route's URL
+     *
+     * @return string
+     */
+    public static function getCustom($key)
+    {
+        global $syltaen_custom_routes;
+
+        $lang_index = array_search(Lang::getCurrent(), Lang::getList());
+
+        $path = $syltaen_custom_routes[$key][$lang_index] ?? ($syltaen_custom_routes[$key][0] ?? false);
+
+        return site_url(trim($path, "$?^"));
+    }
+
+    /**
+     * Add lang prefixes for routes that have not been translated
+     *
+     * @param  array   $route
+     * @return array
+     */
+    public static function autoTranslateRoute($route)
+    {
+        $langs = Lang::getList();
+        $route = (array) $route;
+
+        // All translations provided
+        if (count($langs) == count($route)) {return $route;}
+
+        foreach ($langs as $i => $lang) {
+            if (!empty($route[$i])) {continue;}
+            $route[$i] = "$lang/{$route[0]}";
+        }
+
+        return $route;
     }
 
     // ==================================================
@@ -248,21 +345,21 @@ abstract class Route
     /**
      * Redirect to a different page
      *
-     * @param string|int $path slug, url or id of the page to redirect to. Default: homepage
+     * @param  string|int $path slug, url or id of the page to redirect to. Default: homepage
      * @return void
      */
-    public static function redirect($path = "")
+    public static function redirect($path = "", $code = 302)
     {
         if (is_string($path)) {
             if (preg_match("~^(?:f|ht)tps?://~i", $path)) {
-                wp_redirect($path);
+                wp_redirect($path, $code);
             } else {
-                wp_redirect(site_url($path));
+                wp_redirect(site_url($path), $code);
             }
         }
 
         if (is_int($path)) {
-            wp_redirect(get_the_permalink($path));
+            wp_redirect(get_the_permalink($path), $code);
         }
 
         exit;
@@ -271,14 +368,17 @@ abstract class Route
     /**
      * Get the full current URL with all its parameters
      *
-     * @param array $query_args
-     * @param boolean $merge
-     * @return string The URL
+     * @param  array   $query_args
+     * @param  boolean $merge
+     * @return string  The URL
      */
     public static function getFullUrl($query_args = [], $merge = true)
     {
         global $wp;
-        if ($merge) $query_args = array_merge($query_args, $_GET);
-        return home_url(add_query_arg($query_args, $wp->request));
+        if ($merge) {
+            $query_args = array_merge($_GET, $query_args);
+        }
+
+        return site_url(add_query_arg($query_args, $wp->request));
     }
 }

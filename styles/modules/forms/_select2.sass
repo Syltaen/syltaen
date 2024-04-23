@@ -3,7 +3,7 @@
 // =============================================================================
 
 // DROPDOWN
-$dropdown-background: $input-background
+$dropdown-background: white
 $dropdown-border: $input-border
 $results-height: 350px
 $option-padding-vertical: 5px
@@ -35,7 +35,8 @@ $tag-remove-hover-color: color(error)
 // > PARTS
 // =============================================================================
 .select2
-    +font(16px $input-height $input-color)
+    +font($input-color)
+    height: $input-height
 
     // ==================================================
     // > CONTAINER
@@ -47,9 +48,13 @@ $tag-remove-hover-color: color(error)
         &--disabled
             opacity: .25
 
-        &--open .select2-selection
+        &--open.select2-container--below .select2-selection
             border-bottom-left-radius: 0px !important
             border-bottom-right-radius: 0px !important
+
+        &--open.select2-container--above .select2-selection
+            border-top-left-radius: 0px !important
+            border-top-right-radius: 0px !important
 
 
     &-hidden-accessible
@@ -69,7 +74,6 @@ $tag-remove-hover-color: color(error)
         z-index: 1051
         border-radius: $dropdown-border-radius
         color: $dropdown-color
-        // overflow: hidden
         &--above
             border-bottom: 0
             border-bottom-left-radius: 0
@@ -78,21 +82,22 @@ $tag-remove-hover-color: color(error)
             border-top: 0
             border-top-left-radius: 0
             border-top-right-radius: 0
+            // box-shadow: 0 -15px 15px rgba(black, .2)
         .select2-container--open &
             left: 0
-
 
     &-results__option
         padding: $option-padding-vertical $input-padding
         user-select: none
-        padding-top: 10px
-        padding-bottom: 10px
         transition: all .4s ease
+        +font(semibold)
 
         &[aria-selected]
             cursor: pointer
         &[aria-selected="true"]
             +font(bold)
+        &[aria-disabled="true"]
+            opacity: 0.25
 
     &-search--dropdown
         display: block
@@ -128,15 +133,22 @@ $tag-remove-hover-color: color(error)
     // ==================================================
     // > SELECTION
     // ==================================================
+    @at-root select
+        appearance: none
+    @at-root select,
     &-selection
         position: relative
         display: block
-        height: $input-height
+        height: $input-height !important
+        width: 100%
         user-select: none
         border: $input-border
         border-radius: $input-border-radius
         background: $input-background
         color: $input-color
+        +font(14px bold)
+
+    &-selection
         &--single
             cursor: pointer
 
@@ -144,6 +156,7 @@ $tag-remove-hover-color: color(error)
             cursor: text
             height: auto
 
+        @at-root select,
         &__rendered
             display: block
             padding: 0 $input-padding
@@ -152,16 +165,16 @@ $tag-remove-hover-color: color(error)
             white-space: nowrap
             line-height: $input-height
 
+        &--multiple &__rendered
+            line-height: $input-height - 4px
+            min-height: $input-height - 2px
+
         &--multiple &__choice
             background-color: $tag-background
             border: $tag-border
             border-radius: $tag-border-radius
             cursor: default
             float: left
-
-            height: $input-height - 10px
-            line-height: $input-height - 10px
-            margin: 3px
             padding: 0 5px
 
             &__remove
@@ -173,7 +186,7 @@ $tag-remove-hover-color: color(error)
                     color: $tag-remove-hover-color
 
         &__placeholder
-            color: #999
+            +font(medium-grey regular)
 
     // ==================================================
     // > SEARCH
@@ -191,7 +204,7 @@ $tag-remove-hover-color: color(error)
             float: left
         &--inline &
             &__field
-                height: $input-height - 2px
+                height: $input-height - 3px
                 border: none
                 padding: 0
                 background: $input-background
@@ -219,3 +232,5 @@ $tag-remove-hover-color: color(error)
         float: right
         font-weight: bold
         margin-right: 20px
+        position: relative
+        z-index: 20

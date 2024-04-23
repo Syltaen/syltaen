@@ -4,13 +4,20 @@ namespace Syltaen;
 
 class FieldRoles extends FieldAdvancedListSelect
 {
+    /**
+     * @var string
+     */
+    protected $_name = "fieldroles";
 
-    protected $_name      = "fieldroles";
+    /**
+     * @var string
+     */
+    protected $_section = "userinfo";
 
-    protected $_section   = "userinfo";
-
-    protected $_icon      = "user";
-
+    /**
+     * @var string
+     */
+    protected $_icon = "user";
 
     public function __construct()
     {
@@ -21,8 +28,8 @@ class FieldRoles extends FieldAdvancedListSelect
     /**
      * Add all commune to the options
      *
-     * @param [type] $options
-     * @param [type] $settings
+     * @param  [type] $options
+     * @param  [type] $settings
      * @return void
      */
     public function filter_options($options, $settings)
@@ -31,13 +38,15 @@ class FieldRoles extends FieldAdvancedListSelect
         $default_value = static::getDefault($settings);
 
         // ========== ADD OPTIONS  ========== //
-        if (!function_exists("get_editable_roles")) require_once ABSPATH . "wp-admin/includes/user.php";
+        if (!function_exists("get_editable_roles")) {
+            require_once ABSPATH . "wp-admin/includes/user.php";
+        }
 
-        foreach (get_editable_roles() as $slug=>$role) {
+        foreach (get_editable_roles() as $slug => $role) {
             $options[] = [
                 "label"    => $role["name"],
                 "value"    => $slug,
-                "selected" => 0
+                "selected" => 0,
             ];
         }
 

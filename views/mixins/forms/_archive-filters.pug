@@ -1,0 +1,50 @@
+//- =============================================================================
+//- > VIEW MIXIN - ARCHIVE FILTERS
+//- =============================================================================
+
+mixin archive-filters(filters)
+
+    - $filters = $filters->process()
+
+    form.archive-filters(method="GET" action=$filters["action"] id="filters")&attributes($attributes)
+
+        for $field, $name in $filters["fields"]
+
+            case $field["type"]
+
+                //- ==================================================
+                //- > TEXT
+                //- ==================================================
+                when "text"
+                    +field-text($filters, $name, $field["label"], $field["attrs"]).archive-filters__set
+
+                //- ==================================================
+                //- > SEARCH
+                //- ==================================================
+                when "search"
+                    +field-text($filters, $name, $field["label"], $field["attrs"]).archive-filters__set
+
+                //- ==================================================
+                //- > SELECT
+                //- ==================================================
+                when "select"
+                    +field-select($filters, $name, $field["label"], $field["attrs"]).archive-filters__set
+                    //- select(name=$field["name"] value=$field["value"] append autosubmit)
+                    //-     each $l, $v in $field["options"]
+                    //-         option(value=$v)!= $l
+
+                //- ==================================================
+                //- > RADIO
+                //- ==================================================
+                when "radio"
+                    +field-radio($filters, $name, $field["label"], "row", $field["attrs"]).archive-filters__set
+
+                //- ==================================================
+                //- > HIDDEN
+                //- ==================================================
+                when "hidden"
+                    +field-hidden($filters, $name)
+
+        .archive-filters__set.archive-filters__set--submit: button.archive-filters__submit.button
+            i.fal.mr-2 &#xf002;
+            != __("Recherche", "syltaen")

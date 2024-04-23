@@ -1,0 +1,15 @@
+//- =============================================================================
+//- > MIXIN : GUI - VIDEO
+//- =============================================================================
+
+mixin video($video, $poster = false, $size = "default", $muted = false)
+
+    .video(class="video--".$size."")&attributes($attributes)
+
+        video(
+            src=\Syltaen\Attachments::getItem($video)->url()
+            poster=$poster?$_img($poster):false
+            muted=$muted
+        )
+
+        .video__play

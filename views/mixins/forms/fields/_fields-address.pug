@@ -1,0 +1,19 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELDS - ADDRESS
+//- =============================================================================
+
+mixin fields-address(form, name = "address", label = false, field_attributes = [])
+
+    if $label
+            label(class=!empty($form["locks"][$name])?"is-locked":"")!= $label
+
+    +field-text($form, $name."[street]", false, array_merge($field_attributes, ["placeholder" => "Street name and number"]))&attributes($attributes)
+
+    .row
+        .gr: +field-text($form, $name."[zip]", false, array_merge($field_attributes, ["placeholder" => "Postcode"]))&attributes($attributes)
+
+        .gr: +field-text($form, $name."[city]", false, array_merge($field_attributes, ["placeholder" => "City"]))&attributes($attributes)
+
+    +field-text($form, $name."[country]", false, array_merge($field_attributes, ["placeholder" => "Country"]))&attributes($attributes)
+
+    block

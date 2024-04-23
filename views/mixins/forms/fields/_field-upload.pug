@@ -1,0 +1,34 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELD - UPLOAD
+//- =============================================================================
+
+mixin field-upload(form, name, label = false, field_attributes = [])
+
+    -
+        $field_attributes = array_merge([
+            "maxupload"  => 8,
+            "attachment" => false,
+            "limit"      => 1,
+            "folder"     => $form["upload_directory"] ?? false
+        ], $field_attributes)
+
+    //- folder, message, attachment=1, maxupload=8, limit = 1, accept = null
+
+    if $form["locks"]->get($name) !== null
+
+        fieldset&attributes($attributes)
+            label.is-locked!= $label
+
+            ul.files-list&attributes($attributes)
+                each $file in $form["locks"]->get($name)
+                    li.files-list__item
+                        +card-file(false, ((array) $file))
+
+
+    else
+        +fieldset($form, $name, $label)&attributes($attributes)
+            input(
+                type="file"
+                name=$name
+                data-value=$form["prefill"]->get($name)
+            )&attributes($field_attributes)

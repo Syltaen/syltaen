@@ -1,0 +1,6 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELD - HIDDEN
+//- =============================================================================
+
+mixin field-hidden(form, name, label = false, field_attributes = false)
+    input(type="hidden" name=$name value=$form["prefill"]->get($name))&attributes($field_attributes)

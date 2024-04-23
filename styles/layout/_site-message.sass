@@ -1,0 +1,55 @@
+// =============================================================================
+// > LAYOUT : SITE MESSAGE
+// =============================================================================
+
+.site-message
+    background: color(primary)
+    +font(bold white center)
+    padding: 20px 40px
+    +fixed(top 0 left 50%)
+    transform: translate(-50%, 0)
+    opacity: 0
+    width: container(md) - 300px
+    z-index: 9999
+    border-radius: 8px
+    transition: all 1s easing(bounce)
+    overflow: hidden
+    visibility: hidden
+
+    &.is-shown
+        transform: translate(-50%, 90px)
+        opacity: 1
+        visibility: visible
+
+    &.is-doomed::after
+        content: ""
+        +absolute(left 0 bottom 0)
+        +size(0, 5px)
+        background: rgba(white, .3)
+        animation: reverse-loading 10s linear
+
+    // ==================================================
+    // > CLOSABLE
+    // ==================================================
+    &__close
+        +font(12px 30px center white)
+        +size(30px)
+        +absolute(top 0 right 0)
+        cursor: pointer
+        text-indent: -9999px
+        &::after
+            +fa(times)
+            @extend %cover
+            text-indent: 0
+
+    // ==================================================
+    // > COLORS
+    // ==================================================
+    &--error
+        background: color(error)
+
+    &--success
+        background: color(success)
+
+    &--info
+        background: color(primary)

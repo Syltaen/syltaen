@@ -3,20 +3,44 @@
 // =============================================================================
 
 .site-header
-
-    padding: 30px 0
-    line-height: 50px
+    padding: 1.5em 0
+    position: relative
+    z-index: 100
 
     // ==================================================
     // > BRAND
     // ==================================================
     &__brand
         display: block
-        height: 50px
-        width: 50px
-        text-indent: -9999em
-        background: img("logo.png") center center / contain no-repeat
+        +font(20px bold uppercase)
 
+    // ==================================================
+    // > SEARCH
+    // ==================================================
+    &__search
+        position: relative
+        &__field
+            border: 0
+            border-bottom: 1px solid #EBEBEB
+            +size(200px, 40px)
+            +font(16px 40px text)
+            padding: 0
+            +placeholder
+                +font(#7F7F7F)
+        &__submit
+            appearance: none
+            background: none
+            border: 0
+            text-indent: -9999em
+            +size(1em)
+            position: relative
+            +font(25px primary)
+            +absolute(bottom 8px left 170px)
+            &::before
+                +fa(search)
+                +font(.75)
+                @extend %cover
+                text-indent: 0
 
     // ==================================================
     // > MAIN MENU
@@ -25,27 +49,34 @@
         +flex(row nowrap, space-around, center)
         position: relative
         z-index: 10
+        margin: 1em -1.5em 0
 
-        li
+        &__item
             position: relative
             z-index: 10
 
-        a
-            +font(18px 38px text)
-            padding: 0 10px
-            &::after
-                content: none !important
+        &__link
+            +font(text)
+            padding: 0 1.5em
             &:hover
                 +font(primary)
 
-        .sub-menu
-            display: none
+        // Sub 1
+        & > &__item > &__sub
+            +absolute(top 100% left 0)
+            transform: translateY(1.5em)
+            background: white
+            padding-bottom: 1em
+            min-width: 300px
+            +flex(column nowrap)
+            visibility: hidden
+            opacity: 0
+            transition: all .35s ease
+        & > &__item > &__sub > &__item
+            white-space: nowrap
+            margin: .5em 0
 
-
-
-    // ========== INDICATOR ========== //
-    &__menu__indicator
-        +absolute(bottom 0 left 0)
-        +size(0, 5px)
-        background: color(primary)
-        transition: all .5s easing(bounce)
+        // Sub display
+        & > &__item:hover > &__sub
+            opacity: 1
+            visibility: visible

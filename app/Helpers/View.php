@@ -4,7 +4,6 @@ namespace Syltaen;
 
 class View
 {
-
     const CACHE = true;
 
     // ==================================================
@@ -14,65 +13,122 @@ class View
     /**
      * Render the provided data
      *
-     * @param string $filename
-     * @param array $data
-     * @param boolean $echo
+     * @param  string        $filename
+     * @param  array         $data
+     * @param  boolean       $echo
      * @return string|null
      */
-    public static function render($filename, $context = false)
+    public static function render($filename, $context = false, $is_main_context = false)
     {
-        return static::getRenderer()->renderFile(
-            static::path($filename),
-            static::prepareContext($context)
+        // Register defual default context and render hooks
+        static::registerHooks();
+
+        if ($is_main_context) {
+            apply_filters("syltaen_render_main_context", $context);
+        }
+
+        return apply_filters("syltaen_render",
+            static::getRenderer()->renderFile(
+                static::path($filename),
+                (array) apply_filters("syltaen_render_context", $context)
+            )
         );
     }
 
+    /**
+     * Register defual default context and render hooks
+     *
+     * @return void
+     */
+    public static function registerHooks()
+    {
+        // Add stuff for the main context
+        add_filter("syltaen_render_main_context", "\Syltaen\View::prepareMainContext");
+
+        // Add helpers
+        add_filter("syltaen_render_context", "\Syltaen\View::addHelpers");
+    }
 
     /**
      * Display a view
      *
      * @return void
      */
-    public static function display($filename, $context = false)
+    public static function display($filename, $context = false, $is_main_context = false)
     {
-        return static::getRenderer()->displayFile(
-            static::path($filename),
-            static::prepareContext($context)
-        );
+        echo static::render($filename, $context, $is_main_context);
     }
 
+    /**
+     * Light render of a pug string
+     *
+     * @return string
+     */
+    public static function parsePug($pug, $context = [])
+    {
+        return static::getRenderer()->render($pug, $context);
+    }
 
     /**
      * Return the HTML view of a WordPress menu
      *
-     * @param string|int $menu Either a menu ID or a menu location
-     * @param string $classes List of classes to add to the menu
-     * @return string HTML output
+     * @param  string|int $menu    Either a menu ID or a menu location
+     * @param  string     $classes List of classes to add to the menu
+     * @return string     HTML output
      */
-    public static function menu($menu, $menu_classes = "", $link_classes = "", $custom_options = [])
+    public static function menu($menu, $menu_classes = "menu", $item_classes = "", $link_classes = "", $custom_options = [], $custom_processing = false)
     {
         $menu = wp_nav_menu(array_merge([
             "menu"           => $menu,
             "theme_location" => is_string($menu) ? $menu : false,
-            "menu_class"     => "menu " . $menu_classes,
+            "menu_class"     => $menu_classes,
             "container"      => "ul",
-            "echo"           => false
+            "echo"           => false,
         ], $custom_options));
 
-
         // Remove all IDs
-        $menu = preg_replace("/id=\"[^\"]+\"\s?/", "", $menu);
+        // $menu = preg_replace("/id=\"[^\"]+\"\s?/", "", $menu);
 
         // Replace classes
-        $menu = preg_replace("/menu-item-/", "menu__item--", $menu);
-        $menu = preg_replace("/menu-item/", "menu__item", $menu);
-        $menu = preg_replace("/sub-menu/", "menu__sub", $menu);
+        $menu = preg_replace("/menu-item-/", "{$menu_classes}__item--", $menu);
+        $menu = preg_replace("/menu-item/", "{$menu_classes}__item", $menu);
+        $menu = preg_replace("/sub-menu/", "{$menu_classes}__sub", $menu);
 
         // Add anchor classes
-        $menu = preg_replace("/<a/", "<a class=\"menu__link $link_classes\"", $menu);
+        $menu = preg_replace("/<a(?! class) /", "<a class=\"{$menu_classes}__link $link_classes\"", $menu);
 
-        // wp_send_json($menu);
-        return $menu;
+        // Custom processing
+        if ($custom_processing) {
+            $menu = $custom_processing($menu);
+        }
+
+        return do_shortcode($menu);
+    }
+
+    /**
+     * Render the result of a mixin, with specific arguments
+     *
+     * @param  string   $path
+     * @param  array    $args
+     * @param  array    $include_all Include all mixins
+     * @return string
+     */
+    public static function mixin($path, $args, $include_all = false)
+    {
+        // Include the mixin
+        if ($include_all) {
+            $include = "include /views/mixins/_mixins";
+        } else {
+            $include = "include /views/mixins/{$path}";
+        }
+        // Generate mixin call
+        $mixin = explode("/_", $path);
+        $mixin = end($mixin);
+        $mixin = "+$mixin(" . implode(", ", array_map(function ($var) {return "\$$var";}, array_keys($args))) . ")";
+        // Render both with arguments
+
+        $args = static::addHelpers($args);
+        return View::parsePug(implode("\n", [$include, $mixin]), (array) $args);
     }
 
     // ==================================================
@@ -85,63 +141,66 @@ class View
      */
     private static $renderer = null;
 
-
     /**
      * Get the singleton renderer
      *
-     * @return void
+     * @return object
      */
     private static function getRenderer()
     {
         if (is_null(static::$renderer)) {
             static::$renderer = new \Pug\Pug([
                 "extension"          => ".pug",
-                // "expressionLanguage" => "php",
+                "expressionLanguage" => "php",
 
                 // Caching
-                "cache"         => static::CACHE ? Files::path("app/cache/pug-php/") : false,
-                "upToDateCheck" => WP_DEBUG, // Alaws serve cached versions in production
+                "cache"              => static::CACHE ? Files::path("app/cache/pug-php/") : false,
+                "upToDateCheck"      => WP_DEBUG, // Alaws serve cached versions in production
 
                 // Options
                 "strict" => true,
+                "basedir"            => Files::path("/"),
+
+                "debug"              => WP_DEBUG,
+                "enable_profiler"    => false,
             ]);
 
-            static::setOptions();
+            // Auto-includes all mixins
+            // static::$renderer->setOption("includes", Files::findIn("*.pug", ["views/mixins/"], 3, true));
         }
 
         return static::$renderer;
     }
 
-
     /**
      * Get the full path of a view file
      *
-     * @param string $filename
+     * @param  string   $filename
      * @return string
      */
     private static function path($filename)
     {
         $filepath = Files::path("views/" . $filename . ".pug");
-        if (!file_exists($filepath)) wp_die("View file not found : $filepath");
+        if (!file_exists($filepath)) {
+            wp_die("View file not found : $filepath");
+        }
+
         return $filepath;
     }
 
-
+    // =============================================================================
+    // > HOOKED METHODS
+    // =============================================================================
     /**
      * Get the full path of a view file
      *
-     * @param array|bool $context
+     * @param  array|bool $context
      * @return string
      */
-    private static function prepareContext($context = false)
+    public static function prepareMainContext($context = false)
     {
-        if (!$context) return [];
-
-        // Add helper functions
-        $context = array_merge(
-            $context,
-            static::helpers()
-        );
+        // Make sure every array in the context is a set
+        $context = new RecursiveSet($context, true);
 
         // Add messages
         $context["error_message"]   = Data::currentPage("error_message");
@@ -149,53 +208,99 @@ class View
 
         // Empty sections if requested
         if (Data::currentPage("empty_content")) {
-            $context = $data["sections"] = [];
+            $context->sections = [];
         }
 
-        // Apply "content" filter to all the context, triggering shortcodes and the likes
-        $context = Data::recursiveFilter($context, "content");
-
+        // Apply global filters
         return $context;
     }
-
-
-
-    /**
-     * Set options for the rendererd
-     *
-     * @return void
-     */
-    private static function setOptions()
-    {
-        static::$renderer = static::getRenderer();
-
-
-        static::$renderer;
-    }
-
 
     /**
      * Add helpers function to the context
      *
      * @return void
      */
-    private static function helpers()
+    public static function addHelpers($context)
     {
-        return [
+        return set($context)->merge([
 
             // Return an image url
-            "_img" => function ($image) {
-
+            "_img"       => function ($image, $size = "large") {
                 // Image ID, from WordPress
                 if (is_int($image)) {
-                    return Data::filter($image, "img:url");
+                    return Attachments::getLightItem($image)->url($size);
                 }
-
                 // Else image in asset
                 return Files::url("build/img/" . $image);
             },
 
+            // Return an image
+            "_bg"        => function ($id, $size = "large") {
+                return Attachments::getLightItem($id)->bg($size);
+            },
 
-        ];
+            // Image tag
+            "_imgtag"    => function ($id, $size = "large", $class = false) {
+                return Attachments::getLightItem($id)->tag($size, $class);
+            },
+
+            // Include file/image (ex: SVG)
+            "_include"   => function ($file) {
+                include Files::path("build/img/{$file}");
+            },
+
+            // Phone number link
+            "_tel"       => function ($tel) {
+                return "tel:" . preg_replace("/[^0-9]/", "", $tel);
+            },
+
+            // Mailto link
+            "_mailto"    => function ($mail) {
+                return "mailto:" . $mail;
+            },
+
+            // Localized date format
+            "_date"      => function ($format, $date) {
+                return date_i18n($format, strtotime($date));
+            },
+
+            // Excerpt with custom size
+            "_excerpt"   => function ($post, $length = 30, $more = " [&hellip;]") {
+                return $post->post_excerpt ?: wp_trim_words($post->post_content, $length, $more);
+            },
+
+            // Class modifier(s)
+            "_modifiers" => function ($class, $modifiers, $include_class = false) {
+                $modifiers = array_map(function ($modifier) use ($class) {
+                    return "{$class}--{$modifier}";
+                }, (array) $modifiers);
+                return $include_class ? array_merge([$class], $modifiers) : $modifiers;
+            },
+
+            // Option
+            "_option"    => function ($key, $fallback = "") {
+                return Data::option($key, $fallback);
+            },
+
+            // Config
+            "_config"    => function ($key) {
+                return config($key);
+            },
+
+            // Get a custom route
+            "_route"     => function ($key) {
+                return Route::getCustom($key);
+            },
+
+            // FA unicode
+            "_fa"        => function ($icon) {
+                return Text::fa($icon);
+            },
+
+            // Sets' methods
+            "_set"       => function ($array) {
+                return set($array);
+            },
+        ]);
     }
 };

@@ -2,10 +2,13 @@
 
 namespace Syltaen;
 
+defined("ABSPATH") || exit;
+
 // ==================================================
 // > SINGLES
 // ==================================================
 Route::is("single", "SingleController::render");
+Route::is("attachment", "SingleController::render");
 
 // ==================================================
 // > SEARCH
@@ -25,7 +28,7 @@ Route::query("nf_preview_form", "PageController::ninjaFormPreview");
 // ==================================================
 // > PAGES
 // ==================================================
-Route::is(["home", "front_page"], "PageController::home");
+// Route::is(["home", "front_page"], "PageController::home");
 Route::is("page", "PageController::page");
 
 // ==================================================

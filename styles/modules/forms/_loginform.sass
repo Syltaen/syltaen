@@ -2,45 +2,21 @@
 // > MODULES - FORMS: LOGIN
 // =============================================================================
 
-#loginform
-    overflow: hidden
-    clear: both
-    position: relative
+.loginform
     max-width: 400px
     margin: 0 auto
 
-    label
-        width: 100%
-
-    p
-        margin-bottom: 10px
-
-        #user_login,
-        #user_pass
-            // +size(100%, 40px)
-            // +font(15px 40px bold)
-            // padding: 0 10px
-
-        &.login-remember
-            float: left
-            width: 40%
-            +screen(xs)
-                width: 100%
-            label
-                height: 50px
-                line-height: 50px
-                +font(14px)
-
-        &.login-submit
-            width: 60%
+    &__password
+        label
+            width: 100%
+        &__reset
+            +font(12px 2 light)
             float: right
-            +screen(xs)
-                width: 100%
-            input
-                margin-top: 0
-
-        &.login-password a
-            float: right
-            +font(12px 2 light secondary)
             &:hover
                 +font(primary)
+
+    &__remember
+        +font(14px)
+
+    &__submit
+        +flex(row nowrap, space-between, center)

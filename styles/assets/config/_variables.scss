@@ -1,0 +1,115 @@
+// =============================================================================
+// > ASSETS: VARIABLES
+// =============================================================================
+
+// ==================================================
+// > COLORS
+// ==================================================
+// Usage : color(primary)
+$colors: (
+    // Project
+    primary:    #111,
+    secondary:  #555,
+
+    // Texts
+    text:       #111,
+
+    // General
+    success:    #53AA27,
+    error:      #e05252,
+
+    // Greys
+    light-grey: #EFEFEF,
+    medium-grey:#DADADA,
+    dark-grey:  #282828,
+    white:      #fff,
+    black:      #111,
+    // transparent: rgba(white, .75)
+);
+
+
+// ==================================================
+// > FONTS
+// ==================================================
+$fonts: (
+    "Roboto-Light",
+    "Roboto-Regular",
+    "Roboto-Bold"
+);
+
+// Usage : font(regular)
+$fonts-stacks: (
+    regular: ("Roboto-Regular", "Roboto-Light", "Helvetica", "Arial", sans-serif),
+    light:   ("Roboto-Light", "Roboto-Regular", "Helvetica", "Arial", sans-serif),
+    bold:    ("Roboto-Bold", "Roboto-Regular", "Helvetica", "Arial", sans-serif),
+);
+
+
+// ==================================================
+// > BREAKPOINTS
+// ==================================================
+// Usage : breakpoint(md) / container(sm)
+$responsive: (
+    lg: (
+        breakpoint: null,
+        container: 1200px,
+        spacingratio: 1
+    ),
+    md: (
+        breakpoint: 1240px,
+        container: 960px,
+        spacingratio: 1
+    ),
+    sm: (
+        breakpoint: 1040px,
+        container: 600px,
+        spacingratio: .75
+    ),
+    xs: (
+        breakpoint: 640px,
+        container: 300px,
+        spacingratio: .5
+    )
+);
+
+
+// ==================================================
+// > SPACING
+// ==================================================
+// Usage : spacing(2)
+$spacing: (
+    0: 0,
+    1: 6px,
+    2: 12px,
+    3: 16px,
+    4: 24px,
+    5: 32px,
+    6: 48px,
+    7: 64px,
+    8: 96px,
+    9: 140px,
+);
+
+// > EASINGS
+// ==================================================
+// Usage : easing(bounce)
+$easing: (
+    bounce: cubic-bezier(0.680, -0.550, 0.265, 1.550)
+);
+
+
+// ==================================================
+// > SECTION CONTENT ICONS
+// ==================================================
+// Usage : section_content_icon(txt)
+$section-content-icons: (
+    txt: text,
+    intro: text-size,
+    image: image,
+    collapsable: compress-arrows-alt,
+    map: map-marker-alt,
+    icon: icons,
+    archive: list,
+    section: square,
+    include: clone,
+);

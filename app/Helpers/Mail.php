@@ -7,233 +7,181 @@ abstract class Mail
     /**
      * Send a mail
      *
-     * @param string $to Address to send the mail to
-     * @param string $subject Subject of the mail
-     * @param string $body Content of the mail
-     * @param array $mail_hook Callable function to add stuff to the mail
+     * @param  string  $to        Address to send the mail to
+     * @param  string  $subject   Subject of the mail
+     * @param  string  $body      Content of the mail
+     * @param  array   $mail_hook Callable function to add stuff to the mail
      * @return boolean True if no error during the sending
      */
-    public static function send($to, $subject, $body, $attachements = [], $mail_hook = false, $template = "mail-default")
+    public static function send($to, $subject, $body, $attachments = [], $hook = false)
     {
-        $mail = new \PHPMailer\PHPMailer\PHPMailer();
-
-        // Force "from" with config values
-        $mail->From     = App::config("mail_from_addr");
-        $mail->FromName = App::config("mail_from_name");
-
-        // Parse "to"
-        foreach (static::parseTo($to) as $addr) $mail->AddAddress(trim($addr));
-
-        // Add subject
-        $mail->Subject = $subject;
-
-        // Parse body into the template
-        $mail->CharSet = get_bloginfo("charset");
-        $body = static::parseBody($mail, $body, $template);
-        $mail->msgHTML($body);
-
-        // Attachements : TODO
-
-
-        // Setup SMTP if the config is provided
-        if (App::config("mail_smtp")["host"]) {
-            static::smtpSetup($mail);
-        } else {
-            $mail->IsMail();
+        // If there is a hook, add it
+        if ($hook) {
+            add_action("phpmailer_init", $hook);
         }
 
-        // Dkim, unsubscribe, ...
-        static::antispamSetup($mail);
+        // Send the mail
+        $result = wp_mail($to, $subject, $body, $attachments);
 
-        // Hook to update the mail before sending it
-        if (is_callable($mail_hook)) $mail_hook($mail);
-
-        // Log the mail and send it
-        if (App::config("mail_debug")) {
-            $mail->Subject = "[TEST] " . $mail->Subject;
-            static::log($mail);
-        } else {
-            static::log($mail);
-            return $mail->Send();
-        }
-    }
-
-
-    /**
-     * Render the mail in a preview box
-     *
-     * @param string $to
-     * @param string $subject
-     * @param string $body
-     * @return void
-     */
-    public static function preview($to, $subject, $body, $actions = [])
-    {
-        echo static::parseBody((object) [
-            "Subject"  => $subject,
-            "CharSet"  => get_bloginfo("charset"),
-            "From"     => App::config("mail_from_addr"),
-            "FromName" => App::config("mail_from_name"),
-        ], $body, "mail-preview", [
-            "to" => $to,
-            "actions" => $actions
-        ]);
-    }
-
-    // ==================================================
-    // > PARSERS
-    // ==================================================
-    /**
-     * Parse a string list of recievers into an array
-     *
-     * @param string|array $to
-     * @return array
-     */
-    private static function parseTo($to)
-    {
-        if (is_array($to)) return $to;
-
-        if (is_string($to)) {
-            $to = explode(",", $to);
+        // Remove the hook
+        if ($hook) {
+            add_action("phpmailer_init", $hook);
         }
 
-        return (array) $to;
+        return $result;
     }
-
 
     /**
      * Put the text body into a mail template
      *
-     * @param string $body
+     * @param  string   $subject
+     * @param  string   $body
+     * @param  string   $template  to use
      * @return string
      */
-    private static function parseBody($mail, $body, $template, $additional_context = [])
+    public static function render($subject, $body, $template = "mail-default", $additional_context = [])
     {
-        return (new Controller)->view("mails/".$template, array_merge([
-            "mail"    => $mail,
-            "body"    => $body,
+        return View::render("mails/" . $template, array_merge([
+            "subject"   => $subject,
+            "body"      => $body,
+            "from"      => config("mail.from.name"),
 
             "imgpath"   => Files::url("build/img/mails/"),
-            "primary"   => App::config("color_primary"),
-            "secondary" => App::config("color_secondary"),
+            "primary"   => config("color.primary"),
+            "secondary" => config("color.secondary"),
+            "logo"      => Data::option("mail_logo"),
 
-            "url"  => get_bloginfo("url")
+            "url"       => get_bloginfo("url"),
         ], $additional_context));
     }
-
 
     // ==================================================
     // > TOOLS
     // ==================================================
-    private static function log($mail)
-    {
-        if (class_exists("No3x\WPML\WPML_Plugin")) {
-            $to = [];
-            foreach ($mail->getToAddresses() as $reciever) {
-                $to[] = $reciever[0];
-            }
-
-            (new \No3x\WPML\WPML_Plugin(["raw", "html", "json"], []))->log_email([
-                "to"          => $to,
-                "subject"     => $mail->Subject,
-                "message"     => $mail->Body,
-                "headers"     => [],
-                "attachments" => []
-            ]);
-        }
-    }
-
-
     /**
      * Send a test mail with generic content
      *
-     * @param string $to Address to send the mail to
+     * @param  string $to    Address to send the mail to
      * @return string Result of the test
      */
     public static function sendTest($to)
     {
-        if (static::send($to, "TEST mail", "<p>Hi,<br><br>This is a test sent from <a href='".site_url()."'>".site_url()."</a></p>")) {
-            return "The e-mail was sent successfully to ".$to;
+        if (static::send($to, "TEST mail", "<p>Hi,<br><br>This is a test sent from <a href='" . site_url() . "'>" . site_url() . "</a></p>")) {
+            return "The e-mail was sent successfully to " . $to;
         } else {
             return "An error occured";
         }
     }
 
-
     /**
-     * A hook triggered for each default WordPress mail
+     * Send a mail using a template defined in the options
      *
-     * @param array $args
-     * @return void
+     * @param  string  $option_key The option key
+     * @param  array   $tags       A set of dynamic tags to use. Provide "to" if it's not define in the options.
+     * @return boolean True if no error during the sending
      */
-    public static function hookRelay($args)
+    public static function sendTemplate($option_key, $tags = [])
     {
-        static::send(
-            $args["to"],
-            $args["subject"],
-            $args["message"],
-            $args["attachments"]
+        $mail = Data::option($option_key);
+
+        // Mail not found or Option specify that the mail should not be sent
+        if (empty($mail) || (isset($mail["send"]) && !$mail["send"])) {
+            return false;
+        }
+
+        // Some info is lacking
+        $mail = array_merge($mail, $tags);
+        if (empty($mail["to"]) || empty($mail["subject"]) || empty($mail["body"])) {
+            return false;
+        }
+
+        $tags_keys = array_map(function ($tag) {return "[$tag]";}, array_keys($mail));
+        $tags_values = array_values($mail);
+
+        Mail::send(
+            str_replace($tags_keys, $tags_values, $mail["to"]),
+            str_replace($tags_keys, $tags_values, $mail["subject"]),
+            str_replace($tags_keys, $tags_values, $mail["body"])
         );
-
-        // Prevent the default sending
-        $args["to"] = "";
-        $args["message"] = "";
-        return $args;
     }
-
 
     // ==================================================
     // > CONFIGS
     // ==================================================
     /**
-     * Setup a SMTP connection
+     * Update the WordPress phpmailer config
      *
-     * @param PHPMailer $mail
+     * @param  object $mail
      * @return void
      */
-    private static function smtpSetup(&$mail)
+    public static function init(&$mail)
+    {
+        // Render the body
+        $mail->msgHTML(static::render($mail->Subject, $mail->Body));
+
+        // Send via SMTP if is set in config
+        if (config("mail.smtp.host")) {
+            static::smtpSetup($mail);
+        }
+
+        // Dkim, unsubscribe, ...
+        static::antispamSetup($mail);
+
+        // If debug : prevent sending the mail
+        if (config("mail.debug")) {
+            $mail->clearAllRecipients();
+        }
+    }
+
+    /**
+     * Setup a SMTP connection
+     *
+     * @param  PHPMailer $mail
+     * @return void
+     */
+    public static function smtpSetup(&$mail)
     {
         $mail->isSMTP();
 
-        if (App::config("mail_smtp")["debug"]) $mail->SMTPDebug = 3;
+        if (config("mail.smtp.debug")) {
+            $mail->SMTPDebug = 3;
+        }
 
-        $mail->Host       = App::config("mail_smtp")["host"];
+        $mail->Host       = config("mail.smtp.host");
         $mail->Port       = 587;
         $mail->SMTPAuth   = true;
         $mail->SMTPSecure = "tls";
 
-        $mail->Username   = $mail->From;
-        $mail->Password   = App::config("mail_smtp")["password"];
+        $mail->Username = config("mail.smtp.username");
+        $mail->Password = config("mail.smtp.password");
     }
-
-
 
     /**
      * Add custom headers to decrease spam-flag probability
      *
-     * @param PHPMailer $mail
+     * @param  PHPMailer $mail
      * @return void
      */
-    private static function antispamSetup(&$mail)
+    public static function antispamSetup(&$mail)
     {
         // Unsubscribe list
-        $mail->addCustomHeader("List-Unsubscribe", "<mailto:".$mail->From."?body=unsubscribe>, <".site_url("contact").">");
+        $mail->addCustomHeader("List-Unsubscribe", "<mailto:" . $mail->From . "?body=unsubscribe>, <" . site_url("contact") . ">");
 
         // Remove XMailer
         $mail->XMailer = " ";
 
         // Organization
-        $mail->addCustomHeader("Organization" , App::config("client"));
+        $mail->addCustomHeader("Organization", config("client"));
 
         // Sender enveloppe & bounce address
         $mail->Sender = $mail->From;
 
         // DKIM
-        if (App::config("mail_dkim")["domain"]) {
-            $mail->DKIM_domain     = App::config("mail_dkim")["domain"];
-            $mail->DKIM_selector   = App::config("mail_dkim")["selector"];
-            $mail->DKIM_private    = App::config("mail_dkim")["private"];
-            $mail->DKIM_passphrase = App::config("mail_dkim")["passphrase"];
+        if (config("mail.dkim.domain")) {
+            $mail->DKIM_domain     = config("mail.dkim.domain");
+            $mail->DKIM_selector   = config("mail.dkim.selector");
+            $mail->DKIM_private    = config("mail.dkim.private");
+            $mail->DKIM_passphrase = config("mail.dkim.passphrase");
             $mail->DKIM_identity   = $mail->From;
         }
     }

@@ -1,0 +1,34 @@
+//- =============================================================================
+//- > VIEW : SEARCH
+//- =============================================================================
+extends _base
+
+//- ==================================================
+//- > INTRO
+//- ==================================================
+block intro
+    .site-intro.search-page__intro
+        h1!= __("Recherche", "syltaen")
+
+//- ==================================================
+//- > SECTIONS
+//- ==================================================
+block sections
+    section.py-5.bg-white: .container
+
+        if $results
+            each $post_type in $results
+                h3.search-page__type
+                    strong.search-page__type__label!= $post_type["label"]
+                    span.search-page__type__count!= $post_type["count"]
+                ul.search-page__results
+                    each $result in $post_type["posts"]
+                        li.search-page__results__item
+                            a.search-page__results__card(href=$result->url)
+                                p.search-page__results__card__title= $result->post_title
+                                p.search-page__results__card__url= $result->url
+                                p.search-page__results__card__excerpt!= get_the_excerpt($result)
+
+        else
+            p.search-page__noresult
+                != __("Aucun résultat", "syltaen")

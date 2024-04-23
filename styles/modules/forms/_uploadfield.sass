@@ -1,0 +1,134 @@
+// =============================================================================
+// > MOULE - FORMS : DROPZONE
+// =============================================================================
+
+.uploadfield
+
+    &__zone
+        padding: 0 1em
+        border: 1px dashed color(medium-grey)
+        background: none
+        +flex(column nowrap)
+        cursor: pointer
+        transition: all .35s ease
+        &:hover
+            border-color: color(primary)
+
+    &__message
+        +font(16px center text)
+        width: 100%
+        pointer-events: none
+        transition: all .25s ease
+        padding: 1em
+
+        &::before
+            +far(paperclip)
+            margin-right: .25em
+
+        .dz-started &
+            display: none
+
+    // ==================================================
+    // > PREVIEW
+    // ==================================================
+    .dz-preview
+        position: relative
+        border-bottom: 1px solid color(light-grey)
+        padding: 15px 40px 15px 100px
+        min-height: 110px
+
+        &:last-child
+            border-bottom: 0
+
+        // Image
+        .dz-image
+            +size(80px)
+            border-radius: 50%
+            +absolute(top 1em left 0)
+            overflow: hidden
+            margin-right: 1em
+            &::after
+                +fa(file)
+                @extend %cover
+                background: color(primary)
+                +font(20px 80px center white)
+        &.dz-image-preview .dz-image::after
+            content: none
+
+        // Details
+        .dz-details
+            +font(14px text)
+            +flex(column-reverse nowrap)
+
+        // Progress
+        .dz-progress
+            +size(auto, 4px)
+            margin: .5em 0
+            border-radius: 2px
+            overflow: hidden
+            background: color(light-grey)
+            position: relative
+            .dz-upload
+                +absolute(top 0 left 0)
+                +size(0%, 100%)
+                background: color(primary)
+
+        @at-root .dz-no-auto .dz-progress,
+        &.dz-complete .dz-progress,
+        &.dz-error .dz-progress
+            opacity: 0
+
+        // Errors
+        .dz-error-message
+            +font(12px error bold)
+
+        // ========== MARKS ========== //
+        .dz-success-mark,
+        .dz-error-mark
+            @extend %cover
+            opacity: 0
+            transform: translateY(10%)
+            pointer-events: none
+            +flex(row nowrap, center, center)
+            svg
+                +size(50px)
+                background: white
+                padding: 2px
+                border-radius: 50%
+        .dz-success-mark path
+            fill: color(success)
+        .dz-error-mark path
+            fill: color(error)
+        &.dz-success .dz-success-mark
+            animation: dropzoneMarkAppear 3s ease
+        .dz-error-mark
+            display: none // hidden by default
+
+        // ========== REMOVE ========== //
+        .dz-remove
+            +size(1em)
+            text-indent: -9999em
+            +absolute(top 28px right 0)
+            margin-top: -.5em
+            background: white
+            border-radius: 50%
+            +font(20px 1 center error)
+            &::before
+                +fa(times-circle)
+                @extend %cover
+                text-indent: 0
+            &:hover
+                +font(primary)
+
+
+
+@keyframes dropzoneMarkAppear
+    0%
+        opacity: 0
+        transform: translateY(10%)
+    50%
+        opacity: 1
+        transform: translateY(0)
+    100%
+        opacity: 0
+        transform: translateY(-10%)

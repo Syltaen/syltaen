@@ -1,0 +1,63 @@
+// =============================================================================
+// > MODULE - INTERACTIVE : PROGRESS-CIRCLE
+// =============================================================================
+
+.progress-circle
+    position: relative
+    align-items: center
+    flex-flow: column nowrap
+    display: none
+    clear: both
+
+    &__parent.is-loading &
+        display: flex
+
+    &__parent.is-loading
+        height: 300px
+        & > *
+            display: none
+
+    &__wrap
+        +size(5em)
+        background: color(light-grey)
+        position: relative
+        border-radius: 50%
+        overflow: hidden
+        +font(40px bold)
+        margin: 0 auto
+
+    // ==================================================
+    // > PROGRESS
+    // ==================================================
+    &__half
+        +size(50%, 100%)
+        +absolute(top 0)
+        overflow: hidden
+        &--left
+            left: 0
+        &--right
+            right: 0
+
+    &__progress
+        +size(100%)
+        background: color(primary)
+        +absolute(top 0 left 0)
+
+    &__half--left &__progress
+        transform: rotate(-180deg)
+        transform-origin: 100% 50%
+
+    &__half--right &__progress
+        transform-origin: 0% 50%
+        transform: rotate(-180deg)
+
+    // ==================================================
+    // > DIGIT
+    // ==================================================
+    &__digit
+        +absolute(top 50% left 50%)
+        +size(4.75em)
+        transform: translate(-50%, -50%)
+        border-radius: 50%
+        background: white
+        +flex(row, center, center)

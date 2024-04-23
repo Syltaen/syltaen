@@ -2,57 +2,70 @@
 
 return [
 
+    "timezone" => "Europe/Brussels",
+
     // ==================================================
     // > IDENTITY
     // ==================================================
-
     // The project name
-    "project" => "Hungry Minds - Site web",
+    "project"  => "",
 
     // The client's name
-    "client"  => "Hungry Minds",
-
-
+    "client"   => "",
 
     // ==================================================
     // > COLORS
     // ==================================================
-
-    // The primary color used in mail templates, excel exports, ...
-    "color_primary"   => "#a1f2ca",
-
-    // The secondary color
-    "color_secondary" => "#282828",
-
-
+    // The colors used in mail templates, excel exports, ...
+    "color"    => [
+        "primary"   => "#111",
+        "secondary" => "#555",
+    ],
 
     // ==================================================
     // > MAILS
     // ==================================================
+    "mail"     => [
 
-    // Set to true to prevent mail from being sent
-    "mail_debug"     => false,
+        // Set to true to prevent mail from being sent
+        "debug" => false || (defined("LOCAL_ENV") && LOCAL_ENV),
 
-    // The address all mails are sent from
-    "mail_from_addr" => "info@hungryminds.be",
+        // The address all mails are sent from
+        "from"  => [
+            "name"    => "",
+            "address" => "",
+        ],
 
-    // The name all mails are sent from
-    "mail_from_name" => "Hungry Minds",
+        // Define SMTP credentials to send mails, fallback to php mail() when not specified
+        "smtp"  => [
+            "host"     => "",
+            "username" => "",
+            "password" => "",
+            "debug"    => false,
+        ],
 
-    // Define SMTP credentials to send mails, fallback to php mail() when not specified
-    "mail_smtp" => [
-        "host"     => "",
-        "password" => '',
-        "debug"    => false
+        // Setup DKIM authentification if provided
+        "dkim"  => [
+            "domain"     => "",
+            "selector"   => "phpmailer",
+            "private"    => "/var/www/vhosts/.../httpdocs/dkim/dkim.private",
+            "passphrase" => "",
+        ],
     ],
 
+    // ==================================================
+    // > DEBUGGING
+    // ==================================================
+    "debug"    => [
 
-    // Setup DKIM authentification if provided
-    "mail_dkim" => [
-        "domain"     => "",
-        "selector"   => "phpmailer",
-        "private"    => "/var/www/vhosts/.../httpdocs/dkim/dkim.private",
-        "passphrase" => ""
-    ]
+        // Number of backtrace calls to include in debugs
+        "backtrace_level" => 1,
 
+        // Wether to fetch all fields of model logged or not.
+        // Can cause infinite loop in some cases.
+        "fetch_fields"    => true,
+
+        // Number of lines to keep in each logfile
+        "log_history"     => 50000,
+    ],
 ];

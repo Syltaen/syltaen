@@ -1,0 +1,77 @@
+// =============================================================================
+// > MODULE : FORMS - STEPS
+// =============================================================================
+
+.form-steps
+
+    &__slide
+        position: relative
+
+    &__step
+        opacity: 0
+        transition: all .35s easing(bounce)
+        +absolute(top 0 left 0)
+        +size(100%)
+        visibility: hidden
+        transform: translateY(20px)
+
+        &.is-active
+            visibility: visible
+            opacity: 1
+            position: static
+            transform: translateY(0)
+
+        .submit-container
+            margin-bottom: -60px
+
+    // ==================================================
+    // > NAV
+    // ==================================================
+    &__progress
+        +flex(row nowrap)
+        margin: 50px -5px 20px
+        &__item
+            margin: 0 5px
+            +size(auto, 8px)
+            flex: 1
+            background: color(light-grey)
+            transition: all .5s ease
+            cursor: pointer
+            position: relative
+            &:hover
+                background: darken(color(light-grey), 10%)
+            span
+                +font(14px left primary bold)
+                +absolute(bottom 0 left 0)
+                white-space: nowrap
+                opacity: 0
+                transition: all .5s ease
+                visibility: hidden
+
+            &.is-active
+                flex: 1.2
+                background: color(primary)
+                span
+                    opacity: 1
+                    bottom: 10px
+                    visibility: visible
+            &.has-errors
+                background: color(error)
+
+    // ==================================================
+    // > NAV
+    // ==================================================
+    &__nav
+        clear: both
+        +flex(row nowrap, space-between)
+        margin-top: 20px
+        +screen(xs)
+            flex-direction: column-reverse
+            &__button
+                width: 100%
+                margin: 10px 0 !important
+
+    &__step:first-child &__nav__button--prev,
+    &__step:last-child &__nav__button--next
+        opacity: 0
+        visibility: hidden

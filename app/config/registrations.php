@@ -2,8 +2,7 @@
 
 namespace Syltaen;
 
-add_action("init", function() {
-
+add_action("init", function () {
     /**
      * Register all custom post types and taxonomies found in these folders.
      * Prepend the filename with . to prevent it from being registered
@@ -11,7 +10,7 @@ add_action("init", function() {
 
     $registration_folders = [
         "Models/Taxonomies",
-        "Models/Posts"
+        "Models/Posts",
     ];
 
     foreach ($registration_folders as $folder) {
@@ -21,7 +20,6 @@ add_action("init", function() {
             $class::register();
         }
     }
-
 
     // ==================================================
     // > BLOCKS

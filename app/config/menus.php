@@ -4,8 +4,8 @@
 // > MENU REGISTRATION
 // ==================================================
 register_nav_menus([
-    "main_menu"      => "Menu principal",
-    "footer_menu"    => "Menu du footer"
+    "main_menu"   => "Menu principal",
+    "footer_menu" => "Menu du footer",
 ]);
 
 // ==================================================

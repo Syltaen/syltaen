@@ -6,7 +6,6 @@ namespace Syltaen;
 // > ACF OPTIONS PAGES
 // ==================================================
 if (function_exists("acf_add_options_page")) {
-
     // ========== HEADER & FOOTER ========== //
     acf_add_options_page([
         "page_title" => "Header & Footer",
@@ -15,10 +14,19 @@ if (function_exists("acf_add_options_page")) {
         "post_id"    => "headerfooter",
         "capability" => "edit_posts",
         "redirect"   => false,
-        "icon_url"   => "dashicons-align-center",
-        "position"   => 4,
+        "autoload"   => true,
     ]);
 
+    // ========== GLOBAL OPTIONS ========== //
+    // acf_add_options_page([
+    //     "page_title" => "Paramètres",
+    //     "menu_title" => "Paramètres",
+    //     "menu_slug"  => "options",
+    //     "post_id"    => "options",
+    //     "capability" => "edit_theme_options",
+    //     "redirect"   => false,
+    //     "autoload"   => true,
+    // ]);
 }
 
 // ==================================================
@@ -35,56 +43,23 @@ add_filter("acf/settings/load_json", function ($paths) {
     return $paths;
 });
 
-
 // ==================================================
 // > GOOGLE MAP KEY
 // ==================================================
 add_action("acf/init", function () {
-    acf_update_setting("google_api_key", "__PROVIDE_A_NEW_KEY__");
+    acf_update_setting("google_api_key", "AIzaSyDf2ZP-hkzlrYHYezBIW8JDQYzCnYQGR0o"); // Should only be used in admin
 });
-
-
 
 // ==================================================
-// > ADD ACF DATA TO SEARCH
+// > CONTENT PREVIEW
 // ==================================================
-/**
- * Extend WordPress search to include custom fields
- * http://adambalee.com
- *
- * Join posts and postmeta tables
- * http://codex.wordpress.org/Plugin_API/Filter_Reference/posts_join
- */
-add_filter("posts_join", function ($join) {
-    global $wpdb;
-    if ( is_search() ) {
-        $join .=' LEFT JOIN '.$wpdb->postmeta. ' ON '. $wpdb->posts . '.ID = ' . $wpdb->postmeta . '.post_id ';
+add_filter("acfe/flexible/render/template", function ($f, $field, $layout, $is_preview) {
+    if ($is_preview) {
+        return Files::path("app/lib/misc/admin-preview.php");
     }
-    return $join;
-});
+    return $f;
+}, 10, 4);
 
-/**
- * Modify the search query with posts_where
- * http://codex.wordpress.org/Plugin_API/Filter_Reference/posts_where
- */
-add_filter("posts_where", function ($where) {
-    global $pagenow, $wpdb;
-    if ( is_search() ) {
-        $where = preg_replace(
-            "/\(\s*".$wpdb->posts.".post_title\s+LIKE\s*(\'[^\']+\')\s*\)/",
-            "(".$wpdb->posts.".post_title LIKE $1) OR (".$wpdb->postmeta.".meta_value LIKE $1)", $where );
-    }
-    return $where;
-});
-
-/**
- * Prevent duplicates
- * http://codex.wordpress.org/Plugin_API/Filter_Reference/posts_distinct
- */
-add_filter("posts_distinct", function ($where) {
-    global $wpdb;
-    if ( is_search() ) {
-        return "DISTINCT";
-    }
-    return $where;
+Hooks::ajax("syltaen_admin_preview", function () {
+    (new AdminPreviewController)->ajaxRender();
 });

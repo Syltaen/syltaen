@@ -1,0 +1,62 @@
+// =============================================================================
+// > MODULE - NAVIGATION : SINGLENAV
+// =============================================================================
+
+.singlenav
+    overflow: hidden
+    +font(16px)
+
+    // ==================================================
+    // > LINKS
+    // ==================================================
+    &__link
+        +font(text)
+        transition: all .25s ease
+        +flex(row nowrap, null, center)
+        +screen(xs)
+            padding: 8px 0
+
+        &::before
+            +font(15px 2em center secondary)
+            +size(2em)
+            // margin: 0 10px
+            transition: all .25s ease
+
+        &:hover::before
+            +font(ternary)
+
+        // ==================================================
+        // > ICONS
+        // ==================================================
+        &--archive
+            float: left
+
+        &--prev,
+        &--next
+            float: right
+
+        &--next
+            flex-direction: row-reverse
+            margin-left: 20px
+
+        &--archive::before
+            +fa(list)
+        &--prev::before
+            +fa(angle-left)
+        &--next::before
+            +fa(angle-right)
+
+
+    // =============================================================================
+    // > RESPONSIVE
+    // =============================================================================
+    +screen(xs)
+        +font(16px medium-grey)
+        +flex(row-reverse nowrap, space-between, center)
+
+    +screen(xs)
+        &__link
+            &--prev
+                margin-left: -.5em
+            &--next
+                float: none

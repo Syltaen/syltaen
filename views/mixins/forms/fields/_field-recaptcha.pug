@@ -1,0 +1,12 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELD - DATE
+//- =============================================================================
+
+mixin field-recaptcha(form)
+
+    script(src="https://www.google.com/recaptcha/api.js" async defer)
+
+    +fieldset($form, "g-recaptcha-response")&attributes($attributes)
+        .g-recaptcha(data-sitekey=$_config("recaptcha.site_key"))
+
+        block

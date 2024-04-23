@@ -9,7 +9,7 @@
 
 //> 404.pug;
 __("Erreur 404", "syltaen");
-__("Cette page n'existe pas", "syltaen");
+__("Désolé, cette page n'existe pas ou plus.", "syltaen");
 __("Retour à l'accueil", "syltaen");
 
 

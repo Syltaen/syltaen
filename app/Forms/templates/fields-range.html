@@ -1,0 +1,16 @@
+<script id="tmpl-nf-field-range" type="text/template">
+    <input
+        type="range"
+
+        id="nf-field-{{{ data.id }}}"
+        name="nf-field-{{{ data.id }}}"
+        class="{{{ data.renderClasses() }}} nf-element"
+
+        min="{{ data.min }}"
+        max="{{ data.max }}"
+        step="{{ data.step }}"
+
+        value="{{{ data.value ? data.value : 0 }}}"
+    >
+
+</script>

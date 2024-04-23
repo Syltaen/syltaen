@@ -4,7 +4,9 @@ namespace Syltaen;
 
 class ApiController extends Controller
 {
-
+    /**
+     * @param array $args
+     */
     public function __construct($args = [])
     {
         $this->args = $args;
@@ -22,32 +24,35 @@ class ApiController extends Controller
     /**
      * Playground to test things
      *
-     * @param string $target
+     * @param  string $target
      * @return void
      */
     private function lab($target = false)
     {
-
     }
-
 
     /**
      * Login as a certain user
      *
-     * @param int $target The user ID
-     * @param string The admin password, used as a skeleton key
+     * @param  int    $target The user ID
+     * @param  string The     admin password, used as a skeleton key
      * @return void
      */
-    private function login($user_id = false, $password = false)
+    private function login($user_id = false)
     {
-        if (!$user_id || !$password) wp_die("Please provide a user ID and a password");
+        if (!$user_id) {
+            wp_die("Please provide a user ID");
+        }
 
-        $admin = get_user_by("id", 1);
-        if (!wp_check_password($password, $admin->data->user_pass, $admin->ID)) wp_die("Wrong password");
+        $user   = Users::getCurrent();
+        $target = Users::getItem($user_id);
 
-        (new Users)->is($user_id)->login("wp-admin");
+        if (!$user || !$user->can("administrator")) {
+            wp_die("Please log-in as an admin before.");
+        }
+
+        $target->login("wp-admin");
     }
-
 
     /**
      * Generate a new user key
@@ -59,11 +64,10 @@ class ApiController extends Controller
         wp_die(Users::generateKey());
     }
 
-
     /**
      * Send a test mail to an address
      *
-     * @param string $address
+     * @param  string $address
      * @return void
      */
     private function testmail($address = "")
@@ -74,7 +78,6 @@ class ApiController extends Controller
 
         echo Mail::sendTest($address);
     }
-
 
     /**
      * Output the result of phpinfo()

@@ -1,0 +1,20 @@
+// =============================================================================
+// > MODULE : NAVIGATION - ICONS
+// =============================================================================
+
+.icons
+    +flex(row nowrap, flex-end)
+
+    &__item
+        margin: 0 3px
+
+    &__link
+        display: block
+        +size(1.75em)
+        +font(22px 1.75 primary center)
+        transition: all .35s ease
+        &:hover
+            +font(secondary)
+
+    &__icon
+        font-style: normal

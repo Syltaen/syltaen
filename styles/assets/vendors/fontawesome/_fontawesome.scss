@@ -1,0 +1,172 @@
+// =============================================================================
+// > CONFIG
+// =============================================================================
+@import "fa-icons";
+
+// =============================================================================
+// > SOURCES
+// =============================================================================
+$fa-font-path: "https://d2rl04ld38f57x.cloudfront.net/cdn/fa6";
+
+$files: (
+    fa-brands-400:  (name: "Font Awesome 6 Brands", width: 400),
+    fa-duotone-900: (name: "Font Awesome 6 Duotone", width: 900),
+
+    fa-thin-100: (name: "Font Awesome 6", width: 100),
+
+    fa-light-300: (name: "Font Awesome 6", width: 300),
+    fa-sharp-light-300: (name: "Font Awesome 6 Sharp", width: 300),
+
+    fa-regular-400: (name: "Font Awesome 6", width: 400),
+    fa-sharp-regular-400: (name: "Font Awesome 6 Sharp", width: 400),
+
+    fa-solid-900: (name: "Font Awesome 6", width: 900),
+    fa-sharp-solid-900: (name: "Font Awesome 6 Sharp", width: 900),
+);
+
+@each $f, $file in $files {
+    @font-face {
+        font-family: map-get($file, "name");
+        font-style: normal;
+        font-display: swap;
+        font-weight: map-get($file, "width");
+        src: url('#{$fa-font-path}/#{$f}.woff2') format('woff2'),
+             url('#{$fa-font-path}/#{$f}.ttf') format('truetype');
+    }
+}
+
+// =============================================================================
+// > CLASSES
+// =============================================================================
+.fa,
+.fas, .fass, .fa-solid, .fa-sharp-solid,
+.far, .fasr, .fa-regular, .fa-sharp-regular,
+.fal, .fasl, .fa-light, .fa-sharp-light,
+.fat, .fa-thin,
+.fab {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    // line-height: 1;
+}
+
+// =============================================================================
+// > MIXINS
+// =============================================================================
+
+// ========== SOLID ========== //
+@mixin fa($icon_var: false) {
+    font-family: "Font Awesome 6";
+    font-weight: 900;
+    @if($icon_var) {
+        content: fa-content($icon_var);
+    }
+}
+.fa,
+.fas,
+.fa-solid {
+    @include fa();
+}
+
+@mixin fass($icon_var: false) {
+    font-family: "Font Awesome 6 Sharp";
+    font-weight: 900;
+    @if($icon_var) {
+        content: fa-content($icon_var);
+    }
+}
+.fass,
+.fa-sharp-solid {
+    @include fass();
+}
+
+// ========== REGULAR ========== //
+@mixin far($icon_var: false) {
+    font-family: "Font Awesome 6";
+    font-weight: 400;
+    @if($icon_var) {
+        content: fa-content($icon_var);
+    }
+}
+.far,
+.fa-regular {
+    @include far();
+}
+
+@mixin fasr($icon_var: false) {
+    font-family: "Font Awesome 6 Sharp";
+    font-weight: 400;
+    @if($icon_var) {
+        content: fa-content($icon_var);
+    }
+}
+.fasr,
+.fa-sharp-regular {
+    @include fasr();
+}
+
+// ========== LIGHT ========== //
+@mixin fal($icon_var: false) {
+    font-family: "Font Awesome 6";
+    font-weight: 300;
+    @if($icon_var) {
+        content: fa-content($icon_var);
+    }
+}
+.fal,
+.fa-light {
+    @include fal();
+}
+
+@mixin fasl($icon_var: false) {
+    font-family: "Font Awesome 6 Sharp";
+    font-weight: 300;
+    @if($icon_var) {
+        content: fa-content($icon_var);
+    }
+}
+.fasl,
+.fa-sharp-light {
+    @include fasl();
+}
+
+// ========== THIN ========== //
+@mixin fat($icon_var: false) {
+    font-family: "Font Awesome 6";
+    font-weight: 100;
+    @if($icon_var) {
+        content: fa-content($icon_var);
+    }
+}
+.fat,
+.fa-thin {
+    @include fat();
+}
+
+// ========== BRANDS ========== //
+@mixin fab($icon_var: false) {
+    font-family: "Font Awesome 6 Brands";
+    font-weight: 400;
+    @if($icon_var) {
+        content: fa-content($icon_var);
+    }
+}
+.fab,
+.fa-brands {
+    @include fab();
+}
+
+// ========== DUOTONE ========== //
+@mixin fad($icon_var: false) {
+    font-family: "Font Awesome 6 Duotone";
+    font-weight: 900;
+    @if($icon_var) {
+        content: fa-content($icon_var);
+    }
+}
+.fad {
+    @include fad();
+}

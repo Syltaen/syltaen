@@ -4,14 +4,15 @@
 $button_base_color: color(primary)
 
 %button
-    +font(16px 1.2 center white bold uppercase)
+    +font(center white bold uppercase)
+    line-height: 1.2
     position: relative
     display: inline-flex
     align-items: center
     z-index: 5
     border: 2px solid $button_base_color
     cursor: pointer
-    padding: 10px 20px
+    padding: .5em 1.5em
     transition: all .35s ease
 
     &::before
@@ -41,11 +42,13 @@ $button_base_color: color(primary)
 
     &--small
         +font(13px)
-        padding: 5px
+
+    &--medium
+        +font(18px)
 
     &--big
-        +font(20px bold)
-        padding: 20px 60px
+        +font(24px)
+        padding: .5em 2em
 
     // ========== REVERSE ========== //
     &--reversed
@@ -62,21 +65,30 @@ $button_base_color: color(primary)
 
     // ========== COLORS ========== //
     @each $color, $value in $colors
-        &--#{$color}
+        &---#{"" + $color}
             border-color: $value
             &::before
                 background: $value
             &:hover
                 color: $value
-        &--#{$color}.button--reversed
+        &---#{"" + $color}.button--reversed
             color: $value
             &:hover
                 color: white
 
+    // ==================================================
+    // > ELEMENTS
+    // ==================================================
     // ========== ICONS ========== //
-    .fa
+    .fa, .fab, .fal, .far
         margin-right: .5em
+        &.on-right
+            margin-left: .5em
+            margin-right: 0
 
+    // ==================================================
+    // > STATES
+    // ==================================================
     // ========== LOADING ========== //
     &.is-loading
         opacity: 0.5

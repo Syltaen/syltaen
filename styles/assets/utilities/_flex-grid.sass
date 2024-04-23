@@ -1,0 +1,168 @@
+// ==================================================
+// > FLEX GRID
+// ==================================================
+
+// ==================================================
+// > CONTAINER
+// ==================================================
+.container
+    position: relative
+    z-index: 10
+    width: calc(100% - 20px)
+    max-width: container(lg)
+    margin: 0 auto
+
+    // Create a container modifier for each breakpoint
+    @each $slug, $bp in $responsive
+        &--#{$slug}
+            max-width: container($slug)
+
+        &--full
+            width: 100%
+            max-width: 100%
+
+        // Set the container max size for each breakpoint
+        @if breakpoint($slug)
+            +screen($slug)
+                max-width: container($slug)
+
+            &--full
+                width: 100%
+                max-width: 100%
+
+// ==================================================
+// > ROW / COLUMNS
+// > Exemple : "row column-reverse-sm"
+// ==================================================
++screen-suffixes() using ($suffix, $bp)
+    .row#{$suffix}
+        +flex(row nowrap)
+    .row-wrap#{$suffix}
+        +flex(row wrap)
+    .row-reverse#{$suffix}
+        +flex(row-reverse nowrap)
+    .row-reverse-wrap#{$suffix}
+        +flex(row-reverse wrap)
+
+    .column#{$suffix}
+        +flex(column nowrap)
+    .column-wrap#{$suffix}
+        +flex(column wrap)
+    .column-reverse#{$suffix}
+        +flex(column-reverse nowrap)
+    .column-reverse-wrap#{$suffix}
+        +flex(column-reverse wrap)
+
+// ==================================================
+// > GRID ITEM
+// > Exemple : .gr-4-sm
+// ==================================================
++screen-suffixes() using ($suffix, $bp)
+    .gr#{$suffix}
+        flex: 1
+        max-width: 100%
+        width: 100%
+    @for $i from 1 through 12
+        .gr-#{$i}#{$suffix}
+            flex: $i
+            // flex-shrink: 1
+            // flex-grow: 1
+    .gr-auto
+        flex: unset
+        flex-grow: 1
+    .gr-none
+        flex: unset
+
+// ==================================================
+// > GUTTERS
+// > Exemple : .row.sm-gutters.xs-gutters-sm
+// ==================================================
+[class^="row"]
+    margin-left: -1 * spacing(2)
+    margin-right: -1 * spacing(2)
+    & > [class^="gr"]
+        padding-left: spacing(2)
+        padding-right: spacing(2)
+
++screen-spacing using ($sp, $value, $ratio, $suffix, $bp)
+    @if (breakpoint($bp) == null or $ratio != 1) and (breakpoint($bp) == null or $value != 0px)
+        .gutters-#{$sp}
+            margin-left: -1 * $value
+            margin-right: -1 * $value
+
+        .gutters-#{$sp} > [class^="gr"]
+            padding-left: $value
+            padding-right: $value
+
+    @if breakpoint($bp)
+        .gutters-#{$sp}#{$suffix}
+            margin-left: -1 * $value
+            margin-right: -1 * $value
+
+        .gutters-#{$sp}#{$suffix} > [class^="gr"]
+            padding-left: $value
+            padding-right: $value
+
+
+// // ==================================================
+// // > PREFIX / SUFFIX
+// // ==================================================
+// @for $i from 1 through 12
+//     .prefix-#{$i}
+//         margin-left: #{(100% / 12) * $i}
+//     .suffix-#{$i}
+//         margin-right: #{(100% / 12) * $i}
+
+// ==================================================
+// > ALIGNMENTS
+// > Exemple : .flex-justify-center
+// ==================================================
+// Justify content
++screen-suffixes() using ($suffix, $bp)
+    @each $jc in start end center space-between space-around none
+        .flex-justify-#{$jc}#{$suffix}
+            @if $jc == start or $jc == end
+                $jc: flex-#{$jc}
+            @if $jc == none
+                $jc: unset
+            justify-content: $jc
+
+
+// Align items
++screen-suffixes() using ($suffix, $bp)
+    @each $ai in start end center baseline stretch none
+        .flex-align-#{$ai}#{$suffix}
+            @if $ai == start or $ai == end
+                $ai: flex-#{$ai}
+            @if $ai == none
+                $ai: unset
+            align-items: $ai
+
+.flex
+    &-pos-left-top
+        justify-content: flex-start
+        align-items: flex-start
+    &-pos-center-top
+        justify-content: center
+        align-items: flex-start
+    &-pos-right-top
+        justify-content: flex-end
+        align-items: flex-start
+    &-pos-left-center
+        justify-content: flex-start
+        align-items: center
+    &-pos-center-center
+        justify-content: center
+        align-items: center
+    &-pos-right-center
+        justify-content: flex-end
+        align-items: center
+    &-pos-left-bottom
+        justify-content: flex-start
+        align-items: flex-end
+    &-pos-center-bottom
+        justify-content: center
+        align-items: flex-end
+    &-pos-right-bottom
+        justify-content: flex-end
+        align-items: flex-end

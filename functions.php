@@ -3,18 +3,11 @@
 namespace Syltaen;
 
 // ==================================================
-// > Gloabal config
-// ==================================================
-date_default_timezone_set("Europe/Brussels");
-
-
-// ==================================================
 // > Autoloading & vendors
 // ==================================================
 require __DIR__ . "/app/Helpers/Files.php";
 spl_autoload_register("Syltaen\Files::autoload");
 Files::import("app/vendors/vendor/autoload.php");
-
 
 // ==================================================
 // > Custom error-handler
@@ -31,11 +24,8 @@ if (WP_DEBUG || isset($_GET["debug"])) {
 // ==================================================
 Files::import([
     "app/config",
-    "app/hooks/actions",
-    "app/hooks/filters",
-    "app/hooks/ajax",
+    "app/hooks",
 ]);
-
 
 // ==================================================
 // > TMP
@@ -50,20 +40,17 @@ Files::import("Controllers/Blocks/core/section", "block.section.php");
 //     ];
 // });
 
-
-
-
 // return;
 // Register a testimonial ACF Block
-if( function_exists('acf_register_block') ) {
+if (function_exists('acf_register_block')) {
 
-    $result = acf_register_block(array(
-        'name'				=> 'testimonial',
-        'title'				=> __('Testimonial'),
-        'description'		=> __('A custom testimonial block.'),
-        'render_callback'	=> function () {
+    $result = acf_register_block([
+        'name'            => 'testimonial',
+        'title'           => __('Testimonial'),
+        'description'     => __('A custom testimonial block.'),
+        'render_callback' => function () {
             $testimonial = "salut";
-            $author = "ouioiuioiu";
+            $author      = "ouioiuioiu";
 
             ?>
             <blockquote class="testimonial">
@@ -74,10 +61,9 @@ if( function_exists('acf_register_block') ) {
             </blockquote>
             <?php
 
-
-        }
-        //'category'		=> '',
-        //'icon'			=> '',
-        //'keywords'		=> array(),
-    ));
+        },
+        //'category'        => '',
+        //'icon'            => '',
+        //'keywords'        => array(),
+    ]);
 }

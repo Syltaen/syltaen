@@ -1,13 +1,11 @@
 // =============================================================================
-// > LAYOUTS : SITE INTRO
+// > LAYOUT : SITE INTRO
 // =============================================================================
 
 .site-intro
-    padding: 50px 0
-    text-align: center
-    color: white
-    background: color(secondary)
-
-    h1
-        +font(white center uppercase)
-        margin: 0
+    position: relative
+    &::before
+        content: ""
+        @extend %cover
+        background: color(black, .25)
+        z-index: 5

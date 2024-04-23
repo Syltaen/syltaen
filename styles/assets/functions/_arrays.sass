@@ -1,0 +1,82 @@
+// ==================================================
+// > UTILS - ARRAYS
+// ==================================================
+
+// ==================================================
+// > TOOLS
+// ==================================================
+@function list_get($array, $index)
+    @if map-has-key($array, $index)
+        @return map-get($array, $index)
+    @warn "Unkown '#{$index}' in array"
+    @return null
+
+
+// ==================================================
+// > ARRAYS
+// ==================================================
+
+// ========== BREAKPOINTS ========== //
+@function breakpoint($slug: null)
+
+    @if not $slug
+        @return null
+
+    @if $slug == null
+        @return null
+
+    @if map-has-key($responsive, $slug)
+        $resp: list_get($responsive, $slug)
+        @return list_get($resp, breakpoint)
+    @else
+        @return $slug
+
+@function spacingratio($slug)
+    @if map-has-key($responsive, $slug)
+        $resp: list_get($responsive, $slug)
+        @return list_get($resp, spacingratio)
+    @else
+        @return $slug
+
+// ========== CONTAINERS ========== //
+@function container($slug)
+    $resp: list_get($responsive, $slug)
+    @return list_get($resp, container)
+
+
+// ========== COLORS ========== //
+@function color($slug, $opacity: 1)
+    $color: false
+
+    @if map-has-key($colors, $slug)
+        $color: list_get($colors, $slug)
+    @else
+        $color: $slug
+
+    @if $opacity == 1
+        @return $color
+    @else
+        @return rgba($color, $opacity)
+
+// ========== FONTS ========== //
+@function font($slug)
+    @if map-has-key($fonts-stacks, $slug)
+        @return list_get($fonts-stacks, $slug)
+    @else
+        @return $slug
+
+
+// ========== SPACING ========== //
+@function spacing($slug)
+    @if map-has-key($spacing, $slug)
+        @return list_get($spacing, $slug)
+    @else
+        @return $slug
+
+
+// ========== EASING ========== //
+@function easing($slug)
+    @if map-has-key($easing, $slug)
+        @return list_get($easing, $slug)
+    @else
+        @return $slug

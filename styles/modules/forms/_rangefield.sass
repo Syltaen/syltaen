@@ -1,0 +1,134 @@
+// =============================================================================
+// > MODULE : FORM - RANGEFIELD
+// =============================================================================
+
+.rangefield
+    margin-top: 10px
+    background: color(light-grey)
+    position: relative
+    margin-bottom: 40px
+
+    &,
+    &__fill
+        display: block
+        box-shadow: inset 0px 1px 2px rgba(black, .15)
+        border-radius: 5px
+
+    &--disabled
+        opacity: .4
+
+    &__fill
+        background: color(primary)
+        position: absolute
+        transition: all .25s ease
+
+    &__handle
+        background: white
+        border: 1px solid #ccc
+        cursor: pointer
+        display: inline-block
+        +size(20px)
+        position: absolute
+        transition: all .25s ease
+
+        background-size: 100%
+        background-image: linear-gradient(rgba(black, 0), rgba(black, .1))
+        box-shadow: 0 0 8px rgba(black, .3)
+
+        border-radius: 50%
+        &::after
+            content: ""
+            display: block
+            +size(9px)
+            margin: auto
+            +absolute(top 0 left 0 bottom 0 right 0)
+            background-size: 100%
+            background-image: linear-gradient(rgba(black, .13), rgba(black, 0))
+            border-radius: 50%
+
+    &__handle:active,
+    &--active &__handle
+        background-size: 100%
+        background-image: linear-gradient(rgba(black, .1), rgba(black, .12))
+
+    // ==================================================
+    // > HORIZONTAL
+    // ==================================================
+    &--horizontal
+        height: 10px
+        width: 100%
+
+    &--horizontal &
+        &__fill
+            top: 0
+            height: 100%
+
+        &__handle
+            top: -5px
+            touch-action: pan-y
+
+    // ==================================================
+    // > VERTICAL
+    // ==================================================
+    &--vertical
+        width: 10px
+        height: 100%
+        min-height: 150px
+        max-height: 100%
+
+    &--vertical &
+        &__fill
+            bottom: 0
+            width: 100%
+
+        &__handle
+            left: -5px
+            touch-action: pan-x
+
+
+    // ==================================================
+    // > GRADUATIONS
+    // ==================================================
+    &__graduations
+        +flex(row nowrap, space-between)
+        +size(100%, 20px)
+        +absolute(bottom -40px left 0)
+
+        &__item
+            width: 20px
+            +font(13px medium-grey bold center)
+            position: relative
+            &::before
+                content: ""
+                +size(1px, 8px)
+                background: color(medium-grey)
+                +absolute(top -12px right 50%)
+            span
+                +absolute(left 50% top 0)
+                transform: translate(-50%)
+
+    // ==================================================
+    // > VALUE
+    // ==================================================
+    &__value
+        z-index: 100
+        padding: 8px 10px
+        border-radius: 5px
+        background: color(primary)
+        +absolute(top 100% left 50%)
+        transform: translate(-50%, 8px)
+        +font(13px bold white)
+        &::before
+            content: ""
+            border-bottom: 8px solid color(primary)
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            +absolute(bottom 100% left 50%)
+            margin-left: -4px
+
+
+    // =============================================================================
+    // > THEMES
+    // =============================================================================
+    &--nolabel &__graduations__item span
+        display: none

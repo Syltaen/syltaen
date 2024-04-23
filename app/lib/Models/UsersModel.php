@@ -4,58 +4,104 @@ namespace Syltaen;
 
 abstract class UsersModel extends Model
 {
+    /**
+     * The slug that define what this model is used for
+     */
+    const TYPE = "users";
+
+    /**
+     * Query arguments used by the model's methods
+     */
+    const QUERY_CLASS  = "WP_User_Query";
+    const OBJECT_CLASS = "WP_User";
+    const ITEM_CLASS   = "\Syltaen\User";
+    const OBJECT_KEY   = "results";
+    const QUERY_IS     = "include";
+    const QUERY_ISNT   = "exclude";
+    const QUERY_LIMIT  = "number";
+    const QUERY_HOOK   = "pre_user_query";
+    const META_TABLE   = "usermeta";
+    const META_ID      = "umeta_id";
+    const META_OBJECT  = "user_id";
+
+    /**
+     * Add fields shared by all post types
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->addFields([
+            /**
+             * Unique profile URL
+             */
+            "@url"       => function ($user) {
+                return get_author_posts_url($user->getID());
+            },
+
+            /**
+             * URL to edit the user in the admin
+             */
+            "@admin_url" => function ($user) {
+                return site_url("/wp-admin/user-edit.php?user_id={$user->ID}");
+            },
+        ]);
+
+    }
 
     // =============================================================================
     // > QUERY MODIFIERS
     // =============================================================================
 
     /* Update parent method */
-    public function is($list, $add = false, $filter_key = "include")
-    {
-        return parent::is($list, $add, $filter_key);
-    }
-
-    public function merge($model)
-    {
-        if (isset($model->filters["include"])) {
-            $this->is($model->filters["include"], true);
-        }
-        return $this;
-    }
-
-    /* Update parent method */
-    public function isnt($list, $filter_key = "exclude")
-    {
-        return parent::isnt($list, $filter_key);
-    }
-
-    /* Update parent method */
-    public function limit($limit = false, $filter_key = "number")
-    {
-        return parent::limit($limit, $filter_key);
-    }
-
-    /* Update parent method */
+    /**
+     * @param  $terms
+     * @param  array     $columns
+     * @param  $strict
+     * @return mixed
+     */
     public function search($terms, $columns = [], $strict = false)
     {
         $this->filters["search"] = $strict ? $terms : "*$terms*";
-
-        if (!empty($columns)) $this->filters["search_columns"] = $columns;
+        if (!empty($columns)) {
+            $this->filters["search_columns"] = $columns;
+        }
 
         return $this;
     }
 
-
     /**
-     * Filter to the current logged user
-     *
+     * Update parent to add common ordering parameters
      * @return self
      */
-    public function logged()
+    public function order($orderby = false, $order = "ASC")
     {
-        return $this->is(wp_get_current_user()->ID);
+        $orderby = explode(":", $orderby);
+
+        switch ($orderby[0]) {
+            case "relation_title":
+                return $this->updateQuery(function ($query) use ($order, $orderby) {
+                    global $wpdb;
+                    $query->query_from .= " LEFT JOIN {$wpdb->usermeta} rel ON rel.meta_key = '{$orderby[1]}' AND rel.user_id = {$wpdb->users}.ID";
+                    $query->query_from .= " LEFT JOIN {$wpdb->posts} rel_post ON rel_post.ID = rel.meta_value";
+                    $query->query_orderby = "ORDER BY rel_post.post_title $order";
+                    return $query;
+                });
+
+            default:
+                return parent::order($orderby, $order);
+        }
     }
 
+    /**
+     * Get the current logged user
+     *
+     * @return User
+     */
+    public static function getCurrent()
+    {
+        return self::getItem(wp_get_current_user());
+    }
 
     /**
      * Check if there is a logged user
@@ -67,16 +113,34 @@ abstract class UsersModel extends Model
         return is_user_logged_in();
     }
 
+    /**
+     * Get the target ID, fallback to the current logged-in user
+     *
+     * @param  mixed         $user
+     * @return int|boolean
+     */
+    public static function getTargetID($target = false)
+    {
+        if ($target) {
+            return Data::extractIds($target)[0] ?? false;
+        }
+
+        return get_current_user_id();
+    }
 
     /**
      * Filter users by roles
      *
-     * @param array|string $roles An array or a comma-separated list of role names that users must match to be included in results.
-     * @param $relation Specify if the matches should have : any, all or none of the roles
+     * @param  array|string $roles  An array or a comma-separated list of role names that users must match to be included in results.
+     * @param  $relation    Specify if the matches should have : any, all or none of the roles
      * @return self
      */
     public function role($roles, $relation = "all")
     {
+        unset($this->filters["role__in"]);
+        unset($this->filters["role__not_in"]);
+        unset($this->filters["role"]);
+
         switch ($relation) {
             case "any":
                 $this->filters["role__in"] = $roles;
@@ -91,115 +155,62 @@ abstract class UsersModel extends Model
         return $this;
     }
 
-
     /**
      * Set a default filter because runing WP_User_Query without any argument return no result
      *
-     * @param boolean $filter_keys
-     * @param array $default_filters
+     * @param  boolean $filter_keys
+     * @param  array   $default_filters
      * @return self
      */
     public function clearFilters($filter_keys = false, $default_filters = null)
     {
         return parent::clearFilters($filter_keys, [
-            "prevent_empty"   => true
+            "prevent_empty" => true,
         ]);
     }
-
-
-
 
     // =============================================================================
     // > GETTERS
     // =============================================================================
+    /* Update parent method */
     /**
-     * Update parent method to have a cleaner data structure for each result
-     *
-     * @param WP_User_Query $query
-     * @return void
+     * @param  $paginated
+     * @return mixed
      */
-    protected static function getResultsFromQuery($query)
-    {
-        // empty
-        if (empty($query->results)) return [];
-        // string|int -> IDs
-        if (is_string($query->results[0]) || is_int($query->results[0])) return $query->results;
-        // already transformed
-        if (get_class($query->results[0]) !== "WP_User") return $query->results;
-
-        $wp_users = $query->results;
-        $results  = [];
-
-        $query->results = [];
-        foreach ($wp_users as $wp_user) {
-            $result = (object) [
-                "ID"    => $wp_user->ID,
-                "caps"  => $wp_user->allcaps
-            ];
-            foreach ($wp_user->data as $key=>$value) {
-                $key          = str_replace("user_", "", $key);
-                $result->$key = $value;
-            }
-
-            $result->first_name = $wp_user->first_name;
-            $result->last_name  = $wp_user->last_name;
-
-            $results[] = $result;
-        }
-
-        $query->results = $results;
-
-        return $query->results;
-    }
-
-
-    /* Update parent method */
-    public function run($force = false)
-    {
-        if ($this->cachedQuery && $this->filters == $this->cachedFilters && !$force) return $this;
-        $this->clearCache();
-        $this->cachedQuery = new \WP_User_Query($this->filters);
-        $this->cachedFilters = $this->filters;
-        return $this;
-    }
-
-
-    /* Update parent method */
     public function count($paginated = true)
     {
-        $total = $this->getQuery()->total_users;
+        if ($paginated) {
+            return count($this->getQuery()->results);
+        } else {
+            return $this->getQuery()->total_users;
+        }
 
-        if (!$paginated || !isset($this->filters["number"])) return $total;
-
-        // Not on last page : return the limit
-        $page = isset($this->filters["paged"]) ? $this->filters["paged"] : 1;
-
-        if ($page < $this->getPagesCount()) return $this->filters["number"];
-
-        // On last page : return the rest
-        return $total - ($page - 1 ) * $this->filters["number"];
     }
 
     /* Update parent method */
+    /**
+     * @return int
+     */
     public function getPagesCount()
     {
-        $total = $this->getQuery()->total_users;
+        // No limit, everything in one page
+        if (!isset($this->filters[static::QUERY_LIMIT])) {
+            return 1;
+        }
 
-        if (!isset($this->filters["number"])) return $total;
-
-        return ceil($total / $this->filters["number"]);
+        // Else, divide total by limit
+        return ceil($this->getQuery()->total_users / $this->filters[static::QUERY_LIMIT]);
     }
 
-
-    // =============================================================================
-    // > DATA HANDLING FOR EACH POST
-    // =============================================================================
-    /* Update parent method */
-    protected function populateFields(&$user, $fields_prefix = "user_")
+    /**
+     * Get all the IDs of this model's objects
+     *
+     * @return array
+     */
+    public static function getAllIDs()
     {
-        parent::populateFields($user, $fields_prefix);
+        return (array) Database::get_col("SELECT ID FROM users");
     }
-
 
     // =============================================================================
     // > ROLES AND PERMISSIONS
@@ -207,50 +218,38 @@ abstract class UsersModel extends Model
     /**
      * Check is the matched users have a capability or a role
      *
-     * @param string|array $capability Capability or Role to check, or an array of them
-     * @param string $relation If $capability is an array, specify if the users should have any or all capacility (any|all)
-     * @return void
+     * @param  string|array $capability Capability or Role to check, or an array of them
+     * @param  string       $relation   If $capability is an array, specify if the users should have any or all capacility (any|all)
+     * @return bool
      */
     public function can($capability, $relation = "all")
     {
-        if (!$this->found()) return false;
+        if (!$this->found()) {
+            return false;
+        }
 
         foreach ($this->get() as $user) {
-            if (is_array($capability)) {
-                switch ($relation) {
-                    case "any":
-                        $user_can = false;
-                        foreach ($capability as $cap) {
-                            if (isset($user->caps[$cap]) && $user->caps[$cap]) {
-                                $user_can = true;
-                                break;
-                            }
-                        }
-                        if (!$user_can) return false;
-                        break;
-                    case "all":
-                    default:
-                        foreach ($capability as $cap) {
-                            if (!isset($user->caps[$cap]) || !$user->caps[$cap]) {
-                                return false;
-                            }
-                        }
-                        break;
-                }
-            } else {
-                if (!isset($user->caps[$capability]) || !$user->caps[$capability]) {
-                    return false;
-                }
+            $can = $user->can($capability, $relation);
+
+            // One user who cannot was met, need all of them
+            if ($relation == "all" && !$can) {
+                return false;
+            }
+
+            // One user who can was met, need only one of them
+            if ($relation == "any" && $can) {
+                return true;
             }
         }
-        return true;
-    }
 
+        // Not stopped, return oposite value of user-specific checks
+        return $relation == "all";
+    }
 
     /**
      * Remove unused roles
      *
-     * @param array $roles
+     * @param  array  $roles
      * @return void
      */
     public static function unregisterRoles($roles)
@@ -262,11 +261,10 @@ abstract class UsersModel extends Model
         }
     }
 
-
     /**
      * Register custom capablilities
      *
-     * @param array $capablilities
+     * @param  array  $capablilities
      * @return void
      */
     public static function registerCapabilities($capablilities)
@@ -278,8 +276,47 @@ abstract class UsersModel extends Model
         }
     }
 
+    /**
+     * Get an object instance
+     *
+     * @return WP_...
+     */
+    public static function getObject($id)
+    {
+        $class = static::OBJECT_CLASS;
+        return new $class($id);
+    }
 
-
+    /**
+     * Get a dummy object instance
+     *
+     * @return object
+     */
+    public static function getDummyObject()
+    {
+        return (object) [
+            "ID"         => 0,
+            "roles"      => [],
+            "data"       => [
+                "ID"                  => "0",
+                "user_login"          => "",
+                "user_pass"           => "",
+                "user_nicename"       => "",
+                "user_email"          => "",
+                "user_url"            => "",
+                "user_registered"     => "",
+                "user_activation_key" => "",
+                "user_status"         => "0",
+                "display_name"        => "<i>-</i>",
+            ],
+            "first_name" => "",
+            "last_name"  => "",
+            "cap_key"    => "",
+            "caps"       => [],
+            "allcaps"    => [],
+            "filter"     => null,
+        ];
+    }
 
     // =============================================================================
     // > ACTIONS
@@ -287,11 +324,11 @@ abstract class UsersModel extends Model
     /**
      * Create a new user
      *
-     * @param string $login
-     * @param string $password
-     * @param string $email
-     * @param array $roles
-     * @return int $user_id
+     * @param  string $login
+     * @param  string $password
+     * @param  string $email
+     * @param  array  $roles
+     * @return self   A new model instance containing the new item
      */
     public static function add($login, $password, $email, $attrs = [], $fields = [], $roles = [])
     {
@@ -299,151 +336,34 @@ abstract class UsersModel extends Model
             "user_login"           => $login,
             "user_pass"            => $password,
             "user_email"           => $email,
-            "show_admin_bar_front" => "false"
+            "show_admin_bar_front" => "false",
         ], $attrs));
 
-        if ($user_id instanceof \WP_Error) return $user_id;
-
-        if ($fields && !empty($fields)) {
-            static::updateFields($user_id, $fields);
+        if ($user_id instanceof \WP_Error) {
+            return $user_id;
         }
 
-        if ($roles && !empty($roles)) {
-            static::updateRoles($user_id, $roles);
-        }
+        $user = static::getItem($user_id)->update(false, $fields, $roles);
 
-        return $user_id;
+        return $user;
     }
 
-
     /**
-     * Update all posts matching the query
+     * Alias for the setTaxonomy method
      *
-     * @param array $attrs
-     * @param array $filds
-     * @param array $merge Only update data that is not already set
+     * @param  array  $roles Roles to set
+     * @param  bool   $merge Wether to merge or set the values
      * @return self
      */
-    public function update($attrs = [], $fields = [], $roles = [], $merge = false)
+    public function seteRoles($roles, $merge = false)
     {
-        foreach ($this->get() as $result) {
-
-            // Default attributes
-            if ($attrs && !empty($attrs)) {
-                static::updateAttrs($result, $attrs, $merge);
-            }
-
-            // Custom fields
-            if ($fields && !empty($fields)) {
-                static::updateFields($result, $fields, $merge);
-            }
-
-            // Roles
-            if ($roles && !empty($roles)) {
-                static::updateRoles($result, $roles, $merge);
-            }
-        }
-
-        // Force get refresh
-        $this->clearCache();
-
-        return $this;
+        return $this->updateTaxonomies($roles, $merge);
     }
-
-
-    /**
-     * Update parent method
-     *
-     * @see https://codex.wordpress.org/Function_Reference/wp_update_user
-     * @return void
-     */
-    public static function updateAttrs($result, $attrs, $merge = false)
-    {
-        if ($merge) {
-            foreach ($attrs as $attr=>$value) {
-                if (isset($result->$attr) && !empty($result->$attr)) {
-                    unset($attrs[$attr]);
-                }
-            }
-        }
-
-        foreach ($attrs as &$attr) {
-            if (is_callable($attr) && !is_string($attr)) $attr = $attr($result);
-        }
-
-        $attrs["ID"] = $result->ID;
-        wp_update_user($attrs);
-    }
-
-
-    /* Update parent method */
-    public static function updateFields($user, $fields, $merge = false, $fields_prefix = "user_")
-    {
-        parent::updateFields($user, $fields, $merge, $fields_prefix);
-    }
-
-
-    /**
-     * Update a user's roles
-     *
-     * @param mixed $user The user
-     * @param array $roles A list of roles slugs
-     * @return void
-     */
-    public static function updateRoles($user, $roles, $merge = false)
-    {
-        $user = get_user_by("id", Data::filter($user, "id"));
-        if ($user) {
-            if (!$merge) {
-                $user->set_role("");
-            }
-            foreach ((array) $roles as $role) {
-                $user->add_role($role);
-            }
-        }
-    }
-
-
-    /* Update parent method */
-    public function delete($reassign = null)
-    {
-        foreach ($this->get() as $user) {
-            wp_delete_user($user->ID, $reassign);
-        }
-        $this->clearCache();
-    }
-
-
-    /**
-     * Login as the first found user
-     *
-     * @param string $redirecton URL to which redirect when logged in successfully
-     * @return boolean Success of the login
-     */
-    public function login($redirection = false)
-    {
-        $user = $this->getOne();
-
-        if ($this->count()) {
-            wp_set_current_user($user->ID, $user->login);
-            wp_set_auth_cookie($user->ID);
-            do_action("wp_login", $user->login, $user);
-
-            if ($redirection) {
-                Route::redirect($redirection);
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
     /**
      * Logout any logged user
      *
-     * @param string $redirection URL to which redirect when logged out successfully
+     * @param  string $redirection URL to which redirect when logged out successfully
      * @return void
      */
     public static function logout($redirection = false)
@@ -451,22 +371,6 @@ abstract class UsersModel extends Model
         wp_logout();
         if ($redirection) {
             Route::redirect($redirection);
-        }
-    }
-
-
-    /**
-     * Send a mail to each matching user
-     *
-     * @param string $subject
-     * @param string $body
-     * @param array $custom_headers
-     * @return void
-     */
-    public function sendMail($subject, $body, $custom_headers = [])
-    {
-        foreach ($this->get() as $user) {
-            Mail::send($user->email, $subject, $body, $custom_headers);
         }
     }
 }

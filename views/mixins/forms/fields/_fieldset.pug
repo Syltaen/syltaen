@@ -1,0 +1,41 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELDSET
+//- =============================================================================
+
+mixin fieldset(form, name, label = false, field_attributes = false, $display_filter = false)
+
+    fieldset(class=$form["hidden"]->hasValue($name)?"is-hidden":"" class=$form["errors"]->get($name)?"has-error":"")&attributes($attributes)
+
+        if $label
+            label(class=!empty($form["locks"][$name])?"is-locked":"")!= $label
+
+        if $form["locks"]->get($name) !== null
+            p.input.input--lock.no-margin
+                input(type="hidden" name=$name value=$form["locks"]->get($name))
+
+                //- Options : use labels
+                if $form["options"]->get($name)
+                    != $_set((array) $form["locks"]->get($name))->map(function($value) use ($form, $name) {
+                        return $form["options"]->get($name)[$value] ?? $value;
+                    })->join(", ")
+
+                //- Flat value
+                else
+                    if (isset($field_attributes["data-prefix"]))
+                        != $field_attributes["data-prefix"]
+                        |&nbsp;
+
+                    if $display_filter
+                        != apply_filters($display_filter, $form["locks"]->get($name), $name, $field_attributes)
+                    else
+                        != $form["locks"]->get($name)
+
+                    if (isset($field_attributes["data-suffix"]))
+                        |&nbsp;
+                        != $field_attributes["data-suffix"]
+
+        else
+            block
+                //- The field
+
+            p.form__error!= $form["errors"]->get($name)

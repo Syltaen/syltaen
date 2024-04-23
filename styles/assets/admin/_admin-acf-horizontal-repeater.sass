@@ -1,0 +1,28 @@
+// =============================================================================
+// > ADMIN : ACF-HORIZONTAL-REPEATER
+// =============================================================================
+
+.acf-horizontal-repeater > .acf-input > .acf-flexible-content
+    position: relative
+
+    // ROW / COLUMNS
+    & > .values
+        +flex(row nowrap)
+        padding-right: 40px
+
+        & > .layout
+            margin-top: 0
+            flex: 1
+            border-right: 1px solid #ccd0d4
+
+            & > .acf-fc-layout-handle
+                border-bottom: 0
+
+            & > .acf-fc-layout-controls .acf-icon.-plus
+                display: none
+
+    // ROW ACTIONS
+    & > .acf-actions
+        +absolute(top 50% right 0)
+        transform: translateY(-50%)
+        +flex(column nowrap)

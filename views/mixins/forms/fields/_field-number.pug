@@ -1,0 +1,9 @@
+//- =============================================================================
+//- > MIXIN : FORM FIELD - NUMBER
+//- =============================================================================
+
+mixin field-number(form, name, label = false, field_attributes = false)
+
+    +fieldset($form, $name, $label, $field_attributes)&attributes($attributes)
+        input(type="number" name=$name value=$form["prefill"]->get($name))&attributes($field_attributes)
+        block

@@ -5,60 +5,72 @@
 .site-mobilenav
     z-index: 7500
     +fixed(top 0 right 0)
-    +size(400px, 100%)
-    max-width: 100%
+    +size(100%)
+    max-width: 400px
     transform: translateX(100%)
     background: white
-    transition: all .2s ease
+    transition: all .35s ease
     overflow-y: scroll
-    padding: 20px 60px 20px
     display: none
+    padding: 0 1.5em
     +screen(sm)
         display: block
 
-    +screen(xs)
-        padding: 80px 20px 20px
+    .is-mobilenav-open &
+        transform: translateX(0)
+
+    &::-webkit-scrollbar
+        &-track
+            background-color: transparent
+        &-thumb
+            background: color(primary-dark)
 
     &__nav
         display: block
         clear: both
+        +flex(column, center)
+        height: 100%
 
     &__menu
         +flex(column)
-        padding: 20px 0
+        & > li
+            padding: .5em 0
+            border-bottom: 1px solid color(light-grey)
+            &:last-child
+                border-bottom: 0
         a
-            +font(18px regular right)
+            +font(20px bold uppercase text left)
             display: block
-            padding: 10px 0
+            padding: .5em 0
             transition: all 0.2s ease
             &::after
-                content: none
-
+                content: none !important
+            &:hover
+                +font(primary)
         .sub-menu a
-            +font(14px #aaa light)
+            +font(18px regular text)
             padding: 5px 0
+            &:hover
+                +font(primary)
 
-    &__header
-        +absolute(top 0 left 0)
-        +size(100%, 40px)
-        padding: 24px 40px
-
-    .is-mobilenav-open &
-        transform: translateX(0)
 
     // ==================================================
     // > TRIGGER
     // ==================================================
     &__trigger
         z-index: 9999
-        +fixed(top 35px right 20px)
+        +fixed(top 30px right 30px)
         +size(50px)
-        border: 2px solid color(primary)
+        border: 2px solid color(white)
+        background: color(primary)
+        box-shadow: 0 0 0 4px color(primary)
         border-radius: 50%
         opacity: 0
         visibility: hidden
         transition: all .2s ease
-        background: none
+        cursor: pointer
+        +screen(xs)
+            +pos(top 20px right 20px)
 
         +screen(sm)
             opacity: 1
@@ -66,27 +78,31 @@
 
         span
             position: absolute
-            width: 60%
+            width: 26px
+            margin-top: -1px
+            margin-left: -13px
             height: 2px
             top: 50%
             left: 50%
-            background: color(primary)
-            transition: all 0.2s ease
+            background: color(white)
+            transition: margin .25s ease .25s, transform .25s ease
             &:nth-child(1)
-                transform: translate(-50%, calc(-50% - 4px))
-            &:nth-child(2)
-                transform: translate(-50%, -50%)
+                margin-top: -8px
             &:nth-child(3)
-                transform: translate(-50%, calc(-50% + 4px))
+                margin-top: 6px
 
-            .is-mobilenav-open &
+        .is-mobilenav-open &
+            span
+                transition: margin .25s ease, transform .25s ease .25s
                 &:nth-child(1)
-                    transform: translate(-50%, -50%)
+                    margin-top: -1px
+                    transform: rotate(45deg)
                 &:nth-child(2)
                     opacity: 0
-                    transform: translate(-100%, -50%)
+                    transition-delay: .25s
                 &:nth-child(3)
-                    transform: translate(-50%, -50%)
+                    margin-top: -1px
+                    transform: rotate(-45deg)
 
 
 

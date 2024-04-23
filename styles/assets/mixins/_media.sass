@@ -1,0 +1,61 @@
+// =============================================================================
+// > UTILS - MEDIA QUERIES
+// =============================================================================
+
+// ==================================================
+// > SCREEN
+// > Usage :
+// > +screen(md)
+// >    color: red
+// ==================================================
+
+=screen($max_width, $min_width: null, $max_height: null, $min_height: null)
+
+    $query: "screen"
+
+    // max width
+    @if breakpoint($max_width) != null
+        $query: $query + " and (max-width: #{breakpoint($max_width)})"
+
+    // min width
+    @if breakpoint($min_width) != null
+        $query: $query + " and (min-width: #{breakpoint($min_width)})"
+
+    // max height
+    @if breakpoint($max_height) != null
+        $query: $query + " and (max-height: #{breakpoint($max_height)})"
+
+    // min height
+    @if breakpoint($min_height) != null
+        $query: $query + " and (min-height: #{breakpoint($min_height)})"
+
+    @if $query == "screen"
+        @content
+    @else
+        @media #{$query}
+            @content
+
+
+=breakpoints
+    @each $bp, $bp_data in $responsive
+        $suffix: ""
+        @if breakpoint($bp) != null
+            $suffix: "-#{$bp}"
+        @content($suffix, $bp)
+
+
+=screen-suffixes
+    @each $bp, $bp_data in $responsive
+        +screen($bp)
+            $suffix: ""
+            @if breakpoint($bp) != null
+                $suffix: "-#{$bp}"
+            @content($suffix, $bp)
+
+
+// ==================================================
+// > PRINT
+// ==================================================
+=print
+    @media print
+        @content

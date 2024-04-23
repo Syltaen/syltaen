@@ -1,0 +1,119 @@
+// =============================================================================
+// > ADMIN : ADMIN-ACF-PAGE-SECTIONS
+// =============================================================================
+
+.acf-page-sections > .acf-input > .acf-flexible-content > .values
+    // padding-left: 50px
+
+    & > .layout
+        margin-top: 0
+        border: 0
+        position: relative
+
+        &,
+        & > .acfe-fc-preview
+            min-height: 200px
+            overflow: hidden
+            position: relative
+            &::before
+                content: ""
+                +absolute(top 0 left 0)
+                +size(300%, 100%)
+                background-image: linear-gradient(to right, #F8F8F8 50%, #FFFFFF 50%)
+                background-size: 10px 100%
+                background-position: 0% 0%
+                transform: skewX(-45deg) translate(-50%)
+                animation: loadingGradient .5s infinite linear
+            &::after
+                +fal(circle-notch)
+                z-index: 0
+                +absolute(top 50% left 50%)
+                +size(50px)
+                +font(30px 50px primary center)
+                margin-left: -25px
+                margin-top: -25px
+                animation: spin 2s infinite ease
+            &.-loading
+                opacity: .5
+            .error-message
+                position: relative
+                z-index: 1
+                text-align: center
+
+            iframe
+                position: relative
+                z-index: 1
+
+        & > .acf-fc-layout-handle
+            +absolute(top 0 left 0)
+            z-index: 100
+            +size(45px, 100%)
+            box-sizing: border-box
+            background: white
+            opacity: 0
+            .acfe-layout-title
+                display: none
+
+        // Hover : display controls
+        &.-collapsed:hover > .acfe-fc-preview .acfe-fc-overlay
+            background: rgba(black, .85) !important
+            z-index: 5
+        &.-collapsed:hover > .acfe-fc-preview > .button
+            display: block
+        &.-collapsed:hover > .acf-fc-layout-controls,
+        &.-collapsed:hover > .acf-fc-layout-handle
+            opacity: 1 !important
+
+        // Controls
+        & > .acf-fc-layout-controls
+            +absolute(top 50% left 50%)
+            z-index: 150
+            opacity: 0
+
+            .acf-icon
+                visibility: visible !important
+                +size(30px)
+                border: none
+                margin: 0 !important
+                position: absolute
+                &::before
+                    +font(15px center)
+                    line-height: 28px !important
+
+            // Add / Remove
+            .acf-icon.-plus
+                +pos(top 50px left -25px)
+            .acf-icon.-minus
+                +pos(top 50px left 25px)
+
+            // Duplicate / Clone / Hide
+            .acf-icon.-duplicate
+                +pos(top -80px left -50px)
+            .acf-icon.dashicons-hidden
+                +pos(top -80px left 0px)
+            .acf-icon.dashicons-category
+                +pos(top -80px left 50px)
+
+        // Edit / Settings
+        & > .acfe-fc-preview > .button,
+        & > .acf-fc-layout-controls .dashicons-admin-generic
+            +size(50px)
+            border: 0
+            z-index: 150
+            &::before, .dashicons
+                +font(28px #555d66)
+                line-height: 48px !important
+                width: 100%
+                display: block
+
+        & > .acfe-fc-preview > .button
+            +absolute(top 50% left 50%)
+            margin-left: -20px
+        & > .acf-fc-layout-controls .dashicons-admin-generic
+            +absolute(top -25px left 20px)
+
+@keyframes loadingGradient
+    0%
+        background-position: 0 0
+    100%
+        background-position: 10px 0

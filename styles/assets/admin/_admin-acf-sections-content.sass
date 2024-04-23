@@ -1,0 +1,73 @@
+// =============================================================================
+// > ADMIN : ACF-SECTIONS-CONTENT
+// =============================================================================
+
+.acf-sections-content > .acf-input > .acf-flexible-content
+
+
+    // ==================================================
+    // > LAYOUT
+    // ==================================================
+    & > .values > .layout
+        border: 1px solid #CCC
+        margin: 10px 0 0
+
+        & > .acf-fc-layout-handle
+            background: #F5F5F5
+            &::before
+                +far(th-large)
+                +font(16px primary)
+                margin-right: .5em
+
+        @each $layout, $icon in $section-content-icons
+            &[data-layout="#{$layout}"] > .acf-fc-layout-handle::before
+                content: fa-content($icon)
+
+
+    // ==================================================
+    // > ACTIONS
+    // ==================================================
+    & > .acf-actions
+        +flex(row nowrap, center, center)
+
+// ==================================================
+// > MODAL
+// ==================================================
+.acfe-modal-select-content .acfe-flex-container a
+    padding: 0 !important
+    display: flex !important
+    +flex(row nowrap)
+    &:before
+        +far(th-large)
+        +font(16px white)
+        margin-right: .5em
+        padding: .25em .5em
+        +flex(column, center)
+        background: color(primary)
+    span
+        padding: 10px
+
+    &:hover
+        background: color(primary) !important
+
+    @each $layout, $icon in $section-content-icons
+        &[data-layout="#{$layout}"]:before
+            content: fa-content($icon)
+
+// ==================================================
+// > DROPDOWN
+// ==================================================
+.acf-tooltip a[data-layout]::before
+    +far(th-large)
+    margin-right: .5em
+    width: 1.5em
+    display: inline-block
+    +font(center)
+    border-right: 1px solid rgba(white, .5)
+    margin-right: .5em
+    padding-right: .25em
+
+
+@each $layout, $icon in $section-content-icons
+    .acf-tooltip a[data-layout="#{$layout}"]::before
+        content: fa-content($icon)

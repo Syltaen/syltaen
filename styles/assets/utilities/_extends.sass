@@ -1,0 +1,49 @@
+// =============================================================================
+// > BASE : @extend CLASSES.
+// =============================================================================
+
+// ==================================================
+// > CLEARFIX
+// ==================================================
+%clearfix
+    &::after
+        content: ""
+        display: table
+        clear: both
+.clearfix
+    @extend %clearfix
+
+
+// ==================================================
+// > UNSTYLED LIST
+// ==================================================
+%unstyled-list
+    list-style: none
+    &, li
+        margin: 0 !important
+        padding: 0 !important
+        &::before
+            content: none !important
+
+.unstyled-list
+    @extend %unstyled-list
+
+
+// ==================================================
+// > CENTERED ITEM
+// ==================================================
+%centered
+    +absolute(left 50% top 50%)
+    transform: translate(-50%, -50%)
+.centered
+    @extend %centered
+
+
+// ==================================================
+// > COVER PARENT
+// ==================================================
+%cover
+    +absolute(left 0 top 0)
+    +size(100%)
+.cover
+    @extend %cover

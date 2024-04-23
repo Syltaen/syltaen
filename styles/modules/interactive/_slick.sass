@@ -2,13 +2,18 @@
 // > MODULE : INTERACTIVE - SLICK
 // =============================================================================
 
-@import "assets/vendors/slick/slick"
-// @import "assets/vendors/slick/slick-theme"
+@import "../../assets/vendors/slick/slick"
 
 .slick-slider
-    // border: 4px solid white
-    // outline: 1px solid darken(color(light-grey), 2%)
-    // box-shadow: 15px 15px 50px rgba(black, .2)
+    margin-bottom: 65px
+    max-width: 100%
+    +screen(xs)
+        margin-bottom: 80px
+
+    .slick-list,
+    .slick-track
+        min-width: 100%
+        height: 100%
 
     & > li
         display: none
@@ -20,51 +25,67 @@
         display: block
         margin: 0
 
+    .slick-track
+        display: flex
+    .slick-slide
+        height: auto
+        & > div
+            height: 100%
+
     // ==================================================
     // > ARROWS
     // ==================================================
     .slick-arrow
         appearance: none
-        +size(40px)
-        +absolute(top 50%)
-        background: color(primary)
+        +font(24px 1.75 primary center)
+        +size(1.75em)
+        +absolute(bottom -2.25em)
+        background: #F4F4F4
         text-indent: -9990em
         border: 0
         border-radius: 50%
-        margin-top: -20px
+        margin-top: -.875em
         z-index: 1000
         cursor: pointer
-        transition: all .25s ease
-        &::before
-            +font(20px 40px white center)
+        transition: all .4s ease
+        .bg-light-grey &
+            background: #E5E5E5
+
+        // ICON
+        &::after
+            +far(angle-left)
             @extend %cover
             text-indent: 0
-        &:hover
-            background: color(secondary)
         &.slick-prev
-            left: -20px
-            &::before
-                +fa(angle-left)
+            right: 2.65em
         &.slick-next
-            right: -20px
-            &::before
-                +fa(angle-right)
+            right: 10px
+            &::after
+                content: fa-content(angle-right)
+        &:hover
+            background: color(primary)
+            +font(white)
+        &.slick-disabled
+            opacity: .25
+            pointer-events: none
 
         +print
             display: none !important
 
+        +screen(xs)
+            bottom: -1.75em
 
     // ==================================================
     // > DOTS
     // ==================================================
     .slick-dots
-        +size(100%, 14px)
-        +flex(row nowrap, center, center)
-        margin-top: 10px
+        +size(100%, 32px)
+        +flex(row nowrap, flex-end, center)
+        padding: 10px 120px 10px 10px
+        +absolute(bottom -50px left 0)
         li
             +size(12px)
-            border: 1px solid color(primary)
-            background: white
+            background: #F0F0F0
             border-radius: 50%
             margin: 3px
             cursor: pointer
@@ -72,9 +93,8 @@
             button
                 display: none
             &.slick-active
-                background: color(primary)
+                background: #C4C4C4
             &:hover
-                border-color: color(secondary)
-                background: color(secondary)
+                background: color(primary)
         +print
             display: none !important

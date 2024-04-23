@@ -1,0 +1,68 @@
+// =============================================================================
+// > LAYOUTS: MODULES - GUI: BACKGROUNDS
+// =============================================================================
+
+
+// ==================================================
+// > GENERATED BACKGOUNDS COLOR CLASSES. Ex: .bg-primary
+// ==================================================
++screen-suffixes() using ($suffix, $bp)
+    @each $color, $value in $colors
+        .bg-#{"" + $color}#{$suffix}
+            background-color: $value
+
+        .bg-#{"" + $color}-hover#{$suffix}:hover
+            background-color: $value
+
+        .border-#{"" + $color}#{$suffix}
+            border: 1px solid $value
+
+    .no-background#{$suffix}
+        background: none !important
+
+// ==================================================
+// > BACKGROUND IMAGE
+// ==================================================
+.bg-image
+    background-position: center center
+    background-repeat: no-repeat
+    background-size: cover
+
+    &--overlayed::before
+        content: ""
+        @extend %cover
+        background: rgba(black, .5)
+
++screen-suffixes() using ($suffix, $bp)
+    .bg-image
+        &--cover#{$suffix}
+            background-size: cover
+        &--contain#{$suffix}
+            background-size: contain
+        &--left#{$suffix}
+            background-position-x: left
+        &--right#{$suffix}
+            background-position-x: right
+        &--top#{$suffix}
+            background-position-y: top
+        &--bottom#{$suffix}
+            background-position-y: bottom
+
+        &--left-top#{$suffix}
+            background-position: left top
+        &--center-top#{$suffix}
+            background-position: center top
+        &--right-top#{$suffix}
+            background-position: right top
+        &--left-center#{$suffix}
+            background-position: left center
+        &--center-center#{$suffix}
+            background-position: center center
+        &--right-center#{$suffix}
+            background-position: right center
+        &--left-bottom#{$suffix}
+            background-position: left bottom
+        &--center-bottom#{$suffix}
+            background-position: center bottom
+        &--right-bottom#{$suffix}
+            background-position: right bottom

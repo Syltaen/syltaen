@@ -1,0 +1,12 @@
+//- =============================================================================
+//- > MIXIN : FIELDS REPEATER
+//- =============================================================================
+
+mixin fields-repeater($form, $name, $addLabel)
+
+    div(data-repeater=$addLabel)&attributes($attributes)
+
+        each $item, $i in (array) $form["prefill"]->get($name) ?? [0]
+
+            div(data-repeater-item)
+                block

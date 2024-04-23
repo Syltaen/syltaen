@@ -9,17 +9,15 @@ namespace Syltaen;
 // ==================================================
 // > JS
 // ==================================================
-Files::removeScript("jquery");
+Files::addScript("bundle.js", ["jquery"]);
 
-Files::addScript("bundle.js");
-
-Files::addInlineScript(
-    "var ajaxurl = '".admin_url("admin-ajax.php")."';".
-    "window.location.site = '".site_url("/")."';",
-    "before",
-    "bundle.js"
-);
-
+add_action("wp", function () {
+    Data::registerJSVars([
+        "var ajaxurl"          => admin_url("admin-ajax.php"),
+        "var post_id"          => get_the_ID(),
+        "window.location.site" => site_url("/"),
+    ]);
+});
 
 // ==================================================
 // > CSS
@@ -33,25 +31,18 @@ if (is_admin_bar_showing()) {
 // ==================================================
 // > REMOVE UNWANTED
 // ==================================================
-// Emojis
-add_action("init", function () {
-    remove_action("wp_head", "print_emoji_detection_script", 7);
-    remove_action("admin_print_scripts", "print_emoji_detection_script");
-    remove_action("wp_print_styles", "print_emoji_styles");
-    remove_action("admin_print_styles", "print_emoji_styles");
-    remove_filter("the_content_feed", "wp_staticize_emoji");
-    remove_filter("comment_text_rss", "wp_staticize_emoji");
-    remove_filter("wp_mail", "wp_staticize_emoji_for_email");
+add_action("wp_enqueue_scripts", function () {
+    wp_dequeue_style("nf-font-awesome");
+    wp_dequeue_style("wc-blocks-vendors-styles");
+    wp_dequeue_style("wc-blocks-style");
 });
-
-
 // Ninja forms
 add_action("nf_display_enqueue_scripts", function () {
     wp_dequeue_style("nf-display");
 });
 
 // Gallery
-add_filter( 'use_default_gallery_style', '__return_false' );
+add_filter('use_default_gallery_style', '__return_false');
 
 // =============================================================================
 // > BACK
@@ -62,13 +53,11 @@ add_filter( 'use_default_gallery_style', '__return_false' );
 // ==================================================
 Files::addScript("admin.js", [], "admin_enqueue_scripts");
 
-
 // ==================================================
 // > CSS
 // ==================================================
 Files::addStyle("admin.css", [], "admin_enqueue_scripts");
 
 add_action("login_head", function () {
-    echo '<link rel="stylesheet" type="text/css" href="' . Files::url("build/css/bundle.css") .'" />';
-    echo '<link rel="stylesheet" type="text/css" href="' . Files::url("build/css/admin.css") .'" />';
+    echo '<link rel="stylesheet" type="text/css" href="' . Files::url("build/css/admin.css") . '" />';
 });
