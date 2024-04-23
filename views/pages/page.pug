@@ -1,1 +1,5 @@
 extends _base
+
+block sections
+    //- != get_the_content()
+    != apply_filters("the_content", $post->post_content)

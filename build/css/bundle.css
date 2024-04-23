@@ -7827,6 +7827,24 @@ body {
   }
 }
 
+.cky-footer-wrapper div:last-child {
+  display: none !important;
+}
+
+.cky-switch input[type=checkbox] {
+  background: #EFEFEF;
+}
+.cky-switch input[type=checkbox]:checked {
+  background: #111 !important;
+}
+.cky-switch input[type=checkbox]::before {
+  opacity: 1;
+  -webkit-transform: none;
+      -ms-transform: none;
+          transform: none;
+  top: unset;
+}
+
 h6:not([class]),
 .h6, h5:not([class]),
 .h5, h4:not([class]),
@@ -8513,8 +8531,8 @@ label,
   margin-bottom: 0.35em;
   display: inline-block;
 }
-label.is-required::after,
-.form__label.is-required::after {
+.is-required > label::after,
+.is-required > .form__label::after {
   content: " *";
   color: #e05252;
 }

@@ -1,3 +1,5 @@
+console.log(wp);
+
 var el                = wp.element.createElement,
     // Fragment       = wp.element.Fragment,
     // BlockControls  = wp.editor.BlockControls,

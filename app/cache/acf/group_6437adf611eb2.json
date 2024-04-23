@@ -110,7 +110,6 @@
                                 "class": "",
                                 "id": ""
                             },
-                            "acfe_save_meta": 0,
                             "post_type": [
                                 "included_sections"
                             ],
@@ -125,7 +124,8 @@
                             },
                             "allow_null": 0,
                             "ui": 1,
-                            "save_post_type": ""
+                            "save_post_type": "",
+                            "bidirectional_target": []
                         }
                     ],
                     "min": "",
@@ -155,13 +155,11 @@
                 "param": "post_type",
                 "operator": "==",
                 "value": "page"
-            }
-        ],
-        [
+            },
             {
                 "param": "post_type",
-                "operator": "==",
-                "value": "included_sections"
+                "operator": "!=",
+                "value": "page"
             }
         ]
     ],
@@ -191,7 +189,7 @@
     "acfe_form": 0,
     "acfe_meta": "",
     "acfe_note": "",
-    "modified": 1683892732,
+    "modified": 1713796895,
     "acfe_categories": {
         "layout": "Layout"
     }

@@ -25,18 +25,18 @@ Route::add([
 /**
  * Remove "page" from pagination base
  */
-add_action("init", function () {
-    global $wp_rewrite;
-    $wp_rewrite->pagination_base = "";
-});
+// add_action("init", function () {
+//     global $wp_rewrite;
+//     $wp_rewrite->pagination_base = "";
+// });
 
 /**
  * Add catchall pagination route
  */
-Route::add([[
-    "(.+)/([0-9]*)/?$",
-    'index.php?pagename=$matches[1]&paged=$matches[2]',
-]]);
+// Route::add([[
+//     "(.+)/([0-9]*)/?$",
+//     'index.php?pagename=$matches[1]&paged=$matches[2]',
+// ]]);
 
 // ==================================================
 // > FILTER GLOBAL QUERY VARS

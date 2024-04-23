@@ -29,7 +29,7 @@ html(lang=$site["language"])
                 //- ==================================================
                 //- > HEADER
                 //- ==================================================
-                block header
+                //- block header
                     header(role="navigation").site-header: .container
 
                         .row.flex-justify-space-between.flex-align-center.no-gutters
@@ -52,25 +52,26 @@ html(lang=$site["language"])
                     main.site-main(role="main")
 
                         //- ========== INTRO ========== -//
-                        block intro
-                            if !empty($intro_image) || !empty($intro_content)
-                                section.site-intro(style=$intro_image?"background-image: url(".$intro_image.")":"")
-                                    != $intro_content
+                        //- block intro
+                        //-     if !empty($intro_image) || !empty($intro_content)
+                        //-         section.site-intro(style=$intro_image?"background-image: url(".$intro_image.")":"")
+                        //-             != $intro_content
 
-                        //- ========== BREADCRUMB ========== -//
-                        block breadcrumb
-                            if !empty($site["breadcrumb"])
-                                .container.breadcrumb-container!= $site["breadcrumb"]
+                        //- //- ========== BREADCRUMB ========== -//
+                        //- block breadcrumb
+                        //-     if !empty($site["breadcrumb"])
+                        //-         .container.breadcrumb-container!= $site["breadcrumb"]
 
                         //- ========== CONTENT ========== -//
                         block sections
-                            +sections($sections)
+                            //- +sections($sections)
+
 
 
                 //- ==================================================
                 //- > FOOTER
                 //- ==================================================
-                block footer
+                //- block footer
                     footer.site-footer(role="contentinfo")
                         .site-footer__top: .container!= $site["footer"]["footer_content"]
 
